@@ -73,7 +73,7 @@ final class NowPlaying: ObservableObject {
     private var buffer = Data()
     private var restarts = 0
     private var hideWork: DispatchWorkItem?
-    /// Board 9.7: after a pause the wings stay (greyed) for a minute, then go.
+    /// Board 9.6: after a pause the wings stay (greyed) for a minute, then go.
     private let pauseGrace: TimeInterval = 60
 
     private static let perlScript = """

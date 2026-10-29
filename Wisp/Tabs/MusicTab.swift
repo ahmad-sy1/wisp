@@ -1,7 +1,7 @@
 import SwiftUI
 
 /// Music: artwork, title, progress and controls on the left; a live spectrum on the
-/// right (boards 9.2–9.6). The output device sits in the tab bar.
+/// right (boards 9.1–9.5). The output device sits in the tab bar.
 struct MusicTab: View {
     @ObservedObject var player: NowPlaying
 
@@ -69,7 +69,7 @@ private struct PlayerCard: View {
     }
 }
 
-/// Board 9.5: nothing is playing.
+/// Board 9.4: nothing is playing.
 private struct NothingPlayingCard: View {
     var body: some View {
         HStack(spacing: 14) {
@@ -238,7 +238,7 @@ struct Artwork: View {
     let image: NSImage?
     var size: CGFloat
     var corner: CGFloat
-    /// Without artwork a video gets a dark red tile with a play icon (board 9.3).
+    /// Without artwork a video gets a dark red tile with a play icon (board 9.2).
     var isVideo = false
 
     var body: some View {

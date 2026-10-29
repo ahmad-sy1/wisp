@@ -38,7 +38,7 @@ struct NotchRootView: View {
     }
 }
 
-/// Live activity on the closed notch (board 9.7): artwork left of the camera, a mini
+/// Live activity on the closed notch (board 9.6): artwork left of the camera, a mini
 /// spectrum of 8 bands right of it. Without spectrum access the bars are decorative.
 private struct MusicWings: View {
     let track: NowPlayingTrack

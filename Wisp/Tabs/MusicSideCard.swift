@@ -74,7 +74,7 @@ struct SideCard: View {
     }
 }
 
-// MARK: - Spectrum (boards 9.2, 9.4, 9.5)
+// MARK: - Spectrum (boards 9.1, 9.3, 9.4)
 
 private struct SpectrumView: View {
     @ObservedObject var spectrum: Spectrum
@@ -155,7 +155,7 @@ struct SpectrumBars: View {
     }
 }
 
-// MARK: - Permission (board 9.6)
+// MARK: - Permission (board 9.5)
 
 private struct ConsentView: View {
     @ObservedObject var spectrum: Spectrum
