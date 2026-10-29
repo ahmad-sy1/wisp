@@ -50,6 +50,12 @@ The notch is the one bit of screen you never use. wisp turns it into a quiet das
 <tr>
 <td colspan="2" align="center"><sub>Music: what's playing, and a live spectrum of what you hear</sub></td>
 </tr>
+<tr>
+<td colspan="2"><img src="docs/media/agenda.png" alt="The Agenda tab with today's timeline and the weather"></td>
+</tr>
+<tr>
+<td colspan="2" align="center"><sub>Agenda: today's timeline, the weather, and when to leave for your shift</sub></td>
+</tr>
 </table>
 
 ### On the way
