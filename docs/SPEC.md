@@ -30,7 +30,7 @@ Rechts: **Instellingen** (open het Settings-venster).
 - Links: tijdlijn van vandaag. Afgelopen items doorgestreept/grijs, een rode **"nu"-lijn** met tijd, komende items met gekleurd streepje (dienst = oranje) en "over Xu Xm".
 - Rechts: **weer** in Nijmegen (temperatuur + omschrijving) en een **vertrek-kaart** ("Vertrek voor je dienst 16:25 · 22 min fietsen · droog tot 22:00"). Weer via Open-Meteo (gratis, geen key) of WeatherKit.
 
-> **Stand van zaken:** gebouwd. EventKit en Open-Meteo. Een dienst is een afspraak met "dienst" in de titel, of (instelbaar) alles in één agenda. De fietstijd is een vast aantal minuten in Settings: een route berekenen zou je adres naar een kaartdienst sturen. De plaats voor het weer is in Settings te kiezen (standaard Nijmegen). Staat er vandaag niets meer, dan toont de tijdlijn onder de nu-lijn alvast de eerste twee afspraken van morgen, onder *Morgen · vrijdag 30 oktober*.
+> **Stand van zaken:** gebouwd. EventKit en Open-Meteo. Een dienst is een afspraak met "dienst" in de titel, of (instelbaar) alles in één agenda. De reistijd is een vast aantal minuten in Settings: een route berekenen zou je adres naar een kaartdienst sturen. De plaats voor het weer is in Settings te kiezen (standaard Nijmegen). Staat er vandaag niets meer, dan toont de tijdlijn onder de nu-lijn alvast de eerste twee afspraken van morgen, onder *Morgen · vrijdag 30 oktober*.
 
 ### Focus-timer
 - Ring met aftellende tijd, knoppen **Start/Pauze** en **Reset**, duur-keuze **25 / 50 / 90 min**.
@@ -90,7 +90,7 @@ Rechts: **Instellingen** (open het Settings-venster).
 
 ## Settings-aanpassingen
 
-> **Stand van zaken:** accentkleur, sluitvertraging, geluiden, opstarten bij inloggen, Gmail, Agenda & weer (agenda's, diensten, fietstijd, plaats), Muziek (spectrum) en Claude Code-hooks zijn er. Tabs, Focus, integraties en hotkey nog niet.
+> **Stand van zaken:** accentkleur, sluitvertraging, geluiden, opstarten bij inloggen, Gmail, Agenda & weer (agenda's, diensten, reistijd, plaats), Muziek (spectrum) en Claude Code-hooks zijn er. Tabs, Focus, integraties en hotkey nog niet.
 
 - Bovenaan: accentkleur kiezen (4 opties).
 - Sectie **Tabs**: tabs aan/uit en volgorde.

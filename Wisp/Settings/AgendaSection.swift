@@ -29,7 +29,7 @@ struct AgendaSection: View {
             }
 
             Stepper(value: $agenda.travelMinutes, in: 1...120) {
-                LabeledContent("Fietstijd naar je dienst", value: "\(agenda.travelMinutes) min")
+                LabeledContent("Reistijd naar je dienst", value: "\(agenda.travelMinutes) min")
             }
 
             LabeledContent("Weer voor", value: [weather.place.name, weather.place.detail]
