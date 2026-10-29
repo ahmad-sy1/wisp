@@ -1,12 +1,12 @@
-## Wat
-Korte uitleg van wat deze PR doet.
+## What
+What this PR does, in a few lines.
 
-## Waarom
-Welk onderdeel van REDESIGN-WISP.md dit afrondt.
+## Why
+Which step of `docs/ROADMAP.md` or which issue this is, and any decision the reviewer should check.
 
-## Hoe te testen
+## How to test
 1. …
 2. …
 
 ## Screenshots
-(voor/na, waar mogelijk)
+(before/after, where it applies)

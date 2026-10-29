@@ -35,7 +35,7 @@ xcodegen && xcodebuild -scheme wisp -configuration Debug -derivedDataPath build 
 
 ## How we work
 
-The owner is Ahmad. Talk to him in Dutch; code, comments, commits and docs stay in English.
+The owner is Ahmad. Talk to him in Dutch; code, comments, commits, docs, PR descriptions and PR or issue comments stay in English.
 
 **Picking up work**
 - Start with `git status`, `gh pr list` and `gh issue list`. Don't begin a new step while the previous step's PR is still open, unless Ahmad says so.
@@ -51,7 +51,7 @@ The owner is Ahmad. Talk to him in Dutch; code, comments, commits and docs stay 
    - Anything that animates: measure CPU on the **Release** build (Debug is several times slower).
    - Say plainly what you could not test (hover, clicks, permission prompts need Ahmad).
 4. **Update the docs in the same PR**: README (features, screenshots in `docs/media/`), `docs/ARCHITECTURE.md`, `docs/INTEGRATIONS.md`, `docs/DESIGN.md`, `docs/ROADMAP.md`, and a line in `CHANGELOG.md` under *Unreleased*. Ahmad sees thorough documentation as part of professional work.
-5. Push and open a PR with the template in `.github/PULL_REQUEST_TEMPLATE.md`, written in Dutch: **Wat**, **Waarom**, **Hoe te testen**, **Screenshots**.
+5. Push and open a PR with the template in `.github/PULL_REQUEST_TEMPLATE.md`, in English: **What**, **Why**, **How to test**, **Screenshots**. Keep it short: a few lines per section, only what a reviewer needs (the decisions to check, not every detail of the change). The same goes for PR and issue comments.
 6. **Never merge.** Ahmad reviews and merges, then you continue.
 
 **Never**

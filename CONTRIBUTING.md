@@ -61,7 +61,7 @@ End the test session with `"hook_event_name":"SessionEnd"`, so it doesn't stay o
 
 ## Pull requests
 
-- Open the PR against `main`; the template asks for **Wat**, **Waarom**, **Hoe te testen** and **Screenshots** (in Dutch).
+- Open the PR against `main`; the template asks for **What**, **Why**, **How to test** and **Screenshots**. Write PR descriptions and comments in English, and keep them short.
 - One topic per PR. Add a screenshot or short recording for anything visual.
 - The *Build* check must pass. The PR is merged by the owner, not by its author.
 - Add a line to `CHANGELOG.md` under *Unreleased* for anything a user would notice.
