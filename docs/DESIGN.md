@@ -84,7 +84,8 @@ Three cards in the fixed 150 pt area (board 3):
 States the board doesn't show, built in the style of the other tabs and open to a design:
 
 - No Calendar access yet / refused: the calendar icon, a short line and *Toegang geven* or *Open Systeeminstellingen*, like Mail's empty states.
-- Nothing today: *Niets gepland vandaag.*
+- Nothing left today: below the *nu* line a header *Morgen · vrijdag 30 oktober* (12 pt semibold, grey, with a thin grey rule) and tomorrow's first two timed events (or its all-day events when nothing is timed), in the normal row style without a countdown.
+- Nothing today or tomorrow: *Niets gepland vandaag.*
 - No shift left today: the departure card reads *Geen dienst meer vandaag*, the rain line, and today's low and high.
 - Leaving time passed but the shift hasn't started: *Nu · 22 min fietsen*.
 - All-day events sit at the top as *hele dag*.
