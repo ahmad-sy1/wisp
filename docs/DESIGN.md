@@ -13,7 +13,14 @@ The boards in [`design/boards/`](../design/boards) are the visual source of trut
 | [6](../design/boards/6-notes.png) | Notes |
 | [7](../design/boards/7-system.png) | System |
 | [8](../design/boards/8-notifications-collapsed.png) | mail notification, closed-notch states |
-| [9](../design/boards/9-music.png) | Music |
+| [9](../design/boards/9-music.png) | Music (first version, replaced by 9.1–9.7) |
+| [9.1](../design/boards/9.1-music-lyrics.png) | Music: live lyrics |
+| [9.2](../design/boards/9.2-music-spectrum.png) | Music: live spectrum |
+| [9.3](../design/boards/9.3-music-video-no-lyrics.png) | Music: video in a browser, no lyrics |
+| [9.4](../design/boards/9.4-music-paused.png) | Music: paused |
+| [9.5](../design/boards/9.5-music-nothing-playing.png) | Music: nothing playing |
+| [9.6](../design/boards/9.6-music-permission.png) | Music: one-time permission |
+| [9.7](../design/boards/9.7-closed-notch-mini-spectrum.png) | closed notch: mini spectrum, paused |
 
 ## Principles
 

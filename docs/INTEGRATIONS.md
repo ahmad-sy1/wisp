@@ -7,6 +7,8 @@ Golden rule: **check the official documentation when you build or change an inte
 | Claude Code | ✓ live | hooks, installed from Settings |
 | Gmail | ✓ live | address + Google app password |
 | Now Playing | ✓ live | nothing |
+| Lyrics (LRCLIB) | ✓ live | nothing; can be switched off in Settings |
+| Live spectrum | ✓ live | one-time *System Audio Recording* permission |
 | GitHub | planned | sign in with GitHub |
 | Notion | planned | sign in with Notion |
 | WHOOP | planned | sign in with WHOOP |
@@ -65,7 +67,25 @@ If wisp is shared with more people later, "Sign in with Google" (OAuth) is frien
 - Source: MediaRemote (private framework), through the perl-loaded bridge described in [ARCHITECTURE.md](ARCHITECTURE.md#music).
 - Works with anything that shows up in Control Center: Spotify, Music, Podcasts, YouTube and other video in Safari, Brave, Chrome…
 - Commands: play/pause, next, previous. Volume and output device come from Core Audio, not from the playing app.
-- Not available: an "up next" queue. macOS does not expose one for third-party players, which is why the Music tab shows *Speelt via* instead of the *Hierna* list from the design.
+- Source label: the app's name (Spotify, Muziek, Brave Browser…). macOS reports which *app* plays, not which website, so a browser shows the browser's name rather than "YouTube".
+- Not available: an "up next" queue, the stream's bitrate, the codec, AirPods battery. macOS does not expose these reliably, so wisp only shows what it can measure.
+
+## Lyrics (LRCLIB)
+
+Docs: <https://lrclib.net/docs>
+
+- Free, no account, no key. Requests carry a `User-Agent` naming wisp.
+- Sent: artist, title, album and duration of the current song. Nothing else.
+- `GET /api/get?track_name=…&artist_name=…&album_name=…&duration=…` for an exact match (`404` when there is none), then `GET /api/search?track_name=…&artist_name=…`, accepting the first result within 3 s of the song's length.
+- Only `syncedLyrics` (`[mm:ss.xx] line`) is used; lyrics without timing are ignored.
+- LRCLIB sometimes answers `503 ServerOverloaded`. That counts as a network error and is not cached, so the next play tries again.
+- Off switch: Settings → Muziek → *Songteksten tonen*.
+
+## Live spectrum (system audio)
+
+- Core Audio process taps (macOS 14.2+): wisp listens to the playing app's audio while the spectrum is visible. See [ARCHITECTURE.md](ARCHITECTURE.md#live-spectrum).
+- Permission: macOS's *System Audio Recording* (Privacy & Security). wisp asks inside the Music tab first (board 9.6); *Niet nu*, or Settings → Muziek → *Live spectrum*, turns it off.
+- Nothing is recorded, written to disk or sent anywhere: each block of samples goes through the FFT and is dropped.
 
 ## Planned: GitHub, Notion, WHOOP
 

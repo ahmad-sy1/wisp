@@ -4,7 +4,7 @@ wisp is a native macOS app that lives in the MacBook notch: Claude Code sessions
 
 ## Where things are
 
-- `Wisp/`: the app. `Notch/` window and tab bar, `Tabs/` one view per tab, `Claude/` hooks and sessions, `Mail/` IMAP, `Music/` Now Playing, `Settings/`, `Design/Theme.swift` tokens.
+- `Wisp/`: the app. `Notch/` window and tab bar, `Tabs/` one view per tab, `Claude/` hooks and sessions, `Mail/` IMAP, `Music/` Now Playing, lyrics and the live spectrum, `Settings/`, `Design/Theme.swift` tokens.
 - `WispHook/`: the `wisp-hook` helper; `Shared/`: code for both targets; `Helpers/NowPlayingBridge.m`: the Now Playing dylib.
 - `project.yml`: XcodeGen project. Never edit the generated `.xcodeproj`.
 - `design/boards/`: design boards, the visual source of truth. `docs/DESIGN.md`: tokens and rules.
