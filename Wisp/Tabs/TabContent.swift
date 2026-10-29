@@ -5,8 +5,11 @@ struct TabContent: View {
     let tab: WispTab
 
     var body: some View {
-        // Each tab gets its real view in a later step; until then a calm placeholder.
-        PlaceholderTab(tab: tab)
+        switch tab {
+        case .home: HomeTab(sessions: .shared)
+        // The other tabs get their real view in a later step; until then a calm placeholder.
+        default:    PlaceholderTab(tab: tab)
+        }
     }
 }
 
