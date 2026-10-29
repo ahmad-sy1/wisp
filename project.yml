@@ -8,7 +8,10 @@ settings:
   base:
     SWIFT_VERSION: "6.0"
     MACOSX_DEPLOYMENT_TARGET: "15.0"
-    CODE_SIGN_IDENTITY: "-"
+    # Developer ID for every local build: a stable signature, so macOS remembers the
+    # Keychain and other permissions across updates. CI builds without signing.
+    CODE_SIGN_IDENTITY: "Developer ID Application"
+    DEVELOPMENT_TEAM: VYYW6326D6
     CODE_SIGN_STYLE: Manual
     ENABLE_HARDENED_RUNTIME: YES
     # The one place the version lives; scripts/release.sh tags from it.
@@ -28,6 +31,30 @@ targets:
         codeSign: true
         copy:
           destination: executables
+    postCompileScripts:
+      - name: Build NowPlayingBridge
+        # Loaded by /usr/bin/perl at runtime (see Wisp/Music/NowPlaying.swift):
+        # MediaRemote only answers Apple-signed processes since macOS 15.4.
+        script: |
+          set -e
+          OUT="${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/libNowPlayingBridge.dylib"
+          mkdir -p "$(dirname "$OUT")"
+          xcrun clang -dynamiclib -fobjc-arc -O2 -arch arm64 -arch x86_64 \
+            -mmacosx-version-min=${MACOSX_DEPLOYMENT_TARGET} -framework Foundation \
+            "${SRCROOT}/Helpers/NowPlayingBridge.m" -o "$OUT"
+          IDENTITY="${EXPANDED_CODE_SIGN_IDENTITY:--}"
+          if [ "$IDENTITY" = "-" ] || [ "$CODE_SIGNING_ALLOWED" = "NO" ]; then
+            codesign --force --sign - "$OUT"
+          elif [ "$CONFIGURATION" = "Release" ]; then
+            # Notarization needs a secure timestamp and the hardened runtime.
+            codesign --force --timestamp --options runtime --sign "$IDENTITY" "$OUT"
+          else
+            codesign --force --options runtime --sign "$IDENTITY" "$OUT"
+          fi
+        inputFiles:
+          - $(SRCROOT)/Helpers/NowPlayingBridge.m
+        outputFiles:
+          - $(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/libNowPlayingBridge.dylib
     info:
       path: Wisp/Resources/Info.plist
       properties:
