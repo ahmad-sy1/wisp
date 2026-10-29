@@ -34,6 +34,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         #endif
     }
 
+    /// Opening wisp again (Spotlight, Finder, Dock) shows Settings: on a full menu bar
+    /// macOS hides the status item behind the notch, so this is the fallback way in.
+    func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
+        openSettings()
+        return false
+    }
+
     // MARK: - Claude Code
 
     private func startClaudeHooks(notch: NotchController) {

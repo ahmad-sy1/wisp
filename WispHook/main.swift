@@ -10,8 +10,10 @@ import Darwin
 
 let env = ProcessInfo.processInfo.environment
 
-// Sessions inside the Claude desktop app are not shown in the notch.
-if env["CLAUDE_CODE_ENTRYPOINT"]?.hasPrefix("claude-desktop") == true { exit(0) }
+// Sessions inside the Claude desktop app are not shown in the notch. Match on the
+// app that launched the process: CLAUDE_CODE_ENTRYPOINT is not reliable, because an
+// IDE opened from the desktop app inherits it and passes it on to its terminal.
+if env["__CFBundleIdentifier"] == "com.anthropic.claudefordesktop" { exit(0) }
 
 let input = FileHandle.standardInput.readDataToEndOfFile()
 guard var payload = (try? JSONSerialization.jsonObject(with: input)) as? [String: Any] else { exit(0) }
