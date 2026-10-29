@@ -26,6 +26,10 @@
 	<true/>
 	<key>NSAudioCaptureUsageDescription</key>
 	<string>wisp analyseert live het geluid van wat er speelt voor het spectrum in de Muziek-tab. Er wordt niets opgenomen, opgeslagen of verstuurd.</string>
+	<key>NSCalendarsFullAccessUsageDescription</key>
+	<string>wisp toont wat er vandaag in je agenda staat in de Agenda-tab. Je agenda wordt alleen gelezen en blijft op je Mac.</string>
+	<key>NSCalendarsUsageDescription</key>
+	<string>wisp toont wat er vandaag in je agenda staat in de Agenda-tab. Je agenda wordt alleen gelezen en blijft op je Mac.</string>
 	<key>NSHumanReadableCopyright</key>
 	<string>Copyright © 2026 Ahmad Alasmi. All rights reserved.</string>
 </dict>
