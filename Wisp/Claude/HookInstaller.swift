@@ -28,7 +28,6 @@ enum HookInstaller {
         let backupURL: URL
         let updated: Data
         let changes: [Change]
-        let hasCoucouHooks: Bool
     }
 
     static var settingsURL: URL {
@@ -43,7 +42,6 @@ enum HookInstaller {
     static var command: String? { helperPath.map { "\"\($0)\"" } }
 
     static func isWisp(_ command: String) -> Bool { command.contains("wisp-hook") }
-    static func isCoucou(_ command: String) -> Bool { command.contains("NotchBuddy/nb-hook") }
 
     static func status(at url: URL = settingsURL, command: String? = command) -> Status {
         guard let command else { return .noHelper }
@@ -54,21 +52,20 @@ enum HookInstaller {
         return all == [command] && complete ? .installed : .otherPath
     }
 
-    static func plan(removeCoucou: Bool, at url: URL = settingsURL,
-                     command: String? = command) throws -> Plan {
+    static func plan(at url: URL = settingsURL, command: String? = command) throws -> Plan {
         guard let command else { throw InstallError.noHelper }
         var settings = try readSettings(url)
         let before = existingCommands(in: settings)
 
         var hooks = settings["hooks"] as? [String: Any] ?? [:]
-        // Drop old wisp entries (and Coucou's, if asked), keeping everything else.
+        // Drop old wisp entries, keeping everything else.
         for (event, value) in hooks {
             guard let groups = value as? [[String: Any]] else { continue }
             let kept: [[String: Any]] = groups.compactMap { group in
                 var group = group
                 let entries = (group["hooks"] as? [[String: Any]] ?? []).filter { entry in
                     let cmd = entry["command"] as? String ?? ""
-                    return !isWisp(cmd) && !(removeCoucou && isCoucou(cmd))
+                    return !isWisp(cmd)
                 }
                 guard !entries.isEmpty else { return nil }
                 group["hooks"] = entries
@@ -92,8 +89,7 @@ enum HookInstaller {
         formatter.dateFormat = "yyyyMMdd-HHmmss"
         let stamp = formatter.string(from: Date())
         let backup = url.deletingLastPathComponent().appendingPathComponent("settings.json.wisp-backup-\(stamp)")
-        return Plan(settingsURL: url, backupURL: backup, updated: data, changes: changes,
-                    hasCoucouHooks: before.contains { isCoucou($0.command) })
+        return Plan(settingsURL: url, backupURL: backup, updated: data, changes: changes)
     }
 
     static func apply(_ plan: Plan) throws {

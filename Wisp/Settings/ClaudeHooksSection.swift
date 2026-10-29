@@ -4,7 +4,6 @@ import SwiftUI
 struct ClaudeHooksSection: View {
     @State private var status = HookInstaller.status()
     @State private var plan: HookInstaller.Plan?
-    @State private var removeCoucou = true
     @State private var message: String?
 
     var body: some View {
@@ -34,10 +33,9 @@ struct ClaudeHooksSection: View {
         }
     }
 
-    private func prepare(removeCoucou: Bool? = nil) {
-        if let removeCoucou { self.removeCoucou = removeCoucou }
+    private func prepare() {
         do {
-            plan = try HookInstaller.plan(removeCoucou: self.removeCoucou)
+            plan = try HookInstaller.plan()
         } catch {
             message = error.localizedDescription
         }
@@ -69,13 +67,6 @@ struct ClaudeHooksSection: View {
             }
             .frame(height: 220)
             .background(RoundedRectangle(cornerRadius: 6).fill(Color.black.opacity(0.25)))
-
-            if plan.hasCoucouHooks {
-                Toggle("Oude Coucou-hooks verwijderen", isOn: Binding(
-                    get: { removeCoucou },
-                    set: { prepare(removeCoucou: $0) }
-                ))
-            }
 
             Text("Eerst wordt een back-up gemaakt: \(plan.backupURL.lastPathComponent). Andere instellingen blijven staan; het bestand wordt wel opnieuw opgemaakt (sleutels op alfabet).")
                 .font(.caption)
