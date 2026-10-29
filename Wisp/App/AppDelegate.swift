@@ -1,4 +1,5 @@
 import AppKit
+import Combine
 import SwiftUI
 
 @main
@@ -19,6 +20,7 @@ enum WispMain {
 final class AppDelegate: NSObject, NSApplicationDelegate {
     private var notch: NotchController?
     private var hookServer: HookServer?
+    private var subscriptions: Set<AnyCancellable> = []
     private var statusItem: NSStatusItem?
     private var settingsWindow: NSWindow?
 
@@ -28,9 +30,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         self.notch = notch
         setUpStatusItem()
         startClaudeHooks(notch: notch)
+        startMail(notch: notch)
         #if DEBUG
-        // `open wisp.app --args -openOnLaunch YES` opens the panel right away (for screenshots).
-        if UserDefaults.standard.bool(forKey: "openOnLaunch") { notch.expand() }
+        // `open wisp.app --args -openOnLaunch mail` opens the panel on that tab (for screenshots).
+        if let name = UserDefaults.standard.string(forKey: "openOnLaunch") {
+            notch.expand(to: WispTab(rawValue: name) ?? .home)
+        }
         #endif
     }
 
@@ -52,6 +57,17 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         let server = HookServer { event, reply in sessions.handle(event, reply: reply) }
         server.start()
         hookServer = server
+    }
+
+    // MARK: - Mail
+
+    private func startMail(notch: NotchController) {
+        let mail = MailStore.shared
+        mail.$unreadCount
+            .removeDuplicates()
+            .sink { notch.model.badges[.mail] = $0 }
+            .store(in: &subscriptions)
+        mail.start()
     }
 
     // MARK: - Menu bar

@@ -65,7 +65,7 @@ struct ExpandedPanel: View {
             TabBar(model: model)
                 .frame(height: Theme.tabBarHeight)
 
-            TabContent(tab: model.tab)
+            TabContent(tab: model.tab, openSettings: model.onOpenSettings)
                 .frame(height: Theme.contentHeight)
                 .id(model.tab)
                 .transition(.opacity)
