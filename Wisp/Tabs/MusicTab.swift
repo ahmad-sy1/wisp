@@ -57,15 +57,8 @@ private struct PlayerCard: View {
 
                 HStack(spacing: 0) {
                     ControlButton(symbol: "backward.end.fill", action: player.previousTrack)
-                    Button(action: player.playPause) {
-                        Image(systemName: track.isPlaying ? "pause.fill" : "play.fill")
-                            .font(.system(size: 15, weight: .semibold))
-                            .foregroundStyle(.black)
-                            .frame(width: 40, height: 34)
-                            .background(RoundedRectangle(cornerRadius: 12, style: .continuous).fill(.white))
-                    }
-                    .buttonStyle(.plain)
-                    .padding(.horizontal, 6)
+                    PlayPauseButton(isPlaying: track.isPlaying, action: player.playPause)
+                        .padding(.horizontal, 6)
                     ControlButton(symbol: "forward.end.fill", action: player.nextTrack)
                     Spacer(minLength: 0)
                     Equalizer(playing: track.isPlaying, barWidth: 3, spacing: 2.5)
@@ -114,19 +107,61 @@ private struct Progress: View {
     }
 }
 
+/// Previous / next: a soft round highlight on hover, a bounce on click.
 private struct ControlButton: View {
     let symbol: String
     let action: () -> Void
+    @State private var hovered = false
+    @State private var taps = 0
+
+    var body: some View {
+        Button {
+            taps += 1
+            action()
+        } label: {
+            Image(systemName: symbol)
+                .font(.system(size: 14))
+                .foregroundStyle(hovered ? Theme.textPrimary : Theme.textPrimary.opacity(0.8))
+                .symbolEffect(.bounce, value: taps)
+                .frame(width: 32, height: 32)
+                .background(Circle().fill(hovered ? Theme.activeTab : .clear))
+                .contentShape(Circle())
+        }
+        .buttonStyle(PressableStyle())
+        .onHover { hovered = $0 }
+        .animation(.easeOut(duration: 0.15), value: hovered)
+    }
+}
+
+/// The white play / pause key: grows a little on hover, the icon morphs between states.
+private struct PlayPauseButton: View {
+    let isPlaying: Bool
+    let action: () -> Void
+    @State private var hovered = false
 
     var body: some View {
         Button(action: action) {
-            Image(systemName: symbol)
-                .font(.system(size: 14))
-                .foregroundStyle(Theme.textPrimary)
-                .frame(width: 30, height: 30)
-                .contentShape(Rectangle())
+            Image(systemName: isPlaying ? "pause.fill" : "play.fill")
+                .font(.system(size: 15, weight: .semibold))
+                .foregroundStyle(.black)
+                .contentTransition(.symbolEffect(.replace))
+                .frame(width: 40, height: 34)
+                .background(RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    .fill(.white.opacity(hovered ? 1 : 0.92)))
+                .scaleEffect(hovered ? 1.06 : 1)
         }
-        .buttonStyle(.plain)
+        .buttonStyle(PressableStyle())
+        .onHover { hovered = $0 }
+        .animation(.spring(response: 0.25, dampingFraction: 0.7), value: hovered)
+    }
+}
+
+/// Sinks in while pressed, springs back on release.
+struct PressableStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .scaleEffect(configuration.isPressed ? 0.88 : 1)
+            .animation(.spring(response: 0.2, dampingFraction: 0.6), value: configuration.isPressed)
     }
 }
 
