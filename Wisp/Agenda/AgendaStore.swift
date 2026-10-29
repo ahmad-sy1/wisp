@@ -35,6 +35,8 @@ final class AgendaStore: ObservableObject {
 
     @Published private(set) var access: Access
     @Published private(set) var events: [AgendaEvent] = []
+    /// Tomorrow's events, shown once nothing is left today.
+    @Published private(set) var tomorrow: [AgendaEvent] = []
     @Published private(set) var calendars: [EKCalendar] = []
 
     /// Calendars the user switched off in Settings (by identifier); all others count.
@@ -136,14 +138,19 @@ final class AgendaStore: ObservableObject {
         let shown = calendars.filter { !hiddenCalendars.contains($0.calendarIdentifier) }
         guard !shown.isEmpty else {
             events = []
+            tomorrow = []
             return
         }
         let day = Calendar.current.startOfDay(for: .now)
-        let end = Calendar.current.date(byAdding: .day, value: 1, to: day) ?? day
+        let next = Calendar.current.date(byAdding: .day, value: 1, to: day) ?? day
+        let end = Calendar.current.date(byAdding: .day, value: 1, to: next) ?? next
+        // One query for today and tomorrow; an event belongs to the day it starts on.
         let predicate = store.predicateForEvents(withStart: day, end: end, calendars: shown)
-        events = store.events(matching: predicate)
+        let all = store.events(matching: predicate)
             .map(makeEvent)
             .sorted { ($0.isAllDay ? 0 : 1, $0.start) < ($1.isAllDay ? 0 : 1, $1.start) }
+        events = all.filter { $0.start < next }
+        tomorrow = all.filter { $0.start >= next }
     }
 
     private func makeEvent(_ event: EKEvent) -> AgendaEvent {

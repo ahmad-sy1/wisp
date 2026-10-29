@@ -42,7 +42,7 @@ private struct Timeline: View {
         case .denied:
             AgendaMessage(text: "wisp heeft geen toegang tot je agenda.",
                           action: ("Open Systeeminstellingen", { agenda.openPrivacySettings() }))
-        case .granted where agenda.events.isEmpty:
+        case .granted where agenda.events.isEmpty && agenda.tomorrow.isEmpty:
             AgendaMessage(text: "Niets gepland vandaag.")
         case .granted:
             list
@@ -55,6 +55,8 @@ private struct Timeline: View {
         // The "nu" line goes above the first timed event that hasn't ended yet.
         let split = timed.firstIndex { !$0.isPast(at: now) } ?? timed.count
         let next = timed.first { $0.start > now }
+        // Once nothing is left today, a peek at how tomorrow starts.
+        let peek = split == timed.count ? Self.firstOf(agenda.tomorrow) : []
 
         return ScrollViewReader { proxy in
             ScrollView {
@@ -63,12 +65,22 @@ private struct Timeline: View {
                     ForEach(timed[..<split]) { EventRow(event: $0, now: now, countdown: false) }
                     NowLine(now: now).id(NowLine.anchor)
                     ForEach(timed[split...]) { EventRow(event: $0, now: now, countdown: $0.id == next?.id) }
+                    if let first = peek.first {
+                        DayHeader(day: first.start)
+                        ForEach(peek) { EventRow(event: $0, now: now, countdown: false) }
+                    }
                 }
                 .padding(.vertical, 5)
             }
             .scrollIndicators(.automatic)
             .onAppear { proxy.scrollTo(NowLine.anchor, anchor: .center) }
         }
+    }
+
+    /// The first two timed events of the day, or its all-day events when nothing is timed.
+    private static func firstOf(_ day: [AgendaEvent]) -> [AgendaEvent] {
+        let timed = day.filter { !$0.isAllDay }
+        return Array((timed.isEmpty ? day : timed).prefix(2))
     }
 }
 
@@ -148,6 +160,27 @@ private struct NowLine: View {
                 .monospacedDigit()
                 .foregroundStyle(Theme.badge)
                 .padding(.leading, 8)
+        }
+        .padding(.horizontal, 15)
+        .frame(height: 28)
+    }
+}
+
+/// "Morgen · vrijdag 30 oktober", above the peek at tomorrow.
+private struct DayHeader: View {
+    let day: Date
+
+    var body: some View {
+        HStack(spacing: 8) {
+            Text("Morgen · " + day.formatted(
+                .dateTime.weekday(.wide).day().month(.wide).locale(Locale(identifier: "nl_NL"))))
+                .font(.system(size: 12, weight: .semibold))
+                .foregroundStyle(Theme.textSecondary)
+                .lineLimit(1)
+                .layoutPriority(1)
+            Rectangle()
+                .fill(Theme.textSecondary.opacity(0.25))
+                .frame(height: 1)
         }
         .padding(.horizontal, 15)
         .frame(height: 28)
