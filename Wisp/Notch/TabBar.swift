@@ -16,6 +16,9 @@ struct TabBar: View {
             if model.tab == .mail {
                 MailToolbar(store: .shared)
                     .padding(.trailing, 4)
+            } else if model.tab == .music {
+                MusicToolbar()
+                    .padding(.trailing, 10)
             }
             TabIconButton(symbol: "slider.vertical.3", label: "Instellingen", isActive: false) {
                 model.onOpenSettings()
