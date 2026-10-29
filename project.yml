@@ -63,6 +63,7 @@ targets:
         CFBundleShortVersionString: $(MARKETING_VERSION)
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         LSUIElement: true
+        NSAudioCaptureUsageDescription: "wisp analyseert live het geluid van wat er speelt voor het spectrum in de Muziek-tab. Er wordt niets opgenomen, opgeslagen of verstuurd."
         LSApplicationCategoryType: public.app-category.productivity
         NSHumanReadableCopyright: "Copyright © 2026 Ahmad Alasmi. All rights reserved."
     settings:
