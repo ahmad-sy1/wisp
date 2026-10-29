@@ -107,7 +107,7 @@ private struct Progress: View {
     }
 }
 
-/// Previous / next: a soft round highlight on hover, a bounce on click.
+/// Previous / next: a round glass key that lights up on hover, a bounce on click.
 private struct ControlButton: View {
     let symbol: String
     let action: () -> Void
@@ -124,7 +124,7 @@ private struct ControlButton: View {
                 .foregroundStyle(hovered ? Theme.textPrimary : Theme.textPrimary.opacity(0.8))
                 .symbolEffect(.bounce, value: taps)
                 .frame(width: 32, height: 32)
-                .background(Circle().fill(hovered ? Theme.activeTab : .clear))
+                .glass(in: Circle())
                 .contentShape(Circle())
         }
         .buttonStyle(PressableStyle())
@@ -133,7 +133,8 @@ private struct ControlButton: View {
     }
 }
 
-/// The white play / pause key: grows a little on hover, the icon morphs between states.
+/// The play / pause key: a slightly larger glass key that grows a little on hover;
+/// the icon morphs between states.
 private struct PlayPauseButton: View {
     let isPlaying: Bool
     let action: () -> Void
@@ -143,11 +144,11 @@ private struct PlayPauseButton: View {
         Button(action: action) {
             Image(systemName: isPlaying ? "pause.fill" : "play.fill")
                 .font(.system(size: 15, weight: .semibold))
-                .foregroundStyle(.black)
+                .foregroundStyle(.white)
                 .contentTransition(.symbolEffect(.replace))
                 .frame(width: 40, height: 34)
-                .background(RoundedRectangle(cornerRadius: 12, style: .continuous)
-                    .fill(.white.opacity(hovered ? 1 : 0.92)))
+                .glass(in: RoundedRectangle(cornerRadius: 12, style: .continuous),
+                       tint: .white.opacity(hovered ? 0.22 : 0.14))
                 .scaleEffect(hovered ? 1.06 : 1)
         }
         .buttonStyle(PressableStyle())
