@@ -63,6 +63,6 @@ The owner is Ahmad. Talk to him in Dutch; code, comments, commits and docs stay 
 - Don't copy code from `~/coucou`. That is an old fork of someone else's project (MIT code, "all rights reserved" name, icons and sounds), kept only as reference. wisp is written from scratch and credits only Ahmad.
 
 **This Mac**
-- Signing: `Developer ID Application: Ahmad Alasmi (VYYW6326D6)` is in the Keychain, and the notary profile `wisp-notary` is set up, so `./scripts/release.sh` works from a clean `main`. No release has been published yet.
+- Signing and notarization are set up in the Keychain (check with `security find-identity -v -p codesigning`), so `./scripts/release.sh` works from a clean `main`. No release has been published yet.
 - Claude Code hooks are installed and point at `/Applications/wisp.app/Contents/MacOS/wisp-hook`, so keep wisp installed there.
 - Gmail is connected; live spectrum access has been granted.
