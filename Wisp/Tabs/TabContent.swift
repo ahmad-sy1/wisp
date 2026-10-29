@@ -9,6 +9,7 @@ struct TabContent: View {
         switch tab {
         case .home: HomeTab(sessions: .shared)
         case .mail: MailTab(store: .shared, openSettings: openSettings)
+        case .agenda: AgendaTab(agenda: .shared, weather: .shared)
         case .music: MusicTab(player: .shared)
         // The other tabs get their real view in a later step; until then a calm placeholder.
         default:    PlaceholderTab(tab: tab)

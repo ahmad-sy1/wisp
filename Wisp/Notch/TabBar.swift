@@ -16,6 +16,9 @@ struct TabBar: View {
             if model.tab == .mail {
                 MailToolbar(store: .shared)
                     .padding(.trailing, 4)
+            } else if model.tab == .agenda {
+                AgendaToolbar()
+                    .padding(.trailing, 10)
             } else if model.tab == .music {
                 MusicToolbar()
                     .padding(.trailing, 10)
