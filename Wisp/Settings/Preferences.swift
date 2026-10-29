@@ -19,6 +19,11 @@ final class Preferences: ObservableObject {
         didSet { defaults.set(soundsEnabled, forKey: Key.sounds) }
     }
 
+    /// Look up song lyrics on LRCLIB (sends artist, title, album and duration only).
+    @Published var lyricsEnabled: Bool {
+        didSet { defaults.set(lyricsEnabled, forKey: Key.lyrics) }
+    }
+
     @Published private(set) var launchAtLogin: Bool
 
     private let defaults = UserDefaults.standard
@@ -27,12 +32,14 @@ final class Preferences: ObservableObject {
         static let accent = "accent"
         static let closeDelay = "closeDelay"
         static let sounds = "soundsEnabled"
+        static let lyrics = "lyricsEnabled"
     }
 
     private init() {
         accent = Accent(rawValue: defaults.string(forKey: Key.accent) ?? "") ?? .blue
         closeDelay = defaults.object(forKey: Key.closeDelay) as? Double ?? 0.6
         soundsEnabled = defaults.object(forKey: Key.sounds) as? Bool ?? true
+        lyricsEnabled = defaults.object(forKey: Key.lyrics) as? Bool ?? true
         launchAtLogin = SMAppService.mainApp.status == .enabled
     }
 
