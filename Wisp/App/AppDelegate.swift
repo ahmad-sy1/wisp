@@ -76,8 +76,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private func startMusic(notch: NotchController) {
         let player = NowPlaying.shared
         let spectrum = Spectrum.shared
-        let lyrics = Lyrics.shared
-        let prefs = Preferences.shared
 
         player.$isActive
             .removeDuplicates()
@@ -97,12 +95,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             .map { wings, phase in wings && phase == .collapsed }
             .removeDuplicates()
             .sink { visible in spectrum.setVisible(visible, by: "wings") }
-            .store(in: &subscriptions)
-
-        // Lyrics are looked up once per song.
-        player.$track
-            .combineLatest(prefs.$lyricsEnabled)
-            .sink { track, enabled in lyrics.update(for: track, enabled: enabled) }
             .store(in: &subscriptions)
 
         player.start()

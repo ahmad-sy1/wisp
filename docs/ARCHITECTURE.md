@@ -18,7 +18,7 @@ wisp.app
 | `Wisp/Tabs` | one view per tab (`HomeTab`, `MailTab`, `MusicTab`…) and the shared `Card` |
 | `Wisp/Claude` | hook server, Claude Code sessions, approvals, hooks installer, IDE detection, git branch |
 | `Wisp/Mail` | IMAP client and `MailStore` |
-| `Wisp/Music` | `NowPlaying` (bridge process), `AudioOutput` (device, quality, volume), `Spectrum`, `AudioTap` and `SpectrumAnalyzer` (live spectrum), `Lyrics` (LRCLIB) |
+| `Wisp/Music` | `NowPlaying` (bridge process), `AudioOutput` (device, quality, volume), `Spectrum`, `AudioTap` and `SpectrumAnalyzer` (live spectrum) |
 | `Wisp/Settings` | `Preferences` (UserDefaults) and the Settings sections |
 | `Wisp/Design` | `Theme`: colours, sizes, the accent options |
 | `Wisp/Support` | small helpers, such as `Keychain` |
@@ -94,24 +94,18 @@ playing app (Spotify, Brave helper…) ─► Core Audio process tap ─► priv
 
 - `AudioTap` creates a **process tap** (macOS 14.2+) on every audio process whose bundle id starts with the playing app's (a browser plays through helper processes such as `com.brave.Browser.helper`), falling back to a global tap. The tap is private and unmuted, wrapped in a private aggregate device, and read in an IOProc. macOS asks once for *System Audio Recording* permission (`NSAudioCaptureUsageDescription`).
 - `SpectrumAnalyzer` mixes to mono and runs a 2048-point FFT (Accelerate, Hann window) every 1024 samples, about 45 times a second at 48 kHz. It groups the bins into 24 log-spaced bands from 40 Hz to 16 kHz (−70…−10 dB mapped to 0…1, fast attack and slow release), computes the energy shares below 250 Hz, 250 Hz–4 kHz and above 4 kHz, and the RMS loudness in dBFS. All buffers are allocated up front; nothing is recorded or kept.
-- `Spectrum` runs the tap only while **someone shows it** (`setVisible(_:by:)`: the Music tab in Spectrum mode, the closed-notch wings), **music plays** and the user **allowed** it (board 9.6, or Settings → Muziek). Otherwise the tap and aggregate device are destroyed. It publishes at most 30 frames a second; the wings use 8 bands (the maximum of each group of three).
-
-### Lyrics
-
-`Lyrics` looks up time-synced lyrics on LRCLIB once per song: first the exact match (`/api/get` with artist, title, album and duration), then a search whose result must be within 3 s of the song's length. `SongQuery` cleans video titles first: "Artist - Title (Official Video)" by "ArtistVEVO" becomes *Artist* / *Title*. Results, including "not found", are cached as JSON in `~/Library/Application Support/wisp/lyrics/` (not-found entries are retried after a week; network errors are never cached).
-
-The right card of the Music tab shows **Tekst** when lyrics were found and **Spectrum** otherwise; a manual choice wins until the next song. The current line follows the playback position, checked four times a second while it is visible.
+- `Spectrum` runs the tap only while **someone shows it** (`setVisible(_:by:)`: the right card of the Music tab, the closed-notch wings), **music plays** and the user **allowed** it (board 9.6, or Settings → Muziek). Otherwise the tap and aggregate device are destroyed. It publishes bands at most 30 times a second and the text summary four times a second (`SpectrumLevels`); the wings use 8 bands (the maximum of each group of three).
 
 ## Settings and secrets
 
-- `Preferences` (UserDefaults): accent colour, close delay, sounds, lyrics on or off, open at login (`SMAppService`). `Spectrum` keeps the spectrum permission choice (`spectrumConsent`).
+- `Preferences` (UserDefaults): accent colour, close delay, sounds, open at login (`SMAppService`). `Spectrum` keeps the spectrum permission choice (`spectrumConsent`).
 - `Keychain`: generic passwords under the service `com.ahmadalasmi.wisp`, accessible after first unlock, this device only. Nothing secret is ever written to UserDefaults, to disk or to git.
 
 ## Performance rules
 
 - Closed: no timers, no animations, nothing redrawn. The only background work is event-driven (the hook socket, the IMAP IDLE connection, the Now Playing bridge).
-- Open: views that tick (the session timer, the music progress, the current lyric line) use `TimelineView(.periodic)` at one to four updates per second or once a minute, and only exist while their tab is visible.
-- The live spectrum and the music wings are the exception: they move while music plays, because that is what they are for. The audio tap only runs while one of them is on screen, and the FFT costs well under 1 % CPU.
+- Open: views that tick (the session timer, the music progress) use `TimelineView(.periodic)` at one update per second or once a minute, and only exist while their tab is visible.
+- The live spectrum and the music wings are the exception: they move while music plays, because that is what they are for. The audio tap only runs while one of them is on screen and music plays: about 3–4 % CPU for the Release build (the FFT itself is a fraction of that; the rest is drawing). Bars are drawn in a single `Canvas`, and only the views that draw them observe `SpectrumLevels`, so nothing else redraws 30 times a second. Measure in Release: a Debug build is several times slower.
 
 ## Signing
 

@@ -12,7 +12,9 @@ final class Spectrum: ObservableObject {
 
     enum Consent: String { case notAsked, allowed, declined }
 
-    @Published private(set) var frame = SpectrumFrame.silent
+    /// The fast-changing numbers live in `SpectrumLevels`, so only the views that
+    /// draw them redraw 30 times a second.
+    let levels = SpectrumLevels.shared
     @Published private(set) var isRunning = false
     @Published private(set) var consent: Consent {
         didSet { UserDefaults.standard.set(consent.rawValue, forKey: Self.consentKey) }
@@ -28,14 +30,6 @@ final class Spectrum: ObservableObject {
 
     private init() {
         consent = Consent(rawValue: UserDefaults.standard.string(forKey: Self.consentKey) ?? "") ?? .notAsked
-    }
-
-    /// The eight wider bands for the closed notch.
-    var miniBands: [Float] {
-        let group = Self.bandCount / Self.miniBandCount
-        return (0..<Self.miniBandCount).map { i in
-            frame.bands[(i * group)..<((i + 1) * group)].max() ?? 0
-        }
     }
 
     func allow() {
@@ -93,7 +87,7 @@ final class Spectrum: ObservableObject {
         guard isRunning else { return }
         tap.stop()
         isRunning = false
-        frame = .silent
+        levels.reset()
     }
 
     private func publish(_ new: SpectrumFrame) {
@@ -102,6 +96,39 @@ final class Spectrum: ObservableObject {
         let now = Date()
         guard now.timeIntervalSince(lastPublish) >= 1.0 / 30 else { return }
         lastPublish = now
-        frame = new
+        levels.update(new)
+    }
+}
+
+/// Live levels for drawing: bands at 30 frames a second, the text summary
+/// (bass / mid / treble, loudness) four times a second so numbers stay readable.
+@MainActor
+final class SpectrumLevels: ObservableObject {
+    static let shared = SpectrumLevels()
+
+    @Published private(set) var bands = SpectrumFrame.silent.bands
+    @Published private(set) var summary = SpectrumFrame.silent
+    private var lastSummary = Date.distantPast
+
+    /// The eight wider bands for the closed notch.
+    var miniBands: [Float] {
+        let group = Spectrum.bandCount / Spectrum.miniBandCount
+        return (0..<Spectrum.miniBandCount).map { i in
+            bands[(i * group)..<((i + 1) * group)].max() ?? 0
+        }
+    }
+
+    fileprivate func update(_ frame: SpectrumFrame) {
+        bands = frame.bands
+        let now = Date()
+        if now.timeIntervalSince(lastSummary) >= 0.25 {
+            lastSummary = now
+            summary = frame
+        }
+    }
+
+    fileprivate func reset() {
+        bands = SpectrumFrame.silent.bands
+        summary = .silent
     }
 }

@@ -15,7 +15,7 @@ struct NotchRootView: View {
             shape.fill(Theme.panel)
 
             if !model.isExpanded && model.musicWings, let track = player.track {
-                MusicWings(track: track, bands: spectrum.isRunning ? spectrum.miniBands : nil,
+                MusicWings(track: track, levels: spectrum.isRunning ? spectrum.levels : nil,
                            height: model.notchSize.height, wing: model.wingWidth)
                     .transition(.opacity)
             }
@@ -42,7 +42,7 @@ struct NotchRootView: View {
 /// spectrum of 8 bands right of it. Without spectrum access the bars are decorative.
 private struct MusicWings: View {
     let track: NowPlayingTrack
-    let bands: [Float]?
+    let levels: SpectrumLevels?
     let height: CGFloat
     let wing: CGFloat
 
@@ -54,8 +54,8 @@ private struct MusicWings: View {
                 .frame(width: wing)
             Spacer(minLength: 0)
             Group {
-                if let bands, track.isPlaying {
-                    MiniSpectrum(bands: bands)
+                if let levels, track.isPlaying {
+                    MiniSpectrum(levels: levels)
                 } else {
                     Equalizer(playing: track.isPlaying, barWidth: 2.5, spacing: 2)
                 }
@@ -67,21 +67,22 @@ private struct MusicWings: View {
     }
 }
 
-/// Eight thin green capsules, centred vertically like the board.
+/// Eight thin green capsules, centred vertically like the board, drawn in one Canvas pass.
 private struct MiniSpectrum: View {
-    let bands: [Float]
+    @ObservedObject var levels: SpectrumLevels
 
     var body: some View {
-        GeometryReader { geo in
-            HStack(spacing: 1.5) {
-                ForEach(bands.indices, id: \.self) { i in
-                    Capsule()
-                        .fill(Theme.ok)
-                        .frame(width: 2, height: max(3, geo.size.height * CGFloat(bands[i])))
-                }
+        let bands = levels.miniBands
+        Canvas { context, size in
+            let width: CGFloat = 2, gap: CGFloat = 1.5
+            let total = CGFloat(bands.count) * width + CGFloat(bands.count - 1) * gap
+            let x0 = (size.width - total) / 2
+            for (i, level) in bands.enumerated() {
+                let height = max(3, size.height * CGFloat(level))
+                let rect = CGRect(x: x0 + CGFloat(i) * (width + gap), y: (size.height - height) / 2,
+                                  width: width, height: height)
+                context.fill(Path(roundedRect: rect, cornerRadius: width / 2), with: .color(Theme.ok))
             }
-            .frame(width: geo.size.width, height: geo.size.height)
-            .animation(.linear(duration: 1.0 / 30), value: bands)
         }
     }
 }

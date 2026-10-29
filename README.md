@@ -29,7 +29,7 @@ The notch is the one bit of screen you never use. wisp turns it into a quiet das
 - **Claude Code, live**: every session in IntelliJ, Rider, VS Code or a terminal shows up under *Nu bezig* with its project, branch and what it is doing right now. *Open project* takes you straight back to the right IDE window.
 - **Approve from the notch**: when Claude Code asks for permission, the notch opens with the command and three buttons: *Toestaan*, *Weigeren*, *In terminal*. wisp never approves anything on its own; no click within 110 s means Claude asks in the terminal as usual.
 - **Mail**: your Gmail inbox, read-only, with an *Alles / Ongelezen* filter and an unread badge on the tab. New mail arrives by push (IMAP IDLE), not by polling. wisp never marks anything as read.
-- **Music**: whatever your Mac is playing (Spotify, Music, YouTube in the browser), with artwork, progress and glass controls. Next to it, **live lyrics** that follow the song (from LRCLIB) or, when there are none, a **live spectrum** of what you hear: 24 bands from bass to treble, the bass/mid/treble mix and the loudness. While music plays, the closed notch grows a little wing on each side: artwork on the left, a mini spectrum on the right.
+- **Music**: whatever your Mac is playing (Spotify, Music, YouTube in the browser), with artwork, progress and glass controls. Next to it, a **live spectrum** of what you hear: 24 bands from bass to treble, the bass/mid/treble mix and the loudness. While music plays, the closed notch grows a little wing on each side: artwork on the left, a mini spectrum on the right.
 - **Calm by default**: the closed notch draws nothing extra and uses 0 % CPU. No timers run while it is closed.
 - **Any Mac**: on a screen without a notch, wisp sits in a small bar at the top centre.
 - **Private by design**: no telemetry, no account. Passwords live in your macOS Keychain. wisp only talks to the services you connect.
@@ -79,7 +79,7 @@ Open **Settings**: click the notch, then the sliders icon on the right. On a ful
 | **Accent colour** | buttons, unread dots, highlights | Blue, green, orange or purple. |
 | **Open at login** | wisp is always there | One toggle. |
 
-Music needs no setup. The live spectrum asks once for macOS's *System Audio Recording* permission, and lyrics can be switched off under *Settings → Muziek*.
+Music needs no setup. The live spectrum asks once for macOS's *System Audio Recording* permission; *Settings → Muziek* turns it on or off.
 
 ## Things to try
 
@@ -91,7 +91,7 @@ Music needs no setup. The live spectrum asks once for macOS's *System Audio Reco
 | Let Claude Code run a command that needs permission | the notch opens with *Toestaan / Weigeren / In terminal* |
 | Click a mail | it opens in Gmail and stays unread in your inbox |
 | Press play in Spotify | the closed notch gets artwork and a mini spectrum |
-| Open the Music tab during a song | the lyrics run along line by line, or *Spectrum* shows what you hear |
+| Open the Music tab during a song | the spectrum moves with what you hear, from bass to treble |
 | Click the artwork in the Music tab | the app that is playing comes to the front |
 
 ## How it works
@@ -117,7 +117,7 @@ The details are in [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) and [`docs/INT
 
 ## Privacy
 
-wisp has no servers and no analytics. It connects to Gmail only after you add an account, and reads Now Playing and your Claude Code sessions locally on your Mac. For lyrics it sends the artist, title, album and length of the current song to LRCLIB (switchable). The live spectrum analyses the sound on your Mac and never records, stores or sends it. Tool output and file contents from Claude Code never reach the app: `wisp-hook` strips them before forwarding. Passwords are stored in the macOS Keychain and nowhere else.
+wisp has no servers and no analytics. It connects to Gmail only after you add an account, and reads Now Playing and your Claude Code sessions locally on your Mac. The live spectrum analyses the sound on your Mac and never records, stores or sends it. Tool output and file contents from Claude Code never reach the app: `wisp-hook` strips them before forwarding. Passwords are stored in the macOS Keychain and nowhere else.
 
 ## Credits
 

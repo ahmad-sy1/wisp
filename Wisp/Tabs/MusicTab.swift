@@ -1,7 +1,7 @@
 import SwiftUI
 
-/// Music: artwork, title, progress and controls on the left; live lyrics or a live
-/// spectrum on the right (boards 9.1–9.6). The output device sits in the tab bar.
+/// Music: artwork, title, progress and controls on the left; a live spectrum on the
+/// right (boards 9.2–9.6). The output device sits in the tab bar.
 struct MusicTab: View {
     @ObservedObject var player: NowPlaying
 
@@ -17,7 +17,7 @@ struct MusicTab: View {
             .frame(width: 331)
 
             // The card never grows past the fixed content height.
-            Card { SideCard(player: player, lyrics: .shared, spectrum: .shared) }
+            Card { SideCard(player: player, spectrum: .shared) }
                 .frame(maxHeight: .infinity)
                 .clipped()
         }

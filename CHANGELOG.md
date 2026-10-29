@@ -2,9 +2,9 @@
 
 ## Unreleased
 
-- Music: live lyrics from LRCLIB or a live spectrum of what plays (24 bands, bass/mid/treble mix, loudness), the output quality, a one-time permission card, and states for paused and nothing playing; a real mini spectrum on the closed notch, which stays greyed for a minute after a pause (boards 9.1–9.7)
+- Music: a live spectrum of what plays (24 bands, bass/mid/treble mix, loudness), the output quality, a one-time permission card, and states for paused and nothing playing; a real mini spectrum on the closed notch, which stays greyed for a minute after a pause (boards 9.2–9.7)
 - The playing app above the song title, and *Open Spotify* when nothing plays
-- Settings → Muziek: switches for lyrics and the live spectrum
+- Settings → Muziek: a switch for the live spectrum
 - Glass music controls with hover and press feedback (#9)
 - The hooks installer only touches wisp's own entries (#10)
 - Music tab: artwork, progress, controls, output device and volume; artwork and an equalizer on the closed notch while music plays; the music tile on Home (#7)
