@@ -43,6 +43,12 @@ The notch is the one bit of screen you never use. wisp turns it into a quiet das
 <td align="center"><sub>Home: the current Claude Code session</sub></td>
 <td align="center"><sub>Approving a command without leaving what you're doing</sub></td>
 </tr>
+<tr>
+<td colspan="2"><img src="docs/media/music.png" alt="The Music tab with the live spectrum"></td>
+</tr>
+<tr>
+<td colspan="2" align="center"><sub>Music: what's playing, and a live spectrum of what you hear</sub></td>
+</tr>
 </table>
 
 ### On the way
@@ -113,6 +119,7 @@ The details are in [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) and [`docs/INT
 | [DESIGN.md](docs/DESIGN.md) | colours, sizes, typography and the rules every screen follows |
 | [RELEASING.md](docs/RELEASING.md) | signing, notarization and publishing a release |
 | [CONTRIBUTING.md](CONTRIBUTING.md) | how to build, branch and open a pull request |
+| [ROADMAP.md](docs/ROADMAP.md) | what's planned next, and what was decided against |
 | [CHANGELOG.md](CHANGELOG.md) | what changed |
 
 ## Privacy
