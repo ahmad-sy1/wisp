@@ -13,6 +13,10 @@ struct TabBar: View {
                 }
             }
             Spacer(minLength: 0)
+            if model.tab == .mail {
+                MailToolbar(store: .shared)
+                    .padding(.trailing, 4)
+            }
             TabIconButton(symbol: "slider.vertical.3", label: "Instellingen", isActive: false) {
                 model.onOpenSettings()
             }

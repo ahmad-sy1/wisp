@@ -3,10 +3,12 @@ import SwiftUI
 /// Content area for the selected tab (fixed 150 pt high).
 struct TabContent: View {
     let tab: WispTab
+    var openSettings: () -> Void = {}
 
     var body: some View {
         switch tab {
         case .home: HomeTab(sessions: .shared)
+        case .mail: MailTab(store: .shared, openSettings: openSettings)
         // The other tabs get their real view in a later step; until then a calm placeholder.
         default:    PlaceholderTab(tab: tab)
         }
