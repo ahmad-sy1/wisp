@@ -42,6 +42,10 @@ struct SettingsView: View {
     @State private var stripeKey: String    = KeychainStore.shared.get("stripe-api-key")  ?? ""
     @State private var calcomKey: String    = KeychainStore.shared.get("calcom-api-key")  ?? ""
     @State private var notionKey: String    = KeychainStore.shared.get("notion-api-key")  ?? ""
+    @State private var whoopClientId: String     = KeychainStore.shared.get("whoop-client-id")     ?? ""
+    @State private var whoopClientSecret: String = KeychainStore.shared.get("whoop-client-secret") ?? ""
+    @State private var gmailAddress: String  = KeychainStore.shared.get(GmailService.addressKey)  ?? ""
+    @State private var gmailPassword: String = KeychainStore.shared.get(GmailService.passwordKey) ?? ""
 
     // Hotkey
     @State private var hotkeyFlags: UInt    = AppState.shared.hotkeyFlags
@@ -261,6 +265,80 @@ struct SettingsView: View {
                                 .textFieldStyle(.roundedBorder)
                         }
 
+                        // WHOOP
+                        VStack(alignment: .leading, spacing: 5) {
+                            HStack(spacing: 6) {
+                                Circle().fill(Color(hex: "#00D9B1")).frame(width: 8, height: 8)
+                                Text("WHOOP").font(.system(size: 12, weight: .semibold))
+                                Spacer()
+                                let connected = state.whoopLoaded || WhoopService.shared.isConnected
+                                Text(state.whoopError ?? (connected ? "Connected" : "Not connected"))
+                                    .font(.system(size: 11))
+                                    .foregroundColor(state.whoopError != nil ? .red : connected ? .green : .secondary)
+                            }
+                            TextField("Client ID", text: $whoopClientId)
+                                .textFieldStyle(.roundedBorder)
+                            SecureField("Client Secret", text: $whoopClientSecret)
+                                .textFieldStyle(.roundedBorder)
+                            HStack(spacing: 4) {
+                                Text("Redirect URI:").font(.system(size: 11)).foregroundColor(.secondary)
+                                Text(WhoopService.redirectURI)
+                                    .font(.system(size: 11, design: .monospaced))
+                                    .textSelection(.enabled)
+                            }
+                            HStack {
+                                Button("Connect WHOOP") {
+                                    saveKey("whoop-client-id",     value: whoopClientId.trimmingCharacters(in: .whitespacesAndNewlines))
+                                    saveKey("whoop-client-secret", value: whoopClientSecret.trimmingCharacters(in: .whitespacesAndNewlines))
+                                    WhoopService.shared.connect()
+                                }
+                                .disabled(whoopClientId.isEmpty || whoopClientSecret.isEmpty)
+                                if state.whoopLoaded || WhoopService.shared.isConnected {
+                                    Button("Disconnect") { WhoopService.shared.disconnect() }
+                                }
+                            }
+                        }
+
+                        // Gmail (IMAP + app password)
+                        VStack(alignment: .leading, spacing: 5) {
+                            HStack(spacing: 6) {
+                                Circle().fill(Color(hex: "#EA4335")).frame(width: 8, height: 8)
+                                Text("Gmail").font(.system(size: 12, weight: .semibold))
+                                Spacer()
+                                Text(state.gmailError ?? (state.gmailConnected ? "Connected" : "Not connected"))
+                                    .font(.system(size: 11))
+                                    .foregroundColor(state.gmailError != nil ? .red : state.gmailConnected ? .green : .secondary)
+                            }
+                            TextField("you@gmail.com", text: $gmailAddress)
+                                .textFieldStyle(.roundedBorder)
+                            SecureField("App password (16 letters)", text: $gmailPassword)
+                                .textFieldStyle(.roundedBorder)
+                            HStack(spacing: 4) {
+                                Text("Create one at").font(.system(size: 11)).foregroundColor(.secondary)
+                                Link("myaccount.google.com/apppasswords",
+                                     destination: URL(string: "https://myaccount.google.com/apppasswords")!)
+                                    .font(.system(size: 11))
+                            }
+                            HStack {
+                                Button("Connect Gmail") {
+                                    saveKey(GmailService.addressKey,
+                                            value: gmailAddress.trimmingCharacters(in: .whitespacesAndNewlines))
+                                    // Google shows the password in groups of four: spaces don't belong to it.
+                                    saveKey(GmailService.passwordKey,
+                                            value: gmailPassword.replacingOccurrences(of: " ", with: ""))
+                                    GmailService.shared.restart()
+                                }
+                                .disabled(gmailAddress.isEmpty || gmailPassword.isEmpty)
+                                if state.gmailConnected || GmailService.shared.isConfigured {
+                                    Button("Disconnect") {
+                                        GmailService.shared.disconnect()
+                                        gmailAddress = ""
+                                        gmailPassword = ""
+                                    }
+                                }
+                            }
+                        }
+
                         Button("Save integrations") { saveIntegrations() }
                             .buttonStyle(.borderedProminent)
                     }
@@ -309,7 +387,7 @@ struct SettingsView: View {
                 GroupBox("Active pills") {
                     VStack(alignment: .leading, spacing: 10) {
                         HStack {
-                            Text("VS Code")
+                            Text("IntelliJ")
                                 .font(.system(size: 12, weight: .semibold))
                             Circle().fill(Color(hex: "#F5F6F8")).frame(width: 8, height: 8)
                             Spacer()
@@ -462,7 +540,7 @@ struct SettingsView: View {
         do {
             try HookServer.shared.installAndWriteClaudeHooksAppStore(claudeURL: claudeURL)
             hookNeedsUpdate = false
-            statusMessage = "✓ Hooks installed — restart VS Code to activate."
+            statusMessage = "✓ Hooks installed — restart IntelliJ to activate."
         } catch {
             statusMessage = "❌ \(error.localizedDescription)"
         }
@@ -520,6 +598,8 @@ struct SettingsView: View {
         saveKey("stripe-api-key",  value: stripeKey)
         saveKey("calcom-api-key",  value: calcomKey)
         saveKey("notion-api-key",  value: notionKey)
+        saveKey("whoop-client-id",     value: whoopClientId.trimmingCharacters(in: .whitespacesAndNewlines))
+        saveKey("whoop-client-secret", value: whoopClientSecret.trimmingCharacters(in: .whitespacesAndNewlines))
         statusMessage = "✓ Integration keys saved."
     }
 

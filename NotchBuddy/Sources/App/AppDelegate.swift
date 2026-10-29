@@ -16,6 +16,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         setupIsland()
     }
 
+    /// OAuth redirects (coucou://whoop/callback).
+    func application(_ application: NSApplication, open urls: [URL]) {
+        for url in urls where url.scheme == "coucou" && url.host == "whoop" {
+            WhoopService.shared.handleCallback(url)
+        }
+    }
+
     // MARK: - Menu bar
 
     private func setupMenuBarItem() {
@@ -96,6 +103,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         StripePoller.shared.start()
         CalcomPoller.shared.start()
         NotionPoller.shared.start()
+        WhoopService.shared.start()
+        NowPlayingService.shared.start()
+        GmailService.shared.start()
         NotificationCenter.default.addObserver(self, selector: #selector(openSettings),
                                                name: .openFullSettings, object: nil)
     }

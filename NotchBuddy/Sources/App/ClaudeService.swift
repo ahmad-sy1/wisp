@@ -69,6 +69,9 @@ final class KeychainStore: @unchecked Sendable {
         "stripe-api-key",
         "calcom-api-key",
         "notion-api-key",
+        "whoop-client-id", "whoop-client-secret",
+        "whoop-access-token", "whoop-refresh-token", "whoop-token-expiry",
+        "gmail-address", "gmail-app-password",
     ]
 
     private init() {
@@ -150,6 +153,12 @@ final class ClaudeService {
     No markdown formatting (no **, no ##, no bullet dashes). Use plain text with line breaks.
     """
 
+    /// Appends the latest WHOOP numbers (when connected) so Mochi can answer health questions.
+    private var systemPromptWithContext: String {
+        guard let whoop = AppState.shared.whoop, !whoop.chatContext.isEmpty else { return systemPrompt }
+        return systemPrompt + "\n\nThe user's latest WHOOP data: \(whoop.chatContext)."
+    }
+
     private let webSearchTools: [[String: Any]] = [
         ["type": "web_search_20250305", "name": "web_search", "max_uses": 5]
     ]
@@ -187,7 +196,7 @@ final class ClaudeService {
             "model": model,
             "max_tokens": 4096,
             "tools": webSearchTools,
-            "system": systemPrompt,
+            "system": systemPromptWithContext,
             "messages": conversationMessages,
         ]
 

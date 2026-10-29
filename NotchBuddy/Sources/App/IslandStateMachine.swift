@@ -21,6 +21,12 @@ final class IslandStateMachine {
     var homeToPetitDelay: TimeInterval = 15
     /// petit → hidden delay (seconds). Override for debug.
     var petitToHiddenDelay: TimeInterval = 60
+    /// Delay before the island folds away once the mouse leaves it. A few frames of
+    /// grace so brushing the edge doesn't make it flicker.
+    var hoverOutDelay: TimeInterval = 0.12
+    /// True while something on screen must not vanish just because the mouse left
+    /// (pending approval, chat being typed, file drop…). Falls back to the long timers.
+    var keepOpen: () -> Bool = { false }
     /// coucou → petit delay after greeting animation ends (no hover). ~0.6s syncs with canvas collapse.
     var greetAutoCollapseDelay: TimeInterval = 0.6
     /// coucou → petit delay when mouse is hovering over the greeting.
@@ -42,8 +48,9 @@ final class IslandStateMachine {
     func mouseEntered() {
         switch state {
         case .hidden:
+            // Hover only makes the notch pop slightly (drawn by IslandRootView);
+            // a click opens it.
             cancelTimers()
-            transition(to: .petit)
         case .petit:
             petitHideWork?.cancel()
             petitHideWork = nil
@@ -62,9 +69,9 @@ final class IslandStateMachine {
         case .hidden:
             break
         case .petit:
-            schedulePetitHide()
+            schedulePetitHide(delay: keepOpen() ? petitToHiddenDelay : hoverOutDelay)
         case .home:
-            scheduleHomeCollapse()
+            if keepOpen() { scheduleHomeCollapse() } else { scheduleHomeHide() }
         case .coucou:
             // Interrupt greeting immediately → compact (overrides 10s auto-collapse)
             greetCollapseWork?.cancel(); greetCollapseWork = nil
@@ -124,19 +131,36 @@ final class IslandStateMachine {
         guard state == .hidden else { return }
         cancelTimers()
         transition(to: .petit)
-        schedulePetitHide()
+        schedulePetitHide(delay: petitToHiddenDelay)
     }
 
     // MARK: – Timers
 
-    private func schedulePetitHide() {
+    private func schedulePetitHide(delay: TimeInterval) {
         petitHideWork?.cancel()
         let item = DispatchWorkItem { [weak self] in
             guard let self, self.state == .petit else { return }
+            // Something became important meanwhile (alert): keep it, retry on the long timer.
+            if delay < self.petitToHiddenDelay && self.keepOpen() {
+                self.schedulePetitHide(delay: self.petitToHiddenDelay)
+                return
+            }
             self.transition(to: .hidden)
         }
         petitHideWork = item
-        DispatchQueue.main.asyncAfter(deadline: .now() + petitToHiddenDelay, execute: item)
+        DispatchQueue.main.asyncAfter(deadline: .now() + delay, execute: item)
+    }
+
+    /// Mouse left the expanded island: fold straight back into the notch.
+    private func scheduleHomeHide() {
+        homeCollapseWork?.cancel()
+        let item = DispatchWorkItem { [weak self] in
+            guard let self, self.state == .home else { return }
+            if self.keepOpen() { self.scheduleHomeCollapse(); return }
+            self.transition(to: .hidden)
+        }
+        homeCollapseWork = item
+        DispatchQueue.main.asyncAfter(deadline: .now() + hoverOutDelay, execute: item)
     }
 
     private func scheduleHomeCollapse() {

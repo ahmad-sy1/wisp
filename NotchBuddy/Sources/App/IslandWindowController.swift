@@ -153,6 +153,16 @@ final class IslandWindowController: NSWindowController {
     // MARK: - FSM wiring
 
     private func wireFSM() {
+        fsm.keepOpen = { [weak self] in
+            guard let self else { return false }
+            let s = self.state
+            if s.isPinned || s.pendingApproval != nil || self.inAttachDrag { return true }
+            guard s.mode == .expanded else { return false }
+            let sticky: Set<IslandView> = [.approval, .question, .prompt, .upload, .uploading,
+                                           .choose, .finished, .error, .confused, .greeting,
+                                           .mail, .note, .settings]
+            return sticky.contains(s.view)
+        }
         fsm.onTransition = { [weak self] from, to in
             guard let self else { return }
             switch to {
@@ -253,6 +263,7 @@ final class IslandWindowController: NSWindowController {
             fsm.mouseLeft()
         }
         wasInIsland = inIsland
+        if state.islandHovered != inIsland { state.islandHovered = inIsland }
 
         // Bot-head hover (love emote)
         let overBot = state.mode == .expanded && state.stateOverride == nil && isBotHit(local)
@@ -687,7 +698,11 @@ final class IslandWindowController: NSWindowController {
     // MARK: - Helpers
 
     func defaultView() -> IslandView {
-        state.tasks.isEmpty ? .empty : .overview
+        if state.mailBanner != nil {
+            GmailService.shared.dismissBanner()
+            return .inbox
+        }
+        return state.tasks.isEmpty ? .empty : .overview
     }
 
     func baseMode() -> IslandMode {
@@ -863,12 +878,19 @@ extension Notification.Name {
 
 // MARK: - islandSize (takes real notch dimensions)
 
+@MainActor
 func islandSize(mode: IslandMode, view: IslandView,
                 progress: Double = 0,
                 nw: CGFloat = IslandConst.notchWidth,
                 nh: CGFloat = IslandConst.notchHeight) -> (CGFloat, CGFloat) {
     switch mode {
-    case .hidden:   return (nw, nh)
+    case .hidden:
+        let s = AppState.shared
+        // New mail: a banner below the notch (sender + subject).
+        if s.mailBanner != nil { return (max(nw + 170, 360), nh + MailBannerLayout.height) }
+        // Music playing: a wing on each side of the notch (artwork | equalizer).
+        let wings = s.musicActive && s.hasNotch ? 2 * MusicWingsLayout.wingWidth(nh: nh) : 0
+        return (nw + wings, nh)
     case .compact:  return (nw + 160, nh)
     case .expanded:
         let layout = IslandConst.viewLayouts[view]!

@@ -6,7 +6,7 @@ import Combine
 extension AgentTask {
     /// All available integration pills. Claude is always active; others are opt-in (max 4).
     static let integrationAgents: [AgentTask] = [
-        AgentTask(id: "integration_claude",  name: "VS Code",   color: "#F5F6F8", state: .idle, steps: [], source: .claudeCode, isIntegration: true),
+        AgentTask(id: "integration_claude",  name: "IntelliJ",  color: "#F5F6F8", state: .idle, steps: [], source: .claudeCode, isIntegration: true),
         AgentTask(id: "integration_resend",  name: "Resend",    color: "#22C55E", state: .idle, steps: [], source: .n8n, isIntegration: true),
         AgentTask(id: "integration_n8n",     name: "n8n",       color: "#F29B38", state: .idle, steps: [], source: .n8n, isIntegration: true),
         AgentTask(id: "integration_vercel",  name: "Vercel",    color: "#7C5CFF", state: .idle, steps: [], source: .n8n, isIntegration: true),
@@ -14,12 +14,15 @@ extension AgentTask {
         AgentTask(id: "integration_notion",  name: "Notion",    color: "#8C8C8C", state: .idle, steps: [], source: .n8n, isIntegration: true),
         AgentTask(id: "integration_calcom",  name: "Cal.com",   color: "#C9956A", state: .idle, steps: [], source: .n8n, isIntegration: true),
         AgentTask(id: "integration_stripe",  name: "Stripe",    color: "#0570DE", state: .idle, steps: [], source: .n8n, isIntegration: true),
+        AgentTask(id: "integration_whoop",   name: "WHOOP",     color: "#00D9B1", state: .idle, steps: [], source: .n8n, isIntegration: true),
+        AgentTask(id: "integration_spotify", name: "Music",     color: "#1DB954", state: .idle, steps: [], source: .n8n, isIntegration: true),
     ]
 
     /// IDs that can be toggled (VS Code is always on and excluded from this list)
     static let toggleableIntegrationIds: [String] = [
         "integration_resend", "integration_n8n", "integration_vercel", "integration_github",
-        "integration_notion", "integration_calcom", "integration_stripe",
+        "integration_notion", "integration_calcom", "integration_stripe", "integration_whoop",
+        "integration_spotify",
     ]
 
 }
@@ -51,6 +54,7 @@ final class AppState: ObservableObject {
     @Published var isDraggingBot: Bool = false
 
     // Mouse tracking
+    @Published var islandHovered: Bool = false
     var mousePosition: CGPoint = .zero
     var lastMouseMove: Date = .now
     var lastActivity: Date = .now
@@ -175,6 +179,24 @@ final class AppState: ObservableObject {
     @Published var calcomBookings: [CalcomBooking] = []
     @Published var calcomLoaded: Bool = false
     @Published var calcomError: String? = nil
+
+    // WHOOP (populated by WhoopService)
+    @Published var whoop: WhoopSnapshot? = nil
+    @Published var whoopLoaded: Bool = false
+    @Published var whoopError: String? = nil
+
+    // Now playing, any app (populated by NowPlayingService)
+    @Published var nowPlaying: NowPlayingTrack? = nil
+    /// Music is playing: the closed notch grows small wings (artwork + equalizer).
+    @Published var musicActive: Bool = false
+
+    // Gmail (populated by GmailService)
+    @Published var gmailMessages: [GmailMessage] = []
+    @Published var gmailUnread: Int = 0
+    @Published var gmailConnected: Bool = false
+    @Published var gmailError: String? = nil
+    /// New mail: the closed notch grows into a small banner (sender + subject).
+    @Published var mailBanner: MailBanner? = nil
 
     // Notion (populated by NotionPoller)
     @Published var notionPages: [NotionPage] = []

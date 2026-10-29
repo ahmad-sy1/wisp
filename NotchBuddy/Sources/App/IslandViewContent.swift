@@ -25,6 +25,7 @@ struct IslandViewContent: View {
         case .note:      NoteView(state: state)
         case .settings:  SettingsIslandView(state: state)
         case .greeting:  EmptyView()  // GreetingCanvasView overlaid in IslandRootView
+        case .inbox:     InboxView(state: state)
         }
     }
 }
@@ -94,12 +95,13 @@ struct OverviewView: View {
                 }
 
                 // ↗ jump button — last in ZStack so it renders on top; hidden while any detail is open
-                if !showingN8nDetail {
+                let musicShowing = agent?.id == "integration_spotify" && state.nowPlaying != nil
+                if !showingN8nDetail && !musicShowing {
                     Button(action: { openAgentTarget(agent) }) {
                         Image(systemName: "arrow.up.right")
-                            .font(.system(size: 8, weight: .medium))
-                            .foregroundColor(Color(hex: "#5F646D"))
-                            .frame(width: 16, height: 16)
+                            .font(.system(size: 9, weight: .medium))
+                            .foregroundColor(Color(hex: "#8E939C"))
+                            .frame(width: 18, height: 18)
                             .background(Color.white.opacity(0.07))
                             .clipShape(Circle())
                     }
@@ -123,12 +125,7 @@ struct OverviewView: View {
         guard let task else { return }
         switch task.id {
         case "integration_claude":
-            let vscodeBundleId = "com.microsoft.VSCode"
-            if let app = NSWorkspace.shared.runningApplications.first(where: { $0.bundleIdentifier == vscodeBundleId }) {
-                app.activate(options: .activateIgnoringOtherApps)
-            } else {
-                NSWorkspace.shared.open(URL(fileURLWithPath: "/Applications/Visual Studio Code.app"))
-            }
+            IDELauncher.open(projectPath: nil)
         case "integration_resend":
             NSWorkspace.shared.open(URL(string: "https://resend.com/emails")!)
         case "integration_vercel":
@@ -145,6 +142,10 @@ struct OverviewView: View {
             NSWorkspace.shared.open(URL(string: "https://notion.so")!)
         case "integration_calcom":
             NSWorkspace.shared.open(URL(string: "https://app.cal.com/bookings")!)
+        case "integration_whoop":
+            NSWorkspace.shared.open(URL(string: "https://app.whoop.com")!)
+        case "integration_spotify":
+            NowPlayingService.shared.openSource()
         default:
             // Non-integration real tasks
             if task.source == .n8n {
@@ -294,14 +295,9 @@ struct FinishedView: View {
                     .font(.system(size: 15, weight: .semibold))
                 HStack(spacing: 8) {
                     #if !APPSTORE
-                    PrimaryButton("Open terminal") {
-                        let terminalBundleIds = ["com.apple.Terminal", "com.googlecode.iterm2", "net.kovidgoyal.kitty", "com.mitchellh.ghostty"]
-                        let activated = terminalBundleIds.compactMap { id in
-                            NSWorkspace.shared.runningApplications.first { $0.bundleIdentifier == id }
-                        }.first.map { $0.activate(options: .activateIgnoringOtherApps) }
-                        if activated == nil {
-                            NSWorkspace.shared.open(URL(fileURLWithPath: "/System/Applications/Utilities/Terminal.app"))
-                        }
+                    PrimaryButton("Open IntelliJ") {
+                        // Claude Code runs in IntelliJ's terminal: bring that project window forward.
+                        IDELauncher.open(projectPath: state.focusTask?.sessionCwd)
                         NotificationCenter.default.post(name: .islandCollapse, object: nil)
                     }
                     #endif
@@ -985,6 +981,8 @@ struct IntegrationCardView: View {
         case "integration_stripe":  return KeychainStore.shared.get("stripe-api-key") != nil
         case "integration_notion":  return KeychainStore.shared.get("notion-api-key") != nil
         case "integration_calcom":  return KeychainStore.shared.get("calcom-api-key") != nil
+        case "integration_whoop":   return KeychainStore.shared.get("whoop-refresh-token") != nil
+        case "integration_spotify": return true
         default: return false
         }
     }
@@ -1001,6 +999,7 @@ struct IntegrationCardView: View {
         case "integration_stripe":  return URL(string: "https://dashboard.stripe.com/payments")
         case "integration_notion":  return URL(string: "https://notion.so")
         case "integration_calcom":  return URL(string: "https://app.cal.com/bookings")
+        case "integration_whoop":   return URL(string: "https://app.whoop.com")
         default: return nil
         }
     }
@@ -1041,6 +1040,16 @@ struct IntegrationCardView: View {
         task.id == "integration_calcom" && appState.calcomLoaded
     }
 
+    // Music: show the player whenever something is loaded (any app)
+    private var musicHasData: Bool {
+        task.id == "integration_spotify" && appState.nowPlaying != nil
+    }
+
+    // WHOOP: show today's numbers as soon as first poll completes
+    private var whoopHasData: Bool {
+        task.id == "integration_whoop" && appState.whoopLoaded && appState.whoop != nil
+    }
+
     // Notion: show pages as soon as first poll completes
     private var notionHasData: Bool {
         task.id == "integration_notion" && appState.notionLoaded
@@ -1076,6 +1085,12 @@ struct IntegrationCardView: View {
                 .transition(.opacity)
         } else if notionHasData {
             NotionCardView()
+                .transition(.opacity)
+        } else if musicHasData {
+            NowPlayingCardView(track: appState.nowPlaying!)
+                .transition(.opacity)
+        } else if whoopHasData {
+            WhoopCardView(snapshot: appState.whoop!)
                 .transition(.opacity)
         } else if vsCodeSessionActive {
             // Active session view — reuse overview layout
@@ -1120,7 +1135,7 @@ struct IntegrationCardView: View {
                     Circle()
                         .fill(Color(hex: task.color))
                         .frame(width: 7, height: 7)
-                    Text(task.id == "integration_claude" ? "VS Code" : task.name)
+                    Text(task.id == "integration_claude" ? "IntelliJ" : task.name)
                         .font(.system(size: 12, weight: .semibold))
                         .foregroundColor(Color(hex: "#F5F6F8"))
                     Text("Integration")
@@ -1135,6 +1150,7 @@ struct IntegrationCardView: View {
                 HStack(spacing: 5) {
                     let stripeErr = task.id == "integration_stripe" ? appState.stripeError
                                   : task.id == "integration_calcom"  ? appState.calcomError
+                                  : task.id == "integration_whoop"   ? appState.whoopError
                                   : nil
                     let dot = stripeErr != nil ? Color(hex: "#F4505E")
                             : isConfigured    ? Color(hex: "#22C55E")
@@ -1150,7 +1166,7 @@ struct IntegrationCardView: View {
 
                 HStack(spacing: 8) {
                     if task.id == "integration_claude" {
-                        Button("Open Visual Studio Code") { openVSCode() }
+                        Button("Open IntelliJ IDEA") { IDELauncher.open(projectPath: task.sessionCwd) }
                             .font(.system(size: 11, weight: .medium))
                             .foregroundColor(Color(hex: task.color).opacity(0.7))
                             .buttonStyle(.plain)
@@ -1191,6 +1207,12 @@ struct IntegrationCardView: View {
                                 .buttonStyle(.plain)
                         }
                     }
+                    if task.id == "integration_whoop" && isConfigured {
+                        Button("Refresh") { WhoopService.shared.pollNow() }
+                            .font(.system(size: 11, weight: .medium))
+                            .foregroundColor(Color(hex: "#00D9B1").opacity(0.85))
+                            .buttonStyle(.plain)
+                    }
                     if task.id == "integration_calcom" && isConfigured {
                         Button("Refresh") { Task { @MainActor in CalcomPoller.shared.pollNow() } }
                             .font(.system(size: 11, weight: .medium))
@@ -1214,13 +1236,18 @@ struct IntegrationCardView: View {
             .transition(.opacity)
         }
     }
+}
 
-    private func openVSCode() {
-        let ids = ["com.microsoft.VSCode", "com.microsoft.VSCodeInsiders", "com.vscodium.codium"]
+/// Opens IntelliJ IDEA (Ultimate or Community), on the session's project when known.
+@MainActor
+enum IDELauncher {
+    static let ids = ["com.jetbrains.intellij", "com.jetbrains.intellij.ce"]
+
+    static func open(projectPath: String?) {
         let appURL = ids.compactMap { NSWorkspace.shared.urlForApplication(withBundleIdentifier: $0) }.first
 
-        // If we have a project folder, open it directly in VS Code
-        if let cwd = task.sessionCwd, !cwd.isEmpty, let appURL = appURL {
+        // If we have a project folder, open it directly in IntelliJ
+        if let cwd = projectPath, !cwd.isEmpty, let appURL = appURL {
             NSWorkspace.shared.open(
                 [URL(fileURLWithPath: cwd)],
                 withApplicationAt: appURL,
@@ -1562,6 +1589,270 @@ private struct StatRow: View {
                 .monospacedDigit()
         }
         .frame(maxWidth: .infinity)
+    }
+}
+
+// MARK: - Now Playing Card View
+//
+// Design 1b (Claude Design, "Notch Music"): same anatomy as the other cards.
+// Mochi (drawn by BotPlacement) takes the artwork colour; header with the
+// equalizer top-right, small artwork beside the title, progress + controls below.
+
+struct NowPlayingCardView: View {
+    let track: NowPlayingTrack
+
+    private var accent: Color { Color(nsColor: track.tint ?? .white) }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            HStack(spacing: 6) {
+                Circle()
+                    .fill(Color(hex: "#22C55E"))
+                    .frame(width: 7, height: 7)
+                Text("Music")
+                    .font(.system(size: 12, weight: .semibold))
+                    .foregroundColor(Color(hex: "#F5F6F8"))
+                Text("\(track.sourceName) · \(track.isPlaying ? "Now playing" : "Paused")")
+                    .font(.system(size: 11))
+                    .foregroundColor(Color(hex: "#6B7079"))
+                    .lineLimit(1).truncationMode(.tail)
+                Spacer(minLength: 2)
+                MusicEqualizer(color: accent, playing: track.isPlaying,
+                               barWidth: 2, spacing: 1.5)
+                    .frame(height: 10)
+            }
+            .frame(height: 16)
+
+            HStack(spacing: 9) {
+                Button(action: { NowPlayingService.shared.openSource() }) {
+                    MusicArtwork(track: track, cornerRadius: 8, iconSize: 12)
+                        .frame(width: 34, height: 34)
+                        .opacity(track.isPlaying ? 1 : 0.55)
+                }
+                .buttonStyle(.plain)
+
+                VStack(alignment: .leading, spacing: 0) {
+                    Text(track.title)
+                        .font(.system(size: 13, weight: .semibold))
+                        .foregroundColor(Color(hex: "#F5F6F8"))
+                        .lineLimit(1).truncationMode(.tail)
+                        .frame(height: 16)
+                    if !track.artist.isEmpty {
+                        Text(track.artist)
+                            .font(.system(size: 11))
+                            .foregroundColor(Color(hex: "#8E939C"))
+                            .lineLimit(1).truncationMode(.tail)
+                            .frame(height: 15)
+                    }
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+            }
+            .padding(.top, 7)
+
+            Spacer(minLength: 0)
+
+            HStack(spacing: 10) {
+                MusicProgressBar(track: track)
+                HStack(spacing: 2) {
+                    MusicControl(symbol: "backward.fill", size: 10, color: "#8E939C", box: 22) {
+                        NowPlayingService.shared.previousTrack()
+                    }
+                    MusicControl(symbol: track.isPlaying ? "pause.fill" : "play.fill", size: 12,
+                                 color: "#F5F6F8", box: 22) {
+                        NowPlayingService.shared.playPause()
+                    }
+                    MusicControl(symbol: "forward.fill", size: 10, color: "#8E939C", box: 22) {
+                        NowPlayingService.shared.nextTrack()
+                    }
+                }
+            }
+        }
+        .padding(.top, 9)
+        .padding(.bottom, 6)
+        .padding(.leading, 108)
+        .padding(.trailing, 12)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+    }
+}
+
+/// 3 pt track with the elapsed part filled. Ticks once a second, only while playing.
+private struct MusicProgressBar: View {
+    let track: NowPlayingTrack
+
+    var body: some View {
+        TimelineView(.periodic(from: .now, by: 1)) { tl in
+            let p = track.progress(at: tl.date)
+            GeometryReader { geo in
+                ZStack(alignment: .leading) {
+                    Capsule().fill(Color.white.opacity(0.12))
+                    Capsule().fill(Color(hex: "#F5F6F8"))
+                        .frame(width: geo.size.width * p)
+                        .animation(.linear(duration: 1), value: p)
+                }
+            }
+            .frame(height: 3)
+        }
+        .opacity(track.duration > 0 ? 1 : 0)
+    }
+}
+
+/// Artwork (cropped to a square: YouTube thumbnails are 16:9), else the source app's icon.
+struct MusicArtwork: View {
+    let track: NowPlayingTrack
+    let cornerRadius: CGFloat
+    let iconSize: CGFloat
+
+    var body: some View {
+        Group {
+            if let art = track.artwork {
+                Image(nsImage: art).resizable().aspectRatio(contentMode: .fill)
+            } else if let icon = track.sourceIcon {
+                Image(nsImage: icon).resizable().aspectRatio(contentMode: .fit)
+            } else {
+                Color(hex: "#1F2226")
+                    .overlay(Image(systemName: "music.note")
+                        .font(.system(size: iconSize))
+                        .foregroundColor(Color(hex: "#6B7079")))
+            }
+        }
+        .clipShape(RoundedRectangle(cornerRadius: cornerRadius, style: .continuous))
+    }
+}
+
+/// Four bouncing bars (design: scaleY 0.3 ↔ 1, staggered). Paused, they settle into dots.
+struct MusicEqualizer: View {
+    let color: Color
+    let playing: Bool
+    var barWidth: CGFloat = 2.5
+    var spacing: CGFloat = 2
+
+    private static let periods: [Double] = [0.9, 0.7, 1.1, 0.8]
+
+    var body: some View {
+        GeometryReader { geo in
+            TimelineView(.animation(minimumInterval: 1.0 / 30, paused: !playing)) { tl in
+                let t = tl.date.timeIntervalSinceReferenceDate
+                HStack(alignment: .center, spacing: spacing) {
+                    ForEach(0..<Self.periods.count, id: \.self) { i in
+                        let phase = (t - Double(i) * 0.13) / Self.periods[i] * 2 * .pi
+                        let scale = playing ? 0.3 + 0.7 * (0.5 - 0.5 * cos(phase)) : 0
+                        Capsule()
+                            .fill(color)
+                            .frame(width: barWidth,
+                                   height: max(barWidth, geo.size.height * CGFloat(scale)))
+                    }
+                }
+                .frame(height: geo.size.height)
+                .animation(.easeInOut(duration: 0.4), value: playing)
+            }
+        }
+        .frame(width: barWidth * 4 + spacing * 3)
+    }
+}
+
+private struct MusicControl: View {
+    let symbol: String
+    let size: CGFloat
+    let color: String
+    let box: CGFloat
+    let action: () -> Void
+    @State private var hovering = false
+
+    var body: some View {
+        Button(action: action) {
+            Image(systemName: symbol)
+                .font(.system(size: size))
+                .foregroundColor(hovering ? .white : Color(hex: color))
+                .frame(width: box, height: box)
+                .background(Circle().fill(Color.white.opacity(hovering ? 0.08 : 0)))
+                .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .onHover { hovering = $0 }
+    }
+}
+
+// MARK: - WHOOP Card View
+//
+// Design 3a (Claude Design, "Notch Music"): header (dot · name · context; the ↗ overlay
+// sits top-right), three label/value rows, and the 3 pt bottom bar showing recovery.
+
+struct WhoopCardView: View {
+    let snapshot: WhoopSnapshot
+
+    private var hrvLine: String {
+        "\(snapshot.hrv.map { "\(Int($0.rounded())) ms" } ?? "—") · \(snapshot.restingHR.map { "\($0)" } ?? "—")"
+    }
+
+    var body: some View {
+        let recoveryColor = Color(hex: snapshot.recoveryColor)
+        VStack(alignment: .leading, spacing: 0) {
+            HStack(spacing: 6) {
+                Circle()
+                    .fill(Color(hex: "#00D9B1"))
+                    .frame(width: 7, height: 7)
+                Text("WHOOP")
+                    .font(.system(size: 12, weight: .semibold))
+                    .foregroundColor(Color(hex: "#F5F6F8"))
+                Text("Today")
+                    .font(.system(size: 11))
+                    .foregroundColor(Color(hex: "#6B7079"))
+                Spacer(minLength: 2)
+            }
+            .frame(height: 16)
+            .padding(.trailing, 24)   // room for the ↗ overlay
+
+            Grid(alignment: .leading, horizontalSpacing: 8, verticalSpacing: 1) {
+                WhoopRow(label: "Strain", value: snapshot.strain.map { String(format: "%.1f", $0) } ?? "—")
+                WhoopRow(label: "Sleep", value: snapshot.sleepLabel)
+                WhoopRow(label: "HRV · RHR", value: hrvLine)
+            }
+            .padding(.top, 6)
+
+            Spacer(minLength: 0)
+
+            HStack(spacing: 8) {
+                GeometryReader { geo in
+                    ZStack(alignment: .leading) {
+                        Capsule().fill(Color.white.opacity(0.12))
+                        Capsule().fill(recoveryColor)
+                            .frame(width: geo.size.width * CGFloat(snapshot.recovery ?? 0) / 100)
+                    }
+                }
+                .frame(height: 3)
+                Text(snapshot.recovery.map { "\($0)%" } ?? "—")
+                    .font(.system(size: 10, weight: .semibold))
+                    .foregroundColor(recoveryColor)
+                    .monospacedDigit()
+                    .frame(width: 30, alignment: .trailing)
+            }
+            .frame(height: 12)
+        }
+        .padding(.top, 9)
+        .padding(.bottom, 8)
+        .padding(.leading, 108)
+        .padding(.trailing, 12)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+    }
+}
+
+private struct WhoopRow: View {
+    let label: String
+    let value: String
+
+    var body: some View {
+        GridRow {
+            Text(label)
+                .foregroundColor(Color(hex: "#8E939C"))
+            Text(value)
+                .fontWeight(.semibold)
+                .foregroundColor(Color(hex: "#F5F6F8"))
+                .monospacedDigit()
+                .lineLimit(1)
+                .frame(maxWidth: .infinity, alignment: .trailing)
+        }
+        .font(.system(size: 11))
+        .frame(height: 14)
     }
 }
 
@@ -2283,9 +2574,9 @@ struct AgentPill: View {
     let onTap: () -> Void
     @State private var isHovered = false
 
-    // VS Code pill always shows "VS Code" label regardless of active project name
+    // IDE pill always shows "IntelliJ" label regardless of active project name
     private var displayName: String {
-        task.id == "integration_claude" ? "VS Code" : task.name
+        task.id == "integration_claude" ? "IntelliJ" : task.name
     }
 
     var body: some View {

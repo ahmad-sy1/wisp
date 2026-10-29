@@ -1,3 +1,5 @@
+> Gebaseerd op [Coucou](https://github.com/Louis-CFM/coucou) van Louis Raillé (MIT-licentie).
+
 <div align="center">
 
 <img src="NotchBuddy/Assets.xcassets/AppIcon.appiconset/icon_256x256.png" width="96" alt="Coucou icon">

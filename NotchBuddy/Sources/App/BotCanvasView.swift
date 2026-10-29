@@ -28,9 +28,14 @@ struct BotCanvasView: View {
                 }
                 // Integration pills have a fixed brand color → use it as bodyColor.
                 // Claude Code tasks use state-based gradient (working=blue, thinking=purple, etc.).
-                engine.bodyColor = (state.focusTask?.isIntegration == true)
-                    ? cgColorFromHex(state.focusTask!.color)
-                    : nil
+                // Music takes the artwork colour (design 1b).
+                if state.focusTask?.id == "integration_spotify", let tint = state.nowPlaying?.tint {
+                    engine.bodyColor = tint.cgColor
+                } else {
+                    engine.bodyColor = (state.focusTask?.isIntegration == true)
+                        ? cgColorFromHex(state.focusTask!.color)
+                        : nil
+                }
                 engine.update(dt: dt)
                 engine.drawHandsBehind(context: context, size: size)
                 engine.draw(context: context, size: size)

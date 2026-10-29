@@ -68,6 +68,25 @@ targets:
         NSSupportsAutomaticGraphicsSwitching: YES
         NSAppleEventsUsageDescription: "Pour sauter au terminal et envoyer des mails."
         NSAccessibilityUsageDescription: "Pour lire le titre de la fenêtre active et l'attacher comme contexte."
+        CFBundleURLTypes:
+          - CFBundleURLName: fr.louisraille.NotchBuddy.oauth
+            CFBundleURLSchemes: [coucou]
+    postCompileScripts:
+      - name: Build NowPlayingBridge
+        # Loaded by /usr/bin/perl at runtime (see NowPlayingService.swift): MediaRemote
+        # only answers Apple-signed processes since macOS 15.4.
+        script: |
+          set -e
+          OUT="${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/libNowPlayingBridge.dylib"
+          mkdir -p "$(dirname "$OUT")"
+          xcrun clang -dynamiclib -fobjc-arc -O2 -arch arm64 -arch x86_64 \
+            -mmacosx-version-min=${MACOSX_DEPLOYMENT_TARGET} -framework Foundation \
+            "${SRCROOT}/Helpers/NowPlayingBridge.m" -o "$OUT"
+          codesign --force --sign "${EXPANDED_CODE_SIGN_IDENTITY:--}" "$OUT"
+        inputFiles:
+          - $(SRCROOT)/Helpers/NowPlayingBridge.m
+        outputFiles:
+          - $(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/libNowPlayingBridge.dylib
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: fr.louisraille.NotchBuddy

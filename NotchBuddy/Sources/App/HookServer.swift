@@ -151,6 +151,20 @@ final class HookServer: @unchecked Sendable {
     }
 
 
+    /// Claude Code sessions shown on the IDE pill: IntelliJ (any JetBrains IDE) or VS Code.
+    /// A JetBrains terminal inherits `__CFBundleIdentifier=com.jetbrains.*` from the IDE.
+    /// The user is already looking at IntelliJ (any JetBrains IDE, on any screen):
+    /// the notch stays quiet and Claude Code asks in the IDE terminal as usual.
+    @MainActor static var ideIsFrontmost: Bool {
+        NSWorkspace.shared.frontmostApplication?.bundleIdentifier?.hasPrefix("com.jetbrains.") == true
+    }
+
+    nonisolated static func isIDESession(termProgram: String, bundleId: String) -> Bool {
+        let t = termProgram.lowercased(), b = bundleId.lowercased()
+        return b.hasPrefix("com.jetbrains.") || t.contains("jetbrains")
+            || t.contains("vscode") || b.contains("vscode")
+    }
+
     // MARK: - Event → AppState
     // Claude Code events route to the permanent "integration_claude" task.
     // Events tagged with a valid coucou_agent route to a dynamic "integration_<agent>" task.
@@ -175,10 +189,9 @@ final class HookServer: @unchecked Sendable {
 
         let termProgram = payload["term_program"] as? String ?? ""
         let bundleId    = payload["bundle_id"]    as? String ?? ""
-        let isVSCode = termProgram.lowercased().contains("vscode") ||
-                       bundleId.lowercased().contains("vscode")
-        // External agents bypass the VS Code filter (their relay runs in any terminal).
-        guard isExternalAgent || isVSCode else {
+        let isIDE = Self.isIDESession(termProgram: termProgram, bundleId: bundleId)
+        // External agents bypass the IDE filter (their relay runs in any terminal).
+        guard isExternalAgent || isIDE else {
             nbLog("Ignored \(name) from \(termProgram.isEmpty ? bundleId : termProgram) (\(projectName))")
             return
         }
@@ -320,6 +333,8 @@ final class HookServer: @unchecked Sendable {
     @MainActor
     private func expandIfNeeded(to view: IslandView) {
         let state = AppState.shared
+        // Mochi's state in the pill still updates; only the pop-out is skipped.
+        if Self.ideIsFrontmost { return }
         let isAlert: Bool
         switch view {
         case .approval, .finished, .error, .confused: isAlert = true
@@ -363,9 +378,16 @@ final class HookServer: @unchecked Sendable {
 
         let termProgram = payload["term_program"] as? String ?? ""
         let bundleId    = payload["bundle_id"]    as? String ?? ""
-        let isVSCode = termProgram.lowercased().contains("vscode") ||
-                       bundleId.lowercased().contains("vscode")
-        guard isVSCode else {
+        guard Self.isIDESession(termProgram: termProgram, bundleId: bundleId) else {
+            Task.detached { [weak self] in
+                self?.sendLine(fd: fd, text: #"{"permissionDecision":"ask"}"#)
+                close(fd)
+            }
+            return
+        }
+
+        // IntelliJ in front: don't hold the request for the notch, let the terminal prompt appear.
+        if Self.ideIsFrontmost {
             Task.detached { [weak self] in
                 self?.sendLine(fd: fd, text: #"{"permissionDecision":"ask"}"#)
                 close(fd)
@@ -470,7 +492,7 @@ final class HookServer: @unchecked Sendable {
         guard let idx = state.tasks.firstIndex(where: { $0.id == "integration_claude" }) else { return }
         state.tasks[idx].steps = []
         state.tasks[idx].stepIndex = 0
-        state.tasks[idx].name = "VS Code"
+        state.tasks[idx].name = "IntelliJ"
         state.tasks[idx].pillBadge = nil
     }
 

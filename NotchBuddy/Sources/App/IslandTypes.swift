@@ -12,6 +12,7 @@ enum IslandView: String, CaseIterable {
     case overview, empty, approval, question, error, finished
     case confused, upload, uploading, choose, mail, prompt
     case searching, result, note, settings, greeting
+    case inbox
 }
 
 // MARK: - Bot State
@@ -106,6 +107,7 @@ enum IslandConst {
         .result:    ViewLayout(height: 160, botX: 52,  botY: nil, botDiameter: 44, agentMode: .column),
         .note:      ViewLayout(height: 160, botX: 60,  botY: nil, botDiameter: 50, agentMode: .column),
         .settings:  ViewLayout(height: 160, botX: 54,  botY: nil, botDiameter: 46, agentMode: .none),
+        .inbox:     ViewLayout(height: 214, botX: 50,  botY: 84,  botDiameter: 40, agentMode: .none),
         // Greeting: bot drawn by GreetingCanvasView; no BotPlacement needed
         .greeting:  ViewLayout(height: 150, botX: 320, botY: 90,  botDiameter: 0,  agentMode: .none),
     ]
@@ -140,6 +142,8 @@ enum IslandConst {
         .init(id: "integration_notion",  name: "Notion",  color: "#8C8C8C"),
         .init(id: "integration_calcom",  name: "Cal.com", color: "#C9956A"),
         .init(id: "integration_stripe",  name: "Stripe",  color: "#0570DE"),
+        .init(id: "integration_whoop",   name: "WHOOP",   color: "#00D9B1"),
+        .init(id: "integration_spotify", name: "Music",   color: "#1DB954"),
     ]
 
     /// Returns the fixed project color for a display name, or a stable fallback.

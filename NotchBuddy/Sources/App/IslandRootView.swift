@@ -29,8 +29,21 @@ struct IslandContainer: View {
     @State private var islandTopRadius: CGFloat = 0
     @State private var greetNotif: Bool = false
 
-    private let openSpring = Animation.spring(response: 0.5, dampingFraction: 0.72)
-    private let closeEase  = Animation.timingCurve(0.45, 0, 0.2, 1, duration: 0.34)
+    private let openSpring = Animation.spring(response: 0.42, dampingFraction: 0.7)
+    private let closeEase  = Animation.timingCurve(0.4, 0, 0.2, 1, duration: 0.26)
+
+    /// Hover: the resting island swells a little (wider and thicker) and stays that way
+    /// while the mouse is on it; it settles back when the mouse leaves.
+    private let hoverGrow = CGSize(width: 18, height: 7)
+    private let hoverInSpring  = Animation.spring(response: 0.3, dampingFraction: 0.58)
+    private let hoverOutSpring = Animation.spring(response: 0.28, dampingFraction: 0.9)
+
+    private func restingSize(_ mode: IslandMode) -> (CGFloat, CGFloat) {
+        let (w, h) = islandSize(mode: mode, view: state.view, progress: state.uploadProgress,
+                                nw: state.notchWidth, nh: state.notchHeight)
+        guard mode != .expanded, state.islandHovered else { return (w, h) }
+        return (w + hoverGrow.width, h + hoverGrow.height)
+    }
 
     private var chatPromptHeight: CGFloat {
         let base: CGFloat = 240
@@ -106,12 +119,25 @@ struct IslandContainer: View {
 
             CountdownBar(state: state, islandW: islandWidth)
 
+            if state.mode == .hidden, let banner = state.mailBanner {
+                MailBannerView(banner: banner, notchHeight: state.notchHeight)
+                    .frame(width: islandWidth, height: islandHeight)
+                    .transition(.opacity)
+                    .allowsHitTesting(false)
+            } else if state.mode == .hidden && state.musicActive && state.hasNotch,
+               let track = state.nowPlaying {
+                MusicWingsView(track: track, notchHeight: state.notchHeight, state: state)
+                    .frame(width: islandWidth, height: islandHeight)
+                    .transition(.opacity)
+                    .allowsHitTesting(false)
+            }
+
             Group {
                 if state.mode == .compact {
                     CompactMiniGrid(state: state)
                         .scaleEffect(IslandRestingLayout(width: islandWidth, height: islandHeight).miniGridScale)
                         .position(x: islandWidth - 40, y: islandHeight / 2)
-                        .transition(.opacity)
+                        .transition(.opacity.combined(with: .scale(scale: 0.6)))
                 }
             }
             .animation(.easeInOut(duration: 0.25), value: state.mode == .compact)
@@ -120,9 +146,7 @@ struct IslandContainer: View {
         .onChange(of: state.mode) { oldMode, newMode in
             let shrinking = modeOrder(newMode) < modeOrder(oldMode)
             let anim = shrinking ? closeEase : openSpring
-            let (w, h) = islandSize(mode: newMode, view: state.view,
-                                    progress: state.uploadProgress,
-                                    nw: state.notchWidth, nh: state.notchHeight)
+            let (w, h) = restingSize(newMode)
             let cr  = newMode == .expanded ? IslandConst.expandedCorner : IslandConst.roundedCorner
             let tr: CGFloat = 0
             withAnimation(anim) {
@@ -145,6 +169,30 @@ struct IslandContainer: View {
             withAnimation(openSpring) {
                 islandWidth  = w
                 islandHeight = newView == .prompt ? chatPromptHeight : h
+            }
+        }
+        .onChange(of: state.islandHovered) { _, _ in
+            guard state.mode != .expanded else { return }
+            let (w, h) = restingSize(state.mode)
+            withAnimation(state.islandHovered ? hoverInSpring : hoverOutSpring) {
+                islandWidth  = w
+                islandHeight = h
+            }
+        }
+        .onChange(of: state.mailBanner) { _, banner in
+            guard state.mode == .hidden else { return }
+            let (w, h) = restingSize(.hidden)
+            withAnimation(banner != nil ? openSpring : closeEase) {
+                islandWidth  = w
+                islandHeight = h
+            }
+        }
+        .onChange(of: state.musicActive) { _, active in
+            guard state.mode == .hidden else { return }
+            let (w, h) = restingSize(.hidden)
+            withAnimation(active ? openSpring : closeEase) {
+                islandWidth  = w
+                islandHeight = h
             }
         }
         .onChange(of: state.chatHistory.count) { _, _ in
@@ -247,6 +295,84 @@ struct IslandShape: Shape {
 
         p.closeSubpath()
         return p
+    }
+}
+
+// MARK: - Music wings (closed notch, music playing)
+
+enum MusicWingsLayout {
+    /// 184 pt notch → 260 pt island (design 2a).
+    static func wingWidth(nh: CGFloat) -> CGFloat { nh + 6 }
+}
+
+/// iPhone-style live activity (design 2a/2b): artwork left of the notch; on the right
+/// the equalizer, or a mini Mochi in its status colour while a Claude session works.
+struct MusicWingsView: View {
+    let track: NowPlayingTrack
+    let notchHeight: CGFloat
+    @ObservedObject var state: AppState
+
+    /// Claude wins the right wing while it is busy (design 2b).
+    private var claudeStatus: Color? {
+        let busy: Set<BotState> = [.working, .thinking, .searching, .approval, .question, .error]
+        guard let task = state.tasks.first(where: {
+            ($0.id == "integration_claude" || !$0.isIntegration) && busy.contains($0.state)
+        }) else { return nil }
+        switch task.state {
+        case .thinking:  return Color(hex: "#A78BFA")
+        case .searching: return Color(hex: "#6366F1")
+        case .approval, .question: return Color(hex: "#F5A524")
+        case .error:     return Color(hex: "#F4505E")
+        default:         return Color(hex: "#3B9EFF")
+        }
+    }
+
+    var body: some View {
+        let art = max(14, notchHeight - 12)
+        HStack(spacing: 0) {
+            MusicArtwork(track: track, cornerRadius: 6, iconSize: art * 0.55)
+                .frame(width: art, height: art)
+                .overlay(RoundedRectangle(cornerRadius: 6, style: .continuous)
+                    .strokeBorder(Color.white.opacity(0.15), lineWidth: 0.5))
+                .opacity(track.isPlaying ? 1 : 0.55)
+            Spacer(minLength: 0)
+            if let status = claudeStatus {
+                HStack(spacing: 5) {
+                    Circle().fill(status).frame(width: 5, height: 5)
+                    MiniMochiShape(color: status)
+                        .frame(width: 22, height: 17)
+                }
+                .transition(.opacity)
+            } else {
+                MusicEqualizer(color: Color(nsColor: track.tint ?? .white),
+                               playing: track.isPlaying, barWidth: 2.5, spacing: 2)
+                    .frame(height: min(14, art * 0.7))
+                    .transition(.opacity)
+            }
+        }
+        .padding(.horizontal, 11)
+        .animation(.easeInOut(duration: 0.3), value: track.isPlaying)
+        .animation(.easeInOut(duration: 0.3), value: claudeStatus == nil)
+    }
+}
+
+/// The tiny flat Mochi from the design: rounded body, two eyes looking right.
+struct MiniMochiShape: View {
+    let color: Color
+
+    var body: some View {
+        GeometryReader { g in
+            let w = g.size.width, h = g.size.height
+            ZStack(alignment: .topLeading) {
+                RoundedRectangle(cornerRadius: h * 0.41, style: .continuous).fill(color)
+                Capsule().fill(Color.black)
+                    .frame(width: w * 0.14, height: h * 0.24)
+                    .offset(x: w * 0.5, y: h * 0.41)
+                Capsule().fill(Color.black)
+                    .frame(width: w * 0.14, height: h * 0.24)
+                    .offset(x: w * 0.73, y: h * 0.41)
+            }
+        }
     }
 }
 
@@ -437,7 +563,7 @@ struct IslandContentView: View {
                     // Views that fill available height instead of the fixed 98pt content frame:
                     // chat (prompt) is always flexible; mail is flexible only when active so
                     // it doesn't push the ZStack taller when inactive.
-                    let isTall = v == .prompt || (v == .mail && active)
+                    let isTall = v == .prompt || ((v == .mail || v == .inbox) && active)
                     let anim: Animation = active
                         ? .spring(response: 0.4, dampingFraction: 0.8).delay(0.16)
                         : .easeIn(duration: 0.16)
@@ -470,13 +596,8 @@ struct IslandHeader: View {
             // Left: tab capsules
             HStack(spacing: 5) {
                 TabButton(icon: "house.fill", view: .overview, state: state)
-                TabButton(icon: "bubble.left.fill", view: .prompt, state: state, preAction: {
-                    #if !APPSTORE
-                    if state.promptContext == nil {
-                        state.promptContext = WindowContextCapture.captureActive(from: state.lastExternalApp)
-                    }
-                    #endif
-                })
+                // Gmail inbox replaces the chat tab (the chat still opens from a window drop).
+                TabButton(icon: "envelope.fill", view: .inbox, state: state, badge: state.gmailUnread)
                 TabButton(icon: "plus", view: .upload, state: state)
             }
             .padding(.leading, 14)
@@ -514,6 +635,7 @@ struct TabButton: View {
     let view: IslandView
     @ObservedObject var state: AppState
     var preAction: (() -> Void)? = nil
+    var badge: Int = 0
     @State private var isHovered = false
 
     private var isOn: Bool {
@@ -537,6 +659,18 @@ struct TabButton: View {
                     isHovered ? Color.white.opacity(0.07) : Color.clear
                 )
                 .clipShape(Capsule())
+                .overlay(alignment: .topTrailing) {
+                    if badge > 0 {
+                        Text(badge > 99 ? "99+" : "\(badge)")
+                            .font(.system(size: 8.5, weight: .bold))
+                            .monospacedDigit()
+                            .foregroundColor(.white)
+                            .padding(.horizontal, 3.5)
+                            .frame(minWidth: 13, minHeight: 13)
+                            .background(Capsule().fill(Color(hex: "#F4505E")))
+                            .offset(x: 3, y: -3)
+                    }
+                }
         }
         .buttonStyle(.plain)
         .onHover { isHovered = $0 }
