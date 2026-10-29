@@ -13,6 +13,8 @@ final class NotchModel: ObservableObject {
 
     @Published var notchSize = CGSize(width: 185, height: 32)
     @Published var hasNotch = true
+    /// Music is playing: the closed notch grows a wing on each side (artwork, equalizer).
+    @Published var musicWings = false
 
     var onTapCollapsed: () -> Void = {}
     var onOpenSettings: () -> Void = {}
@@ -22,11 +24,19 @@ final class NotchModel: ObservableObject {
 
     var isExpanded: Bool { phase == .expanded }
 
+    /// Width of one music wing: about square with the notch height.
+    var wingWidth: CGFloat { notchSize.height + 2 }
+
+    /// The closed notch, including the music wings when they show.
+    var restingSize: CGSize {
+        CGSize(width: notchSize.width + (musicWings ? 2 * wingWidth : 0), height: notchSize.height)
+    }
+
     var shapeSize: CGSize {
         if isExpanded { return CGSize(width: Theme.panelWidth, height: Theme.panelHeight) }
-        guard hovering else { return notchSize }
-        return CGSize(width: notchSize.width + Self.hoverGrow.width,
-                      height: notchSize.height + Self.hoverGrow.height)
+        guard hovering else { return restingSize }
+        return CGSize(width: restingSize.width + Self.hoverGrow.width,
+                      height: restingSize.height + Self.hoverGrow.height)
     }
 
     /// Bottom corner radius: the hardware notch is softly rounded, the panel more so.

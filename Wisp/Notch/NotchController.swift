@@ -76,6 +76,29 @@ final class NotchController {
 
     func toggle() { model.isExpanded ? collapse() : expand() }
 
+    /// Shows or hides the music wings on the closed notch.
+    func setMusicWings(_ on: Bool) {
+        guard model.musicWings != on else { return }
+        if model.isExpanded {
+            model.musicWings = on
+            return
+        }
+        if on {
+            // Grow the window first, then let the shape spring out into it.
+            model.musicWings = true
+            panel.setFrame(collapsedFrame, display: true)
+            model.musicWings = false
+            withAnimation(openSpring) { model.musicWings = true }
+        } else {
+            withAnimation(closeSpring) {
+                model.musicWings = false
+            } completion: { [weak self] in
+                guard let self, !self.model.isExpanded else { return }
+                self.panel.setFrame(self.collapsedFrame, display: true)
+            }
+        }
+    }
+
     /// Close after the usual delay, unless the mouse is on the panel.
     func collapseSoon() {
         guard !mouseInside else { return }
@@ -110,7 +133,7 @@ final class NotchController {
     // MARK: - Geometry
 
     private var collapsedFrame: NSRect {
-        let n = geometry.notchSize
+        let n = model.restingSize
         let g = NotchModel.hoverGrow
         return geometry.frame(for: CGSize(width: n.width + g.width + 8, height: n.height + g.height + 2))
     }

@@ -158,26 +158,36 @@ private struct ApprovalCard: View {
 // MARK: - Integration tiles
 
 private struct IntegrationGrid: View {
-    // Filled with live data once the integrations move over to wisp.
-    private let tiles = ["GitHub", "WHOOP", "Muziek", "Notion"]
+    @ObservedObject var player: NowPlaying = .shared
 
     var body: some View {
         Grid(horizontalSpacing: 8, verticalSpacing: 8) {
-            GridRow { tile(tiles[0]); tile(tiles[1]) }
-            GridRow { tile(tiles[2]); tile(tiles[3]) }
+            // GitHub, WHOOP and Notion get live data once those integrations move over.
+            GridRow { tile("GitHub"); tile("WHOOP") }
+            GridRow { musicTile; tile("Notion") }
         }
     }
 
-    private func tile(_ name: String) -> some View {
+    private var musicTile: some View {
+        let track = player.track
+        let value = track.map { [$0.title, $0.artist].filter { !$0.isEmpty }.joined(separator: " · ") }
+        return tile("Muziek", value: value ?? "Er speelt niets",
+                    dot: track?.isPlaying == true ? Theme.ok : nil,
+                    dim: track == nil)
+    }
+
+    private func tile(_ name: String, value: String = "Niet gekoppeld",
+                      dot: Color? = nil, dim: Bool = true) -> some View {
         Card {
             VStack(alignment: .leading, spacing: 4) {
                 HStack(spacing: 6) {
-                    Circle().fill(Theme.textSecondary.opacity(0.5)).frame(width: 7, height: 7)
+                    Circle().fill(dot ?? Theme.textSecondary.opacity(0.5)).frame(width: 7, height: 7)
                     Text(name).font(.system(size: 12)).foregroundStyle(Theme.textSecondary)
                 }
-                Text("Niet gekoppeld")
+                Text(value)
                     .font(.system(size: 13, weight: .semibold))
-                    .foregroundStyle(Theme.textSecondary)
+                    .foregroundStyle(dim ? Theme.textSecondary : Theme.textPrimary)
+                    .lineLimit(1)
             }
             .padding(.horizontal, 12)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
