@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Music: a live spectrum of what plays (24 bands, bass/mid/treble mix, loudness), the output quality, a one-time permission card, and states for paused and nothing playing; a real mini spectrum on the closed notch, which stays greyed for a minute after a pause (boards 9.1–9.6)
+- The playing app above the song title, and *Open Spotify* when nothing plays
+- Settings → Muziek: a switch for the live spectrum
+- Glass music controls with hover and press feedback (#9)
+- The hooks installer only touches wisp's own entries (#10)
 - Music tab: artwork, progress, controls, output device and volume; artwork and an equalizer on the closed notch while music plays; the music tile on Home (#7)
 - Local builds are signed with a Developer ID, so macOS remembers Keychain access across updates (#7)
 - Mail tab with Gmail: read-only inbox over IMAP with push, *Alles / Ongelezen*, open in Gmail, unread badge (#6)

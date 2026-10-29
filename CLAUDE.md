@@ -4,7 +4,7 @@ wisp is a native macOS app that lives in the MacBook notch: Claude Code sessions
 
 ## Where things are
 
-- `Wisp/`: the app. `Notch/` window and tab bar, `Tabs/` one view per tab, `Claude/` hooks and sessions, `Mail/` IMAP, `Music/` Now Playing, `Settings/`, `Design/Theme.swift` tokens.
+- `Wisp/`: the app. `Notch/` window and tab bar, `Tabs/` one view per tab, `Claude/` hooks and sessions, `Mail/` IMAP, `Music/` Now Playing and the live spectrum, `Settings/`, `Design/Theme.swift` tokens.
 - `WispHook/`: the `wisp-hook` helper; `Shared/`: code for both targets; `Helpers/NowPlayingBridge.m`: the Now Playing dylib.
 - `project.yml`: XcodeGen project. Never edit the generated `.xcodeproj`.
 - `design/boards/`: design boards, the visual source of truth. `docs/DESIGN.md`: tokens and rules.
@@ -29,6 +29,6 @@ xcodegen && xcodebuild -scheme wisp -configuration Debug -derivedDataPath build 
 - 0 % CPU when the notch is closed: no timers or animations while nothing is visible.
 - The notch never grows beyond the 600 × 242 pt panel; content scrolls inside its card.
 - Use the `Theme` tokens; visual changes must match `design/boards/`.
-- Interface text in Dutch; code, comments and commits in English.
+- Interface text is Dutch for now; English becomes the base language with Dutch as a translation (issue #12, `docs/ROADMAP.md`). Code, comments and commits in English.
 - One branch and pull request per piece of work, Conventional Commits, no AI attribution lines.
 - Keep the bundle identifier `com.ahmadalasmi.wisp`.

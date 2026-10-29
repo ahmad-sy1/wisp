@@ -5,6 +5,7 @@ struct NotchRootView: View {
     @ObservedObject var model: NotchModel
     @ObservedObject var prefs: Preferences
     @ObservedObject var player: NowPlaying = .shared
+    @ObservedObject var spectrum: Spectrum = .shared
 
     var body: some View {
         let size = model.shapeSize
@@ -14,7 +15,8 @@ struct NotchRootView: View {
             shape.fill(Theme.panel)
 
             if !model.isExpanded && model.musicWings, let track = player.track {
-                MusicWings(track: track, height: model.notchSize.height, wing: model.wingWidth)
+                MusicWings(track: track, levels: spectrum.isRunning ? spectrum.levels : nil,
+                           height: model.notchSize.height, wing: model.wingWidth)
                     .transition(.opacity)
             }
 
@@ -36,24 +38,52 @@ struct NotchRootView: View {
     }
 }
 
-/// Live activity on the closed notch: artwork left of the camera, equalizer right of it.
+/// Live activity on the closed notch (board 9.6): artwork left of the camera, a mini
+/// spectrum of 8 bands right of it. Without spectrum access the bars are decorative.
 private struct MusicWings: View {
     let track: NowPlayingTrack
+    let levels: SpectrumLevels?
     let height: CGFloat
     let wing: CGFloat
 
     var body: some View {
         let art = max(14, height - 12)
         HStack(spacing: 0) {
-            Artwork(image: track.artwork, size: art, corner: 5)
+            Artwork(image: track.artwork, size: art, corner: 5, isVideo: track.isVideo)
                 .opacity(track.isPlaying ? 1 : 0.55)
                 .frame(width: wing)
             Spacer(minLength: 0)
-            Equalizer(playing: track.isPlaying, barWidth: 2.5, spacing: 2)
-                .frame(width: wing, height: min(14, art * 0.7))
+            Group {
+                if let levels, track.isPlaying {
+                    MiniSpectrum(levels: levels)
+                } else {
+                    Equalizer(playing: track.isPlaying, barWidth: 2.5, spacing: 2)
+                }
+            }
+            .frame(width: wing, height: min(14, art * 0.7))
         }
         .padding(.horizontal, 3)
         .frame(height: height)
+    }
+}
+
+/// Eight thin green capsules, centred vertically like the board, drawn in one Canvas pass.
+private struct MiniSpectrum: View {
+    @ObservedObject var levels: SpectrumLevels
+
+    var body: some View {
+        let bands = levels.miniBands
+        Canvas { context, size in
+            let width: CGFloat = 2, gap: CGFloat = 1.5
+            let total = CGFloat(bands.count) * width + CGFloat(bands.count - 1) * gap
+            let x0 = (size.width - total) / 2
+            for (i, level) in bands.enumerated() {
+                let height = max(3, size.height * CGFloat(level))
+                let rect = CGRect(x: x0 + CGFloat(i) * (width + gap), y: (size.height - height) / 2,
+                                  width: width, height: height)
+                context.fill(Path(roundedRect: rect, cornerRadius: width / 2), with: .color(Theme.ok))
+            }
+        }
     }
 }
 

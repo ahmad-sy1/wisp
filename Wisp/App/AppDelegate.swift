@@ -75,10 +75,28 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     private func startMusic(notch: NotchController) {
         let player = NowPlaying.shared
+        let spectrum = Spectrum.shared
+
         player.$isActive
             .removeDuplicates()
             .sink { active in notch.setMusicWings(active && notch.model.hasNotch) }
             .store(in: &subscriptions)
+
+        // The spectrum follows what plays and stops when it pauses.
+        player.$track
+            .map { ($0?.sourceBundleId, $0?.isPlaying == true) }
+            .removeDuplicates { $0 == $1 }
+            .sink { source, playing in spectrum.setPlayback(source: source, playing: playing) }
+            .store(in: &subscriptions)
+
+        // The closed-notch wings show the mini-spectrum while they are visible.
+        notch.model.$musicWings
+            .combineLatest(notch.model.$phase)
+            .map { wings, phase in wings && phase == .collapsed }
+            .removeDuplicates()
+            .sink { visible in spectrum.setVisible(visible, by: "wings") }
+            .store(in: &subscriptions)
+
         player.start()
     }
 

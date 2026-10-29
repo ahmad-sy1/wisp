@@ -37,6 +37,8 @@ struct SettingsView: View {
 
             GmailSection(store: .shared)
 
+            MusicSection(spectrum: .shared)
+
             ClaudeHooksSection()
         }
         .formStyle(.grouped)
