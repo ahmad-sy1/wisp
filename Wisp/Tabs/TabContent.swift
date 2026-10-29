@@ -1,0 +1,48 @@
+import SwiftUI
+
+/// Content area for the selected tab (fixed 150 pt high).
+struct TabContent: View {
+    let tab: WispTab
+
+    var body: some View {
+        // Each tab gets its real view in a later step; until then a calm placeholder.
+        PlaceholderTab(tab: tab)
+    }
+}
+
+struct PlaceholderTab: View {
+    let tab: WispTab
+
+    var body: some View {
+        Card {
+            VStack(spacing: 8) {
+                Image(systemName: tab.symbol)
+                    .font(.system(size: 22, weight: .light))
+                    .foregroundStyle(Theme.textSecondary)
+                Text(tab.title)
+                    .font(.system(size: 14, weight: .semibold))
+                Text("Komt in een volgende stap")
+                    .font(.system(size: 11))
+                    .foregroundStyle(Theme.textSecondary)
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+        }
+    }
+}
+
+/// Flat card: #141416 with a hairline #1F1F22 border.
+struct Card<Content: View>: View {
+    @ViewBuilder var content: Content
+
+    var body: some View {
+        content
+            .background(
+                RoundedRectangle(cornerRadius: Theme.cardCorner, style: .continuous)
+                    .fill(Theme.card)
+            )
+            .overlay(
+                RoundedRectangle(cornerRadius: Theme.cardCorner, style: .continuous)
+                    .strokeBorder(Theme.cardBorder, lineWidth: 1)
+            )
+    }
+}
