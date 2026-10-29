@@ -245,7 +245,7 @@ private struct WeatherCard: View {
     }
 }
 
-/// "Vertrek voor je dienst · 16:25 · 22 min fietsen · Droog tot 22:00".
+/// "Vertrek voor je dienst · 16:25 · 22 min reizen · Droog tot 22:00".
 private struct DepartureCard: View {
     let shift: AgendaEvent?
     let travelMinutes: Int
@@ -283,7 +283,7 @@ private struct DepartureCard: View {
     private var headline: String {
         guard let leave else { return report?.rainSummary(at: now) ?? "—" }
         let when = leave <= now ? "Nu" : leave.clockTime
-        return "\(when) · \(travelMinutes) min fietsen"
+        return "\(when) · \(travelMinutes) min reizen"
     }
 
     private var detail: String? {
