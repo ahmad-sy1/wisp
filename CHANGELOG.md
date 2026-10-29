@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-- Music: a live spectrum of what plays (24 bands, bass/mid/treble mix, loudness), the output quality, a one-time permission card, and states for paused and nothing playing; a real mini spectrum on the closed notch, which stays greyed for a minute after a pause (boards 9.2–9.7)
+- Music: a live spectrum of what plays (24 bands, bass/mid/treble mix, loudness), the output quality, a one-time permission card, and states for paused and nothing playing; a real mini spectrum on the closed notch, which stays greyed for a minute after a pause (boards 9.1–9.6)
 - The playing app above the song title, and *Open Spotify* when nothing plays
 - Settings → Muziek: a switch for the live spectrum
 - Glass music controls with hover and press feedback (#9)

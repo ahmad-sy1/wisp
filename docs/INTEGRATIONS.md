@@ -72,7 +72,7 @@ If wisp is shared with more people later, "Sign in with Google" (OAuth) is frien
 ## Live spectrum (system audio)
 
 - Core Audio process taps (macOS 14.2+): wisp listens to the playing app's audio while the spectrum is visible. See [ARCHITECTURE.md](ARCHITECTURE.md#live-spectrum).
-- Permission: macOS's *System Audio Recording* (Privacy & Security). wisp asks inside the Music tab first (board 9.6); *Niet nu*, or Settings → Muziek → *Live spectrum*, turns it off.
+- Permission: macOS's *System Audio Recording* (Privacy & Security). wisp asks inside the Music tab first (board 9.5); *Niet nu*, or Settings → Muziek → *Live spectrum*, turns it off.
 - Nothing is recorded, written to disk or sent anywhere: each block of samples goes through the FFT and is dropped.
 
 ## Planned: GitHub, Notion, WHOOP
