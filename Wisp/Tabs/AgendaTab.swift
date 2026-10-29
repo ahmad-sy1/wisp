@@ -182,11 +182,11 @@ private struct WeatherCard: View {
     @ObservedObject var weather: WeatherStore
 
     var body: some View {
-        HStack(spacing: 14) {
+        HStack(spacing: 13) {
             Image(systemName: weather.report?.symbol ?? "cloud")
-                .font(.system(size: 28, weight: .light))
+                .font(.system(size: 26, weight: .light))
                 .foregroundStyle(weather.report == nil ? Theme.textSecondary : Theme.textPrimary)
-                .frame(width: 36)
+                .frame(width: 28)
             VStack(alignment: .leading, spacing: 1) {
                 if let report = weather.report {
                     Text("\(Int(report.temperature.rounded()))°")
@@ -205,7 +205,6 @@ private struct WeatherCard: View {
                         .lineLimit(1)
                 }
             }
-            Spacer(minLength: 0)
         }
         .padding(.horizontal, 14)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
