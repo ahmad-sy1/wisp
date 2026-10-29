@@ -7,7 +7,6 @@ What is planned, roughly in order. Every item becomes its own branch and pull re
 | Item | Notes | Tracking |
 |---|---|---|
 | **Interface in English, Dutch as the first translation** | English becomes the base language so wisp is not only for Dutch speakers; Dutch (`nl`) is the first translation, more can follow. All visible text moves into a String Catalog (`Localizable.xcstrings`), including the texts macOS shows for permissions (`InfoPlist.xcstrings`). | [#12](https://github.com/ahmad-sy1/wisp/issues/12) |
-| **Agenda & weather tab** | EventKit (the macOS Calendar app) for today's timeline; Open-Meteo for the weather, no key. Board 3. | |
 | **Focus timer tab** | 25 / 50 / 90 min, works out what you are working on from the calendar or the app in front. Ring in the closed notch while it runs. Board 4. | |
 | **Clipboard tab** | Last ~20 items, local only, never passwords (`ConcealedType` / `TransientType` are skipped). Board 5. | |
 | **Notes tab** | Quick notes stored as JSON in Application Support. Board 6. | |

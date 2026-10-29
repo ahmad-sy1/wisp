@@ -37,6 +37,8 @@ struct SettingsView: View {
 
             GmailSection(store: .shared)
 
+            AgendaSection(agenda: .shared, weather: .shared)
+
             MusicSection(spectrum: .shared)
 
             ClaudeHooksSection()

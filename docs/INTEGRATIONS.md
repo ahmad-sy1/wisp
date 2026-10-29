@@ -11,8 +11,8 @@ Golden rule: **check the official documentation when you build or change an inte
 | GitHub | planned | sign in with GitHub |
 | Notion | planned | sign in with Notion |
 | WHOOP | planned | sign in with WHOOP |
-| Agenda | planned | macOS Calendar access (EventKit) |
-| Weather | planned | nothing (Open-Meteo, no key) |
+| Agenda | ✓ live | macOS Calendar access (EventKit) |
+| Weather | ✓ live | nothing (Open-Meteo, no key) |
 
 ## Claude Code
 
@@ -85,7 +85,19 @@ Plan: each gets a *Koppelen* button in Settings that opens the service's own sig
 | WHOOP | *68% herstel* | latest recovery, strain, sleep |
 | Notion | *2 bijgewerkt* | pages edited today |
 
-## Planned: Agenda and weather
+## Agenda (EventKit)
 
-- **Agenda** through EventKit (the macOS Calendar app, which can sync Google Calendar), so no extra key. macOS asks for Calendar access the first time the tab is used.
-- **Weather** through Open-Meteo (free, no key) for a fixed city chosen in Settings; no location permission needed.
+Docs: <https://developer.apple.com/documentation/eventkit>
+
+- Source: the macOS Calendar app, so every account in it counts (iCloud, Google, Exchange…). No key or sign-in of its own.
+- Permission: *Agenda's* under Privacy & Security, asked from the Agenda tab or Settings → Agenda & weer (`NSCalendarsFullAccessUsageDescription`). Reading needs full access; wisp never writes.
+- Read: today's events (title, start, end, all-day, calendar and its colour) from the calendars that are switched on in Settings. Nothing is stored or sent.
+
+## Weather (Open-Meteo)
+
+Docs: <https://open-meteo.com/en/docs>, <https://open-meteo.com/en/docs/geocoding-api>
+
+- Forecast: `GET https://api.open-meteo.com/v1/forecast` with `latitude`, `longitude`, `current=temperature_2m,weather_code,is_day`, `hourly=precipitation_probability,precipitation`, `daily=temperature_2m_max,temperature_2m_min`, `timezone=auto`, `timeformat=unixtime`, `forecast_days=2`.
+- Places: `GET https://geocoding-api.open-meteo.com/v1/search?name=…&count=5&language=nl`, only when you search in Settings.
+- Free for non-commercial use, no key, no account. Only the coordinates of the chosen place are sent; no location permission is needed. Default: Nijmegen.
+- `weather_code` is a WMO code; wisp maps it to a Dutch description and an SF Symbol (`WeatherCode` in `Wisp/Agenda/Weather.swift`).

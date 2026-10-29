@@ -64,8 +64,15 @@ targets:
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         LSUIElement: true
         NSAudioCaptureUsageDescription: "wisp analyseert live het geluid van wat er speelt voor het spectrum in de Muziek-tab. Er wordt niets opgenomen, opgeslagen of verstuurd."
+        NSCalendarsFullAccessUsageDescription: "wisp toont wat er vandaag in je agenda staat in de Agenda-tab. Je agenda wordt alleen gelezen en blijft op je Mac."
+        NSCalendarsUsageDescription: "wisp toont wat er vandaag in je agenda staat in de Agenda-tab. Je agenda wordt alleen gelezen en blijft op je Mac."
         LSApplicationCategoryType: public.app-category.productivity
         NSHumanReadableCopyright: "Copyright © 2026 Ahmad Alasmi. All rights reserved."
+    entitlements:
+      # The hardened runtime blocks Calendar access without this (Agenda tab).
+      path: Wisp/Resources/wisp.entitlements
+      properties:
+        com.apple.security.personal-information.calendars: true
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.ahmadalasmi.wisp

@@ -67,7 +67,27 @@ The boards in [`design/boards/`](../design/boards) are the visual source of trut
 
 ## Tab bar
 
-Left, in this order: **Home · Mail · Agenda · Focus · Muziek · Klembord · Notities · Systeem · Bestanden**. Right: **Settings** (sliders icon). A tab may put its own controls just left of Settings, as Mail does with *Alles / Ongelezen / ↗* and Music with the output device.
+Left, in this order: **Home · Mail · Agenda · Focus · Muziek · Klembord · Notities · Systeem · Bestanden**. Right: **Settings** (sliders icon). A tab may put its own controls just left of Settings, as Mail does with *Alles / Ongelezen / ↗*, Agenda with today's date and Music with the output device.
+
+## Agenda tab
+
+Three cards in the fixed 150 pt area (board 3):
+
+| Part | Spec |
+|---|---|
+| Left card (348 pt) | today's events in 28 pt rows: time (13 pt, grey), a 3 × 16 pt bar, title (13 pt semibold). Done: grey bar, struck-through grey title. A red (`badge`) *nu* line with the time between done and coming. The next event shows *over 2u 55m* in its bar colour; one that is on now shows *nog 25m*. Scrolls when the day is full, starting at the *nu* line |
+| Bar colour | shifts `warning`, everything else its calendar's colour |
+| Weather card (70 pt) | SF Symbol 28 pt light, temperature 22 pt semibold, *Nijmegen · half bewolkt* |
+| Departure card (70 pt) | *Vertrek voor je dienst*, *16:25 · 22 min fietsen* (15 pt semibold), *Droog tot 22:00* |
+| Tab bar | *Vandaag · donderdag 29 oktober* just left of Settings |
+
+States the board doesn't show, built in the style of the other tabs and open to a design:
+
+- No Calendar access yet / refused: the calendar icon, a short line and *Toegang geven* or *Open Systeeminstellingen*, like Mail's empty states.
+- Nothing today: *Niets gepland vandaag.*
+- No shift left today: the departure card reads *Geen dienst meer vandaag*, the rain line, and today's low and high.
+- Leaving time passed but the shift hasn't started: *Nu · 22 min fietsen*.
+- All-day events sit at the top as *hele dag*.
 
 ## Music tab
 
