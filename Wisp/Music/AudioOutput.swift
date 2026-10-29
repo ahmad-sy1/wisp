@@ -29,6 +29,37 @@ enum AudioOutput {
         return Device(id: id, name: name as String, isBluetooth: bluetooth)
     }
 
+    /// Sample rate and bit depth the device plays at, e.g. "48 kHz · 24-bit".
+    static var qualityLabel: String? {
+        guard let id = defaultDeviceID() else { return nil }
+        var rate: Float64 = 0
+        var size = UInt32(MemoryLayout<Float64>.size)
+        var address = AudioObjectPropertyAddress(mSelector: kAudioDevicePropertyNominalSampleRate,
+                                                 mScope: kAudioObjectPropertyScopeGlobal,
+                                                 mElement: kAudioObjectPropertyElementMain)
+        guard AudioObjectGetPropertyData(id, &address, 0, nil, &size, &rate) == noErr, rate > 0 else { return nil }
+        let khz = rate.truncatingRemainder(dividingBy: 1000) == 0
+            ? "\(Int(rate / 1000)) kHz" : String(format: "%.1f kHz", rate / 1000)
+
+        // Bit depth from the physical format of the first output stream.
+        address = AudioObjectPropertyAddress(mSelector: kAudioDevicePropertyStreams,
+                                             mScope: kAudioDevicePropertyScopeOutput,
+                                             mElement: kAudioObjectPropertyElementMain)
+        size = 0
+        guard AudioObjectGetPropertyDataSize(id, &address, 0, nil, &size) == noErr, size > 0 else { return khz }
+        var streams = [AudioStreamID](repeating: 0, count: Int(size) / MemoryLayout<AudioStreamID>.size)
+        guard AudioObjectGetPropertyData(id, &address, 0, nil, &size, &streams) == noErr,
+              let stream = streams.first else { return khz }
+        var format = AudioStreamBasicDescription()
+        size = UInt32(MemoryLayout<AudioStreamBasicDescription>.size)
+        address = AudioObjectPropertyAddress(mSelector: kAudioStreamPropertyPhysicalFormat,
+                                             mScope: kAudioObjectPropertyScopeGlobal,
+                                             mElement: kAudioObjectPropertyElementMain)
+        guard AudioObjectGetPropertyData(stream, &address, 0, nil, &size, &format) == noErr,
+              format.mBitsPerChannel > 0 else { return khz }
+        return "\(khz) · \(format.mBitsPerChannel)-bit"
+    }
+
     /// 0…1, or nil when the device has no software volume.
     static var volume: Float? {
         guard let id = defaultDeviceID() else { return nil }

@@ -1,7 +1,7 @@
 import SwiftUI
 
-/// Music: artwork, title, progress and controls on the left; where it plays and the
-/// volume on the right. macOS does not expose an "up next" queue, so there is none.
+/// Music: artwork, title, progress and controls on the left; live lyrics or a live
+/// spectrum on the right (boards 9.1–9.6). The output device sits in the tab bar.
 struct MusicTab: View {
     @ObservedObject var player: NowPlaying
 
@@ -11,22 +11,15 @@ struct MusicTab: View {
                 if let track = player.track {
                     PlayerCard(track: track, player: player)
                 } else {
-                    VStack(spacing: 8) {
-                        Image(systemName: "music.note")
-                            .font(.system(size: 22, weight: .light))
-                            .foregroundStyle(Theme.textSecondary)
-                        Text("Er speelt niets")
-                            .font(.system(size: 13, weight: .semibold))
-                        Text("Start muziek in Spotify, Muziek of YouTube.")
-                            .font(.system(size: 11))
-                            .foregroundStyle(Theme.textSecondary)
-                    }
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    NothingPlayingCard()
                 }
             }
             .frame(width: 331)
 
-            Card { OutputCard(player: player) }
+            // The card never grows past the fixed content height.
+            Card { SideCard(player: player, lyrics: .shared, spectrum: .shared) }
+                .frame(maxHeight: .infinity)
+                .clipped()
         }
     }
 }
@@ -37,19 +30,25 @@ private struct PlayerCard: View {
 
     var body: some View {
         HStack(spacing: 14) {
-            Artwork(image: track.artwork, size: 120, corner: 14)
+            Artwork(image: track.artwork, size: 120, corner: 14, isVideo: track.isVideo)
                 .onTapGesture { player.openSource() }
                 .help("Open \(track.sourceName ?? "de bron")")
 
             VStack(alignment: .leading, spacing: 0) {
+                Text(track.sourceLabel.uppercased())
+                    .font(.system(size: 10.5, weight: .medium))
+                    .tracking(0.6)
+                    .foregroundStyle(Theme.textSecondary)
+                    .lineLimit(1)
                 Text(track.title)
                     .font(.system(size: 15, weight: .semibold))
                     .lineLimit(1)
+                    .padding(.top, 2)
                 Text([track.artist, track.album].filter { !$0.isEmpty }.joined(separator: " · "))
                     .font(.system(size: 12))
                     .foregroundStyle(Theme.textSecondary)
                     .lineLimit(1)
-                    .padding(.top, 2)
+                    .padding(.top, 1)
 
                 Spacer(minLength: 6)
                 Progress(track: track)
@@ -61,14 +60,65 @@ private struct PlayerCard: View {
                         .padding(.horizontal, 6)
                     ControlButton(symbol: "forward.end.fill", action: player.nextTrack)
                     Spacer(minLength: 0)
-                    Equalizer(playing: track.isPlaying, barWidth: 3, spacing: 2.5)
-                        .frame(height: 16)
                 }
             }
             .padding(.vertical, 2)
         }
         .padding(12)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+    }
+}
+
+/// Board 9.5: nothing is playing.
+private struct NothingPlayingCard: View {
+    var body: some View {
+        HStack(spacing: 14) {
+            RoundedRectangle(cornerRadius: 14, style: .continuous)
+                .fill(Theme.control)
+                .frame(width: 120, height: 120)
+                .overlay(Image(systemName: "music.note")
+                    .font(.system(size: 44, weight: .light))
+                    .foregroundStyle(Theme.textSecondary.opacity(0.6)))
+
+            VStack(alignment: .leading, spacing: 4) {
+                Text("NIETS AAN HET AFSPELEN")
+                    .font(.system(size: 10.5, weight: .medium))
+                    .tracking(0.6)
+                    .foregroundStyle(Theme.textSecondary)
+                Text("Er speelt niets")
+                    .font(.system(size: 15, weight: .semibold))
+                Text("Start iets in Spotify of YouTube")
+                    .font(.system(size: 12))
+                    .foregroundStyle(Theme.textSecondary)
+                    .lineLimit(1)
+                Button("Open Spotify") { Self.openSpotify() }
+                    .buttonStyle(WhiteButtonStyle())
+                    .padding(.top, 8)
+            }
+        }
+        .padding(12)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+    }
+
+    private static func openSpotify() {
+        if let url = NSWorkspace.shared.urlForApplication(withBundleIdentifier: "com.spotify.client") {
+            NSWorkspace.shared.openApplication(at: url, configuration: .init())
+        } else if let web = URL(string: "https://open.spotify.com") {
+            NSWorkspace.shared.open(web)
+        }
+    }
+}
+
+struct WhiteButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .font(.system(size: 13, weight: .semibold))
+            .foregroundStyle(.black)
+            .padding(.horizontal, 14)
+            .frame(height: Theme.buttonHeight + 2)
+            .background(RoundedRectangle(cornerRadius: Theme.buttonCorner, style: .continuous).fill(.white))
+            .scaleEffect(configuration.isPressed ? 0.95 : 1)
+            .animation(.spring(response: 0.2, dampingFraction: 0.6), value: configuration.isPressed)
     }
 }
 
@@ -166,75 +216,6 @@ struct PressableStyle: ButtonStyle {
     }
 }
 
-private struct OutputCard: View {
-    @ObservedObject var player: NowPlaying
-    @State private var volume: Double = Double(AudioOutput.volume ?? 0)
-    @State private var hasVolume = AudioOutput.volume != nil
-    @State private var device = AudioOutput.current
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            Text("Speelt via")
-                .font(.system(size: 12))
-                .foregroundStyle(Theme.textSecondary)
-
-            if let track = player.track {
-                Button { player.openSource() } label: {
-                    row(icon: AnyView(appIcon(track.sourceIcon)),
-                        title: track.sourceName ?? "Onbekende app", subtitle: "Openen")
-                }
-                .buttonStyle(.plain)
-            }
-            row(icon: AnyView(symbolTile(device?.isBluetooth == true ? "headphones" : "hifispeaker")),
-                title: device?.name ?? "Geen uitvoer", subtitle: "Uitvoer")
-
-            Spacer(minLength: 0)
-
-            HStack(spacing: 10) {
-                Image(systemName: "speaker.wave.1")
-                    .font(.system(size: 12))
-                    .foregroundStyle(Theme.textSecondary)
-                Slider(value: $volume, in: 0...1) { _ in }
-                    .controlSize(.mini)
-                    .tint(.white)
-                    .disabled(!hasVolume)
-                    .onChange(of: volume) { _, new in AudioOutput.setVolume(Float(new)) }
-            }
-        }
-        .padding(14)
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-        .onAppear {
-            device = AudioOutput.current
-            hasVolume = AudioOutput.volume != nil
-            volume = Double(AudioOutput.volume ?? 0)
-        }
-    }
-
-    private func row(icon: AnyView, title: String, subtitle: String) -> some View {
-        HStack(spacing: 10) {
-            icon
-            VStack(alignment: .leading, spacing: 1) {
-                Text(title).font(.system(size: 13, weight: .semibold)).lineLimit(1)
-                Text(subtitle).font(.system(size: 11)).foregroundStyle(Theme.textSecondary)
-            }
-        }
-    }
-
-    private func appIcon(_ image: NSImage?) -> some View {
-        Group {
-            if let image { Image(nsImage: image).resizable() } else { symbolTile("app") }
-        }
-        .frame(width: 30, height: 30)
-    }
-
-    private func symbolTile(_ symbol: String) -> some View {
-        RoundedRectangle(cornerRadius: 8, style: .continuous)
-            .fill(Theme.control)
-            .frame(width: 30, height: 30)
-            .overlay(Image(systemName: symbol).font(.system(size: 13)).foregroundStyle(Theme.textPrimary))
-    }
-}
-
 /// Right side of the tab bar on the Music tab: the current output device.
 struct MusicToolbar: View {
     @State private var device = AudioOutput.current
@@ -257,15 +238,17 @@ struct Artwork: View {
     let image: NSImage?
     var size: CGFloat
     var corner: CGFloat
+    /// Without artwork a video gets a dark red tile with a play icon (board 9.3).
+    var isVideo = false
 
     var body: some View {
         RoundedRectangle(cornerRadius: corner, style: .continuous)
-            .fill(Color(hex: 0x34486B))
+            .fill(isVideo ? Color(hex: 0x3A1E22) : Color(hex: 0x34486B))
             .overlay {
                 if let image {
                     Image(nsImage: image).resizable().aspectRatio(contentMode: .fill)
                 } else {
-                    Image(systemName: "music.note")
+                    Image(systemName: isVideo ? "play.rectangle" : "music.note")
                         .font(.system(size: size * 0.4, weight: .light))
                         .foregroundStyle(.white.opacity(0.85))
                 }
@@ -275,7 +258,7 @@ struct Artwork: View {
     }
 }
 
-/// Green bars that bounce while playing and sink to dots when paused.
+/// Green bars that bounce while playing and sink to grey dots when paused.
 struct Equalizer: View {
     let playing: Bool
     var barWidth: CGFloat = 2.5
@@ -299,7 +282,7 @@ struct Equalizer: View {
             HStack(alignment: .bottom, spacing: spacing) {
                 ForEach(durations.indices, id: \.self) { i in
                     Capsule()
-                        .fill(Theme.ok)
+                        .fill(playing ? Theme.ok : Theme.textSecondary.opacity(0.5))
                         .frame(width: barWidth)
                         .scaleEffect(y: playing ? (up ? 1 : 0.3 + 0.15 * Double(i % 2)) : barWidth / 16,
                                      anchor: .bottom)

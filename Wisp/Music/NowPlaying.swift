@@ -29,6 +29,20 @@ struct NowPlayingTrack: Equatable {
 
     var sourceIcon: NSImage? { sourceURL.map { NSWorkspace.shared.icon(forFile: $0.path) } }
 
+    /// Playing in a web browser (YouTube and other video or audio sites).
+    var isVideo: Bool {
+        guard let id = sourceBundleId else { return false }
+        return Self.browsers.contains { id.hasPrefix($0) }
+    }
+
+    /// Small label above the title: "Spotify", "Muziek", "Brave Browser"…
+    var sourceLabel: String { sourceName ?? "Nu aan het afspelen" }
+
+    private static let browsers = [
+        "com.apple.Safari", "com.google.Chrome", "com.brave.Browser", "company.thebrowser",
+        "org.mozilla.firefox", "com.microsoft.edgemac", "com.operasoftware", "com.vivaldi",
+    ]
+
     private var sourceURL: URL? {
         sourceBundleId.flatMap { NSWorkspace.shared.urlForApplication(withBundleIdentifier: $0) }
     }
@@ -50,8 +64,8 @@ final class NowPlaying: ObservableObject {
     static let shared = NowPlaying()
 
     @Published private(set) var track: NowPlayingTrack?
-    /// True while something plays, and for a short grace period after it pauses,
-    /// so the closed-notch indicator doesn't flicker on track changes.
+    /// True while something plays, and for a minute after it pauses, so the closed-notch
+    /// wings don't flicker on track changes and show the paused state for a while.
     @Published private(set) var isActive = false
 
     private var process: Process?
@@ -59,7 +73,8 @@ final class NowPlaying: ObservableObject {
     private var buffer = Data()
     private var restarts = 0
     private var hideWork: DispatchWorkItem?
-    private let pauseGrace: TimeInterval = 2.0
+    /// Board 9.7: after a pause the wings stay (greyed) for a minute, then go.
+    private let pauseGrace: TimeInterval = 60
 
     private static let perlScript = """
     use DynaLoader;
