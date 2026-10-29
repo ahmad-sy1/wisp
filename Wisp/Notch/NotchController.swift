@@ -10,6 +10,8 @@ import SwiftUI
 final class NotchController {
     let model = NotchModel()
     var openSettings: () -> Void = {}
+    /// False while something needs an answer (a permission request): stay open.
+    var canCollapse: () -> Bool = { true }
 
     private var geometry = NotchGeometry.current()
     private let panel: NotchPanel
@@ -63,7 +65,7 @@ final class NotchController {
 
     func collapse() {
         collapseWork?.cancel()
-        guard model.isExpanded else { return }
+        guard model.isExpanded, canCollapse() else { return }
         withAnimation(closeSpring) {
             model.phase = .collapsed
         } completion: { [weak self] in
@@ -73,6 +75,12 @@ final class NotchController {
     }
 
     func toggle() { model.isExpanded ? collapse() : expand() }
+
+    /// Close after the usual delay, unless the mouse is on the panel.
+    func collapseSoon() {
+        guard !mouseInside else { return }
+        scheduleCollapse(after: Preferences.shared.closeDelay)
+    }
 
     private func scheduleCollapse(after delay: TimeInterval) {
         collapseWork?.cancel()

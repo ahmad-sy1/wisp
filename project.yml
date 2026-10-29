@@ -20,6 +20,14 @@ targets:
     platform: macOS
     sources:
       - path: Wisp
+      - path: Shared
+    dependencies:
+      # Claude Code runs this helper for each hook event (see WispHook/main.swift).
+      - target: wisp-hook
+        embed: true
+        codeSign: true
+        copy:
+          destination: executables
     info:
       path: Wisp/Resources/Info.plist
       properties:
@@ -35,3 +43,14 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: com.ahmadalasmi.wisp
         PRODUCT_NAME: wisp
         GENERATE_INFOPLIST_FILE: NO
+  wisp-hook:
+    type: tool
+    platform: macOS
+    sources:
+      - path: WispHook
+      - path: Shared
+    settings:
+      base:
+        PRODUCT_NAME: wisp-hook
+        PRODUCT_BUNDLE_IDENTIFIER: com.ahmadalasmi.wisp.hook
+        SKIP_INSTALL: YES

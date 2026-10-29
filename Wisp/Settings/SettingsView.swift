@@ -34,6 +34,8 @@ struct SettingsView: View {
                     set: { prefs.setLaunchAtLogin($0) }
                 ))
             }
+
+            ClaudeHooksSection()
         }
         .formStyle(.grouped)
         .frame(width: 440)

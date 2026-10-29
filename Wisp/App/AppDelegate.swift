@@ -18,6 +18,7 @@ enum WispMain {
 @MainActor
 final class AppDelegate: NSObject, NSApplicationDelegate {
     private var notch: NotchController?
+    private var hookServer: HookServer?
     private var statusItem: NSStatusItem?
     private var settingsWindow: NSWindow?
 
@@ -26,10 +27,24 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         notch.openSettings = { [weak self] in self?.openSettings() }
         self.notch = notch
         setUpStatusItem()
+        startClaudeHooks(notch: notch)
         #if DEBUG
         // `open wisp.app --args -openOnLaunch YES` opens the panel right away (for screenshots).
         if UserDefaults.standard.bool(forKey: "openOnLaunch") { notch.expand() }
         #endif
+    }
+
+    // MARK: - Claude Code
+
+    private func startClaudeHooks(notch: NotchController) {
+        let sessions = ClaudeSessions.shared
+        sessions.onNeedsAttention = { notch.expand(to: .home) }
+        sessions.onAnswered = { notch.collapseSoon() }
+        notch.canCollapse = { sessions.approval == nil }
+
+        let server = HookServer { event, reply in sessions.handle(event, reply: reply) }
+        server.start()
+        hookServer = server
     }
 
     // MARK: - Menu bar
