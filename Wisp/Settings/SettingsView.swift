@@ -35,6 +35,8 @@ struct SettingsView: View {
                 ))
             }
 
+            GmailSection(store: .shared)
+
             ClaudeHooksSection()
         }
         .formStyle(.grouped)
