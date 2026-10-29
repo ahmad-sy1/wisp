@@ -31,6 +31,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         setUpStatusItem()
         startClaudeHooks(notch: notch)
         startMail(notch: notch)
+        startMusic(notch: notch)
         #if DEBUG
         // `open wisp.app --args -openOnLaunch mail` opens the panel on that tab (for screenshots).
         if let name = UserDefaults.standard.string(forKey: "openOnLaunch") {
@@ -68,6 +69,17 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             .sink { notch.model.badges[.mail] = $0 }
             .store(in: &subscriptions)
         mail.start()
+    }
+
+    // MARK: - Music
+
+    private func startMusic(notch: NotchController) {
+        let player = NowPlaying.shared
+        player.$isActive
+            .removeDuplicates()
+            .sink { active in notch.setMusicWings(active && notch.model.hasNotch) }
+            .store(in: &subscriptions)
+        player.start()
     }
 
     // MARK: - Menu bar

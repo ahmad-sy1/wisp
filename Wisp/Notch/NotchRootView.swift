@@ -4,6 +4,7 @@ import SwiftUI
 struct NotchRootView: View {
     @ObservedObject var model: NotchModel
     @ObservedObject var prefs: Preferences
+    @ObservedObject var player: NowPlaying = .shared
 
     var body: some View {
         let size = model.shapeSize
@@ -11,6 +12,11 @@ struct NotchRootView: View {
 
         ZStack(alignment: .top) {
             shape.fill(Theme.panel)
+
+            if !model.isExpanded && model.musicWings, let track = player.track {
+                MusicWings(track: track, height: model.notchSize.height, wing: model.wingWidth)
+                    .transition(.opacity)
+            }
 
             if model.isExpanded {
                 ExpandedPanel(model: model)
@@ -27,6 +33,27 @@ struct NotchRootView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .tint(prefs.accent.color)
         .preferredColorScheme(.dark)
+    }
+}
+
+/// Live activity on the closed notch: artwork left of the camera, equalizer right of it.
+private struct MusicWings: View {
+    let track: NowPlayingTrack
+    let height: CGFloat
+    let wing: CGFloat
+
+    var body: some View {
+        let art = max(14, height - 12)
+        HStack(spacing: 0) {
+            Artwork(image: track.artwork, size: art, corner: 5)
+                .opacity(track.isPlaying ? 1 : 0.55)
+                .frame(width: wing)
+            Spacer(minLength: 0)
+            Equalizer(playing: track.isPlaying, barWidth: 2.5, spacing: 2)
+                .frame(width: wing, height: min(14, art * 0.7))
+        }
+        .padding(.horizontal, 3)
+        .frame(height: height)
     }
 }
 
