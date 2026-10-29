@@ -19,6 +19,7 @@ wisp.app
 | `Wisp/Claude` | hook server, Claude Code sessions, approvals, hooks installer, IDE detection, git branch |
 | `Wisp/Mail` | IMAP client and `MailStore` |
 | `Wisp/Music` | `NowPlaying` (bridge process), `AudioOutput` (device, quality, volume), `Spectrum`, `AudioTap` and `SpectrumAnalyzer` (live spectrum) |
+| `Wisp/Agenda` | `AgendaStore` (EventKit, today's events, shifts) and `WeatherStore` (Open-Meteo) |
 | `Wisp/Settings` | `Preferences` (UserDefaults) and the Settings sections |
 | `Wisp/Design` | `Theme`: colours, sizes, the accent options |
 | `Wisp/Support` | small helpers, such as `Keychain` |
@@ -96,9 +97,22 @@ playing app (Spotify, Brave helper…) ─► Core Audio process tap ─► priv
 - `SpectrumAnalyzer` mixes to mono and runs a 2048-point FFT (Accelerate, Hann window) every 1024 samples, about 45 times a second at 48 kHz. It groups the bins into 24 log-spaced bands from 40 Hz to 16 kHz (−70…−10 dB mapped to 0…1, fast attack and slow release), computes the energy shares below 250 Hz, 250 Hz–4 kHz and above 4 kHz, and the RMS loudness in dBFS. All buffers are allocated up front; nothing is recorded or kept.
 - `Spectrum` runs the tap only while **someone shows it** (`setVisible(_:by:)`: the right card of the Music tab, the closed-notch wings), **music plays** and the user **allowed** it (board 9.5, or Settings → Muziek). Otherwise the tap and aggregate device are destroyed. It publishes bands at most 30 times a second and the text summary four times a second (`SpectrumLevels`); the wings use 8 bands (the maximum of each group of three).
 
+## Agenda and weather
+
+```
+macOS Calendar (EventKit) ─► AgendaStore ─┐
+                                          ├─► Agenda tab: timeline · weather · departure
+Open-Meteo (HTTPS, no key) ─► WeatherStore ┘
+```
+
+- **`AgendaStore`** asks for full Calendar access the first time (`requestFullAccessToEvents`; the hardened runtime needs the `com.apple.security.personal-information.calendars` entitlement in `Wisp/Resources/wisp.entitlements`). It reads only while the tab is visible (`setVisible(_:)`): one `events(matching:)` for today over the calendars that aren't switched off, and a listener for `EKEventStoreChanged` that is removed again when the tab closes. Nothing is written to the calendar.
+- An event is a **shift** when its title contains *dienst*, or, if chosen in Settings, when it is in a given calendar. Shifts get the `warning` colour; other events the colour of their calendar. *Vertrek voor je dienst* is the next shift's start minus the ride in minutes from Settings.
+- **`WeatherStore`** fetches the current temperature and WMO weather code, the hourly chance and amount of rain, and today's low and high from `api.open-meteo.com` for the place in Settings, at most once every 15 minutes and only when the tab opens. An hour counts as wet from a 50 % chance or 0.2 mm; that gives *Droog tot 22:00* or *Regen tot 15:00*. Settings looks up places with Open-Meteo's geocoding API.
+- The tab redraws once a minute (`TimelineView(.everyMinute)`) for the *nu* line and the countdowns, and only exists while it is open.
+
 ## Settings and secrets
 
-- `Preferences` (UserDefaults): accent colour, close delay, sounds, open at login (`SMAppService`). `Spectrum` keeps the spectrum permission choice (`spectrumConsent`).
+- `Preferences` (UserDefaults): accent colour, close delay, sounds, open at login (`SMAppService`). `Spectrum` keeps the spectrum permission choice (`spectrumConsent`); `AgendaStore` the hidden calendars, the shift calendar and the ride (`agenda…`); `WeatherStore` the place (`weatherPlace`).
 - `Keychain`: generic passwords under the service `com.ahmadalasmi.wisp`, accessible after first unlock, this device only. Nothing secret is ever written to UserDefaults, to disk or to git.
 
 ## Performance rules
@@ -109,4 +123,4 @@ playing app (Spotify, Brave helper…) ─► Core Audio process tap ─► priv
 
 ## Signing
 
-Every local build is signed with the Developer ID in `project.yml`, so macOS keeps Keychain access and other permissions across updates. The bridge dylib is signed in its own build phase (with a secure timestamp and the hardened runtime for Release builds, which notarization needs). CI builds without signing. See [RELEASING.md](RELEASING.md).
+Every local build is signed with the Developer ID in `project.yml`, so macOS keeps Keychain access and other permissions across updates. The app's entitlements (`Wisp/Resources/wisp.entitlements`, generated from `project.yml`) only add Calendar access for the hardened runtime. The bridge dylib is signed in its own build phase (with a secure timestamp and the hardened runtime for Release builds, which notarization needs). CI builds without signing. See [RELEASING.md](RELEASING.md).

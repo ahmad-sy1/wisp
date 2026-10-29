@@ -6,7 +6,7 @@
 
 **A small light at the top of your screen.**
 
-wisp lives in your MacBook's notch and keeps your day within reach: your Claude Code sessions, your mail, your music, and soon your agenda, focus timer, clipboard, notes and system stats. One click away, and out of sight the rest of the time.
+wisp lives in your MacBook's notch and keeps your day within reach: your Claude Code sessions, your mail, your music, your agenda and the weather, and soon a focus timer, clipboard, notes and system stats. One click away, and out of sight the rest of the time.
 
 ![macOS 15+](https://img.shields.io/badge/macOS-15%2B-black?logo=apple)
 ![Swift 6](https://img.shields.io/badge/Swift-6-F05138?logo=swift&logoColor=white)
@@ -30,6 +30,7 @@ The notch is the one bit of screen you never use. wisp turns it into a quiet das
 - **Approve from the notch**: when Claude Code asks for permission, the notch opens with the command and three buttons: *Toestaan*, *Weigeren*, *In terminal*. wisp never approves anything on its own; no click within 110 s means Claude asks in the terminal as usual.
 - **Mail**: your Gmail inbox, read-only, with an *Alles / Ongelezen* filter and an unread badge on the tab. New mail arrives by push (IMAP IDLE), not by polling. wisp never marks anything as read.
 - **Music**: whatever your Mac is playing (Spotify, Music, YouTube in the browser), with artwork, progress and glass controls. Next to it, a **live spectrum** of what you hear: 24 bands from bass to treble, the bass/mid/treble mix and the loudness. While music plays, the closed notch grows a little wing on each side: artwork on the left, a mini spectrum on the right.
+- **Agenda & weather**: today's timeline from the macOS Calendar app (and so from Google Calendar too), with what's done struck through, a red *nu* line and a countdown to what's next. Next to it the weather where you are and, on a work day, when to leave for your shift and whether it stays dry.
 - **Calm by default**: the closed notch draws nothing extra and uses 0 % CPU. No timers run while it is closed.
 - **Any Mac**: on a screen without a notch, wisp sits in a small bar at the top centre.
 - **Private by design**: no telemetry, no account. Passwords live in your macOS Keychain. wisp only talks to the services you connect.
@@ -53,7 +54,7 @@ The notch is the one bit of screen you never use. wisp turns it into a quiet das
 
 ### On the way
 
-Agenda & weather, a focus timer that knows what you are working on, clipboard history, quick notes, system stats, a restyled file drop, mail notifications in the notch, and GitHub, WHOOP and Notion on the Home tab. The designs for all of them are in [`design/boards/`](design/boards).
+A focus timer that knows what you are working on, clipboard history, quick notes, system stats, a restyled file drop, mail notifications in the notch, and GitHub, WHOOP and Notion on the Home tab. The designs for all of them are in [`design/boards/`](design/boards).
 
 ## Install
 
@@ -82,6 +83,7 @@ Open **Settings**: click the notch, then the sliders icon on the right. On a ful
 |---|---|---|
 | **Claude Code hooks** | live sessions and approvals | *Claude Code → Installeren…* shows exactly which lines it adds to `~/.claude/settings.json`. Nothing is written until you click *Installeren*, and a dated backup is made first. Restart running Claude Code sessions afterwards. |
 | **Gmail** | the Mail tab and unread badge | Your address and a Google [app password](https://myaccount.google.com/apppasswords). Both are stored in the Keychain only. |
+| **Agenda & weer** | the Agenda tab | Calendar access (macOS asks once), which calendars count, how a shift is recognised (the word *dienst* or a calendar), your ride to work in minutes, and the place for the weather (Nijmegen by default). |
 | **Accent colour** | buttons, unread dots, highlights | Blue, green, orange or purple. |
 | **Open at login** | wisp is always there | One toggle. |
 
@@ -98,6 +100,7 @@ Music needs no setup. The live spectrum asks once for macOS's *System Audio Reco
 | Click a mail | it opens in Gmail and stays unread in your inbox |
 | Press play in Spotify | the closed notch gets artwork and a mini spectrum |
 | Open the Music tab during a song | the spectrum moves with what you hear, from bass to treble |
+| Open the Agenda tab | today at a glance, the weather, and when to leave for your shift |
 | Click the artwork in the Music tab | the app that is playing comes to the front |
 
 ## How it works
@@ -106,6 +109,7 @@ Music needs no setup. The live spectrum asks once for macOS's *System Audio Reco
 - **Claude Code**: a small compiled helper, `wisp-hook`, ships inside the app. Claude Code runs it for each hook event; it forwards a trimmed copy over a Unix socket. If wisp isn't running, it exits in about 30 ms, so Claude Code never waits.
 - **Mail**: a minimal IMAP client on `Network.framework` (LOGIN, EXAMINE, SEARCH, FETCH with `BODY.PEEK`, IDLE).
 - **Music**: MediaRemote only answers Apple-signed processes since macOS 15.4, so the system `perl` loads a tiny bundled dylib that streams "now playing" changes as JSON lines. The spectrum comes from a Core Audio process tap and an FFT (Accelerate), and only runs while it is on screen.
+- **Agenda & weather**: EventKit reads today's events, only while the tab is open. The weather comes from [Open-Meteo](https://open-meteo.com) (no key, no account) at most every 15 minutes, and only when you open the tab.
 - **No dependencies**: native Swift 6, SwiftUI and AppKit.
 
 The details are in [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) and [`docs/INTEGRATIONS.md`](docs/INTEGRATIONS.md).
@@ -125,7 +129,7 @@ The details are in [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) and [`docs/INT
 
 ## Privacy
 
-wisp has no servers and no analytics. It connects to Gmail only after you add an account, and reads Now Playing and your Claude Code sessions locally on your Mac. The live spectrum analyses the sound on your Mac and never records, stores or sends it. Tool output and file contents from Claude Code never reach the app: `wisp-hook` strips them before forwarding. Passwords are stored in the macOS Keychain and nowhere else.
+wisp has no servers and no analytics. It connects to Gmail only after you add an account, and reads Now Playing, your calendar and your Claude Code sessions locally on your Mac. Your calendar is only read and never leaves the Mac; for the weather, only the coordinates of the place you chose go to Open-Meteo. The live spectrum analyses the sound on your Mac and never records, stores or sends it. Tool output and file contents from Claude Code never reach the app: `wisp-hook` strips them before forwarding. Passwords are stored in the macOS Keychain and nowhere else.
 
 ## Credits
 
