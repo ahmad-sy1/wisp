@@ -147,13 +147,13 @@ final class ClaudeService {
     }
 
     private let systemPrompt = """
-    You are Mochi, Louis's personal AI assistant embedded in the notch of his Mac. \
+    You are wisp, Ahmad's personal AI assistant embedded in the notch of the user's Mac. \
     You have web search access and can help with absolutely anything — research, coding, finding places, recommendations, tasks, questions. \
     Respond in the user's language. Be thorough and complete — use as much detail as the task requires. \
     No markdown formatting (no **, no ##, no bullet dashes). Use plain text with line breaks.
     """
 
-    /// Appends the latest WHOOP numbers (when connected) so Mochi can answer health questions.
+    /// Appends the latest WHOOP numbers (when connected) so the assistant can answer health questions.
     private var systemPromptWithContext: String {
         guard let whoop = AppState.shared.whoop, !whoop.chatContext.isEmpty else { return systemPrompt }
         return systemPrompt + "\n\nThe user's latest WHOOP data: \(whoop.chatContext)."
