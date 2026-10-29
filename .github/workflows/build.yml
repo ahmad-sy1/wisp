@@ -1,0 +1,37 @@
+name: Build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+# A newer push to the same branch or PR cancels the build still running
+# (macOS minutes are expensive on private repos).
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: macos-15
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Generate project
+        run: xcodegen
+
+      - name: Build (Release, unsigned)
+        run: |
+          xcodebuild \
+            -project wisp.xcodeproj \
+            -scheme wisp \
+            -configuration Release \
+            -derivedDataPath build \
+            build \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO
