@@ -119,6 +119,7 @@ The details are in [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) and [`docs/INT
 | [DESIGN.md](docs/DESIGN.md) | colours, sizes, typography and the rules every screen follows |
 | [RELEASING.md](docs/RELEASING.md) | signing, notarization and publishing a release |
 | [CONTRIBUTING.md](CONTRIBUTING.md) | how to build, branch and open a pull request |
+| [SPEC.md](docs/SPEC.md) | what every tab should do (in Dutch) |
 | [ROADMAP.md](docs/ROADMAP.md) | what's planned next, and what was decided against |
 | [CHANGELOG.md](CHANGELOG.md) | what changed |
 
