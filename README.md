@@ -74,7 +74,7 @@ Open **Settings**: click the notch, then the sliders icon on the right. On a ful
 
 | What | Why | How |
 |---|---|---|
-| **Claude Code hooks** | live sessions and approvals | *Claude Code → Installeren…* shows exactly which lines it adds to `~/.claude/settings.json` (and, if you like, which old Coucou hooks it removes). Nothing is written until you click *Installeren*, and a dated backup is made first. Restart running Claude Code sessions afterwards. |
+| **Claude Code hooks** | live sessions and approvals | *Claude Code → Installeren…* shows exactly which lines it adds to `~/.claude/settings.json`. Nothing is written until you click *Installeren*, and a dated backup is made first. Restart running Claude Code sessions afterwards. |
 | **Gmail** | the Mail tab and unread badge | Your address and a Google [app password](https://myaccount.google.com/apppasswords). Both are stored in the Keychain only. |
 | **Accent colour** | buttons, unread dots, highlights | Blue, green, orange or purple. |
 | **Open at login** | wisp is always there | One toggle. |
@@ -120,7 +120,7 @@ wisp has no servers and no analytics. It connects to Gmail only after you add an
 
 ## Credits
 
-Built by Ahmad Alasmi. The idea of a notch companion for Claude Code was inspired by [Coucou](https://github.com/Louis-CFM/coucou) by Louis Raillé; wisp is a separate app with its own code and design.
+Designed and built by Ahmad Alasmi.
 
 ## License
 
