@@ -179,14 +179,11 @@ struct EmptyStateView: View {
                 VStack(alignment: .leading, spacing: 5) {
                     Text("Nothing running right now.")
                         .font(.system(size: 15, weight: .semibold))
-                    Text("Drop a file or window, or ask me anything.")
+                    Text("Drop a file here to keep it handy.")
                         .font(.system(size: 13))
                         .foregroundColor(Color(hex: "#9398A1"))
                 }
                 Spacer()
-                PrimaryButton("Ask Claude") {
-                    state.view = .prompt
-                }
             }
             .padding(.leading, 118)
             .padding(.trailing, 18)
@@ -514,7 +511,11 @@ struct ChooseView: View {
                 (Text(fileName).font(.system(size: 14, weight: .semibold)) + Text(" is ready.").font(.system(size: 14, weight: .semibold)))
                 Text("What do you want to do with it?").font(.system(size: 12.5)).foregroundColor(Color(hex: "#9398A1"))
                 HStack(spacing: 8) {
-                    PrimaryButton("Ask a question") { state.view = .prompt }
+                    PrimaryButton("Show in Finder") {
+                        if let url = state.droppedFile?.url {
+                            NSWorkspace.shared.activateFileViewerSelecting([url])
+                        }
+                    }
                     SecondaryButton("Send by email") { state.view = .mail }
                 }
             }
@@ -1595,7 +1596,7 @@ private struct StatRow: View {
 // MARK: - Now Playing Card View
 //
 // Design 1b (Claude Design, "Notch Music"): same anatomy as the other cards.
-// Mochi (drawn by BotPlacement) takes the artwork colour; header with the
+// The status icon (drawn by BotPlacement) sits on the left; header with the
 // equalizer top-right, small artwork beside the title, progress + controls below.
 
 struct NowPlayingCardView: View {
@@ -2590,8 +2591,7 @@ struct AgentPill: View {
                     Capsule()
                         .stroke(Color(hex: task.color).opacity(isHovered ? 0.55 : 0.14), lineWidth: 1)
                     HStack(spacing: 0) {
-                        MiniBotCanvasView(task: task)
-                            .frame(width: 22 / 0.6, height: 22 / 0.6)
+                        TaskDot(task: task, size: 7)
                             .frame(width: 22, height: 22, alignment: .center)
                             .padding(.leading, 8)
                         Spacer()
@@ -2674,8 +2674,7 @@ struct ColumnAgentsView: View {
     var body: some View {
         VStack(spacing: 0) {
             ForEach(Array(others.prefix(4).enumerated()), id: \.1.id) { idx, task in
-                MiniBotCanvasView(task: task)
-                    .frame(width: 16 / 0.6, height: 16 / 0.6)
+                TaskDot(task: task, size: 7)
                     .frame(width: 16, height: 16)
                     .position(x: 0, y: CGFloat(50 + idx * 24))
                     .animation(.spring(response: 0.5, dampingFraction: 0.72).delay(Double(idx) * 0.035), value: idx)
@@ -2687,6 +2686,7 @@ struct ColumnAgentsView: View {
 // MARK: - Card background
 
 struct CardBackground<Content: View>: View {
+    /// Kept so call sites still say which state a card shows; wisp cards draw no wash.
     enum Wash { case red, green, pink, amber, cyan, indigo, soft }
 
     let wash: Wash?
@@ -2697,40 +2697,9 @@ struct CardBackground<Content: View>: View {
         self.content = content
     }
 
-    var washColor: Color {
-        switch wash {
-        case .red:    return Color(hex: "#F4505E").opacity(0.55)
-        case .green:  return Color(hex: "#34D399").opacity(0.5)
-        case .pink:   return Color(hex: "#F472B6").opacity(0.55)
-        case .amber:  return Color(hex: "#F5A524").opacity(0.42)
-        case .cyan:   return Color(hex: "#22D3EE").opacity(0.38)
-        case .indigo: return Color(hex: "#6366F1").opacity(0.5)
-        case .soft:   return Color.white.opacity(0.08)
-        case nil:     return Color.clear
-        }
-    }
-
     var body: some View {
         ZStack {
-            RoundedRectangle(cornerRadius: 20)
-                .fill(Color(hex: "#141518"))
-                .overlay(
-                    RadialGradient(
-                        gradient: Gradient(stops: [
-                            .init(color: washColor, location: 0),
-                            .init(color: .clear, location: 0.7)
-                        ]),
-                        center: UnitPoint(x: 0.5, y: 1.3),
-                        startRadius: 0,
-                        endRadius: 280
-                    )
-                    .clipShape(RoundedRectangle(cornerRadius: 20))
-                )
-                .overlay(
-                    RoundedRectangle(cornerRadius: 20)
-                        .stroke(Color.white.opacity(0.035), lineWidth: 1)
-                )
-
+            CardSurface()
             if let content = content {
                 content()
             }
@@ -2743,28 +2712,17 @@ extension CardBackground where Content == EmptyView {
         self.wash = wash
         self.content = nil
     }
+}
 
+/// Flat wisp card: no gradient wash, just the card fill and a hairline border.
+struct CardSurface: View {
     var body: some View {
-        ZStack {
-            RoundedRectangle(cornerRadius: 20)
-                .fill(Color(hex: "#141518"))
-                .overlay(
-                    RadialGradient(
-                        gradient: Gradient(stops: [
-                            .init(color: washColor, location: 0),
-                            .init(color: .clear, location: 0.7)
-                        ]),
-                        center: UnitPoint(x: 0.5, y: 1.3),
-                        startRadius: 0,
-                        endRadius: 280
-                    )
-                    .clipShape(RoundedRectangle(cornerRadius: 20))
-                )
-                .overlay(
-                    RoundedRectangle(cornerRadius: 20)
-                        .stroke(Color.white.opacity(0.035), lineWidth: 1)
-                )
-        }
+        RoundedRectangle(cornerRadius: Wisp.cardCorner, style: .continuous)
+            .fill(Wisp.card)
+            .overlay(
+                RoundedRectangle(cornerRadius: Wisp.cardCorner, style: .continuous)
+                    .stroke(Wisp.cardBorder, lineWidth: 1)
+            )
     }
 }
 

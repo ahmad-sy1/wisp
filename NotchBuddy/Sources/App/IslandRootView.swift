@@ -59,9 +59,8 @@ struct IslandContainer: View {
         // Canvas active during drag-over (.upload), post-drop animation (.uploading),
         // AND choose overlay (.choose) — canvas handles the full sequence through user action.
         // Engine deactivates when user clicks a canvas choose button or navigates away.
-        let uploadActive = state.mode == .expanded
-            && UploadSequenceEngine.shared.isActive
-            && (state.view == .upload || state.view == .uploading || state.view == .choose)
+        // wisp: the mascot drop canvas is retired; the SwiftUI drop views render instead.
+        let uploadActive = false
 
         let greetingActive = state.mode == .expanded && state.view == .greeting
 
@@ -74,10 +73,8 @@ struct IslandContainer: View {
             // Content
             if state.mode == .expanded {
                 if greetingActive {
-                    // Greeting canvas: fixed 640-wide, centered by offset so x=320 aligns with island center
-                    GreetingCanvasView(state: state)
-                        .frame(width: IslandConst.expandedWidth, height: 150)
-                        .offset(x: (islandWidth - IslandConst.expandedWidth) / 2)
+                    WispGreetingView()
+                        .frame(width: islandWidth, height: islandHeight)
                         .clipShape(IslandShape(width: islandWidth, height: islandHeight,
                                               cornerRadius: cornerRadius, topRadius: islandTopRadius))
                         .transition(.opacity)
@@ -104,16 +101,8 @@ struct IslandContainer: View {
                 }
             }
 
-            // Single BotPlacement — always alive in the view tree so spring animations
-            // fire from the current position (e.g. choose at 60,101) when canvas deactivates.
-            // Hidden during upload canvas or greeting (both draw their own Mochi).
+            // Single BotPlacement (status icon) — always alive so position changes animate.
             BotPlacement(state: state, islandW: islandWidth, islandH: islandHeight)
-                // Keep idle animations inside the resting strip. Expanded views
-                // retain the panel's full height for particles and hands.
-                .mask(alignment: .topLeading) {
-                    Rectangle().frame(width: islandWidth,
-                                      height: state.mode == .expanded ? 320 : islandHeight)
-                }
                 .opacity(uploadActive || greetingActive ? 0 : 1)
                 .animation(.easeInOut(duration: 0.25), value: uploadActive || greetingActive)
 
@@ -306,7 +295,7 @@ enum MusicWingsLayout {
 }
 
 /// iPhone-style live activity (design 2a/2b): artwork left of the notch; on the right
-/// the equalizer, or a mini Mochi in its status colour while a Claude session works.
+/// the equalizer, or a code icon in its status colour while a Claude session works.
 struct MusicWingsView: View {
     let track: NowPlayingTrack
     let notchHeight: CGFloat
@@ -339,8 +328,9 @@ struct MusicWingsView: View {
             if let status = claudeStatus {
                 HStack(spacing: 5) {
                     Circle().fill(status).frame(width: 5, height: 5)
-                    MiniMochiShape(color: status)
-                        .frame(width: 22, height: 17)
+                    Image(systemName: "chevron.left.forwardslash.chevron.right")
+                        .font(.system(size: 11, weight: .medium))
+                        .foregroundColor(status)
                 }
                 .transition(.opacity)
             } else {
@@ -356,26 +346,6 @@ struct MusicWingsView: View {
     }
 }
 
-/// The tiny flat Mochi from the design: rounded body, two eyes looking right.
-struct MiniMochiShape: View {
-    let color: Color
-
-    var body: some View {
-        GeometryReader { g in
-            let w = g.size.width, h = g.size.height
-            ZStack(alignment: .topLeading) {
-                RoundedRectangle(cornerRadius: h * 0.41, style: .continuous).fill(color)
-                Capsule().fill(Color.black)
-                    .frame(width: w * 0.14, height: h * 0.24)
-                    .offset(x: w * 0.5, y: h * 0.41)
-                Capsule().fill(Color.black)
-                    .frame(width: w * 0.14, height: h * 0.24)
-                    .offset(x: w * 0.73, y: h * 0.41)
-            }
-        }
-    }
-}
-
 // MARK: - Bot placement helper
 
 struct BotPlacement: View {
@@ -383,91 +353,29 @@ struct BotPlacement: View {
     let islandW: CGFloat
     let islandH: CGFloat
 
+    /// The mascot is gone: the same slot now shows a line icon for the current state.
+    /// Expanded views get a rounded tile; the resting strip gets the bare icon, and the
+    /// hidden bar (no notch) and the upload bar get a plain dot.
     var body: some View {
         let (cx, cy, diameter, opacity) = botPosition(mode: state.mode, view: state.view, islandW: islandW, islandH: islandH, uploadProgress: state.uploadProgress, hasNotch: state.hasNotch)
-        let canvasSize = diameter / 0.6
-        let overhang: CGFloat = 40
-        let isUploading = state.view == .uploading
+        let s = state.effectiveState
 
         Group {
-            // No glow in uploading mode — the tiny dot doesn't need it
-            if state.mode == .expanded && !isUploading {
-                Circle()
-                    .fill(RadialGradient(
-                        gradient: Gradient(stops: [
-                            .init(color: botGlowColor(state.effectiveState), location: 0),
-                            .init(color: .clear, location: 0.62)
-                        ]),
-                        center: .center,
-                        startRadius: 0,
-                        endRadius: diameter * 1.1
-                    ))
-                    .frame(width: diameter * 2.2, height: diameter * 2.2)
-                    .blur(radius: 6)
-                    .opacity(botGlowOpacity(state.effectiveState))
-                    .position(x: cx, y: cy)
-                    .animation(.easeInOut(duration: 0.4), value: state.effectiveState)
-            }
-
-            // Uploading: no particle overhang (no hearts during upload), positioned directly at cy.
-            // BotEngine cy = H/2 + 0 + oy*R + R*0.06 ≈ H/2 (body centered in canvas).
-            // With .position(x:y:) placing the frame center at (uploadCx, cy), bot is at cy ✓.
-            //
-            // Normal: extra 40pt canvas at top for heart particles; position offset up by 20pt;
-            // BotEngine compensates with cy = H/2 + particleOverhang/2 + oy*R + R*0.06.
-            if isUploading {
-                TimelineView(.animation) { tl in
-                    let elapsed: Double = {
-                        guard let start = state.uploadStartTime else { return 0 }
-                        return tl.date.timeIntervalSince(start)
-                    }()
-                    let t = min(1.0, max(0, elapsed / state.uploadDuration))
-                    // cx = 36 + 526*t: bot center at fill right edge (bar left=36, width=526)
-                    let uploadCx = 36 + CGFloat(t * (2 - t)) * 526
-                    BotCanvasView(state: state, particleOverhang: 0)
-                        .frame(width: canvasSize, height: canvasSize)
-                        .opacity(state.isDraggingBot ? 0 : opacity)
-                        .position(x: uploadCx, y: cy)
-                }
-                .transition(.scale(scale: 0.01, anchor: .center).combined(with: .opacity))
+            if state.mode == .expanded && state.view != .uploading {
+                StatusGlyph(state: s, size: min(52, diameter * 0.9))
+            } else if state.mode == .compact {
+                Image(systemName: s.symbol)
+                    .font(.system(size: max(10, diameter * 0.55)))
+                    .foregroundColor(s.tint)
             } else {
-                BotCanvasView(state: state, particleOverhang: overhang)
-                    .frame(width: canvasSize, height: canvasSize + overhang)
-                    .opacity(state.isDraggingBot ? 0 : opacity)
-                    .position(x: cx, y: cy - overhang / 2)
-                    .animation(.spring(response: 0.5, dampingFraction: 0.72), value: cx)
-                    .animation(.spring(response: 0.5, dampingFraction: 0.72), value: cy)
-                    .animation(.spring(response: 0.5, dampingFraction: 0.72), value: canvasSize)
-                    .transition(.scale(scale: 0.01, anchor: .center).combined(with: .opacity))
+                Circle().fill(Color.white).frame(width: 6, height: 6)
             }
         }
-        // Branch switch (uploading ↔ normal) animates with a fast spring: uploading dot
-        // scales out at bar-end while normal bot scales in at choose position.
-        .animation(.spring(response: 0.36, dampingFraction: 0.72), value: isUploading)
-        // Slap, drag, and hover are handled by the AppKit NSEvent monitor in
-        // IslandWindowController — not SwiftUI gestures — so this is safe.
+        .opacity(opacity)
+        .position(x: cx, y: cy)
+        .animation(.spring(response: 0.5, dampingFraction: 0.72), value: cx)
+        .animation(.spring(response: 0.5, dampingFraction: 0.72), value: cy)
         .allowsHitTesting(false)
-    }
-
-    private func botGlowColor(_ s: BotState) -> Color {
-        switch s {
-        case .working:   return Color(hex: "#3B9EFF")
-        case .thinking:  return Color(hex: "#A78BFA")
-        case .searching: return Color(hex: "#6366F1")
-        case .approval:  return Color(hex: "#F5A524")
-        case .error:     return Color(hex: "#F4505E")
-        case .finished:  return Color(hex: "#34D399")
-        case .ratelimit: return Color(hex: "#F59E0B")
-        default:         return Color.white
-        }
-    }
-
-    private func botGlowOpacity(_ s: BotState) -> Double {
-        switch s {
-        case .idle, .sleeping: return 0.15
-        case .dizzy:           return 0.0
-        default:               return 0.65
-        }
     }
 }
 
@@ -499,6 +407,41 @@ func botPosition(mode: IslandMode, view: IslandView, islandW: CGFloat, islandH: 
             cy = headerBottom + (islandH - headerBottom - cardH) / 2 + cardH / 2
         }
         return (cx, cy, diameter, 1)
+    }
+}
+
+// MARK: - Launch greeting
+
+/// Short launch greeting: the wisp mark and wordmark, then back to the resting strip.
+struct WispGreetingView: View {
+    @State private var shown = false
+    @State private var done: DispatchWorkItem? = nil
+
+    var body: some View {
+        HStack(spacing: 12) {
+            WispMark(size: 30)
+            Text("wisp")
+                .font(.system(size: 30, weight: .bold))
+                .tracking(-0.5)
+                .foregroundColor(Wisp.textPrimary)
+        }
+        .opacity(shown ? 1 : 0)
+        .scaleEffect(shown ? 1 : 0.94)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .padding(.top, 20)
+        .onAppear {
+            withAnimation(.easeOut(duration: 0.4)) { shown = true }
+            SoundEngine.shared.play("greet")
+            let item = DispatchWorkItem {
+                NotificationCenter.default.post(name: .greetComplete, object: nil)
+            }
+            done = item
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.8, execute: item)
+        }
+        .onDisappear { done?.cancel() }
+        .onReceive(NotificationCenter.default.publisher(for: .greetingInterrupt)) { _ in
+            done?.cancel()
+        }
     }
 }
 
@@ -677,7 +620,7 @@ struct TabButton: View {
     }
 }
 
-// MARK: - Compact mini mochi grid (2×2 to the right of the notch)
+// MARK: - Compact task grid (2×2 dots to the right of the notch)
 
 struct CompactMiniGrid: View {
     @ObservedObject var state: AppState
@@ -690,8 +633,7 @@ struct CompactMiniGrid: View {
         let cols = [GridItem(.fixed(12), spacing: 4), GridItem(.fixed(12), spacing: 4)]
         LazyVGrid(columns: cols, spacing: 4) {
             ForEach(others) { task in
-                MiniBotCanvasView(task: task)
-                    .frame(width: 12 / 0.6, height: 12 / 0.6)
+                TaskDot(task: task, size: 7)
                     .frame(width: 12, height: 12, alignment: .center)
             }
         }

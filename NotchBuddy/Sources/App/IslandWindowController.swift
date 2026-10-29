@@ -754,33 +754,10 @@ final class IslandWindowController: NSWindowController {
     // MARK: - Bot hit test (for slap trigger)
 
     private func isBotHit(_ windowPoint: CGPoint) -> Bool {
-        let s = AppState.shared
-        let panelH = window?.frame.height ?? 320
-        let panelW = window?.frame.width  ?? 720
-        let (islandW, fixedH) = islandSize(mode: s.mode, view: s.view,
-                                            progress: s.uploadProgress, nw: notchW, nh: notchH)
-        // Chat view resizes dynamically — must match IslandContainer.chatPromptHeight
-        let islandH: CGFloat
-        if s.mode == .expanded && s.view == .prompt {
-            let base: CGFloat = 240
-            let perMsg: CGFloat = 40
-            islandH = min(300, base + CGFloat(s.chatHistory.count) * perMsg)
-        } else {
-            islandH = fixedH
-        }
-        let islandMinX = (panelW - islandW) / 2
-        let (cx, cy, diameter, _) = botPosition(mode: s.mode, view: s.view,
-                                                  islandW: islandW, islandH: islandH,
-                                                  uploadProgress: s.uploadProgress, hasNotch: s.hasNotch)
-        let radius = (diameter / 0.6) / 2
-        // botPosition cy is from island TOP; panel AppKit coords have y=0 at bottom
-        // island top in AppKit coords = panelH (island glued to top of panel/screen)
-        let botX = islandMinX + cx
-        let botY = panelH - cy
-        let dx = windowPoint.x - botX
-        let dy = windowPoint.y - botY
-        return dx*dx + dy*dy <= radius * radius
+        // wisp: no mascot to hover, slap or drag onto a window (that drag opened the chat).
+        false
     }
+
 
     // MARK: - Notch detection (static)
 
