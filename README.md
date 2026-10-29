@@ -12,6 +12,12 @@ xcodebuild -scheme wisp -configuration Debug -derivedDataPath build build
 open build/Build/Products/Debug/wisp.app
 ```
 
+## Installeren en releasen
+
+- `./scripts/install.sh` bouwt een Release-versie en zet die in `/Applications` (vervangt de draaiende wisp).
+- `./scripts/release.sh` maakt een ondertekende en door Apple genotariseerde release op GitHub. De versie komt uit `MARKETING_VERSION` in `project.yml`; eenmalige setup staat bovenin het script.
+- Elke push en PR naar `main` wordt op GitHub Actions gebouwd (workflow *Build*).
+
 ## Regels
 
 - Swift 6, SwiftUI + AppKit, geen dependencies van derden.
