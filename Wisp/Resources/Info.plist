@@ -32,5 +32,9 @@
 	<string>wisp shows what's on your calendar today in the Calendar tab. Your calendar is only read and stays on your Mac.</string>
 	<key>NSHumanReadableCopyright</key>
 	<string>Copyright © 2026 Ahmad Alasmi. All rights reserved.</string>
+	<key>NSLocationUsageDescription</key>
+	<string>macOS gives apps the name of your Wi‑Fi network only with Location access. wisp uses it for the System tab and never reads where you are.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>macOS gives apps the name of your Wi‑Fi network only with Location access. wisp uses it for the System tab and never reads where you are.</string>
 </dict>
 </plist>

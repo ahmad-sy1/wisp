@@ -57,6 +57,8 @@ struct SettingsView: View {
 
             MusicSection(spectrum: .shared)
 
+            SystemSection(stats: .shared)
+
             ClaudeHooksSection()
         }
         .formStyle(.grouped)

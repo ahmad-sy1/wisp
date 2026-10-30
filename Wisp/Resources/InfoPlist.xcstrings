@@ -33,6 +33,28 @@
           }
         }
       }
+    },
+    "NSLocationUsageDescription" : {
+      "comment" : "Shown by macOS when wisp asks for Location access (only for the Wi-Fi name)",
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "macOS geeft apps de naam van je wifinetwerk alleen met toegang tot je locatie. wisp gebruikt die voor de Systeem-tab en leest nooit waar je bent."
+          }
+        }
+      }
+    },
+    "NSLocationWhenInUseUsageDescription" : {
+      "comment" : "Shown by macOS when wisp asks for Location access (only for the Wi-Fi name)",
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "macOS geeft apps de naam van je wifinetwerk alleen met toegang tot je locatie. wisp gebruikt die voor de Systeem-tab en leest nooit waar je bent."
+          }
+        }
+      }
     }
   },
   "version" : "1.0"
