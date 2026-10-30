@@ -7,7 +7,6 @@ What is planned, roughly in order. Every item becomes its own branch and pull re
 | Item | Notes | Tracking |
 |---|---|---|
 | **Files tab** | The drop zone, restyled. | |
-| **Mail notifications in the notch** | A short peek with *Openen / Verwijderen / Later*, and the unread count on the closed notch. Board 8. | |
 | **Settings window with a sidebar** | General, Notch, Integrations, Calendar & weather, Music, Focus as pages instead of one long form. Boards 10.1–10.6. | [#28](https://github.com/ahmad-sy1/wisp/issues/28) |
 | **Choose and reorder tabs** | Tabs on/off, drag to reorder, pick the Home tiles. Board 10.1. | [#24](https://github.com/ahmad-sy1/wisp/issues/24) |
 | **Keyboard shortcut** | Open the notch with ⌥Space (changeable). Board 10.2. | [#25](https://github.com/ahmad-sy1/wisp/issues/25) |
