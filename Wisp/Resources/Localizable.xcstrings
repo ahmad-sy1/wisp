@@ -161,6 +161,26 @@
         }
       }
     },
+    "Automatic · %@ active" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Automatisch · %@ actief"
+          }
+        }
+      }
+    },
+    "Automatic · %@ · %@" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Automatisch · %1$@ · %2$@"
+          }
+        }
+      }
+    },
     "Bass %@ · Mid %@ · High %@" : {
       "localizations" : {
         "nl" : {
@@ -221,12 +241,32 @@
         }
       }
     },
+    "Change the task" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Taak aanpassen"
+          }
+        }
+      }
+    },
     "Changes to ~/.claude/settings.json" : {
       "localizations" : {
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Wijzigingen in ~/.claude/settings.json"
+          }
+        }
+      }
+    },
+    "Chosen by you" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zelf gekozen"
           }
         }
       }
@@ -257,6 +297,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sluiten na verlaten"
+          }
+        }
+      }
+    },
+    "Coding" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Coderen"
           }
         }
       }
@@ -371,6 +421,16 @@
         }
       }
     },
+    "Do not disturb during focus" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Niet storen tijdens focus"
+          }
+        }
+      }
+    },
     "Done · %@ focused" : {
       "localizations" : {
         "nl" : {
@@ -397,6 +457,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Droog tot %@"
+          }
+        }
+      }
+    },
+    "Duration" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Duur"
           }
         }
       }
@@ -437,6 +507,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Voor het spectrum analyseert wisp live het geluid van je Mac. Er wordt niets opgenomen of verstuurd."
+          }
+        }
+      }
+    },
+    "Forget" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vergeten"
+          }
+        }
+      }
+    },
+    "From your calendar" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uit agenda"
           }
         }
       }
@@ -911,6 +1001,16 @@
         }
       }
     },
+    "Pause" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pauze"
+          }
+        }
+      }
+    },
     "Paused" : {
       "localizations" : {
         "nl" : {
@@ -991,6 +1091,16 @@
         }
       }
     },
+    "Reset" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reset"
+          }
+        }
+      }
+    },
     "Restart" : {
       "localizations" : {
         "nl" : {
@@ -1007,6 +1117,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Start wisp opnieuw om van taal te wisselen."
+          }
+        }
+      }
+    },
+    "Runs your Shortcuts “%@” and “%@”" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Start je opdrachten “%1$@” en “%2$@”"
           }
         }
       }
@@ -1121,12 +1241,32 @@
         }
       }
     },
+    "Start" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Start"
+          }
+        }
+      }
+    },
     "Start Claude Code in IntelliJ or a terminal to see it here." : {
       "localizations" : {
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Start Claude Code in IntelliJ of een terminal om hem hier te zien."
+          }
+        }
+      }
+    },
+    "Start music when it begins" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Muziek starten bij begin"
           }
         }
       }
@@ -1187,6 +1327,46 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Spectrum start zodra er iets speelt"
+          }
+        }
+      }
+    },
+    "Today %lld sessions · %@" : {
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Today %lld session · %@"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Today %lld sessions · %@"
+                }
+              }
+            }
+          }
+        },
+        "nl" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Vandaag %lld sessie · %@"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Vandaag %lld sessies · %@"
+                }
+              }
+            }
           }
         }
       }
@@ -1301,6 +1481,36 @@
         }
       }
     },
+    "What are you working on?" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Waar werk je aan?"
+          }
+        }
+      }
+    },
+    "When you change a task the timer guessed, wisp remembers it for that app or project." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pas je een taak aan die de timer raadde, dan onthoudt wisp die voor die app of dat project."
+          }
+        }
+      }
+    },
+    "Work" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Werk"
+          }
+        }
+      }
+    },
     "Working · %@" : {
       "localizations" : {
         "nl" : {
@@ -1361,12 +1571,32 @@
         }
       }
     },
+    "done" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "klaar"
+          }
+        }
+      }
+    },
     "drizzle" : {
       "localizations" : {
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "motregen"
+          }
+        }
+      }
+    },
+    "focus" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "focus"
           }
         }
       }
@@ -1471,12 +1701,32 @@
         }
       }
     },
+    "paused" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "gepauzeerd"
+          }
+        }
+      }
+    },
     "rain" : {
       "localizations" : {
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "regen"
+          }
+        }
+      }
+    },
+    "ready" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "gereed"
           }
         }
       }
@@ -1628,6 +1878,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "‘%@’ in de titel"
+          }
+        }
+      }
+    },
+    "“Do not disturb during focus” runs your Shortcuts “%@” and “%@”. Make them in the Shortcuts app with the action Set Focus." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "“Niet storen tijdens focus” start je opdrachten “%1$@” en “%2$@”. Maak ze in de Opdrachten-app met de actie Stel focus in."
           }
         }
       }

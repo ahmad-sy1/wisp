@@ -51,6 +51,8 @@ struct SettingsView: View {
 
             AgendaSection(agenda: .shared, weather: .shared)
 
+            FocusSection(focus: .shared)
+
             MusicSection(spectrum: .shared)
 
             ClaudeHooksSection()
