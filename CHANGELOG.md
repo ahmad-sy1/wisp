@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Clipboard tab: the last 20 copied texts with search and *Copy*, stored only on this Mac, never passwords; can be switched off in Settings (board 5)
 - Focus timer tab: 25 / 50 / 90 minutes, a ring that keeps counting in the closed notch, the task from the calendar or the app in front (learns from corrections), today's sessions, *Do not disturb* through Shortcuts and *Start music* (board 4)
 - English interface with Dutch as the first translation (String Catalogs), a language choice in Settings, and a CI check for missing translations (#12)
 - Debug builds: `-snapshot <file.png>` draws the open panel to a PNG, also with the screen locked

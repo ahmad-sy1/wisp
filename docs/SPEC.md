@@ -67,6 +67,8 @@ Rechts: **Instellingen** (open het Settings-venster).
 - Zoekveld rechtsboven in de tabbalk-rij.
 - Alleen lokaal opslaan.
 
+> **Stand van zaken:** gebouwd. Alleen tekst (geen afbeeldingen of bestanden). Elke seconde wordt één getal van het klembord gelezen (0,0 % CPU); de geschiedenis kan uit in Settings → Klembord, waar je haar ook wist.
+
 ### Notities
 - Links: lijst met recente notities (tekst + tijd). Rechts: tekstveld "Typ een notitie…" + knop **Opslaan** → nieuwe notitie bovenaan.
 - Lokaal opslaan (JSON in Application Support). **Later optioneel:** sync naar Notion via de bestaande Notion-integratie.

@@ -107,6 +107,17 @@ States the board doesn't show, built in the same style:
 - Done: an empty ring, *00:00* and *klaar*; the notch opens on the Focus tab and plays the *Glass* sound if sounds are on.
 - Editing the task: the title becomes a text field; Return saves, Escape cancels.
 
+## Clipboard tab
+
+One scrolling card in the fixed 150 pt area (board 5):
+
+| Part | Spec |
+|---|---|
+| Row (46 pt) | a 28 pt grey tile with *URL*, *</>* or *Aa* (bold, grey); the text on one line (13 pt, code 12 pt monospaced, line breaks as ⏎); how long ago (11 pt grey: *nu*, *2 min*, *1 u*, *3 d*); a *Kopieer* key that reads *Gekopieerd* in the accent colour for a moment |
+| Tab bar | a 190 pt search field *Zoek in klembord* just left of Settings |
+
+States the board doesn't show: nothing copied yet (*Kopieer iets en het verschijnt hier.*), nothing found for a search, and the history switched off in Settings, each as the clipboard icon with a short grey line.
+
 ## Music tab
 
 Two cards in the fixed 150 pt area (boards 9.1–9.6):
