@@ -29,6 +29,18 @@ struct SettingsView: View {
                     }
                 }
                 Toggle("Sounds", isOn: $prefs.soundsEnabled)
+                Picker("Language", selection: $prefs.language) {
+                    Text("Same as macOS").tag(AppLanguage.system)
+                    // Each language in its own words.
+                    Text(verbatim: "English").tag(AppLanguage.english)
+                    Text(verbatim: "Nederlands").tag(AppLanguage.dutch)
+                }
+                if prefs.language != prefs.launchLanguage {
+                    LabeledContent("Restart wisp to switch language.") {
+                        Button("Restart") { prefs.relaunch() }
+                    }
+                    .font(.caption)
+                }
                 Toggle("Open at login", isOn: Binding(
                     get: { prefs.launchAtLogin },
                     set: { prefs.setLaunchAtLogin($0) }

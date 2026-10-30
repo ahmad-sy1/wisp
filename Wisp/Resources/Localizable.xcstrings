@@ -551,6 +551,16 @@
         }
       }
     },
+    "Language" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Taal"
+          }
+        }
+      }
+    },
     "Leave for your shift" : {
       "localizations" : {
         "nl" : {
@@ -981,12 +991,42 @@
         }
       }
     },
+    "Restart" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Opnieuw starten"
+          }
+        }
+      }
+    },
+    "Restart wisp to switch language." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Start wisp opnieuw om van taal te wisselen."
+          }
+        }
+      }
+    },
     "SPECTRUM" : {
       "localizations" : {
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "SPECTRUM"
+          }
+        }
+      }
+    },
+    "Same as macOS" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zelfde als macOS"
           }
         }
       }
