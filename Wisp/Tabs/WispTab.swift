@@ -22,15 +22,15 @@ enum WispTab: String, CaseIterable, Identifiable {
 
     var title: String {
         switch self {
-        case .home:      "Home"
-        case .mail:      "Mail"
-        case .agenda:    "Agenda"
-        case .focus:     "Focus"
-        case .music:     "Muziek"
-        case .clipboard: "Klembord"
-        case .notes:     "Notities"
-        case .system:    "Systeem"
-        case .files:     "Bestanden"
+        case .home:      String(localized: "Home")
+        case .mail:      String(localized: "Mail")
+        case .agenda:    String(localized: "Calendar")
+        case .focus:     String(localized: "Focus")
+        case .music:     String(localized: "Music")
+        case .clipboard: String(localized: "Clipboard")
+        case .notes:     String(localized: "Notes")
+        case .system:    String(localized: "System")
+        case .files:     String(localized: "Files")
         }
     }
 }

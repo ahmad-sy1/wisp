@@ -36,7 +36,7 @@ struct NowPlayingTrack: Equatable {
     }
 
     /// Small label above the title: "Spotify", "Muziek", "Brave Browser"…
-    var sourceLabel: String { sourceName ?? "Nu aan het afspelen" }
+    var sourceLabel: String { sourceName ?? String(localized: "Now playing") }
 
     private static let browsers = [
         "com.apple.Safari", "com.google.Chrome", "com.brave.Browser", "company.thebrowser",

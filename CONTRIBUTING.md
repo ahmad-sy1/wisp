@@ -64,7 +64,18 @@ End the test session with `"hook_event_name":"SessionEnd"`, so it doesn't stay o
 - **Never write `~/.claude/settings.json`** without a backup and the user's confirmation of the exact changes.
 - **0 % CPU when the notch is closed.** No timers or animations while nothing is visible.
 - Visual changes follow [`docs/DESIGN.md`](docs/DESIGN.md) and the boards in `design/boards/`.
+- **Interface text is English**, with Dutch in the String Catalogs. See *Translations* below.
 - Keep the bundle identifier `com.ahmadalasmi.wisp`: Keychain items, preferences and macOS permissions depend on it.
+
+## Translations
+
+English is the source language. Every other language lives in `Wisp/Resources/Localizable.xcstrings` (and `InfoPlist.xcstrings` for the texts macOS shows, such as permission prompts). Dutch (`nl`) is the first translation.
+
+- `Text("…")`, `Button("…")`, `Toggle`, `Section`, `.help("…")` and friends are translated automatically. Text that ends up in a `String` first (a status line, a computed label, a menu item) needs `String(localized: "…")`; a plain `String` shown with `Text(_:)` is never translated.
+- Text that shouldn't be translated (a number, a symbol, a name) goes through `Text(verbatim:)`.
+- Dates and times use `formatted()` without a fixed locale, so they follow the language too.
+- After a build, `scripts/strings.py sync` adds new strings to the catalog and drops unused ones. After switching branches, run `xcodegen` and build clean first (`rm -rf build/Build/Intermediates.noindex/wisp.build`): the build only re-reads the files it recompiles. Fill in the Dutch in Xcode's catalog editor or in the JSON. `scripts/strings.py check` fails while a string has no Dutch; CI runs it after every build.
+- To see the app in one language: `open build/Build/Products/Debug/wisp.app --args -AppleLanguages '(nl)'`.
 
 ## Branches and commits
 

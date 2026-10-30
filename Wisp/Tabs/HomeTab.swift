@@ -18,7 +18,7 @@ struct HomeTab: View {
     }
 }
 
-// MARK: - Nu bezig
+// MARK: - Now
 
 private struct NowCard: View {
     let session: ClaudeSession?
@@ -29,11 +29,11 @@ private struct NowCard: View {
                 HStack(spacing: 12) {
                     IconTile(symbol: "chevron.left.forwardslash.chevron.right")
                     VStack(alignment: .leading, spacing: 2) {
-                        Text("NU BEZIG")
+                        Text("IN PROGRESS")
                             .font(.system(size: 10.5, weight: .medium))
                             .tracking(0.6)
                             .foregroundStyle(Theme.textSecondary)
-                        Text(session?.host.name ?? "Geen sessie")
+                        Text(session?.host.name ?? String(localized: "No session"))
                             .font(.system(size: 15, weight: .semibold))
                             .lineLimit(1)
                     }
@@ -52,7 +52,7 @@ private struct NowCard: View {
                     Button("Open project") { session.host.open(project: session.cwd) }
                         .buttonStyle(AccentButtonStyle())
                 } else {
-                    Text("Start Claude Code in IntelliJ of een terminal om hem hier te zien.")
+                    Text("Start Claude Code in IntelliJ or a terminal to see it here.")
                         .font(.system(size: 12))
                         .foregroundStyle(Theme.textSecondary)
                         .fixedSize(horizontal: false, vertical: true)
@@ -92,18 +92,18 @@ private struct StatusLine: View {
 
     private func text(now: Date) -> String {
         switch session.state {
-        case .working:  return session.tool.map { "Bezig · \($0)" } ?? "Bezig…"
-        case .waiting:  return "Wacht op toestemming"
-        case .question: return "Heeft een vraag voor je"
-        case .failed:   return "Gestopt met een fout"
-        case .finished: return "Klaar · \(Self.duration(now.timeIntervalSince(session.startedAt))) gefocust"
-        case .idle:     return "Verbonden · \(Self.duration(now.timeIntervalSince(session.startedAt))) gefocust"
+        case .working:  return session.tool.map { String(localized: "Working · \($0)") } ?? String(localized: "Working…")
+        case .waiting:  return String(localized: "Waiting for permission")
+        case .question: return String(localized: "Has a question for you")
+        case .failed:   return String(localized: "Stopped with an error")
+        case .finished: return String(localized: "Done · \(Self.duration(now.timeIntervalSince(session.startedAt))) focused")
+        case .idle:     return String(localized: "Connected · \(Self.duration(now.timeIntervalSince(session.startedAt))) focused")
         }
     }
 
     static func duration(_ seconds: TimeInterval) -> String {
         let minutes = max(0, Int(seconds) / 60)
-        return minutes < 60 ? "\(minutes)m" : "\(minutes / 60)u \(minutes % 60)m"
+        return minutes < 60 ? String(localized: "\(minutes)m") : String(localized: "\(minutes / 60)h \(minutes % 60)m")
     }
 }
 
@@ -119,11 +119,11 @@ private struct ApprovalCard: View {
                 HStack(spacing: 12) {
                     IconTile(symbol: "hand.raised", tint: Theme.warning)
                     VStack(alignment: .leading, spacing: 2) {
-                        Text("TOESTEMMING NODIG")
+                        Text("PERMISSION NEEDED")
                             .font(.system(size: 10.5, weight: .medium))
                             .tracking(0.6)
                             .foregroundStyle(Theme.warning)
-                        Text("\(approval.project) wil \(approval.tool) gebruiken")
+                        Text("\(approval.project) wants to use \(approval.tool)")
                             .font(.system(size: 15, weight: .semibold))
                             .lineLimit(1)
                     }
@@ -143,9 +143,9 @@ private struct ApprovalCard: View {
                     Spacer()
                     Button("In terminal") { answer("ask") }
                         .buttonStyle(SecondaryButtonStyle())
-                    Button("Weigeren") { answer("deny") }
+                    Button("Deny") { answer("deny") }
                         .buttonStyle(SecondaryButtonStyle())
-                    Button("Toestaan") { answer("allow") }
+                    Button("Allow") { answer("allow") }
                         .buttonStyle(AccentButtonStyle())
                 }
             }
@@ -171,12 +171,12 @@ private struct IntegrationGrid: View {
     private var musicTile: some View {
         let track = player.track
         let value = track.map { [$0.title, $0.artist].filter { !$0.isEmpty }.joined(separator: " · ") }
-        return tile("Muziek", value: value ?? "Er speelt niets",
+        return tile(String(localized: "Music"), value: value ?? String(localized: "Nothing is playing"),
                     dot: track?.isPlaying == true ? Theme.ok : nil,
                     dim: track == nil)
     }
 
-    private func tile(_ name: String, value: String = "Niet gekoppeld",
+    private func tile(_ name: String, value: String = String(localized: "Not connected"),
                       dot: Color? = nil, dim: Bool = true) -> some View {
         Card {
             VStack(alignment: .leading, spacing: 4) {

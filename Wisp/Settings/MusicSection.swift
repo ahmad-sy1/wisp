@@ -1,16 +1,16 @@
 import SwiftUI
 
-/// Settings → Muziek: access for the live spectrum.
+/// Settings → Music: access for the live spectrum.
 struct MusicSection: View {
     @ObservedObject var spectrum: Spectrum
 
     var body: some View {
-        Section("Muziek") {
+        Section("Music") {
             Toggle("Live spectrum", isOn: Binding(
                 get: { spectrum.consent == .allowed },
                 set: { $0 ? spectrum.allow() : spectrum.decline() }
             ))
-            Text("Analyseert live het geluid van wat er speelt. Er wordt niets opgenomen, opgeslagen of verstuurd. macOS vraagt de eerste keer om toestemming voor systeemaudio.")
+            Text("Analyses the sound of what plays, live. Nothing is recorded, stored or sent. macOS asks for permission for system audio the first time.")
                 .font(.caption)
                 .foregroundStyle(.secondary)
         }

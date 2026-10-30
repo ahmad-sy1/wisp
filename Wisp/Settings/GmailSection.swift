@@ -12,7 +12,7 @@ struct GmailSection: View {
                 LabeledContent("Account") {
                     HStack(spacing: 8) {
                         Text(store.address ?? "").foregroundStyle(.secondary)
-                        Button("Ontkoppelen") {
+                        Button("Disconnect") {
                             store.disconnect()
                             password = ""
                         }
@@ -22,20 +22,20 @@ struct GmailSection: View {
                     Text(statusText).foregroundStyle(.secondary)
                 }
             } else {
-                TextField("Gmail-adres", text: $address, prompt: Text("naam@gmail.com"))
+                TextField("Gmail address", text: $address, prompt: Text("name@gmail.com"))
                     .textContentType(.username)
-                SecureField("App-wachtwoord", text: $password, prompt: Text("16 tekens"))
+                SecureField("App password", text: $password, prompt: Text("16 characters"))
                 HStack {
-                    Link("App-wachtwoord maken…", destination: URL(string: "https://myaccount.google.com/apppasswords")!)
+                    Link("Create an app password…", destination: URL(string: "https://myaccount.google.com/apppasswords")!)
                         .font(.caption)
                     Spacer()
-                    Button("Verbinden") {
+                    Button("Connect") {
                         store.connect(address: address, appPassword: password)
                         password = ""
                     }
                     .disabled(!address.contains("@") || password.replacingOccurrences(of: " ", with: "").count < 16)
                 }
-                Text("Alleen lezen: wisp markeert niets als gelezen. Adres en wachtwoord staan alleen in je Keychain.")
+                Text("Read only: wisp marks nothing as read. Address and password are kept only in your Keychain.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
@@ -44,9 +44,9 @@ struct GmailSection: View {
 
     private var statusText: String {
         switch store.status {
-        case .notConfigured:     "Niet gekoppeld"
-        case .connecting:        "Verbinden…"
-        case .connected:         "Verbonden · \(store.unreadCount) ongelezen"
+        case .notConfigured:     String(localized: "Not connected")
+        case .connecting:        String(localized: "Connecting…")
+        case .connected:         String(localized: "Connected · \(store.unreadCount) unread")
         case .failed(let error): error
         }
     }

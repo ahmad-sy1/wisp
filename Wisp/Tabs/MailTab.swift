@@ -9,11 +9,11 @@ struct MailTab: View {
         Card {
             switch store.status {
             case .notConfigured:
-                message("Koppel Gmail om je mail hier te zien.", action: ("Gmail koppelen", openSettings))
+                message(String(localized: "Connect Gmail to see your mail here."), action: (String(localized: "Connect Gmail"), openSettings))
             case .failed(let text) where store.messages.isEmpty:
-                message(text, action: ("Instellingen", openSettings))
+                message(text, action: (String(localized: "Settings"), openSettings))
             case .connecting where store.messages.isEmpty:
-                message("Verbinden met Gmail…")
+                message(String(localized: "Connecting to Gmail…"))
             default:
                 list
             }
@@ -24,7 +24,7 @@ struct MailTab: View {
     private var list: some View {
         let items = store.visibleMessages
         if items.isEmpty {
-            message(store.filter == .unread ? "Geen ongelezen mail." : "Je inbox is leeg.")
+            message(store.filter == .unread ? String(localized: "No unread mail.") : String(localized: "Your inbox is empty."))
         } else {
             ScrollView {
                 LazyVStack(spacing: 0) {
@@ -91,14 +91,14 @@ private struct MailRow: View {
         }
         .buttonStyle(.plain)
         .onHover { hovered = $0 }
-        .help("Openen in Gmail")
+        .help("Open in Gmail")
     }
 
     static func timeLabel(_ date: Date?) -> String {
         guard let date else { return "" }
         if Calendar.current.isDateInToday(date) { return date.formatted(.dateTime.hour().minute()) }
-        if Calendar.current.isDateInYesterday(date) { return "gisteren" }
-        return date.formatted(.dateTime.day().month(.abbreviated).locale(Locale(identifier: "nl_NL")))
+        if Calendar.current.isDateInYesterday(date) { return String(localized: "yesterday") }
+        return date.formatted(.dateTime.day().month(.abbreviated))
     }
 }
 
@@ -119,14 +119,14 @@ struct Avatar: View {
     }
 }
 
-/// Right side of the tab bar on the Mail tab: Alles / Ongelezen and "open in Gmail".
+/// Right side of the tab bar on the Mail tab: All / Unread and "open in Gmail".
 struct MailToolbar: View {
     @ObservedObject var store: MailStore
 
     var body: some View {
         HStack(spacing: 6) {
-            pill("Alles", .all)
-            pill("Ongelezen", .unread)
+            pill(String(localized: "All"), .all)
+            pill(String(localized: "Unread"), .unread)
             Button { store.open() } label: {
                 Image(systemName: "arrow.up.right")
                     .font(.system(size: 12, weight: .medium))

@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- English interface with Dutch as the first translation (String Catalogs), a language choice in Settings, and a CI check for missing translations (#12)
 - Debug builds: `-snapshot <file.png>` draws the open panel to a PNG, also with the screen locked
 - Agenda: once nothing is left today, the timeline shows tomorrow's first two events under *Morgen*
 - Agenda: the event that is on now gets its own card with *NU*, the time left and a progress bar (board 3.1)

@@ -32,7 +32,7 @@ private struct PlayerCard: View {
         HStack(spacing: 14) {
             Artwork(image: track.artwork, size: 120, corner: 14, isVideo: track.isVideo)
                 .onTapGesture { player.openSource() }
-                .help("Open \(track.sourceName ?? "de bron")")
+                .help(String(localized: "Open \(track.sourceName ?? String(localized: "the source"))"))
 
             VStack(alignment: .leading, spacing: 0) {
                 Text(track.sourceLabel.uppercased())
@@ -81,13 +81,13 @@ private struct NothingPlayingCard: View {
                     .foregroundStyle(Theme.textSecondary.opacity(0.6)))
 
             VStack(alignment: .leading, spacing: 4) {
-                Text("NIETS AAN HET AFSPELEN")
+                Text("NOTHING PLAYING")
                     .font(.system(size: 10.5, weight: .medium))
                     .tracking(0.6)
                     .foregroundStyle(Theme.textSecondary)
-                Text("Er speelt niets")
+                Text("Nothing is playing")
                     .font(.system(size: 15, weight: .semibold))
-                Text("Start iets in Spotify of YouTube")
+                Text("Start something in Spotify or YouTube")
                     .font(.system(size: 12))
                     .foregroundStyle(Theme.textSecondary)
                     .lineLimit(1)

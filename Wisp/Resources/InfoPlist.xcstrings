@@ -1,0 +1,39 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "NSAudioCaptureUsageDescription" : {
+      "comment" : "Shown by macOS when wisp asks for system audio (Music tab spectrum)",
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "wisp analyseert live het geluid van wat er speelt voor het spectrum in de Muziek-tab. Er wordt niets opgenomen, opgeslagen of verstuurd."
+          }
+        }
+      }
+    },
+    "NSCalendarsFullAccessUsageDescription" : {
+      "comment" : "Shown by macOS when wisp asks for Calendar access",
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "wisp toont wat er vandaag in je agenda staat in de Agenda-tab. Je agenda wordt alleen gelezen en blijft op je Mac."
+          }
+        }
+      }
+    },
+    "NSCalendarsUsageDescription" : {
+      "comment" : "Shown by macOS when wisp asks for Calendar access (older macOS)",
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "wisp toont wat er vandaag in je agenda staat in de Agenda-tab. Je agenda wordt alleen gelezen en blijft op je Mac."
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}

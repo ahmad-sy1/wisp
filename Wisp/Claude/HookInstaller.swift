@@ -108,8 +108,8 @@ enum HookInstaller {
 
         var errorDescription: String? {
             switch self {
-            case .noHelper:   "wisp-hook ontbreekt in de app."
-            case .unreadable: "~/.claude/settings.json is geen geldige JSON; er is niets aangepast."
+            case .noHelper:   String(localized: "wisp-hook is missing from the app.")
+            case .unreadable: String(localized: "~/.claude/settings.json is not valid JSON; nothing was changed.")
             }
         }
     }

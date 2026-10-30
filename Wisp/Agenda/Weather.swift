@@ -25,16 +25,16 @@ struct WeatherReport: Equatable, Sendable {
     var description: String { WeatherCode.description(code) }
     var symbol: String { WeatherCode.symbol(code, isDay: isDay) }
 
-    /// "Droog tot 22:00", "Regen tot 15:00", "Droog de komende uren".
+    /// "Dry until 22:00", "Rain until 15:00", "Dry for the coming hours".
     func rainSummary(at now: Date) -> String {
         let ahead = hours.filter { $0.start.addingTimeInterval(3600) > now }
         guard let first = ahead.first else { return description.capitalizedFirst }
         if first.wet {
-            if let dry = ahead.first(where: { !$0.wet }) { return "Regen tot \(dry.start.clockTime)" }
-            return "Regen de komende uren"
+            if let dry = ahead.first(where: { !$0.wet }) { return String(localized: "Rain until \(dry.start.clockTime)") }
+            return String(localized: "Rain for the coming hours")
         }
-        if let wet = ahead.first(where: { $0.wet }) { return "Droog tot \(wet.start.clockTime)" }
-        return "Droog de komende uren"
+        if let wet = ahead.first(where: { $0.wet }) { return String(localized: "Dry until \(wet.start.clockTime)") }
+        return String(localized: "Dry for the coming hours")
     }
 }
 
@@ -204,23 +204,23 @@ private struct GeocodingAnswer: Decodable {
 enum WeatherCode {
     static func description(_ code: Int) -> String {
         switch code {
-        case 0: "helder"
-        case 1: "vrijwel helder"
-        case 2: "half bewolkt"
-        case 3: "bewolkt"
-        case 45, 48: "mist"
-        case 51, 53, 55: "motregen"
-        case 56, 57, 66, 67: "ijzel"
-        case 61: "lichte regen"
-        case 63: "regen"
-        case 65: "zware regen"
-        case 71, 73, 75, 77: "sneeuw"
-        case 80, 81: "buien"
-        case 82: "zware buien"
-        case 85, 86: "sneeuwbuien"
-        case 95: "onweer"
-        case 96, 99: "onweer met hagel"
-        default: "onbekend"
+        case 0: String(localized: "clear")
+        case 1: String(localized: "mostly clear")
+        case 2: String(localized: "partly cloudy")
+        case 3: String(localized: "cloudy")
+        case 45, 48: String(localized: "fog")
+        case 51, 53, 55: String(localized: "drizzle")
+        case 56, 57, 66, 67: String(localized: "freezing rain")
+        case 61: String(localized: "light rain")
+        case 63: String(localized: "rain")
+        case 65: String(localized: "heavy rain")
+        case 71, 73, 75, 77: String(localized: "snow")
+        case 80, 81: String(localized: "showers")
+        case 82: String(localized: "heavy showers")
+        case 85, 86: String(localized: "snow showers")
+        case 95: String(localized: "thunderstorm")
+        case 96, 99: String(localized: "thunderstorm with hail")
+        default: String(localized: "unknown")
         }
     }
 
@@ -249,6 +249,6 @@ private extension Array {
 }
 
 extension String {
-    /// "half bewolkt" → "Half bewolkt".
+    /// "partly cloudy" → "Partly cloudy".
     var capitalizedFirst: String { prefix(1).uppercased() + dropFirst() }
 }

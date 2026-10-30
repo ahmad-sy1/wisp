@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// Settings → Agenda & weer: which calendars count, how a shift is recognised,
+/// Settings → Calendar & weather: which calendars count, how a shift is recognised,
 /// the ride to work and the place for the weather.
 struct AgendaSection: View {
     @ObservedObject var agenda: AgendaStore
@@ -11,17 +11,17 @@ struct AgendaSection: View {
     @State private var searched = false
 
     var body: some View {
-        Section("Agenda & weer") {
+        Section("Calendar & weather") {
             switch agenda.access {
             case .notAsked:
-                LabeledContent("Agenda") {
-                    Button("Toegang geven") { agenda.requestAccess() }
+                LabeledContent("Calendar") {
+                    Button("Give access") { agenda.requestAccess() }
                 }
             case .denied:
-                LabeledContent("Agenda") {
-                    Button("Open Systeeminstellingen") { agenda.openPrivacySettings() }
+                LabeledContent("Calendar") {
+                    Button("Open System Settings") { agenda.openPrivacySettings() }
                 }
-                Text("wisp heeft geen toegang tot je agenda. Zet wisp aan onder Privacy en beveiliging → Agenda's.")
+                Text("wisp has no access to your calendar. Turn wisp on under Privacy & Security → Calendars.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             case .granted:
@@ -29,12 +29,12 @@ struct AgendaSection: View {
             }
 
             Stepper(value: $agenda.travelMinutes, in: 1...120) {
-                LabeledContent("Reistijd naar je dienst", value: "\(agenda.travelMinutes) min")
+                LabeledContent("Travel time to your shift", value: String(localized: "\(agenda.travelMinutes) min"))
             }
 
-            LabeledContent("Weer voor", value: [weather.place.name, weather.place.detail]
+            LabeledContent("Weather for", value: [weather.place.name, weather.place.detail]
                 .filter { !$0.isEmpty }.joined(separator: ", "))
-            TextField("Andere plaats", text: $query, prompt: Text("Zoek een plaats"))
+            TextField("Other place", text: $query, prompt: Text("Search for a place"))
                 .onSubmit { search() }
             ForEach(results, id: \.self) { place in
                 Button {
@@ -48,12 +48,12 @@ struct AgendaSection: View {
                 .buttonStyle(.plain)
             }
             if searched && results.isEmpty {
-                Text("Geen plaats gevonden.")
+                Text("No place found.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
 
-            Text("De agenda komt uit de Agenda-app van macOS en wordt alleen gelezen. Het weer komt van Open-Meteo; alleen de plaats gaat daarheen.")
+            Text("The calendar comes from the macOS Calendar app and is only read. The weather comes from Open-Meteo; only the place is sent there.")
                 .font(.caption)
                 .foregroundStyle(.secondary)
         }
@@ -76,10 +76,10 @@ struct AgendaSection: View {
                 }
             }
         }
-        Picker("Diensten herkennen aan", selection: $agenda.shiftRule) {
-            Text("‘\(AgendaStore.shiftWord)’ in de titel").tag(AgendaStore.ShiftRule.titleWord)
+        Picker("Recognise shifts by", selection: $agenda.shiftRule) {
+            Text("‘\(AgendaStore.shiftWord)’ in the title").tag(AgendaStore.ShiftRule.titleWord)
             ForEach(agenda.calendars, id: \.calendarIdentifier) { calendar in
-                Text("Agenda ‘\(calendar.title)’").tag(AgendaStore.ShiftRule.calendar(calendar.calendarIdentifier))
+                Text("Calendar ‘\(calendar.title)’").tag(AgendaStore.ShiftRule.calendar(calendar.calendarIdentifier))
             }
         }
     }

@@ -38,13 +38,13 @@ private struct Timeline: View {
     var body: some View {
         switch agenda.access {
         case .notAsked:
-            AgendaMessage(text: "Zie hier wat er vandaag in je agenda staat.",
-                          action: ("Toegang geven", { agenda.requestAccess() }))
+            AgendaMessage(text: String(localized: "See what's on your calendar today."),
+                          action: (String(localized: "Give access"), { agenda.requestAccess() }))
         case .denied:
-            AgendaMessage(text: "wisp heeft geen toegang tot je agenda.",
-                          action: ("Open Systeeminstellingen", { agenda.openPrivacySettings() }))
+            AgendaMessage(text: String(localized: "wisp has no access to your calendar."),
+                          action: (String(localized: "Open System Settings"), { agenda.openPrivacySettings() }))
         case .granted where agenda.events.isEmpty && agenda.tomorrow.isEmpty:
-            AgendaMessage(text: "Niets gepland vandaag.")
+            AgendaMessage(text: String(localized: "Nothing planned today."))
         case .granted:
             list
         }
@@ -91,7 +91,7 @@ private struct Timeline: View {
 private struct EventRow: View {
     let event: AgendaEvent
     let now: Date
-    /// Show "over 2u 55m" (only the next event does).
+    /// Show "in 2h 55m" (only the next event does).
     let countdown: Bool
 
     var body: some View {
@@ -116,7 +116,7 @@ private struct EventRow: View {
                 .padding(.leading, 12)
             Spacer(minLength: 8)
             if countdown {
-                Text("over \(Self.duration(from: now, to: event.start))")
+                Text("in \(Self.duration(from: now, to: event.start))")
                     .font(.system(size: 12))
                     .foregroundStyle(color)
             }
@@ -126,21 +126,21 @@ private struct EventRow: View {
     }
 
     private var timeLabel: String {
-        if event.isAllDay { return "hele dag" }
+        if event.isAllDay { return String(localized: "all day") }
         if event.start == event.end { return event.start.clockTime }
         return "\(event.start.clockTime)–\(event.end.clockTime)"
     }
 
-    /// "25m", "2u", "2u 55m".
+    /// "25m", "2h", "2h 55m".
     static func duration(from: Date, to: Date) -> String {
         let minutes = max(1, Int((to.timeIntervalSince(from) / 60).rounded(.up)))
         let h = minutes / 60, m = minutes % 60
-        if h == 0 { return "\(m)m" }
-        return m == 0 ? "\(h)u" : "\(h)u \(m)m"
+        if h == 0 { return String(localized: "\(m)m") }
+        return m == 0 ? String(localized: "\(h)h") : String(localized: "\(h)h \(m)m")
     }
 }
 
-/// What is on right now (board 3.1): a raised card with a *NU* label, the title and the
+/// What is on right now (board 3.1): a raised card with a *NOW* label, the title and the
 /// time, how long it still runs, and a bar that fills up as it goes.
 private struct NowCard: View {
     let event: AgendaEvent
@@ -176,7 +176,7 @@ private struct NowCard: View {
 
     private func header(color: Color, showTimes: Bool) -> some View {
         HStack(spacing: 10) {
-            Text("NU")
+            Text("NOW")
                 .font(.system(size: 11, weight: .bold))
                 .tracking(0.5)
                 .foregroundStyle(.white)
@@ -188,14 +188,14 @@ private struct NowCard: View {
                 .font(.system(size: 15, weight: .semibold))
                 .lineLimit(1)
             if showTimes {
-                Text("\(event.start.clockTime)–\(event.end.clockTime)")
+                Text(verbatim: "\(event.start.clockTime)–\(event.end.clockTime)")
                     .font(.system(size: 13))
                     .monospacedDigit()
                     .foregroundStyle(Theme.textSecondary)
                     .fixedSize()
             }
             Spacer(minLength: 4)
-            Text("nog \(EventRow.duration(from: now, to: event.end))")
+            Text("\(EventRow.duration(from: now, to: event.end)) left")
                 .font(.system(size: 13, weight: .medium))
                 .monospacedDigit()
                 .fixedSize()
@@ -218,7 +218,7 @@ private struct NowLine: View {
                 .fill(Theme.badge)
                 .frame(height: 1)
                 .padding(.leading, 8)
-            Text("nu \(now.clockTime)")
+            Text("now \(now.clockTime)")
                 .font(.system(size: 12))
                 .monospacedDigit()
                 .foregroundStyle(Theme.badge)
@@ -229,14 +229,13 @@ private struct NowLine: View {
     }
 }
 
-/// "Morgen · vrijdag 30 oktober", above the peek at tomorrow.
+/// "Tomorrow · Friday 30 October", above the peek at tomorrow.
 private struct DayHeader: View {
     let day: Date
 
     var body: some View {
         HStack(spacing: 8) {
-            Text("Morgen · " + day.formatted(
-                .dateTime.weekday(.wide).day().month(.wide).locale(Locale(identifier: "nl_NL"))))
+            Text("Tomorrow · \(day.formatted(.dateTime.weekday(.wide).day().month(.wide)))")
                 .font(.system(size: 12, weight: .semibold))
                 .foregroundStyle(Theme.textSecondary)
                 .lineLimit(1)
@@ -285,17 +284,17 @@ private struct WeatherCard: View {
                 .frame(width: 28)
             VStack(alignment: .leading, spacing: 1) {
                 if let report = weather.report {
-                    Text("\(Int(report.temperature.rounded()))°")
+                    Text(verbatim: "\(Int(report.temperature.rounded()))°")
                         .font(.system(size: 22, weight: .semibold))
                         .monospacedDigit()
-                    Text("\(weather.place.name) · \(report.description)")
+                    Text(verbatim: "\(weather.place.name) · \(report.description)")
                         .font(.system(size: 12))
                         .foregroundStyle(Theme.textSecondary)
                         .lineLimit(1)
                 } else {
-                    Text(weather.status == .failed ? "Geen weer" : "Weer laden…")
+                    Text(weather.status == .failed ? String(localized: "No weather") : String(localized: "Loading weather…"))
                         .font(.system(size: 13, weight: .semibold))
-                    Text(weather.status == .failed ? "Open-Meteo is niet bereikbaar" : weather.place.name)
+                    Text(weather.status == .failed ? String(localized: "Open-Meteo can't be reached") : weather.place.name)
                         .font(.system(size: 12))
                         .foregroundStyle(Theme.textSecondary)
                         .lineLimit(1)
@@ -304,11 +303,11 @@ private struct WeatherCard: View {
         }
         .padding(.horizontal, 14)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
-        .help("Weer via Open-Meteo")
+        .help("Weather from Open-Meteo")
     }
 }
 
-/// "Vertrek voor je dienst · 16:25 · 22 min reizen · Droog tot 22:00".
+/// "Leave for your shift · 16:25 · 22 min travel · Dry until 22:00".
 private struct DepartureCard: View {
     let shift: AgendaEvent?
     let travelMinutes: Int
@@ -340,21 +339,21 @@ private struct DepartureCard: View {
     }
 
     private var label: String {
-        shift == nil ? "Geen diensten meer vandaag" : "Vertrek voor je dienst"
+        shift == nil ? String(localized: "No more shifts today") : String(localized: "Leave for your shift")
     }
 
     private var headline: String {
         guard let leave else { return report?.rainSummary(at: now) ?? "—" }
-        let when = leave <= now ? "Nu" : leave.clockTime
-        return "\(when) · \(travelMinutes) min reizen"
+        let when = leave <= now ? String(localized: "Now") : leave.clockTime
+        return String(localized: "\(when) · \(travelMinutes) min travel")
     }
 
     private var detail: String? {
         if let shift {
-            return report?.rainSummary(at: now) ?? "Dienst om \(shift.start.clockTime)"
+            return report?.rainSummary(at: now) ?? String(localized: "Shift at \(shift.start.clockTime)")
         }
         if let low = report?.low, let high = report?.high {
-            return "Vandaag \(Int(low.rounded()))° tot \(Int(high.rounded()))°"
+            return String(localized: "Today \(Int(low.rounded()))° to \(Int(high.rounded()))°")
         }
         return nil
     }
@@ -362,12 +361,11 @@ private struct DepartureCard: View {
 
 // MARK: - Tab bar
 
-/// Right side of the tab bar on the Agenda tab: "Vandaag · donderdag 29 oktober".
+/// Right side of the tab bar on the Agenda tab: "Today · Thursday 29 October".
 struct AgendaToolbar: View {
     var body: some View {
         TimelineView(.everyMinute) { context in
-            Text("Vandaag · " + context.date.formatted(
-                .dateTime.weekday(.wide).day().month(.wide).locale(Locale(identifier: "nl_NL"))))
+            Text("Today · \(context.date.formatted(.dateTime.weekday(.wide).day().month(.wide)))")
                 .font(.system(size: 13))
                 .foregroundStyle(Theme.textSecondary)
                 .lineLimit(1)

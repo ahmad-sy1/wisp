@@ -6,7 +6,7 @@ struct SettingsView: View {
     var body: some View {
         Form {
             Section {
-                LabeledContent("Accentkleur") {
+                LabeledContent("Accent colour") {
                     HStack(spacing: 10) {
                         ForEach(Accent.allCases) { accent in
                             AccentSwatch(color: accent.color, selected: prefs.accent == accent) {
@@ -17,8 +17,8 @@ struct SettingsView: View {
                 }
             }
 
-            Section("Gedrag") {
-                LabeledContent("Sluiten na verlaten") {
+            Section("Behaviour") {
+                LabeledContent("Close after leaving") {
                     HStack {
                         Slider(value: $prefs.closeDelay, in: 0.2...5, step: 0.1)
                             .frame(width: 160)
@@ -28,8 +28,20 @@ struct SettingsView: View {
                             .frame(width: 44, alignment: .trailing)
                     }
                 }
-                Toggle("Geluiden", isOn: $prefs.soundsEnabled)
-                Toggle("Opstarten bij inloggen", isOn: Binding(
+                Toggle("Sounds", isOn: $prefs.soundsEnabled)
+                Picker("Language", selection: $prefs.language) {
+                    Text("Same as macOS").tag(AppLanguage.system)
+                    // Each language in its own words.
+                    Text(verbatim: "English").tag(AppLanguage.english)
+                    Text(verbatim: "Nederlands").tag(AppLanguage.dutch)
+                }
+                if prefs.language != prefs.launchLanguage {
+                    LabeledContent("Restart wisp to switch language.") {
+                        Button("Restart") { prefs.relaunch() }
+                    }
+                    .font(.caption)
+                }
+                Toggle("Open at login", isOn: Binding(
                     get: { prefs.launchAtLogin },
                     set: { prefs.setLaunchAtLogin($0) }
                 ))

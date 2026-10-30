@@ -23,6 +23,7 @@ wisp.app
 | `Wisp/Settings` | `Preferences` (UserDefaults) and the Settings sections |
 | `Wisp/Design` | `Theme`: colours, sizes, the accent options |
 | `Wisp/Support` | small helpers, such as `Keychain` |
+| `Wisp/Resources` | `Info.plist`, entitlements, and the String Catalogs: `Localizable.xcstrings` (interface) and `InfoPlist.xcstrings` (permission texts), English source with Dutch |
 | `WispHook` | the `wisp-hook` command-line tool |
 | `Shared` | code used by both the app and `wisp-hook` (the socket path) |
 | `Helpers` | `NowPlayingBridge.m`, compiled into the dylib by a build phase |
@@ -112,7 +113,7 @@ Open-Meteo (HTTPS, no key) ─► WeatherStore ┘
 
 ## Settings and secrets
 
-- `Preferences` (UserDefaults): accent colour, close delay, sounds, open at login (`SMAppService`). `Spectrum` keeps the spectrum permission choice (`spectrumConsent`); `AgendaStore` the hidden calendars, the shift calendar and the ride (`agenda…`); `WeatherStore` the place (`weatherPlace`).
+- `Preferences` (UserDefaults): accent colour, close delay, sounds, open at login (`SMAppService`), and the language (`AppleLanguages` in wisp's own domain, the same key System Settings → Language & Region → Apps uses; applied after a restart). `Spectrum` keeps the spectrum permission choice (`spectrumConsent`); `AgendaStore` the hidden calendars, the shift calendar and the ride (`agenda…`); `WeatherStore` the place (`weatherPlace`).
 - `Keychain`: generic passwords under the service `com.ahmadalasmi.wisp`, accessible after first unlock, this device only. Nothing secret is ever written to UserDefaults, to disk or to git.
 
 ## Performance rules

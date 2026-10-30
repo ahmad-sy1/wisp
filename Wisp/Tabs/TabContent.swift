@@ -28,7 +28,7 @@ struct PlaceholderTab: View {
                     .foregroundStyle(Theme.textSecondary)
                 Text(tab.title)
                     .font(.system(size: 14, weight: .semibold))
-                Text("Komt in een volgende stap")
+                Text("Coming in a later step")
                     .font(.system(size: 11))
                     .foregroundStyle(Theme.textSecondary)
             }

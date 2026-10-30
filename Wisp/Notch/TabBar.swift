@@ -23,7 +23,7 @@ struct TabBar: View {
                 MusicToolbar()
                     .padding(.trailing, 10)
             }
-            TabIconButton(symbol: "slider.vertical.3", label: "Instellingen", isActive: false) {
+            TabIconButton(symbol: "slider.vertical.3", label: String(localized: "Settings"), isActive: false) {
                 model.onOpenSettings()
             }
         }
@@ -66,7 +66,7 @@ struct CountBadge: View {
     let count: Int
 
     var body: some View {
-        Text(count > 99 ? "99+" : "\(count)")
+        Text(verbatim: count > 99 ? "99+" : "\(count)")
             .font(.system(size: 9.5, weight: .bold))
             .monospacedDigit()
             .foregroundStyle(.white)

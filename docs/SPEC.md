@@ -90,7 +90,7 @@ Rechts: **Instellingen** (open het Settings-venster).
 
 ## Settings-aanpassingen
 
-> **Stand van zaken:** accentkleur, sluitvertraging, geluiden, opstarten bij inloggen, Gmail, Agenda & weer (agenda's, diensten, reistijd, plaats), Muziek (spectrum) en Claude Code-hooks zijn er. Tabs, Focus, integraties en hotkey nog niet.
+> **Stand van zaken:** accentkleur, sluitvertraging, geluiden, opstarten bij inloggen, Gmail, Agenda & weer (agenda's, diensten, reistijd, plaats), Muziek (spectrum), Claude Code-hooks en de taal (Engels of Nederlands, standaard die van macOS) zijn er. Tabs, Focus, integraties en hotkey nog niet.
 
 - Bovenaan: accentkleur kiezen (4 opties).
 - Sectie **Tabs**: tabs aan/uit en volgorde.
