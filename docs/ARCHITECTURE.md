@@ -80,6 +80,12 @@ claude (IntelliJ, Rider, VS Code, Terminal…)
 
 The unread count drives the badge on the Mail tab through Combine.
 
+### New mail
+
+- After each refresh, `MailStore` compares the UIDs with the highest one it has seen. A newer unread message calls `onNewMail`, and the notch **peeks** (`NotchModel.Phase.peek`, a third state between closed and open). Nothing peeks on connect or after waking, only for mail that arrives while wisp listens.
+- **Delete** in the peek opens a second, short IMAP connection: `LIST` to find the mailbox marked `\Trash` (Gmail names it after the account's language, e.g. `[Gmail]/Prullenbak`), `SELECT INBOX`, `UID MOVE` that one UID there, logout. It is the only write wisp does, and only after a click.
+- The unread count also drives the **mail wings** on the closed notch (`NotchModel.mailWings`); focus and music wings take precedence.
+
 ## Music
 
 MediaRemote, the private framework behind Control Center's Now Playing, only answers Apple-signed processes since macOS 15.4. wisp therefore starts `/usr/bin/perl` (Apple-signed) with a three-line script that loads `libNowPlayingBridge.dylib` and calls `wisp_now_playing_run`. The bridge:

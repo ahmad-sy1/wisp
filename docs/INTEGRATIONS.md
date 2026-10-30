@@ -63,6 +63,10 @@ From `__CFBundleIdentifier` and `TERM_PROGRAM`: any `com.jetbrains.*` bundle is 
 
 If wisp is shared with more people later, "Sign in with Google" (OAuth) is friendlier than app passwords, but Gmail scopes require Google's app verification. Until then app passwords are the simpler path.
 
+### Moving to the trash
+
+*Delete* in the mail peek is the one change wisp makes to the mailbox: on a separate connection it runs `LIST "" "*"`, takes the mailbox with the `\Trash` special-use flag (RFC 6154; Gmail translates its name), then `SELECT INBOX` and `UID MOVE <uid> <trash>`. Gmail keeps trashed mail for 30 days.
+
 ## Now Playing
 
 - Source: MediaRemote (private framework), through the perl-loaded bridge described in [ARCHITECTURE.md](ARCHITECTURE.md#music).

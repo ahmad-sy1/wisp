@@ -22,7 +22,7 @@ Debug builds can open straight on a tab, which helps for screenshots:
 open build/Build/Products/Debug/wisp.app --args -openOnLaunch music
 ```
 
-Add `-snapshot </absolute/path.png>` (an app started with `open` doesn't share your working directory) and the debug build draws the open panel into that PNG (1200 × 484, the size of the screenshots in `docs/media/`) after three seconds, then quits. It doesn't need the screen, so it also works while the Mac is locked:
+Add `-snapshot </absolute/path.png>` (an app started with `open` doesn't share your working directory) and the debug build draws the open panel into that PNG (1200 × 484, the size of the screenshots in `docs/media/`) after three seconds, then quits. It doesn't need the screen, so it also works while the Mac is locked. `-focusStart YES` starts a focus session and `-mailPeekDemo YES` shows a sample mail peek, for snapshots of those states:
 
 ```bash
 open -W build/Build/Products/Debug/wisp.app --args -openOnLaunch music -snapshot /tmp/music.png

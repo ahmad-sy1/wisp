@@ -28,7 +28,7 @@ The notch is the one bit of screen you never use. wisp turns it into a quiet das
 
 - **Claude Code, live**: every session in IntelliJ, Rider, VS Code or a terminal shows up under *Now* with its project, branch and what it is doing right now. *Open project* takes you straight back to the right IDE window.
 - **Approve from the notch**: when Claude Code asks for permission, the notch opens with the command and three buttons: *Allow*, *Deny*, *In terminal*. wisp never approves anything on its own; no click within 110 s means Claude asks in the terminal as usual.
-- **Mail**: your Gmail inbox, read-only, with an *All / Unread* filter and an unread badge on the tab. New mail arrives by push (IMAP IDLE), not by polling. wisp never marks anything as read.
+- **Mail**: your Gmail inbox, with an *All / Unread* filter and an unread badge on the tab. New mail arrives by push (IMAP IDLE), not by polling. wisp never marks anything as read. New mail peeks out of the notch with *Open / Delete / Later*, and the closed notch shows the unread count.
 - **Music**: whatever your Mac is playing (Spotify, Music, YouTube in the browser), with artwork, progress and glass controls. Next to it, a **live spectrum** of what you hear: 24 bands from bass to treble, the bass/mid/treble mix and the loudness. While music plays, the closed notch grows a little wing on each side: artwork on the left, a mini spectrum on the right.
 - **Calendar & weather**: today's timeline from the macOS Calendar app (and so from Google Calendar too), with what's done struck through, a red *now* line and a countdown to what's next. Next to it the weather where you are and, on a work day, when to leave for your shift and whether it stays dry.
 - **Focus timer**: 25, 50 or 90 minutes with a ring that keeps counting in the closed notch. It guesses what you work on (the calendar event that's on, or the app and Claude Code project in front) and learns from your corrections; today's sessions sit in the tab bar.
@@ -60,6 +60,12 @@ The notch is the one bit of screen you never use. wisp turns it into a quiet das
 </tr>
 <tr>
 <td colspan="2" align="center"><sub>Calendar: today's timeline, the weather, and when to leave for your shift</sub></td>
+</tr>
+<tr>
+<td colspan="2" align="center"><img src="docs/media/mail-peek.png" width="420" alt="New mail peeking out of the notch"></td>
+</tr>
+<tr>
+<td colspan="2" align="center"><sub>New mail: open it, move it to the trash, or leave it for later</sub></td>
 </tr>
 <tr>
 <td colspan="2"><img src="docs/media/focus.png" alt="The Focus tab with a running session"></td>
@@ -142,7 +148,7 @@ Music needs no setup. The live spectrum asks once for macOS's *System Audio Reco
 
 - **Notch**: a borderless, non-activating `NSPanel` that is always exactly as big as what it draws, so nothing around the notch is ever blocked and no polling is needed. Hover comes from a tracking area, clicks from SwiftUI.
 - **Claude Code**: a small compiled helper, `wisp-hook`, ships inside the app. Claude Code runs it for each hook event; it forwards a trimmed copy over a Unix socket. If wisp isn't running, it exits in about 30 ms, so Claude Code never waits.
-- **Mail**: a minimal IMAP client on `Network.framework` (LOGIN, EXAMINE, SEARCH, FETCH with `BODY.PEEK`, IDLE).
+- **Mail**: a minimal IMAP client on `Network.framework` (LOGIN, EXAMINE, SEARCH, FETCH with `BODY.PEEK`, IDLE; LIST, SELECT and UID MOVE only for *Delete*).
 - **Music**: MediaRemote only answers Apple-signed processes since macOS 15.4, so the system `perl` loads a tiny bundled dylib that streams "now playing" changes as JSON lines. The spectrum comes from a Core Audio process tap and an FFT (Accelerate), and only runs while it is on screen.
 - **Agenda & weather**: EventKit reads today's events, only while the tab is open. The weather comes from [Open-Meteo](https://open-meteo.com) (no key, no account) at most every 15 minutes, and only when you open the tab.
 - **No dependencies**: native Swift 6, SwiftUI and AppKit.
