@@ -7,7 +7,8 @@ enum IMAPError: Error {
     case protocolError(String)
 }
 
-/// Just enough IMAP4rev1 for a read-only inbox: LOGIN, EXAMINE, SEARCH, FETCH, IDLE.
+/// Just enough IMAP4rev1 for the inbox: LOGIN, EXAMINE, SEARCH, FETCH, IDLE, and, only
+/// for *Delete* in the mail peek, SELECT and UID MOVE to the trash.
 /// Headers are fetched with BODY.PEEK, so nothing is ever marked as read.
 actor IMAPConnection {
     private var conn: NWConnection?
@@ -53,6 +54,28 @@ actor IMAPConnection {
             if parts.count >= 3, parts[0] == "*", parts[2] == "EXISTS", let n = Int(parts[1]) { return n }
         }
         return 0
+    }
+
+    /// Opens a mailbox read-write. Only used to move one message to the trash.
+    func select(_ mailbox: String) async throws {
+        _ = try await command("SELECT \(quoted(mailbox))")
+    }
+
+    /// The mailbox the server marks as the trash (RFC 6154 `\Trash`): Gmail names it
+    /// after the account's language, "[Gmail]/Trash", "[Gmail]/Prullenbak"…
+    func trashMailbox() async throws -> String? {
+        for line in try await command("LIST \"\" \"*\"") where line.text.contains("\\Trash") {
+            // * LIST (\HasNoChildren \Trash) "/" "[Gmail]/Trash"
+            guard line.text.hasSuffix("\""),
+                  let open = line.text.dropLast().lastIndex(of: "\"") else { continue }
+            return String(line.text[line.text.index(after: open)..<line.text.index(before: line.text.endIndex)])
+        }
+        return nil
+    }
+
+    /// Moves one message (by UID) out of the selected mailbox.
+    func move(uid: UInt32, to mailbox: String) async throws {
+        _ = try await command("UID MOVE \(uid) \(quoted(mailbox))")
     }
 
     /// UIDs of all unread messages in the open mailbox.
