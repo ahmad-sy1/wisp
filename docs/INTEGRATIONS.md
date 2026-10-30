@@ -13,6 +13,7 @@ Golden rule: **check the official documentation when you build or change an inte
 | WHOOP | planned | sign in with WHOOP |
 | Agenda | ✓ live | macOS Calendar access (EventKit) |
 | Weather | ✓ live | nothing (Open-Meteo, no key) |
+| System info | ✓ live | nothing; Location access only to show the Wi-Fi name |
 | Shortcuts (Focus mode) | ✓ live | two Shortcuts you make yourself, only for *Do not disturb* |
 
 ## Claude Code
@@ -94,6 +95,12 @@ Docs: <https://developer.apple.com/documentation/eventkit>
 - Permission: *Agenda's* under Privacy & Security, asked from the Agenda tab or Settings → Agenda & weer (`NSCalendarsFullAccessUsageDescription`). Reading needs full access; wisp never writes.
 - Read: today's events (title, start, end, all-day, calendar and its colour) from the calendars that are switched on in Settings. Nothing is stored or sent.
 - The focus timer asks for the timed event that is on right now, to name the task.
+
+## System info
+
+- Battery: IOKit power sources. Storage: `URLResourceValues` of `/`. CPU: Mach host statistics and `proc_pid_rusage`. All local, nothing stored or sent.
+- AirPods: `system_profiler SPBluetoothDataType -json` reports `device_batteryLevelLeft / Right / Case` for Apple headphones. Undocumented; if the keys change, the card says *Not connected*.
+- Wi-Fi: `CWWiFiClient.shared().interface()?.ssid()` is nil without Location access. wisp asks only from Settings, with `NSLocationUsageDescription` explaining why.
 
 ## Shortcuts (Focus mode)
 

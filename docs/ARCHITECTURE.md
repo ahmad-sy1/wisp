@@ -22,6 +22,7 @@ wisp.app
 | `Wisp/Agenda` | `AgendaStore` (EventKit, today's events, shifts) and `WeatherStore` (Open-Meteo) |
 | `Wisp/Clipboard` | `ClipboardStore`: the last 20 copied texts, stored in `clipboard.json` |
 | `Wisp/Notes` | `NotesStore`: quick notes, stored in `notes.json` |
+| `Wisp/System` | `SystemStats`: battery, AirPods, CPU, storage and Wi-Fi for the System tab |
 | `Wisp/Focus` | `FocusStore`: the focus timer, today's sessions, the task guess and what it learned |
 | `Wisp/Settings` | `Preferences` (UserDefaults) and the Settings sections |
 | `Wisp/Design` | `Theme`: colours, sizes, the accent options |
@@ -125,6 +126,14 @@ Open-Meteo (HTTPS, no key) ─► WeatherStore ┘
 
 - **`NotesStore`** keeps the notes newest first in `~/Library/Application Support/wisp/notes.json` (0600) and writes the whole file on every change; there are only a handful. Saving an edited note moves it to the top.
 - The text being typed lives in the store, not the view, so it survives the notch closing halfway through a sentence.
+
+## System
+
+- **`SystemStats`** reads only while the tab is visible (`setVisible(_:)`): everything once on open, then the CPU every 2 s and the battery, Wi-Fi and AirPods every 20 s. Closing the tab stops the timer.
+- Battery from IOKit power sources (`IOPSCopyPowerSourcesInfo`); storage from the `/` volume (`volumeAvailableCapacityForImportantUsage`).
+- CPU: `host_statistics(HOST_CPU_LOAD_INFO)` tick deltas. The busiest app is the largest `proc_pid_rusage` delta, with helper processes counted under their app (" Helper" stripped); a sample takes under 1 ms.
+- AirPods: there is no public API, so `system_profiler SPBluetoothDataType -json` is run in the background and the first connected device with left/right levels is shown. Best effort, as the spec allows.
+- Wi-Fi name: `CoreWLAN` returns it only to apps with Location access (macOS 14+). Settings → System asks for it (`requestWhenInUseAuthorization`; entitlement `com.apple.security.personal-information.location`); the location itself is never read.
 
 ## Focus timer
 

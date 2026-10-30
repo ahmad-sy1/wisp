@@ -130,6 +130,18 @@ Two cards in the fixed 150 pt area (board 6):
 
 Differences from the board: the bottom line reads *Alleen op deze Mac* instead of *Synct naar Notion* until the Notion integration exists. While a note is being edited it reads *Notitie bewerken* with a cross to stop. No notes yet: the pencil icon and *Je notities verschijnen hier.*
 
+## System tab
+
+Four equal cards in the fixed 150 pt area (board 7), each with a label (12 pt grey), a big value (24 pt bold) and a line at the bottom (12 pt grey):
+
+| Card | Spec |
+|---|---|
+| Batterij | percentage, a 6 pt bar (`ok`, `badge` at 20 % or less on battery), *nog 6u 10m*, *Vol over 1u*, *Aan de lader* or *Geen batterij* |
+| AirPods | the model name; *Links / Rechts / Case* with percentages, below 20 % in `warning`. Not connected: the AirPods icon and *Niet gekoppeld* |
+| CPU | percentage, a line through the last 40 seconds (accent), *IntelliJ IDEA gebruikt 11%* (may wrap to two lines) |
+| Opslag | free space in whole GB, a bar for what is used (accent), *vrij van 512 GB* |
+| Tab bar | the Wi-Fi icon and network name; *Wi‑Fi* without Location access, *Wifi uit* when off |
+
 ## Music tab
 
 Two cards in the fixed 150 pt area (boards 9.1–9.6):

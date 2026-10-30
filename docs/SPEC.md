@@ -79,6 +79,8 @@ Rechts: **Instellingen** (open het Settings-venster).
 - Vier vakken naast elkaar: **Batterij** (% + balk + resterende tijd), **AirPods** (links/rechts/case %; best effort, mag weggelaten worden als het niet betrouwbaar lukt), **CPU** (% + mini-grafiek + grootste verbruiker), **Opslag** (vrij van totaal + balk).
 - Rechtsboven: huidige Wi-Fi-naam.
 
+> **Stand van zaken:** gebouwd. AirPods via `system_profiler` (best effort, alleen als ze verbonden zijn). De wifinaam geeft macOS alleen met locatietoegang; die vraag je in Settings → Systeem, anders staat er "Wi‑Fi".
+
 ### Bestanden
 - Bestaande drop zone behouden, alleen restylen (zonder mascotte).
 
