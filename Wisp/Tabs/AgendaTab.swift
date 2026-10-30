@@ -17,6 +17,7 @@ struct AgendaTab: View {
                     Card { WeatherCard(weather: weather) }
                     Card { DepartureCard(shift: agenda.nextShift(after: now),
                                          travelMinutes: agenda.travelMinutes,
+                                         travelMode: agenda.travelMode,
                                          report: weather.report, now: now) }
                 }
             }
@@ -307,10 +308,11 @@ private struct WeatherCard: View {
     }
 }
 
-/// "Leave for your shift · 16:25 · 22 min travel · Dry until 22:00".
+/// "Leave for your shift · 16:25 · 22 min cycling · Dry until 22:00".
 private struct DepartureCard: View {
     let shift: AgendaEvent?
     let travelMinutes: Int
+    let travelMode: AgendaStore.TravelMode
     let report: WeatherReport?
     let now: Date
 
@@ -345,7 +347,7 @@ private struct DepartureCard: View {
     private var headline: String {
         guard let leave else { return report?.rainSummary(at: now) ?? "—" }
         let when = leave <= now ? String(localized: "Now") : leave.clockTime
-        return String(localized: "\(when) · \(travelMinutes) min travel")
+        return "\(when) · \(travelMode.duration(travelMinutes))"
     }
 
     private var detail: String? {

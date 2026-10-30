@@ -33,6 +33,32 @@ final class AgendaStore: ObservableObject {
         case calendar(String)
     }
 
+    /// How you get to work; only changes the words on the departure card.
+    enum TravelMode: String, CaseIterable, Identifiable {
+        case bike, car, walk, transit
+
+        var id: String { rawValue }
+
+        var title: String {
+            switch self {
+            case .bike:    String(localized: "Bike")
+            case .car:     String(localized: "Car")
+            case .walk:    String(localized: "On foot")
+            case .transit: String(localized: "Public transport")
+            }
+        }
+
+        /// "22 min cycling".
+        func duration(_ minutes: Int) -> String {
+            switch self {
+            case .bike:    String(localized: "\(minutes) min cycling")
+            case .car:     String(localized: "\(minutes) min driving")
+            case .walk:    String(localized: "\(minutes) min walking")
+            case .transit: String(localized: "\(minutes) min by transit")
+            }
+        }
+    }
+
     @Published private(set) var access: Access
     @Published private(set) var events: [AgendaEvent] = []
     /// Tomorrow's events, shown once nothing is left today.
@@ -62,6 +88,10 @@ final class AgendaStore: ObservableObject {
         didSet { defaults.set(travelMinutes, forKey: Key.travel) }
     }
 
+    @Published var travelMode: TravelMode {
+        didSet { defaults.set(travelMode.rawValue, forKey: Key.travelMode) }
+    }
+
     /// The word in an event title that marks a shift ("dienst" in Dutch).
     static let shiftWord = String(localized: "shift", comment: "Word in a calendar event title that marks a work shift")
 
@@ -74,12 +104,14 @@ final class AgendaStore: ObservableObject {
         static let hidden = "agendaHiddenCalendars"
         static let shiftCalendar = "agendaShiftCalendar"
         static let travel = "agendaTravelMinutes"
+        static let travelMode = "agendaTravelMode"
     }
 
     private init() {
         hiddenCalendars = Set(defaults.stringArray(forKey: Key.hidden) ?? [])
         shiftRule = defaults.string(forKey: Key.shiftCalendar).map { .calendar($0) } ?? .titleWord
         travelMinutes = defaults.object(forKey: Key.travel) as? Int ?? 20
+        travelMode = TravelMode(rawValue: defaults.string(forKey: Key.travelMode) ?? "") ?? .bike
         access = Self.currentAccess()
     }
 
