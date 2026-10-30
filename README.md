@@ -26,11 +26,11 @@ The notch is the one bit of screen you never use. wisp turns it into a quiet das
 
 ## Features
 
-- **Claude Code, live**: every session in IntelliJ, Rider, VS Code or a terminal shows up under *Now* with its project, branch and what it is doing right now. *Open project* takes you straight back to the right IDE window.
+- **Claude Code, live**: every session in IntelliJ, Rider, VS Code or a terminal shows up under *In progress* with its project, branch and what it is doing right now. *Open project* takes you straight back to the right IDE window.
 - **Approve from the notch**: when Claude Code asks for permission, the notch opens with the command and three buttons: *Allow*, *Deny*, *In terminal*. wisp never approves anything on its own; no click within 110 s means Claude asks in the terminal as usual.
 - **Mail**: your Gmail inbox, read-only, with an *All / Unread* filter and an unread badge on the tab. New mail arrives by push (IMAP IDLE), not by polling. wisp never marks anything as read.
 - **Music**: whatever your Mac is playing (Spotify, Music, YouTube in the browser), with artwork, progress and glass controls. Next to it, a **live spectrum** of what you hear: 24 bands from bass to treble, the bass/mid/treble mix and the loudness. While music plays, the closed notch grows a little wing on each side: artwork on the left, a mini spectrum on the right.
-- **Calendar & weather**: today's timeline from the macOS Calendar app (and so from Google Calendar too), with what's done struck through, a red *now* line and a countdown to what's next. Next to it the weather where you are and, on a work day, when to leave for your shift and whether it stays dry.
+- **Calendar & weather**: today's timeline from the macOS Calendar app (and so from Google Calendar too), with what's done struck through, what's on now in its own card with a bar that fills up, a red *now* line and a countdown to what's next; in the evening it already shows how tomorrow starts. Next to it the weather where you are and, on a work day, when to leave for your shift and whether it stays dry.
 - **Focus timer**: 25, 50 or 90 minutes with a ring that keeps counting in the closed notch. It guesses what you work on (the calendar event that's on, or the app and Claude Code project in front) and learns from your corrections; today's sessions sit in the tab bar.
 - **Clipboard**: the last 20 texts you copied, searchable, one click to copy again. Stored only on your Mac; passwords and one-time codes are never kept.
 - **Notes**: jot something down without leaving what you're doing; click a note to edit it. Stored only on your Mac.
