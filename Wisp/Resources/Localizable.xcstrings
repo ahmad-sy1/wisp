@@ -61,6 +61,46 @@
         }
       }
     },
+    "%lld notes" : {
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld note"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld notes"
+                }
+              }
+            }
+          }
+        },
+        "nl" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld notitie"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld notities"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "%lldh" : {
       "localizations" : {
         "nl" : {
@@ -461,6 +501,16 @@
         }
       }
     },
+    "Delete" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verwijderen"
+          }
+        }
+      }
+    },
     "Deny" : {
       "localizations" : {
         "nl" : {
@@ -527,6 +577,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Duur"
+          }
+        }
+      }
+    },
+    "Edit this note" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deze notitie bewerken"
+          }
+        }
+      }
+    },
+    "Editing a note" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notitie bewerken"
           }
         }
       }
@@ -1001,6 +1071,16 @@
         }
       }
     },
+    "Only on this Mac" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alleen op deze Mac"
+          }
+        }
+      }
+    },
     "Open %@" : {
       "localizations" : {
         "nl" : {
@@ -1251,6 +1331,16 @@
         }
       }
     },
+    "Save" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Opslaan"
+          }
+        }
+      }
+    },
     "Search clipboard" : {
       "localizations" : {
         "nl" : {
@@ -1397,6 +1487,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Status"
+          }
+        }
+      }
+    },
+    "Stop editing" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stoppen met bewerken"
           }
         }
       }
@@ -1551,6 +1651,16 @@
         }
       }
     },
+    "Type a note…" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Typ een notitie…"
+          }
+        }
+      }
+    },
     "Unread" : {
       "localizations" : {
         "nl" : {
@@ -1667,6 +1777,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Je inbox is leeg."
+          }
+        }
+      }
+    },
+    "Your notes show up here." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Je notities verschijnen hier."
           }
         }
       }

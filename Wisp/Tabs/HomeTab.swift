@@ -217,6 +217,7 @@ struct AccentButtonStyle: ButtonStyle {
     private struct AccentLabel: View {
         let configuration: ButtonStyleConfiguration
         @ObservedObject private var prefs = Preferences.shared
+        @Environment(\.isEnabled) private var isEnabled
 
         var body: some View {
             configuration.label
@@ -226,19 +227,29 @@ struct AccentButtonStyle: ButtonStyle {
                 .frame(height: Theme.buttonHeight)
                 .background(RoundedRectangle(cornerRadius: Theme.buttonCorner, style: .continuous)
                     .fill(prefs.accent.color))
-                .opacity(configuration.isPressed ? 0.75 : 1)
+                .opacity(!isEnabled ? 0.4 : configuration.isPressed ? 0.75 : 1)
         }
     }
 }
 
 struct SecondaryButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .font(.system(size: 13, weight: .medium))
-            .foregroundStyle(Theme.textPrimary)
-            .padding(.horizontal, 12)
-            .frame(height: Theme.buttonHeight)
-            .background(RoundedRectangle(cornerRadius: Theme.buttonCorner, style: .continuous)
-                .fill(configuration.isPressed ? Theme.activeTab : Theme.control))
+        SecondaryLabel(configuration: configuration)
+    }
+
+    private struct SecondaryLabel: View {
+        let configuration: ButtonStyleConfiguration
+        @Environment(\.isEnabled) private var isEnabled
+
+        var body: some View {
+            configuration.label
+                .font(.system(size: 13, weight: .medium))
+                .foregroundStyle(Theme.textPrimary)
+                .padding(.horizontal, 12)
+                .frame(height: Theme.buttonHeight)
+                .background(RoundedRectangle(cornerRadius: Theme.buttonCorner, style: .continuous)
+                    .fill(configuration.isPressed ? Theme.activeTab : Theme.control))
+                .opacity(isEnabled ? 1 : 0.4)
+        }
     }
 }

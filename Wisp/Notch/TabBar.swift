@@ -25,6 +25,9 @@ struct TabBar: View {
             } else if model.tab == .clipboard {
                 ClipboardToolbar(clipboard: .shared)
                     .padding(.trailing, 4)
+            } else if model.tab == .notes {
+                NotesToolbar(notes: .shared)
+                    .padding(.trailing, 10)
             } else if model.tab == .music {
                 MusicToolbar()
                     .padding(.trailing, 10)

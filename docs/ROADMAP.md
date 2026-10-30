@@ -6,7 +6,6 @@ What is planned, roughly in order. Every item becomes its own branch and pull re
 
 | Item | Notes | Tracking |
 |---|---|---|
-| **Notes tab** | Quick notes stored as JSON in Application Support. Board 6. | |
 | **System tab** | Battery, CPU, storage, Wi-Fi name; AirPods only if it can be read reliably. Board 7. | |
 | **Files tab** | The drop zone, restyled. | |
 | **Mail notifications in the notch** | A short peek with *Openen / Verwijderen / Later*, and the unread count on the closed notch. Board 8. | |
