@@ -27,7 +27,7 @@ final class AgendaStore: ObservableObject {
 
     enum Access { case notAsked, granted, denied }
 
-    /// How a shift is recognised: by the word "dienst" in the title, or by its calendar.
+    /// How a shift is recognised: by `shiftWord` in the title, or by its calendar.
     enum ShiftRule: Hashable {
         case titleWord
         case calendar(String)
@@ -57,12 +57,13 @@ final class AgendaStore: ObservableObject {
         }
     }
 
-    /// Minutes by bike to work, for "Vertrek voor je dienst".
+    /// Minutes to get to work, for "Leave for your shift".
     @Published var travelMinutes: Int {
         didSet { defaults.set(travelMinutes, forKey: Key.travel) }
     }
 
-    static let shiftWord = "dienst"
+    /// The word in an event title that marks a shift ("dienst" in Dutch).
+    static let shiftWord = String(localized: "shift", comment: "Word in a calendar event title that marks a work shift")
 
     private let store = EKEventStore()
     private let defaults = UserDefaults.standard
@@ -155,7 +156,7 @@ final class AgendaStore: ObservableObject {
 
     private func makeEvent(_ event: EKEvent) -> AgendaEvent {
         let raw = event.title ?? ""
-        let title = raw.isEmpty ? "Zonder titel" : raw
+        let title = raw.isEmpty ? String(localized: "Untitled") : raw
         let isShift: Bool
         switch shiftRule {
         case .titleWord: isShift = title.localizedCaseInsensitiveContains(Self.shiftWord)

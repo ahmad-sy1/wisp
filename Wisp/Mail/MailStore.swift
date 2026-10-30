@@ -126,11 +126,11 @@ final class MailStore: ObservableObject {
                 where message.localizedCaseInsensitiveContains("AUTHENTICATIONFAILED")
                    || message.localizedCaseInsensitiveContains("credentials") {
                 // Wrong address or app password: retrying won't help.
-                status = .failed("Inloggen mislukt: controleer adres en app-wachtwoord")
+                status = .failed(String(localized: "Sign-in failed: check the address and app password"))
                 await conn.close()
                 return
             } catch {
-                status = .failed("Offline, probeert opnieuw…")
+                status = .failed(String(localized: "Offline, trying again…"))
             }
             await conn.close()
             if Task.isCancelled { break }

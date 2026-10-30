@@ -45,7 +45,7 @@ struct SideCard: View {
                 .tracking(0.6)
                 .foregroundStyle(Theme.textSecondary)
             Spacer(minLength: 4)
-            Text(player.track == nil ? "Wacht op geluid" : quality ?? "")
+            Text(player.track == nil ? String(localized: "Waiting for sound") : quality ?? "")
                 .font(.system(size: 11))
                 .foregroundStyle(Theme.textSecondary)
                 .lineLimit(1)
@@ -96,20 +96,20 @@ private struct SpectrumView: View {
     @ViewBuilder
     private func footer(live: Bool) -> some View {
         if track == nil {
-            Text("Spectrum start zodra er iets speelt")
+            Text("The spectrum starts when something plays")
         } else if track?.isPlaying != true {
-            Text("Gepauzeerd")
+            Text("Paused")
         } else if spectrum.consent == .declined {
             HStack(spacing: 6) {
-                Text("Spectrum staat uit")
-                Button("Aanzetten") { spectrum.allow() }
+                Text("Spectrum is off")
+                Button("Turn on") { spectrum.allow() }
                     .buttonStyle(.plain)
                     .foregroundStyle(Preferences.shared.accent.color)
             }
         } else if live {
             LevelsReadout(levels: spectrum.levels)
         } else {
-            Text("Luisteren…")
+            Text("Listening…")
         }
     }
 }
@@ -121,11 +121,11 @@ private struct LevelsReadout: View {
     var body: some View {
         let f = levels.summary
         HStack(spacing: 4) {
-            Text("Bas \(pct(f.bass)) · Mid \(pct(f.mid)) · Hoog \(pct(f.high))")
+            Text("Bass \(pct(f.bass)) · Mid \(pct(f.mid)) · High \(pct(f.high))")
                 .minimumScaleFactor(0.8)
             Spacer(minLength: 2)
-            Text("\(Int(f.loudness.rounded())) dB")
-                .help("Luidheid")
+            Text(verbatim: "\(Int(f.loudness.rounded())) dB")
+                .help("Loudness")
         }
     }
 
@@ -170,11 +170,11 @@ private struct ConsentView: View {
                         .font(.system(size: 14))
                         .foregroundStyle(Theme.ok))
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("Laat wisp meeluisteren?")
+                    Text("Let wisp listen along?")
                         .font(.system(size: 13, weight: .semibold))
                         .lineLimit(1)
                         .minimumScaleFactor(0.85)
-                    Text("Voor het spectrum analyseert wisp live het geluid van je Mac. Er wordt niets opgenomen of verstuurd.")
+                    Text("For the spectrum, wisp analyses your Mac's sound live. Nothing is recorded or sent.")
                         .font(.system(size: 11))
                         .foregroundStyle(Theme.textSecondary)
                         .lineLimit(4)
@@ -182,9 +182,9 @@ private struct ConsentView: View {
             }
             Spacer(minLength: 0)
             HStack(spacing: 8) {
-                Button { spectrum.allow() } label: { Text("Toestaan").frame(maxWidth: .infinity) }
+                Button { spectrum.allow() } label: { Text("Allow").frame(maxWidth: .infinity) }
                     .buttonStyle(AccentButtonStyle())
-                Button { spectrum.decline() } label: { Text("Niet nu").frame(maxWidth: .infinity) }
+                Button { spectrum.decline() } label: { Text("Not now").frame(maxWidth: .infinity) }
                     .buttonStyle(SecondaryButtonStyle())
             }
         }

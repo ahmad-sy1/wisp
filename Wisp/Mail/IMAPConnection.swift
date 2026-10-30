@@ -86,7 +86,7 @@ actor IMAPConnection {
                 threadId: Self.number(after: "X-GM-THRID ", in: line.text).flatMap(UInt64.init),
                 senderName: name,
                 senderAddress: address,
-                subject: headers["subject"].map(MailHeaders.decode) ?? "(geen onderwerp)",
+                subject: headers["subject"].map(MailHeaders.decode) ?? String(localized: "(no subject)"),
                 date: Self.internalDate(in: line.text),
                 isRead: line.text.contains("\\Seen")
             )

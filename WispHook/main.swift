@@ -71,7 +71,7 @@ guard let answer = (try? JSONSerialization.jsonObject(with: reply.prefix { $0 !=
 let behaviour: [String: Any]
 switch decision {
 case "allow": behaviour = ["behavior": "allow"]
-case "deny":  behaviour = ["behavior": "deny", "message": "Geweigerd in wisp"]
+case "deny":  behaviour = ["behavior": "deny", "message": "Denied in wisp"]
 default:      exit(0)  // "ask": Claude Code asks in the terminal
 }
 

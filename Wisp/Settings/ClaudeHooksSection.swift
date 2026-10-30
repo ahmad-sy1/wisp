@@ -11,7 +11,7 @@ struct ClaudeHooksSection: View {
             LabeledContent("Hooks") {
                 HStack(spacing: 8) {
                     Text(statusText).foregroundStyle(.secondary)
-                    Button(status == .installed ? "Opnieuw…" : "Installeren…") { prepare() }
+                    Button(status == .installed ? String(localized: "Reinstall…") : String(localized: "Install…")) { prepare() }
                         .disabled(status == .noHelper)
                 }
             }
@@ -26,10 +26,10 @@ struct ClaudeHooksSection: View {
 
     private var statusText: String {
         switch status {
-        case .installed:    "Geïnstalleerd"
-        case .notInstalled: "Niet geïnstalleerd"
-        case .otherPath:    "Verwijst naar een andere wisp"
-        case .noHelper:     "wisp-hook ontbreekt"
+        case .installed:    String(localized: "Installed")
+        case .notInstalled: String(localized: "Not installed")
+        case .otherPath:    String(localized: "Points to another wisp")
+        case .noHelper:     String(localized: "wisp-hook is missing")
         }
     }
 
@@ -43,14 +43,14 @@ struct ClaudeHooksSection: View {
 
     private func confirmSheet(_ plan: HookInstaller.Plan) -> some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("Wijzigingen in ~/.claude/settings.json")
+            Text("Changes to ~/.claude/settings.json")
                 .font(.headline)
 
             ScrollView {
                 VStack(alignment: .leading, spacing: 3) {
                     ForEach(plan.changes) { change in
                         HStack(alignment: .firstTextBaseline, spacing: 6) {
-                            Text(change.kind == .add ? "+" : "−")
+                            Text(verbatim: change.kind == .add ? "+" : "−")
                                 .foregroundStyle(change.kind == .add ? Color.green : Color.red)
                             Text(change.event).frame(width: 150, alignment: .leading)
                             Text(change.command).foregroundStyle(.secondary)
@@ -58,7 +58,7 @@ struct ClaudeHooksSection: View {
                         }
                     }
                     if plan.changes.isEmpty {
-                        Text("Geen wijzigingen nodig.").foregroundStyle(.secondary)
+                        Text("No changes needed.").foregroundStyle(.secondary)
                     }
                 }
                 .font(.system(size: 11, design: .monospaced))
@@ -68,16 +68,16 @@ struct ClaudeHooksSection: View {
             .frame(height: 220)
             .background(RoundedRectangle(cornerRadius: 6).fill(Color.black.opacity(0.25)))
 
-            Text("Eerst wordt een back-up gemaakt: \(plan.backupURL.lastPathComponent). Andere instellingen blijven staan; het bestand wordt wel opnieuw opgemaakt (sleutels op alfabet).")
+            Text("A backup is made first: \(plan.backupURL.lastPathComponent). Other settings stay as they are, but the file is reformatted (keys in alphabetical order).")
                 .font(.caption)
                 .foregroundStyle(.secondary)
                 .fixedSize(horizontal: false, vertical: true)
 
             HStack {
                 Spacer()
-                Button("Annuleren", role: .cancel) { self.plan = nil }
+                Button("Cancel", role: .cancel) { self.plan = nil }
                     .keyboardShortcut(.cancelAction)
-                Button("Installeren") { install(plan) }
+                Button("Install") { install(plan) }
                     .keyboardShortcut(.defaultAction)
                     .disabled(plan.changes.isEmpty)
             }
@@ -89,9 +89,9 @@ struct ClaudeHooksSection: View {
     private func install(_ plan: HookInstaller.Plan) {
         do {
             try HookInstaller.apply(plan)
-            message = "Geïnstalleerd. Back-up: \(plan.backupURL.path)"
+            message = String(localized: "Installed. Backup: \(plan.backupURL.path)")
         } catch {
-            message = "Niet gelukt: \(error.localizedDescription)"
+            message = String(localized: "Failed: \(error.localizedDescription)")
         }
         self.plan = nil
         status = HookInstaller.status()

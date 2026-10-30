@@ -1,0 +1,1597 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "%@ left" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "nog %@"
+          }
+        }
+      }
+    },
+    "%@ wants to use %@" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ wil %2$@ gebruiken"
+          }
+        }
+      }
+    },
+    "%@ · %lld min travel" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ · %2$lld min reizen"
+          }
+        }
+      }
+    },
+    "%lld min" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld min"
+          }
+        }
+      }
+    },
+    "%lldh" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lldu"
+          }
+        }
+      }
+    },
+    "%lldh %lldm" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lldu %2$lldm"
+          }
+        }
+      }
+    },
+    "%lldm" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lldm"
+          }
+        }
+      }
+    },
+    "(no subject)" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "(geen onderwerp)"
+          }
+        }
+      }
+    },
+    "16 characters" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "16 tekens"
+          }
+        }
+      }
+    },
+    "A backup is made first: %@. Other settings stay as they are, but the file is reformatted (keys in alphabetical order)." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eerst wordt een back-up gemaakt: %@. Andere instellingen blijven staan; het bestand wordt wel opnieuw opgemaakt (sleutels op alfabet)."
+          }
+        }
+      }
+    },
+    "Accent colour" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Accentkleur"
+          }
+        }
+      }
+    },
+    "Account" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Account"
+          }
+        }
+      }
+    },
+    "All" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alles"
+          }
+        }
+      }
+    },
+    "Allow" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toestaan"
+          }
+        }
+      }
+    },
+    "Analyses the sound of what plays, live. Nothing is recorded, stored or sent. macOS asks for permission for system audio the first time." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Analyseert live het geluid van wat er speelt. Er wordt niets opgenomen, opgeslagen of verstuurd. macOS vraagt de eerste keer om toestemming voor systeemaudio."
+          }
+        }
+      }
+    },
+    "App password" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "App-wachtwoord"
+          }
+        }
+      }
+    },
+    "Bass %@ · Mid %@ · High %@" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bas %1$@ · Mid %2$@ · Hoog %3$@"
+          }
+        }
+      }
+    },
+    "Behaviour" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gedrag"
+          }
+        }
+      }
+    },
+    "Calendar" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Agenda"
+          }
+        }
+      }
+    },
+    "Calendar & weather" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Agenda & weer"
+          }
+        }
+      }
+    },
+    "Calendar ‘%@’" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Agenda ‘%@’"
+          }
+        }
+      }
+    },
+    "Cancel" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Annuleren"
+          }
+        }
+      }
+    },
+    "Changes to ~/.claude/settings.json" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wijzigingen in ~/.claude/settings.json"
+          }
+        }
+      }
+    },
+    "Claude Code" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Claude Code"
+          }
+        }
+      }
+    },
+    "Clipboard" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Klembord"
+          }
+        }
+      }
+    },
+    "Close after leaving" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sluiten na verlaten"
+          }
+        }
+      }
+    },
+    "Coming in a later step" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Komt in een volgende stap"
+          }
+        }
+      }
+    },
+    "Connect" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verbinden"
+          }
+        }
+      }
+    },
+    "Connect Gmail" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gmail koppelen"
+          }
+        }
+      }
+    },
+    "Connect Gmail to see your mail here." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Koppel Gmail om je mail hier te zien."
+          }
+        }
+      }
+    },
+    "Connected · %@ focused" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verbonden · %@ gefocust"
+          }
+        }
+      }
+    },
+    "Connected · %lld unread" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verbonden · %lld ongelezen"
+          }
+        }
+      }
+    },
+    "Connecting to Gmail…" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verbinden met Gmail…"
+          }
+        }
+      }
+    },
+    "Connecting…" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verbinden…"
+          }
+        }
+      }
+    },
+    "Create an app password…" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "App-wachtwoord maken…"
+          }
+        }
+      }
+    },
+    "Deny" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Weigeren"
+          }
+        }
+      }
+    },
+    "Disconnect" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ontkoppelen"
+          }
+        }
+      }
+    },
+    "Done · %@ focused" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Klaar · %@ gefocust"
+          }
+        }
+      }
+    },
+    "Dry for the coming hours" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Droog de komende uren"
+          }
+        }
+      }
+    },
+    "Dry until %@" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Droog tot %@"
+          }
+        }
+      }
+    },
+    "Failed: %@" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Niet gelukt: %@"
+          }
+        }
+      }
+    },
+    "Files" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bestanden"
+          }
+        }
+      }
+    },
+    "Focus" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Focus"
+          }
+        }
+      }
+    },
+    "For the spectrum, wisp analyses your Mac's sound live. Nothing is recorded or sent." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Voor het spectrum analyseert wisp live het geluid van je Mac. Er wordt niets opgenomen of verstuurd."
+          }
+        }
+      }
+    },
+    "Give access" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toegang geven"
+          }
+        }
+      }
+    },
+    "Gmail" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gmail"
+          }
+        }
+      }
+    },
+    "Gmail address" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gmail-adres"
+          }
+        }
+      }
+    },
+    "Has a question for you" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Heeft een vraag voor je"
+          }
+        }
+      }
+    },
+    "Home" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Home"
+          }
+        }
+      }
+    },
+    "Hooks" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hooks"
+          }
+        }
+      }
+    },
+    "In terminal" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In terminal"
+          }
+        }
+      }
+    },
+    "Install" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Installeren"
+          }
+        }
+      }
+    },
+    "Installed" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geïnstalleerd"
+          }
+        }
+      }
+    },
+    "Installed. Backup: %@" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geïnstalleerd. Back-up: %@"
+          }
+        }
+      }
+    },
+    "Install…" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Installeren…"
+          }
+        }
+      }
+    },
+    "Leave for your shift" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vertrek voor je dienst"
+          }
+        }
+      }
+    },
+    "Let wisp listen along?" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Laat wisp meeluisteren?"
+          }
+        }
+      }
+    },
+    "Listening…" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Luisteren…"
+          }
+        }
+      }
+    },
+    "Live spectrum" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Live spectrum"
+          }
+        }
+      }
+    },
+    "Loading weather…" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Weer laden…"
+          }
+        }
+      }
+    },
+    "Loudness" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Luidheid"
+          }
+        }
+      }
+    },
+    "Mail" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mail"
+          }
+        }
+      }
+    },
+    "Music" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Muziek"
+          }
+        }
+      }
+    },
+    "NOTHING PLAYING" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "NIETS AAN HET AFSPELEN"
+          }
+        }
+      }
+    },
+    "NOW" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "NU BEZIG"
+          }
+        }
+      }
+    },
+    "No changes needed." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geen wijzigingen nodig."
+          }
+        }
+      }
+    },
+    "No more shifts today" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geen dienst meer vandaag"
+          }
+        }
+      }
+    },
+    "No place found." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geen plaats gevonden."
+          }
+        }
+      }
+    },
+    "No session" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geen sessie"
+          }
+        }
+      }
+    },
+    "No unread mail." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geen ongelezen mail."
+          }
+        }
+      }
+    },
+    "No weather" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geen weer"
+          }
+        }
+      }
+    },
+    "Not connected" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Niet gekoppeld"
+          }
+        }
+      }
+    },
+    "Not installed" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Niet geïnstalleerd"
+          }
+        }
+      }
+    },
+    "Not now" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Niet nu"
+          }
+        }
+      }
+    },
+    "Notes" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notities"
+          }
+        }
+      }
+    },
+    "Nothing is playing" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Er speelt niets"
+          }
+        }
+      }
+    },
+    "Nothing planned today." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Niets gepland vandaag."
+          }
+        }
+      }
+    },
+    "Now" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nu"
+          }
+        }
+      }
+    },
+    "Now playing" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nu aan het afspelen"
+          }
+        }
+      }
+    },
+    "Offline, trying again…" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Offline, probeert opnieuw…"
+          }
+        }
+      }
+    },
+    "Open %@" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open %@"
+          }
+        }
+      }
+    },
+    "Open Spotify" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open Spotify"
+          }
+        }
+      }
+    },
+    "Open System Settings" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open Systeeminstellingen"
+          }
+        }
+      }
+    },
+    "Open at login" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Opstarten bij inloggen"
+          }
+        }
+      }
+    },
+    "Open in Gmail" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Openen in Gmail"
+          }
+        }
+      }
+    },
+    "Open project" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open project"
+          }
+        }
+      }
+    },
+    "Open wisp" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open wisp"
+          }
+        }
+      }
+    },
+    "Open-Meteo can't be reached" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open-Meteo is niet bereikbaar"
+          }
+        }
+      }
+    },
+    "Other place" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Andere plaats"
+          }
+        }
+      }
+    },
+    "PERMISSION NEEDED" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "TOESTEMMING NODIG"
+          }
+        }
+      }
+    },
+    "Paused" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gepauzeerd"
+          }
+        }
+      }
+    },
+    "Points to another wisp" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verwijst naar een andere wisp"
+          }
+        }
+      }
+    },
+    "Quit wisp" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stop wisp"
+          }
+        }
+      }
+    },
+    "Rain for the coming hours" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Regen de komende uren"
+          }
+        }
+      }
+    },
+    "Rain until %@" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Regen tot %@"
+          }
+        }
+      }
+    },
+    "Read only: wisp marks nothing as read. Address and password are kept only in your Keychain." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alleen lezen: wisp markeert niets als gelezen. Adres en wachtwoord staan alleen in je Keychain."
+          }
+        }
+      }
+    },
+    "Recognise shifts by" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diensten herkennen aan"
+          }
+        }
+      }
+    },
+    "Reinstall…" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Opnieuw…"
+          }
+        }
+      }
+    },
+    "SPECTRUM" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SPECTRUM"
+          }
+        }
+      }
+    },
+    "Search for a place" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zoek een plaats"
+          }
+        }
+      }
+    },
+    "See what's on your calendar today." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zie hier wat er vandaag in je agenda staat."
+          }
+        }
+      }
+    },
+    "Settings" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Instellingen"
+          }
+        }
+      }
+    },
+    "Settings — wisp" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Instellingen — wisp"
+          }
+        }
+      }
+    },
+    "Settings…" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Instellingen…"
+          }
+        }
+      }
+    },
+    "Shift at %@" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dienst om %@"
+          }
+        }
+      }
+    },
+    "Sign-in failed: check the address and app password" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inloggen mislukt: controleer adres en app-wachtwoord"
+          }
+        }
+      }
+    },
+    "Sounds" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geluiden"
+          }
+        }
+      }
+    },
+    "Spectrum is off" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spectrum staat uit"
+          }
+        }
+      }
+    },
+    "Start Claude Code in IntelliJ or a terminal to see it here." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Start Claude Code in IntelliJ of een terminal om hem hier te zien."
+          }
+        }
+      }
+    },
+    "Start something in Spotify or YouTube" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Start iets in Spotify of YouTube"
+          }
+        }
+      }
+    },
+    "Status" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Status"
+          }
+        }
+      }
+    },
+    "Stopped with an error" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gestopt met een fout"
+          }
+        }
+      }
+    },
+    "System" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Systeem"
+          }
+        }
+      }
+    },
+    "The calendar comes from the macOS Calendar app and is only read. The weather comes from Open-Meteo; only the place is sent there." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "De agenda komt uit de Agenda-app van macOS en wordt alleen gelezen. Het weer komt van Open-Meteo; alleen de plaats gaat daarheen."
+          }
+        }
+      }
+    },
+    "The spectrum starts when something plays" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spectrum start zodra er iets speelt"
+          }
+        }
+      }
+    },
+    "Today %lld° to %lld°" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vandaag %1$lld° tot %2$lld°"
+          }
+        }
+      }
+    },
+    "Today · %@" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vandaag · %@"
+          }
+        }
+      }
+    },
+    "Tomorrow · %@" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Morgen · %@"
+          }
+        }
+      }
+    },
+    "Travel time to your shift" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reistijd naar je dienst"
+          }
+        }
+      }
+    },
+    "Turn on" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aanzetten"
+          }
+        }
+      }
+    },
+    "Unread" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ongelezen"
+          }
+        }
+      }
+    },
+    "Untitled" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zonder titel"
+          }
+        }
+      }
+    },
+    "Waiting for permission" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wacht op toestemming"
+          }
+        }
+      }
+    },
+    "Waiting for sound" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wacht op geluid"
+          }
+        }
+      }
+    },
+    "Weather for" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Weer voor"
+          }
+        }
+      }
+    },
+    "Weather from Open-Meteo" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Weer via Open-Meteo"
+          }
+        }
+      }
+    },
+    "Working · %@" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bezig · %@"
+          }
+        }
+      }
+    },
+    "Working…" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bezig…"
+          }
+        }
+      }
+    },
+    "Your inbox is empty." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Je inbox is leeg."
+          }
+        }
+      }
+    },
+    "all day" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "hele dag"
+          }
+        }
+      }
+    },
+    "clear" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "helder"
+          }
+        }
+      }
+    },
+    "cloudy" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "bewolkt"
+          }
+        }
+      }
+    },
+    "drizzle" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "motregen"
+          }
+        }
+      }
+    },
+    "fog" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "mist"
+          }
+        }
+      }
+    },
+    "freezing rain" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ijzel"
+          }
+        }
+      }
+    },
+    "heavy rain" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "zware regen"
+          }
+        }
+      }
+    },
+    "heavy showers" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "zware buien"
+          }
+        }
+      }
+    },
+    "in %@" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "over %@"
+          }
+        }
+      }
+    },
+    "light rain" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "lichte regen"
+          }
+        }
+      }
+    },
+    "mostly clear" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "vrijwel helder"
+          }
+        }
+      }
+    },
+    "name@gmail.com" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "naam@gmail.com"
+          }
+        }
+      }
+    },
+    "now %@" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "nu %@"
+          }
+        }
+      }
+    },
+    "partly cloudy" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "half bewolkt"
+          }
+        }
+      }
+    },
+    "rain" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "regen"
+          }
+        }
+      }
+    },
+    "shift" : {
+      "comment" : "Word in a calendar event title that marks a work shift",
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "dienst"
+          }
+        }
+      }
+    },
+    "showers" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "buien"
+          }
+        }
+      }
+    },
+    "snow" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "sneeuw"
+          }
+        }
+      }
+    },
+    "snow showers" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "sneeuwbuien"
+          }
+        }
+      }
+    },
+    "the source" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "de bron"
+          }
+        }
+      }
+    },
+    "thunderstorm" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "onweer"
+          }
+        }
+      }
+    },
+    "thunderstorm with hail" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "onweer met hagel"
+          }
+        }
+      }
+    },
+    "unknown" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "onbekend"
+          }
+        }
+      }
+    },
+    "wisp has no access to your calendar." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "wisp heeft geen toegang tot je agenda."
+          }
+        }
+      }
+    },
+    "wisp has no access to your calendar. Turn wisp on under Privacy & Security → Calendars." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "wisp heeft geen toegang tot je agenda. Zet wisp aan onder Privacy en beveiliging → Agenda's."
+          }
+        }
+      }
+    },
+    "wisp-hook is missing" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "wisp-hook ontbreekt"
+          }
+        }
+      }
+    },
+    "wisp-hook is missing from the app." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "wisp-hook ontbreekt in de app."
+          }
+        }
+      }
+    },
+    "yesterday" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "gisteren"
+          }
+        }
+      }
+    },
+    "~/.claude/settings.json is not valid JSON; nothing was changed." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "~/.claude/settings.json is geen geldige JSON; er is niets aangepast."
+          }
+        }
+      }
+    },
+    "‘%@’ in the title" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "‘%@’ in de titel"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}

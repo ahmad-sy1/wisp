@@ -115,10 +115,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         item.button?.image = NSImage(systemSymbolName: "circle.circle", accessibilityDescription: "wisp")
 
         let menu = NSMenu()
-        menu.addItem(withTitle: "Open wisp", action: #selector(openNotch), keyEquivalent: "")
-        menu.addItem(withTitle: "Instellingen…", action: #selector(openSettings), keyEquivalent: ",")
+        menu.addItem(withTitle: String(localized: "Open wisp"), action: #selector(openNotch), keyEquivalent: "")
+        menu.addItem(withTitle: String(localized: "Settings…"), action: #selector(openSettings), keyEquivalent: ",")
         menu.addItem(.separator())
-        menu.addItem(withTitle: "Stop wisp", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
+        menu.addItem(withTitle: String(localized: "Quit wisp"), action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
         for menuItem in menu.items where menuItem.action != #selector(NSApplication.terminate(_:)) {
             menuItem.target = self
         }
@@ -135,7 +135,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     @objc private func openSettings() {
         if settingsWindow == nil {
             let window = NSWindow(contentViewController: NSHostingController(rootView: SettingsView(prefs: .shared)))
-            window.title = "Settings — wisp"
+            window.title = String(localized: "Settings — wisp")
             window.styleMask = [.titled, .closable]
             window.isReleasedWhenClosed = false
             window.center()
