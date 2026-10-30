@@ -31,6 +31,26 @@
         }
       }
     },
+    "%lld d" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld d"
+          }
+        }
+      }
+    },
+    "%lld h" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld u"
+          }
+        }
+      }
+    },
     "%lld min" : {
       "localizations" : {
         "nl" : {
@@ -281,6 +301,16 @@
         }
       }
     },
+    "Clear" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wissen"
+          }
+        }
+      }
+    },
     "Clipboard" : {
       "localizations" : {
         "nl" : {
@@ -387,6 +417,36 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Verbinden…"
+          }
+        }
+      }
+    },
+    "Copied" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gekopieerd"
+          }
+        }
+      }
+    },
+    "Copy" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kopieer"
+          }
+        }
+      }
+    },
+    "Copy something and it shows up here." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kopieer iets en het verschijnt hier."
           }
         }
       }
@@ -571,6 +631,16 @@
         }
       }
     },
+    "History" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geschiedenis"
+          }
+        }
+      }
+    },
     "Home" : {
       "localizations" : {
         "nl" : {
@@ -637,6 +707,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Installeren…"
+          }
+        }
+      }
+    },
+    "Keep a clipboard history" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Klembordgeschiedenis bijhouden"
           }
         }
       }
@@ -847,6 +927,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Notities"
+          }
+        }
+      }
+    },
+    "Nothing found for “%@”." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Niets gevonden voor “%@”."
           }
         }
       }
@@ -1151,6 +1241,16 @@
         }
       }
     },
+    "Search clipboard" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zoek in klembord"
+          }
+        }
+      }
+    },
     "Search for a place" : {
       "localizations" : {
         "nl" : {
@@ -1317,6 +1417,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "De agenda komt uit de Agenda-app van macOS en wordt alleen gelezen. Het weer komt van Open-Meteo; alleen de plaats gaat daarheen."
+          }
+        }
+      }
+    },
+    "The clipboard history is off in Settings." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "De klembordgeschiedenis staat uit in Instellingen."
+          }
+        }
+      }
+    },
+    "The last %lld texts you copied, stored only on this Mac. Passwords and one-time codes that apps mark as such are never kept." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "De laatste %lld teksten die je kopieerde, alleen op deze Mac bewaard. Wachtwoorden en eenmalige codes die apps als zodanig markeren worden nooit bewaard."
           }
         }
       }
@@ -1677,6 +1797,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "naam@gmail.com"
+          }
+        }
+      }
+    },
+    "now" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "nu"
           }
         }
       }

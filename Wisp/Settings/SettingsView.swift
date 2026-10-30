@@ -53,6 +53,8 @@ struct SettingsView: View {
 
             FocusSection(focus: .shared)
 
+            ClipboardSection(clipboard: .shared)
+
             MusicSection(spectrum: .shared)
 
             ClaudeHooksSection()
