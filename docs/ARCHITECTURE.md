@@ -105,10 +105,10 @@ macOS Calendar (EventKit) ─► AgendaStore ─┐
 Open-Meteo (HTTPS, no key) ─► WeatherStore ┘
 ```
 
-- **`AgendaStore`** asks for full Calendar access the first time (`requestFullAccessToEvents`; the hardened runtime needs the `com.apple.security.personal-information.calendars` entitlement in `Wisp/Resources/wisp.entitlements`). It reads only while the tab is visible (`setVisible(_:)`): one `events(matching:)` for today over the calendars that aren't switched off, and a listener for `EKEventStoreChanged` that is removed again when the tab closes. Nothing is written to the calendar.
+- **`AgendaStore`** asks for full Calendar access the first time (`requestFullAccessToEvents`; the hardened runtime needs the `com.apple.security.personal-information.calendars` entitlement in `Wisp/Resources/wisp.entitlements`). It reads only while the tab is visible (`setVisible(_:)`): one `events(matching:)` for today and tomorrow (tomorrow is shown once nothing is left today) over the calendars that aren't switched off, and a listener for `EKEventStoreChanged` that is removed again when the tab closes. Nothing is written to the calendar.
 - An event is a **shift** when its title contains *dienst*, or, if chosen in Settings, when it is in a given calendar. Shifts get the `warning` colour; other events the colour of their calendar. *Vertrek voor je dienst* is the next shift's start minus the ride in minutes from Settings.
 - **`WeatherStore`** fetches the current temperature and WMO weather code, the hourly chance and amount of rain, and today's low and high from `api.open-meteo.com` for the place in Settings, at most once every 15 minutes and only when the tab opens. An hour counts as wet from a 50 % chance or 0.2 mm; that gives *Droog tot 22:00* or *Regen tot 15:00*. Settings looks up places with Open-Meteo's geocoding API.
-- The tab redraws once a minute (`TimelineView(.everyMinute)`) for the *nu* line and the countdowns, and only exists while it is open.
+- The tab redraws once a minute (`TimelineView(.everyMinute)`) for the *nu* line, the countdowns and the bar of the event on now, and only exists while it is open. All of it reads the time through `AgendaClock.now`, which in Debug builds can be set with `-agendaTime HH:mm`.
 
 ## Settings and secrets
 

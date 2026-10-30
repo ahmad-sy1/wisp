@@ -28,9 +28,9 @@ Rechts: **Instellingen** (open het Settings-venster).
 ### Agenda & weer
 - Bron: mijn agenda (mijn schoolrooster en diensten staan erin). **Voorkeur: EventKit** (macOS Agenda-app, die gesynct is met Google Calendar), zodat er geen extra API-key nodig is.
 - Links: tijdlijn van vandaag. Afgelopen items doorgestreept/grijs, een rode **"nu"-lijn** met tijd, komende items met gekleurd streepje (dienst = oranje) en "over Xu Xm".
-- Rechts: **weer** in Nijmegen (temperatuur + omschrijving) en een **vertrek-kaart** ("Vertrek voor je dienst 16:25 · 22 min fietsen · droog tot 22:00"). Weer via Open-Meteo (gratis, geen key) of WeatherKit.
+- Rechts: **weer** in Nijmegen (temperatuur + omschrijving) en een **vertrek-kaart** ("Vertrek voor je dienst 16:25 · 22 min reizen · droog tot 22:00"). Weer via Open-Meteo (gratis, geen key) of WeatherKit.
 
-> **Stand van zaken:** gebouwd. EventKit en Open-Meteo. Een dienst is een afspraak met "dienst" in de titel, of (instelbaar) alles in één agenda. De fietstijd is een vast aantal minuten in Settings: een route berekenen zou je adres naar een kaartdienst sturen. De plaats voor het weer is in Settings te kiezen (standaard Nijmegen).
+> **Stand van zaken:** gebouwd. EventKit en Open-Meteo. Een dienst is een afspraak met "dienst" in de titel, of (instelbaar) alles in één agenda. De reistijd is een vast aantal minuten in Settings: een route berekenen zou je adres naar een kaartdienst sturen. De plaats voor het weer is in Settings te kiezen (standaard Nijmegen). Staat er vandaag niets meer, dan toont de tijdlijn onder de nu-lijn alvast de eerste twee afspraken van morgen, onder *Morgen · vrijdag 30 oktober*. Wat nu bezig is staat in een eigen kaart met *NU*, de tijd die nog rest en een balk (bord 3.1).
 
 ### Focus-timer
 - Ring met aftellende tijd, knoppen **Start/Pauze** en **Reset**, duur-keuze **25 / 50 / 90 min**.
@@ -90,7 +90,7 @@ Rechts: **Instellingen** (open het Settings-venster).
 
 ## Settings-aanpassingen
 
-> **Stand van zaken:** accentkleur, sluitvertraging, geluiden, opstarten bij inloggen, Gmail, Agenda & weer (agenda's, diensten, fietstijd, plaats), Muziek (spectrum) en Claude Code-hooks zijn er. Tabs, Focus, integraties en hotkey nog niet.
+> **Stand van zaken:** accentkleur, sluitvertraging, geluiden, opstarten bij inloggen, Gmail, Agenda & weer (agenda's, diensten, reistijd, plaats), Muziek (spectrum) en Claude Code-hooks zijn er. Tabs, Focus, integraties en hotkey nog niet.
 
 - Bovenaan: accentkleur kiezen (4 opties).
 - Sectie **Tabs**: tabs aan/uit en volgorde.
