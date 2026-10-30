@@ -2,10 +2,11 @@ import SwiftUI
 
 struct TabBar: View {
     @ObservedObject var model: NotchModel
+    @ObservedObject private var prefs = Preferences.shared
 
     var body: some View {
         HStack(spacing: 2) {
-            ForEach(WispTab.allCases) { tab in
+            ForEach(prefs.visibleTabs) { tab in
                 TabIconButton(symbol: tab.symbol, label: tab.title,
                               isActive: model.tab == tab,
                               badge: model.badges[tab] ?? 0) {
@@ -38,6 +39,9 @@ struct TabBar: View {
             TabIconButton(symbol: "slider.vertical.3", label: String(localized: "Settings"), isActive: false) {
                 model.onOpenSettings()
             }
+        }
+        .onChange(of: prefs.hiddenTabs) { _, hidden in
+            if hidden.contains(model.tab) { model.tab = .home }
         }
     }
 }

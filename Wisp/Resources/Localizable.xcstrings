@@ -301,6 +301,16 @@
         }
       }
     },
+    "Always on" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Altijd aan"
+          }
+        }
+      }
+    },
     "App password" : {
       "localizations" : {
         "nl" : {
@@ -497,6 +507,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Opladen"
+          }
+        }
+      }
+    },
+    "Choose which tabs you see and drag them into your own order." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kies welke tabs je ziet en sleep ze in je eigen volgorde."
           }
         }
       }
@@ -2157,16 +2177,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Spectrum start zodra er iets speelt"
-          }
-        }
-      }
-    },
-    "The tabs in the notch and their options." : {
-      "localizations" : {
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "De tabs in de notch en hun opties."
           }
         }
       }

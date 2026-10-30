@@ -53,6 +53,8 @@ final class NotchController {
     func expand(to tab: WispTab? = nil) {
         collapseWork?.cancel()
         if let tab { model.tab = tab }
+        // A tab switched off in Settings doesn't open; Home always can.
+        if Preferences.shared.hiddenTabs.contains(model.tab) { model.tab = .home }
         guard !model.isExpanded else { return }
         panel.setFrame(geometry.frame(for: CGSize(width: Theme.panelWidth, height: Theme.panelHeight)),
                        display: true)
