@@ -26,11 +26,11 @@ The notch is the one bit of screen you never use. wisp turns it into a quiet das
 
 ## Features
 
-- **Claude Code, live**: every session in IntelliJ, Rider, VS Code or a terminal shows up under *Now* with its project, branch and what it is doing right now. *Open project* takes you straight back to the right IDE window.
+- **Claude Code, live**: every session in IntelliJ, Rider, VS Code or a terminal shows up under *In progress* with its project, branch and what it is doing right now. *Open project* takes you straight back to the right IDE window.
 - **Approve from the notch**: when Claude Code asks for permission, the notch opens with the command and three buttons: *Allow*, *Deny*, *In terminal*. wisp never approves anything on its own; no click within 110 s means Claude asks in the terminal as usual.
 - **Mail**: your Gmail inbox, read-only, with an *All / Unread* filter and an unread badge on the tab. New mail arrives by push (IMAP IDLE), not by polling. wisp never marks anything as read.
 - **Music**: whatever your Mac is playing (Spotify, Music, YouTube in the browser), with artwork, progress and glass controls. Next to it, a **live spectrum** of what you hear: 24 bands from bass to treble, the bass/mid/treble mix and the loudness. While music plays, the closed notch grows a little wing on each side: artwork on the left, a mini spectrum on the right.
-- **Calendar & weather**: today's timeline from the macOS Calendar app (and so from Google Calendar too), with what's done struck through, a red *now* line and a countdown to what's next. Next to it the weather where you are and, on a work day, when to leave for your shift and whether it stays dry.
+- **Calendar & weather**: today's timeline from the macOS Calendar app (and so from Google Calendar too), with what's done struck through, what's on now in its own card with a bar that fills up, a red *now* line and a countdown to what's next; in the evening it already shows how tomorrow starts. Next to it the weather where you are and, on a work day, when to leave for your shift and whether it stays dry.
 - **English and Dutch**: wisp follows your Mac's language, or pick one in Settings.
 - **Calm by default**: the closed notch draws nothing extra and uses 0 % CPU. No timers run while it is closed.
 - **Any Mac**: on a screen without a notch, wisp sits in a small bar at the top centre.

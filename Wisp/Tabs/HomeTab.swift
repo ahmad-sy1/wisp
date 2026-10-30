@@ -29,7 +29,7 @@ private struct NowCard: View {
                 HStack(spacing: 12) {
                     IconTile(symbol: "chevron.left.forwardslash.chevron.right")
                     VStack(alignment: .leading, spacing: 2) {
-                        Text("NOW")
+                        Text("IN PROGRESS")
                             .font(.system(size: 10.5, weight: .medium))
                             .tracking(0.6)
                             .foregroundStyle(Theme.textSecondary)
