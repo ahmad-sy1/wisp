@@ -14,7 +14,7 @@ What is planned, roughly in order. Every item becomes its own branch and pull re
 | **Focus task rules** | See, add and remove app/project/site → task rules. Board 10.6. | [#27](https://github.com/ahmad-sy1/wisp/issues/27) |
 | **GitHub, Notion, WHOOP** | Sign in with OAuth (PKCE), tokens in the Keychain; fills the Home tiles. See [INTEGRATIONS.md](INTEGRATIONS.md#planned-github-notion-whoop). | |
 | **Own app icon and sounds** | The wisp mark from board 0; short, quiet system-like sounds. | |
-| **First signed release** | `./scripts/release.sh` once the main tabs are in. See [RELEASING.md](RELEASING.md). | |
+| **First signed release** | `./scripts/release.sh` once the main tabs are in. See [RELEASING.md](RELEASING.md) and the [launch checklist](LAUNCH.md). | |
 
 ## Decided against
 
