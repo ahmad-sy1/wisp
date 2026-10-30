@@ -871,6 +871,16 @@
         }
       }
     },
+    "Later" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Later"
+          }
+        }
+      }
+    },
     "Leave for your shift" : {
       "localizations" : {
         "nl" : {
@@ -957,6 +967,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Meten…"
+          }
+        }
+      }
+    },
+    "Moves it to the Gmail trash" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verplaatst hem naar de Gmail-prullenbak"
           }
         }
       }
@@ -1181,6 +1201,16 @@
         }
       }
     },
+    "Open" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Openen"
+          }
+        }
+      }
+    },
     "Open %@" : {
       "localizations" : {
         "nl" : {
@@ -1337,16 +1367,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Regen tot %@"
-          }
-        }
-      }
-    },
-    "Read only: wisp marks nothing as read. Address and password are kept only in your Keychain." : {
-      "localizations" : {
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Alleen lezen: wisp markeert niets als gelezen. Adres en wachtwoord staan alleen in je Keychain."
           }
         }
       }
@@ -1517,6 +1537,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Dienst om %@"
+          }
+        }
+      }
+    },
+    "Show new mail in the notch" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nieuwe mail tonen in de notch"
           }
         }
       }
@@ -1797,6 +1827,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ongelezen"
+          }
+        }
+      }
+    },
+    "Unread count on the closed notch" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aantal ongelezen op de dichte notch"
           }
         }
       }
@@ -2278,6 +2318,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "wisp heeft geen toegang tot je agenda. Zet wisp aan onder Privacy en beveiliging → Agenda's."
+          }
+        }
+      }
+    },
+    "wisp marks nothing as read and only changes your mailbox when you click Delete on new mail (it goes to the Gmail trash). Address and password are kept only in your Keychain." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "wisp markeert niets als gelezen en verandert je mailbox alleen als je bij nieuwe mail op Verwijderen klikt (hij gaat naar de Gmail-prullenbak). Adres en wachtwoord staan alleen in je Keychain."
           }
         }
       }

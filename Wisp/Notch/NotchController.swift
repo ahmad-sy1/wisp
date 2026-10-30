@@ -31,6 +31,7 @@ final class NotchController {
         panel.contentView = host
 
         model.onTapCollapsed = { [weak self] in self?.expand() }
+        model.onCollapse = { [weak self] in self?.collapse() }
         model.onOpenSettings = { [weak self] in
             self?.collapse()
             self?.openSettings()
@@ -65,16 +66,31 @@ final class NotchController {
 
     func collapse() {
         collapseWork?.cancel()
-        guard model.isExpanded, canCollapse() else { return }
+        guard !model.isCollapsed, canCollapse() else { return }
         withAnimation(closeSpring) {
             model.phase = .collapsed
         } completion: { [weak self] in
-            guard let self, !self.model.isExpanded else { return }
+            guard let self, self.model.isCollapsed else { return }
+            self.model.peekMail = nil
             self.panel.setFrame(self.collapsedFrame, display: true)
         }
     }
 
-    func toggle() { model.isExpanded ? collapse() : expand() }
+    /// Peeks out with a new message (board 8) and closes again after a few seconds,
+    /// unless the mouse is on it. Only from closed: an open panel isn't interrupted.
+    func peek(_ mail: MailMessage) {
+        guard model.isCollapsed else { return }
+        collapseWork?.cancel()
+        model.peekMail = mail
+        panel.setFrame(geometry.frame(for: CGSize(width: Theme.peekWidth, height: Theme.peekHeight)), display: true)
+        withAnimation(openSpring) {
+            model.phase = .peek
+            model.hovering = false
+        }
+        if !mouseInside { scheduleCollapse(after: 6) }
+    }
+
+    func toggle() { model.isCollapsed ? expand() : collapse() }
 
     #if DEBUG
     /// Draws the panel into a PNG. Unlike `screencapture` this also works while the
@@ -95,10 +111,13 @@ final class NotchController {
     /// Shows or hides the focus timer's wings on the closed notch.
     func setFocusWings(_ on: Bool) { setWings(\.focusWings, on) }
 
+    /// Shows or hides the unread-mail wings on the closed notch.
+    func setMailWings(_ on: Bool) { setWings(\.mailWings, on) }
+
     private func setWings(_ wings: ReferenceWritableKeyPath<NotchModel, Bool>, _ on: Bool) {
         guard model[keyPath: wings] != on else { return }
         // Already wide (the other wings show), or open: only the content changes.
-        if model.isExpanded || (on ? model.showsWings : model.restingSize == restingSize(without: wings)) {
+        if !model.isCollapsed || (on ? model.showsWings : model.restingSize == restingSize(without: wings)) {
             withAnimation(.easeInOut(duration: 0.2)) { model[keyPath: wings] = on }
             return
         }
@@ -112,7 +131,7 @@ final class NotchController {
             withAnimation(closeSpring) {
                 model[keyPath: wings] = false
             } completion: { [weak self] in
-                guard let self, !self.model.isExpanded else { return }
+                guard let self, self.model.isCollapsed else { return }
                 self.panel.setFrame(self.collapsedFrame, display: true)
             }
         }
@@ -136,13 +155,13 @@ final class NotchController {
     private func mouseEntered() {
         mouseInside = true
         collapseWork?.cancel()
-        guard !model.isExpanded else { return }
+        guard model.isCollapsed else { return }
         withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) { model.hovering = true }
     }
 
     private func mouseExited() {
         mouseInside = false
-        if model.isExpanded {
+        if !model.isCollapsed {
             scheduleCollapse(after: Preferences.shared.closeDelay)
         } else {
             withAnimation(.spring(response: 0.28, dampingFraction: 0.9)) { model.hovering = false }
@@ -153,7 +172,8 @@ final class NotchController {
 
     /// The resting size if these wings were off (the other wings may keep it wide).
     private func restingSize(without wings: ReferenceWritableKeyPath<NotchModel, Bool>) -> CGSize {
-        let others = wings == \NotchModel.musicWings ? model.focusWings : model.musicWings
+        let all: [ReferenceWritableKeyPath<NotchModel, Bool>] = [\.musicWings, \.focusWings, \.mailWings]
+        let others = all.contains { $0 != wings && model[keyPath: $0] }
         return CGSize(width: model.notchSize.width + (others ? 2 * model.wingWidth : 0),
                       height: model.notchSize.height)
     }
@@ -172,9 +192,7 @@ final class NotchController {
     private func screensChanged() {
         geometry = .current()
         applyGeometry()
-        let frame = model.isExpanded
-            ? geometry.frame(for: CGSize(width: Theme.panelWidth, height: Theme.panelHeight))
-            : collapsedFrame
+        let frame = model.isCollapsed ? collapsedFrame : geometry.frame(for: model.shapeSize)
         panel.setFrame(frame, display: true)
     }
 }

@@ -96,6 +96,8 @@ Rechts: **Instellingen** (open het Settings-venster).
 - Drie knoppen: **Openen** (wit, primair) · **Verwijderen** (naar de Gmail-prullenbak, niet permanent) · **Later** (melding weg, mail blijft ongelezen).
 - Sluit automatisch weer (bestaande "close after X s" instelling).
 
+> **Stand van zaken:** gebouwd. De peek toont het onderwerp, niet de eerste regel (wisp haalt alleen headers op). *Verwijderen* verplaatst naar de Gmail-prullenbak. Beide (peek en aantal op de dichte notch) zijn uit te zetten in Settings → Gmail. Tijdens focus met *Niet storen* komt er geen peek.
+
 ## Settings-aanpassingen
 
 > **Stand van zaken:** accentkleur, sluitvertraging, geluiden, opstarten bij inloggen, Gmail, Agenda & weer (agenda's, diensten, reistijd, plaats), Muziek (spectrum), Claude Code-hooks en de taal (Engels of Nederlands, standaard die van macOS) zijn er. Tabs, Focus, integraties en hotkey nog niet.

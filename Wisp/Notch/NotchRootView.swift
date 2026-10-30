@@ -15,14 +15,23 @@ struct NotchRootView: View {
         ZStack(alignment: .top) {
             shape.fill(Theme.panel)
 
-            if !model.isExpanded && model.focusWings {
+            if model.isCollapsed && model.focusWings {
                 FocusWings(focus: focus, color: prefs.accent.color,
                            height: model.notchSize.height, wing: model.wingWidth)
                     .transition(.opacity)
-            } else if !model.isExpanded && model.musicWings, let track = player.track {
+            } else if model.isCollapsed && model.musicWings, let track = player.track {
                 MusicWings(track: track, levels: spectrum.isRunning ? spectrum.levels : nil,
                            height: model.notchSize.height, wing: model.wingWidth)
                     .transition(.opacity)
+            } else if model.isCollapsed && model.mailWings {
+                MailWings(count: model.unreadCount, height: model.notchSize.height, wing: model.wingWidth)
+                    .transition(.opacity)
+            }
+
+            if model.phase == .peek, let mail = model.peekMail {
+                MailPeek(mail: mail, model: model)
+                    .frame(width: Theme.peekWidth, height: Theme.peekHeight)
+                    .transition(.opacity.animation(.easeOut(duration: 0.18).delay(0.08)))
             }
 
             if model.isExpanded {
@@ -35,7 +44,7 @@ struct NotchRootView: View {
         .clipShape(shape)
         .contentShape(shape)
         .onTapGesture {
-            if !model.isExpanded { model.onTapCollapsed() }
+            if model.isCollapsed { model.onTapCollapsed() }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .tint(prefs.accent.color)

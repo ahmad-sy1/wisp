@@ -28,6 +28,9 @@ def extracted(build: Path) -> dict[str, str]:
     files = list(build.glob("Build/Intermediates.noindex/wisp.build/*/wisp.build/Objects-normal/*/*.stringsdata"))
     if not files:
         sys.exit(f"error: no .stringsdata in {build}; build wisp first (SWIFT_EMIT_LOC_STRINGS)")
+    # Debug and Release each keep their own; only the configuration built last is current.
+    newest = max(files, key=lambda f: f.stat().st_mtime).parents[2]
+    files = [f for f in files if newest in f.parents]
     for path in files:
         data = json.loads(path.read_text())
         # A build folder shared between branches keeps files for sources that are gone.

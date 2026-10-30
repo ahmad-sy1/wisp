@@ -19,7 +19,8 @@ struct MailMessage: Identifiable, Equatable, Sendable {
 
 /// Gmail inbox over IMAP (imap.gmail.com:993) with a Google app password, so no
 /// Google Cloud project is needed. New mail arrives through IMAP IDLE (push, no
-/// polling). Read-only: nothing is ever marked as read.
+/// polling). Nothing is ever marked as read; the only change wisp makes is moving a
+/// message to Gmail's trash after a click on *Delete* in the mail peek.
 @MainActor
 final class MailStore: ObservableObject {
     static let shared = MailStore()
@@ -32,8 +33,22 @@ final class MailStore: ObservableObject {
     @Published private(set) var unreadCount = 0
     @Published var filter: Filter = .all
 
+    /// A short peek in the notch when new mail arrives.
+    @Published var peekNewMail: Bool {
+        didSet { UserDefaults.standard.set(peekNewMail, forKey: Self.peekKey) }
+    }
+    /// The unread count on the closed notch.
+    @Published var showUnreadOnNotch: Bool {
+        didSet { UserDefaults.standard.set(showUnreadOnNotch, forKey: Self.unreadKey) }
+    }
+
+    /// Called with the newest message when new unread mail arrives (not on connect).
+    var onNewMail: (MailMessage) -> Void = { _ in }
+
     static let addressKey = "gmail-address"
     static let passwordKey = "gmail-app-password"
+    private static let peekKey = "mailPeek"
+    private static let unreadKey = "mailUnreadOnNotch"
 
     /// Recent inbox messages kept for the list (the newest unread ones are added on top).
     private static let listSize = 20
@@ -43,6 +58,13 @@ final class MailStore: ObservableObject {
     private var loop: Task<Void, Never>?
     private var connection: IMAPConnection?
     private var wakeObserver: NSObjectProtocol?
+    /// Highest UID seen so far; nil until the first refresh after connecting.
+    private var newestUID: UInt32?
+
+    private init() {
+        peekNewMail = UserDefaults.standard.object(forKey: Self.peekKey) as? Bool ?? true
+        showUnreadOnNotch = UserDefaults.standard.object(forKey: Self.unreadKey) as? Bool ?? true
+    }
 
     var address: String? { Keychain.get(Self.addressKey) }
     var isConfigured: Bool { address != nil && Keychain.get(Self.passwordKey) != nil }
@@ -68,6 +90,7 @@ final class MailStore: ObservableObject {
     func stop() {
         loop?.cancel()
         loop = nil
+        newestUID = nil
         let conn = connection
         connection = nil
         Task { await conn?.close() }
@@ -155,5 +178,34 @@ final class MailStore: ObservableObject {
 
         messages = (recent + extra).sorted { $0.uid > $1.uid }
         unreadCount = unseen.count
+
+        // New unread mail since the last refresh (not what was there on connect).
+        let newest = messages.first?.uid
+        if let before = newestUID, let fresh = messages.first(where: { $0.uid > before && !$0.isRead }) {
+            onNewMail(fresh)
+        }
+        if let newest { newestUID = max(newestUID ?? 0, newest) }
+    }
+
+    /// Moves one message to Gmail's trash (not a permanent delete), on a separate short
+    /// connection so the IDLE one keeps listening. Only ever called from a click.
+    func trash(_ message: MailMessage) {
+        guard let address, let password = Keychain.get(Self.passwordKey) else { return }
+        messages.removeAll { $0.uid == message.uid }
+        Task {
+            let conn = IMAPConnection()
+            do {
+                try await conn.open(host: "imap.gmail.com", port: 993)
+                try await conn.login(user: address, password: password)
+                guard let trash = try await conn.trashMailbox() else { throw IMAPError.protocolError("no trash") }
+                try await conn.select("INBOX")
+                try await conn.move(uid: message.uid, to: trash)
+            } catch {
+                NSLog("wisp: moving mail to the trash failed: \(error)")
+            }
+            await conn.close()
+            // The IDLE connection sees the change too; this just makes it immediate.
+            restart()
+        }
     }
 }

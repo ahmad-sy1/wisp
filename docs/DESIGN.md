@@ -145,6 +145,20 @@ Four equal cards in the fixed 150 pt area (board 7), each with a label (12 pt gr
 | Opslag | free space in whole GB, a bar for what is used (accent), *vrij van 512 GB* |
 | Tab bar | the Wi-Fi icon and network name; *Wi‑Fi* without Location access, *Wifi uit* when off |
 
+## Closed notch and mail peek
+
+On the closed notch the wings show one thing at a time, in this order: a running focus session (ring and time), music (artwork and mini spectrum, boards 9.6), unread mail (an envelope and the red count, board 8). Unread mail can be switched off in Settings → Gmail.
+
+New mail peeks out of the notch (board 8): 420 × 132 pt, corner radius 26.
+
+| Part | Spec |
+|---|---|
+| Top | a 38 pt avatar, the sender (15 pt semibold), *nu* on the right (12 pt grey), the subject below (13 pt) |
+| Keys | three equal 30 pt keys: *Openen* (white, black text), *Verwijderen* and *Later* (`control`) |
+| Timing | closes after 6 s, or after the close delay once the mouse has been on it |
+
+The peek shows the subject only, not the first line of the message: wisp fetches headers, not bodies. It stays away while the panel is open, while a permission request waits, and during a focus session with *Niet storen*.
+
 ## Music tab
 
 Two cards in the fixed 150 pt area (boards 9.1–9.6):

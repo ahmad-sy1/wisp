@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- New mail peeks out of the notch with *Open / Delete / Later* (Delete moves it to the Gmail trash), and the closed notch shows the unread count; both can be switched off (board 8)
 - System tab: battery, AirPods, CPU with the busiest app, storage, and the Wi-Fi name (with Location access from Settings) (board 7)
 - Notes tab: quick notes stored on this Mac, click to edit, right-click to copy or delete (board 6)
 - Disabled buttons are dimmed

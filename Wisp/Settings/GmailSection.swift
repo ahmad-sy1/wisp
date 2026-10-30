@@ -21,6 +21,8 @@ struct GmailSection: View {
                 LabeledContent("Status") {
                     Text(statusText).foregroundStyle(.secondary)
                 }
+                Toggle("Show new mail in the notch", isOn: $store.peekNewMail)
+                Toggle("Unread count on the closed notch", isOn: $store.showUnreadOnNotch)
             } else {
                 TextField("Gmail address", text: $address, prompt: Text("name@gmail.com"))
                     .textContentType(.username)
@@ -35,7 +37,7 @@ struct GmailSection: View {
                     }
                     .disabled(!address.contains("@") || password.replacingOccurrences(of: " ", with: "").count < 16)
                 }
-                Text("Read only: wisp marks nothing as read. Address and password are kept only in your Keychain.")
+                Text("wisp marks nothing as read and only changes your mailbox when you click Delete on new mail (it goes to the Gmail trash). Address and password are kept only in your Keychain.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
