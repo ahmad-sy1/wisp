@@ -791,6 +791,16 @@
         }
       }
     },
+    "IN PROGRESS" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "NU BEZIG"
+          }
+        }
+      }
+    },
     "In terminal" : {
       "localizations" : {
         "nl" : {
@@ -996,7 +1006,7 @@
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "NU BEZIG"
+            "value" : "NU"
           }
         }
       }
@@ -1026,7 +1036,7 @@
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Geen dienst meer vandaag"
+            "value" : "Geen diensten meer vandaag"
           }
         }
       }

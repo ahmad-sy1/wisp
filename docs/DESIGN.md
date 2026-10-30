@@ -8,6 +8,7 @@ The boards in [`design/boards/`](../design/boards) are the visual source of trut
 | [1](../design/boards/1-home.png) | Home |
 | [2](../design/boards/2-mail.png) | Mail |
 | [3](../design/boards/3-agenda-weather.png) | Agenda & weather |
+| [3.1](../design/boards/3.1-agenda-now.png) | Agenda: the event that is on now |
 | [4](../design/boards/4-focus-timer.png) | Focus timer |
 | [5](../design/boards/5-clipboard.png) | Clipboard |
 | [6](../design/boards/6-notes.png) | Notes |
@@ -71,11 +72,13 @@ Left, in this order: **Home · Mail · Agenda · Focus · Muziek · Klembord · 
 
 ## Agenda tab
 
-Three cards in the fixed 150 pt area (board 3):
+Three cards in the fixed 150 pt area (boards 3 and 3.1):
 
 | Part | Spec |
 |---|---|
-| Left card (348 pt) | today's events in 28 pt rows: time (13 pt, grey), a 3 × 16 pt bar, title (13 pt semibold). Done: grey bar, struck-through grey title. A red (`badge`) *nu* line with the time between done and coming. The next event shows *over 2u 55m* in its bar colour; one that is on now shows *nog 25m*. Scrolls when the day is full, starting at the *nu* line |
+| Left card (348 pt) | today's events in 28 pt rows: time (13 pt, grey), a 3 × 16 pt bar, title (13 pt semibold). Done: grey bar, struck-through grey title. A red (`badge`) *nu* line with the time between done and coming. The next event shows *over 2u 55m* in its bar colour. Scrolls when the day is full, starting at the *nu* line |
+| Event on now (board 3.1) | a raised card just above the *nu* line (`control` fill, `cardBorder` hairline, radius 12, 15 pt from the card edges): a *NU* label (11 pt bold white on the accent colour, radius 6), the title (15 pt semibold), the times (13 pt grey), *nog 2u 22m* on the right (13 pt medium), and below a 5 pt bar (accent on `activeTab`) that fills up as the event runs. Shifts use `warning` instead of the accent. A long title pushes the times out rather than being cut off |
+| Order | all-day, done (struck through), on now (card), *nu* line, coming |
 | Bar colour | shifts `warning`, everything else its calendar's colour |
 | Weather card (70 pt) | SF Symbol 28 pt light, temperature 22 pt semibold, *Nijmegen · half bewolkt* |
 | Departure card (70 pt) | *Vertrek voor je dienst*, *16:25 · 22 min reizen* (15 pt semibold), *Droog tot 22:00* |
@@ -86,7 +89,7 @@ States the board doesn't show, built in the style of the other tabs and open to 
 - No Calendar access yet / refused: the calendar icon, a short line and *Toegang geven* or *Open Systeeminstellingen*, like Mail's empty states.
 - Nothing left today: below the *nu* line a header *Morgen · vrijdag 30 oktober* (12 pt semibold, grey, with a thin grey rule) and tomorrow's first two timed events (or its all-day events when nothing is timed), in the normal row style without a countdown.
 - Nothing today or tomorrow: *Niets gepland vandaag.*
-- No shift left today: the departure card reads *Geen dienst meer vandaag*, the rain line, and today's low and high.
+- No shift left today: the departure card reads *Geen diensten meer vandaag* (as on board 3.1), the rain line, and today's low and high.
 - Leaving time passed but the shift hasn't started: *Nu · 22 min reizen*.
 - All-day events sit at the top as *hele dag*.
 

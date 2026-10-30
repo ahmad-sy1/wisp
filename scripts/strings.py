@@ -33,6 +33,9 @@ def extracted(build: Path) -> dict[str, str]:
     files = [f for f in files if newest in f.parents]
     for path in files:
         data = json.loads(path.read_text())
+        # A build folder shared between branches keeps files for sources that are gone.
+        if not Path(data.get("source", "")).exists():
+            continue
         for entry in data.get("tables", {}).get("Localizable", []):
             found.setdefault(entry["key"], entry.get("comment", ""))
     return found
