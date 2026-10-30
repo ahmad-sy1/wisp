@@ -6,6 +6,8 @@
 - English interface with Dutch as the first translation (String Catalogs), a language choice in Settings, and a CI check for missing translations (#12)
 - Debug builds: `-snapshot <file.png>` draws the open panel to a PNG, also with the screen locked
 - Agenda: once nothing is left today, the timeline shows tomorrow's first two events under *Morgen*
+- Agenda: the event that is on now gets its own card with *NU*, the time left and a progress bar (board 3.1)
+- Debug builds: `-agendaTime 21:30` shows the Agenda tab at another time of today
 - Agenda & weather tab: today's timeline from the macOS Calendar app with a *nu* line and a countdown, the weather from Open-Meteo, and when to leave for your next shift (board 3); Settings → Agenda & weer for calendars, shifts, the ride and the place
 - Music: a live spectrum of what plays (24 bands, bass/mid/treble mix, loudness), the output quality, a one-time permission card, and states for paused and nothing playing; a real mini spectrum on the closed notch, which stays greyed for a minute after a pause (boards 9.1–9.6)
 - The playing app above the song title, and *Open Spotify* when nothing plays

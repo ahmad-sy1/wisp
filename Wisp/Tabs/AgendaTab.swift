@@ -8,15 +8,16 @@ struct AgendaTab: View {
 
     var body: some View {
         TimelineView(.everyMinute) { context in
+            let now = AgendaClock.now(context.date)
             HStack(spacing: 10) {
-                Card { Timeline(agenda: agenda, now: context.date) }
+                Card { Timeline(agenda: agenda, now: now) }
                     .frame(width: 348)
 
                 VStack(spacing: 10) {
                     Card { WeatherCard(weather: weather) }
-                    Card { DepartureCard(shift: agenda.nextShift(after: context.date),
+                    Card { DepartureCard(shift: agenda.nextShift(after: now),
                                          travelMinutes: agenda.travelMinutes,
-                                         report: weather.report, now: context.date) }
+                                         report: weather.report, now: now) }
                 }
             }
         }
@@ -52,19 +53,22 @@ private struct Timeline: View {
     private var list: some View {
         let allDay = agenda.events.filter(\.isAllDay)
         let timed = agenda.events.filter { !$0.isAllDay }
-        // The "nu" line goes above the first timed event that hasn't ended yet.
-        let split = timed.firstIndex { !$0.isPast(at: now) } ?? timed.count
-        let next = timed.first { $0.start > now }
+        let past = timed.filter { $0.isPast(at: now) }
+        // What is on right now gets its own card, just above the "nu" line.
+        let ongoing = timed.filter { $0.isOngoing(at: now) }
+        let coming = timed.filter { $0.start > now }
+        let next = coming.first
         // Once nothing is left today, a peek at how tomorrow starts.
-        let peek = split == timed.count ? Self.firstOf(agenda.tomorrow) : []
+        let peek = ongoing.isEmpty && coming.isEmpty ? Self.firstOf(agenda.tomorrow) : []
 
         return ScrollViewReader { proxy in
             ScrollView {
                 VStack(spacing: 0) {
                     ForEach(allDay) { EventRow(event: $0, now: now, countdown: false) }
-                    ForEach(timed[..<split]) { EventRow(event: $0, now: now, countdown: false) }
+                    ForEach(past) { EventRow(event: $0, now: now, countdown: false) }
+                    ForEach(ongoing) { NowCard(event: $0, now: now) }
                     NowLine(now: now).id(NowLine.anchor)
-                    ForEach(timed[split...]) { EventRow(event: $0, now: now, countdown: $0.id == next?.id) }
+                    ForEach(coming) { EventRow(event: $0, now: now, countdown: $0.id == next?.id) }
                     if let first = peek.first {
                         DayHeader(day: first.start)
                         ForEach(peek) { EventRow(event: $0, now: now, countdown: false) }
@@ -111,11 +115,7 @@ private struct EventRow: View {
                 .lineLimit(1)
                 .padding(.leading, 12)
             Spacer(minLength: 8)
-            if event.isOngoing(at: now) {
-                Text("\(Self.duration(from: now, to: event.end)) left")
-                    .font(.system(size: 12))
-                    .foregroundStyle(Theme.textSecondary)
-            } else if countdown {
+            if countdown {
                 Text("in \(Self.duration(from: now, to: event.start))")
                     .font(.system(size: 12))
                     .foregroundStyle(color)
@@ -137,6 +137,69 @@ private struct EventRow: View {
         let h = minutes / 60, m = minutes % 60
         if h == 0 { return String(localized: "\(m)m") }
         return m == 0 ? String(localized: "\(h)h") : String(localized: "\(h)h \(m)m")
+    }
+}
+
+/// What is on right now (board 3.1): a raised card with a *NOW* label, the title and the
+/// time, how long it still runs, and a bar that fills up as it goes.
+private struct NowCard: View {
+    let event: AgendaEvent
+    let now: Date
+    @ObservedObject private var prefs = Preferences.shared
+
+    var body: some View {
+        let color = event.isShift ? Theme.warning : prefs.accent.color
+        let total = event.end.timeIntervalSince(event.start)
+        let done = total > 0 ? now.timeIntervalSince(event.start) / total : 0
+
+        VStack(alignment: .leading, spacing: 9) {
+            // A long title pushes the times out rather than getting cut off itself.
+            ViewThatFits(in: .horizontal) {
+                header(color: color, showTimes: true)
+                header(color: color, showTimes: false)
+            }
+            GeometryReader { geo in
+                ZStack(alignment: .leading) {
+                    Capsule().fill(Theme.activeTab)
+                    Capsule().fill(color).frame(width: geo.size.width * max(0, min(1, done)))
+                }
+            }
+            .frame(height: 5)
+        }
+        .padding(.horizontal, 11)
+        .padding(.vertical, 10)
+        .background(RoundedRectangle(cornerRadius: 12, style: .continuous).fill(Theme.control))
+        .overlay(RoundedRectangle(cornerRadius: 12, style: .continuous).strokeBorder(Theme.cardBorder, lineWidth: 1))
+        .padding(.horizontal, 15)
+        .padding(.vertical, 4)
+    }
+
+    private func header(color: Color, showTimes: Bool) -> some View {
+        HStack(spacing: 10) {
+            Text("NOW")
+                .font(.system(size: 11, weight: .bold))
+                .tracking(0.5)
+                .foregroundStyle(.white)
+                .padding(.horizontal, 7)
+                .frame(height: 20)
+                .background(RoundedRectangle(cornerRadius: 6, style: .continuous).fill(color))
+                .fixedSize()
+            Text(event.title)
+                .font(.system(size: 15, weight: .semibold))
+                .lineLimit(1)
+            if showTimes {
+                Text(verbatim: "\(event.start.clockTime)–\(event.end.clockTime)")
+                    .font(.system(size: 13))
+                    .monospacedDigit()
+                    .foregroundStyle(Theme.textSecondary)
+                    .fixedSize()
+            }
+            Spacer(minLength: 4)
+            Text("\(EventRow.duration(from: now, to: event.end)) left")
+                .font(.system(size: 13, weight: .medium))
+                .monospacedDigit()
+                .fixedSize()
+        }
     }
 }
 
@@ -307,5 +370,22 @@ struct AgendaToolbar: View {
                 .foregroundStyle(Theme.textSecondary)
                 .lineLimit(1)
         }
+    }
+}
+
+/// The moment the Agenda tab shows. Debug builds take `-agendaTime 21:30` to pretend
+/// it is that time today, so the evening or a running event can be checked any time.
+enum AgendaClock {
+    static func now(_ date: Date = .now) -> Date {
+        #if DEBUG
+        if let value = UserDefaults.standard.string(forKey: "agendaTime") {
+            let parts = value.split(separator: ":").compactMap { Int($0) }
+            if parts.count == 2,
+               let pretend = Calendar.current.date(bySettingHour: parts[0], minute: parts[1], second: 0, of: date) {
+                return pretend
+            }
+        }
+        #endif
+        return date
     }
 }
