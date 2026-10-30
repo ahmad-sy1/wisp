@@ -91,6 +91,12 @@ The notch is the one bit of screen you never use. wisp turns it into a quiet das
 <tr>
 <td colspan="2" align="center"><sub>System: battery, AirPods, CPU and storage at a glance</sub></td>
 </tr>
+<tr>
+<td colspan="2" align="center"><img src="docs/media/settings.png" width="560" alt="Settings: the Notch page"></td>
+</tr>
+<tr>
+<td colspan="2" align="center"><sub>Settings: a page per topic, each tab's options under Notch</sub></td>
+</tr>
 </table>
 
 ### On the way
@@ -118,17 +124,17 @@ cd wisp
 
 ## Setup
 
-Open **Settings**: click the notch, then the sliders icon on the right. On a full menu bar the wisp icon can hide behind the notch; opening wisp again from Spotlight also brings up Settings.
+Open **Settings**: click the notch, then the sliders icon on the right. On a full menu bar the wisp icon can hide behind the notch; opening wisp again from Spotlight also brings up Settings. The window has a page per topic: *General*, *Notch* (each tab's options), *Integrations*, *Calendar & weather*, *Music* and *Focus*.
 
 | What | Why | How |
 |---|---|---|
-| **Claude Code hooks** | live sessions and approvals | *Claude Code → Installeren…* shows exactly which lines it adds to `~/.claude/settings.json`. Nothing is written until you click *Installeren*, and a dated backup is made first. Restart running Claude Code sessions afterwards. |
-| **Gmail** | the Mail tab and unread badge | Your address and a Google [app password](https://myaccount.google.com/apppasswords). Both are stored in the Keychain only. |
-| **Agenda & weer** | the Agenda tab | Calendar access (macOS asks once), which calendars count, how a shift is recognised (the word *dienst* or a calendar), your ride to work in minutes, and the place for the weather (Nijmegen by default). |
+| **Claude Code hooks** | live sessions and approvals | *General → Claude Code → Install…* shows exactly which lines it adds to `~/.claude/settings.json`. Nothing is written until you click *Install*, and a dated backup is made first. Restart running Claude Code sessions afterwards. |
+| **Gmail** | the Mail tab and unread badge | *Integrations → Add integration → Gmail*: your address and a Google [app password](https://myaccount.google.com/apppasswords). Both are stored in the Keychain only. |
+| **Calendar & weather** | the Agenda tab | Calendar access (macOS asks once), which calendars count, how a shift is recognised (the word *dienst* or a calendar), your ride to work in minutes and how you travel (bike, car, on foot, public transport), and the place for the weather (Nijmegen by default). |
 | **Accent colour** | buttons, unread dots, highlights | Blue, green, orange or purple. |
 | **Open at login** | wisp is always there | One toggle. |
 
-Music needs no setup. The live spectrum asks once for macOS's *System Audio Recording* permission; *Settings → Muziek* turns it on or off.
+Music needs no setup. The live spectrum asks once for macOS's *System Audio Recording* permission; *Settings → Music* turns it on or off.
 
 ## Things to try
 

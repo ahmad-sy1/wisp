@@ -190,6 +190,27 @@ Deliberate differences from the boards:
 - The loudness reads "−10 dB" without the word *Luid*, so the line fits the card on one row; the word shows as a tooltip.
 - The playback keys are glass (see [Glass](#glass)), not the solid white key of the boards.
 
+## Settings window
+
+A 760 × 620 pt window with the title bar drawn over it (boards 10.1–10.6), always dark:
+
+| Part | Spec |
+|---|---|
+| Sidebar | 205 pt, `card` fill, a 1 pt `cardBorder` line on its right. The wisp dot and name (16 pt semibold) below the window buttons, then the pages: SF Symbol + 13 pt label in 30 pt rows; the active page on `activeTab`, radius 8 |
+| Page | black, 31 pt side margin. Title 26 pt bold, optional subtitle 13 pt grey, an action top right (*Add integration*: accent fill, white semibold) |
+| Group | a 12 pt grey header, then a card: `card` fill, `cardBorder` 1 pt, radius 12; rows at least 46 pt, split by 1 pt `cardBorder` lines, 15 pt inside |
+| Row | title 13 pt, optional 11.5 pt grey line below; on the right a switch, a pop-up, or a flat button (`control` fill, radius 7, 28 pt high) |
+| Note | 11.5 pt grey text under the last group |
+
+Built in the same style, not on the boards (open to a design):
+
+- **Notch**: a tab's options open below its row (indented under the title, small switches); tabs without options have no chevron. The switches, drag handles and Home tiles of board 10.1 come with #24.
+- **Integrations**: *Add integration* is a menu (only Gmail for now) and dims when everything is added. Gmail's *Manage* opens a sheet with address and app password; ✕ asks before it disconnects. Music has *Manage* (opens the Music page) but no ✕. The dot is the service's colour; errors show in the grey line.
+- **Calendar & weather**: without access, one row with *Give access* or *Open System Settings*. *Change* opens a search sheet.
+- **Music**: macOS doesn't tell apps whether system audio is allowed, so the dot shows wisp's own switch (*On* / *Off*).
+- **Focus**: with no learned rules, one row *No rules yet*.
+- **General**: after a language change, the grey line says to restart and a *Restart* button appears next to the pop-up.
+
 ## Buttons
 
 `AccentButtonStyle` (accent fill, white semibold) and `SecondaryButtonStyle` (`control` fill), 28 pt high, radius 9. Disabled, both drop to 40 % opacity.

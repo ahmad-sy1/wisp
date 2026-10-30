@@ -28,6 +28,8 @@ Add `-snapshot </absolute/path.png>` (an app started with `open` doesn't share y
 open -W build/Build/Products/Debug/wisp.app --args -openOnLaunch music -snapshot /tmp/music.png
 ```
 
+`-settingsPage notch` (or `general`, `integrations`, `agenda`, `music`, `focus`) opens Settings on that page; with `-snapshot` the PNG is that window instead of the panel. Settings has scroll views that the offscreen drawing leaves empty, so this one goes through `screencapture` and does need an unlocked screen. With wisp already running from `/Applications`, add `-n` to `open`, or macOS brings the running one forward instead.
+
 Start it with `open`: run straight from a shell, macOS checks the shell's permissions (Calendar and the like) instead of wisp's.
 
 The Agenda tab can pretend it is another time of today, to check the morning, a running event or the evening without waiting:
