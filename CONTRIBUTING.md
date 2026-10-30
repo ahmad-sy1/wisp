@@ -22,6 +22,12 @@ Debug builds can open straight on a tab, which helps for screenshots:
 open build/Build/Products/Debug/wisp.app --args -openOnLaunch music
 ```
 
+Add `-snapshot <file.png>` and the debug build draws the open panel into that PNG (1200 × 484, the size of the screenshots in `docs/media/`) after three seconds, then quits. It doesn't need the screen, so it also works while the Mac is locked:
+
+```bash
+open -W build/Build/Products/Debug/wisp.app --args -openOnLaunch music -snapshot /tmp/music.png
+```
+
 To install your build in `/Applications`, use `./scripts/install.sh`.
 
 Only one wisp can own the notch and the hook socket: quit the installed one (or let `install.sh` do it) before running a debug build.
