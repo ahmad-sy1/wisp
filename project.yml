@@ -4,6 +4,8 @@ options:
   deploymentTarget:
     macOS: "15.0"
   createIntermediateGroups: true
+  # English is the source language; Dutch comes from the String Catalogs (Wisp/Resources).
+  developmentLanguage: en
 settings:
   base:
     SWIFT_VERSION: "6.0"
@@ -17,6 +19,9 @@ settings:
     # The one place the version lives; scripts/release.sh tags from it.
     MARKETING_VERSION: "0.1.0"
     CURRENT_PROJECT_VERSION: "1"
+    # Collect every LocalizedStringKey / String(localized:) for the String Catalogs.
+    SWIFT_EMIT_LOC_STRINGS: YES
+    LOCALIZATION_PREFERS_STRING_CATALOGS: YES
 targets:
   wisp:
     type: application
@@ -63,9 +68,10 @@ targets:
         CFBundleShortVersionString: $(MARKETING_VERSION)
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         LSUIElement: true
-        NSAudioCaptureUsageDescription: "wisp analyseert live het geluid van wat er speelt voor het spectrum in de Muziek-tab. Er wordt niets opgenomen, opgeslagen of verstuurd."
-        NSCalendarsFullAccessUsageDescription: "wisp toont wat er vandaag in je agenda staat in de Agenda-tab. Je agenda wordt alleen gelezen en blijft op je Mac."
-        NSCalendarsUsageDescription: "wisp toont wat er vandaag in je agenda staat in de Agenda-tab. Je agenda wordt alleen gelezen en blijft op je Mac."
+        # English here; translations in Wisp/Resources/InfoPlist.xcstrings.
+        NSAudioCaptureUsageDescription: "wisp analyses the sound of what plays, live, for the spectrum in the Music tab. Nothing is recorded, stored or sent."
+        NSCalendarsFullAccessUsageDescription: "wisp shows what's on your calendar today in the Calendar tab. Your calendar is only read and stays on your Mac."
+        NSCalendarsUsageDescription: "wisp shows what's on your calendar today in the Calendar tab. Your calendar is only read and stays on your Mac."
         LSApplicationCategoryType: public.app-category.productivity
         NSHumanReadableCopyright: "Copyright © 2026 Ahmad Alasmi. All rights reserved."
     entitlements:
