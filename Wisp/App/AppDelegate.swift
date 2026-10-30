@@ -76,9 +76,36 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         let mail = MailStore.shared
         mail.$unreadCount
             .removeDuplicates()
-            .sink { notch.model.badges[.mail] = $0 }
+            .sink { count in
+                notch.model.badges[.mail] = count
+                notch.model.unreadCount = count
+            }
             .store(in: &subscriptions)
+        // The unread count on the closed notch, if wanted.
+        mail.$unreadCount
+            .combineLatest(mail.$showUnreadOnNotch)
+            .map { count, show in show && count > 0 }
+            .removeDuplicates()
+            .receive(on: RunLoop.main)
+            .sink { on in notch.setMailWings(on && notch.model.hasNotch) }
+            .store(in: &subscriptions)
+        mail.onNewMail = { message in
+            let focus = FocusStore.shared
+            // Quiet while focusing with "Do not disturb", and never over a permission request.
+            guard mail.peekNewMail, !(focus.isActive && focus.doNotDisturb),
+                  ClaudeSessions.shared.approval == nil else { return }
+            notch.peek(message)
+        }
         mail.start()
+        #if DEBUG
+        // `-mailPeekDemo YES`: peek with a sample message, for snapshots.
+        if UserDefaults.standard.bool(forKey: "mailPeekDemo") {
+            notch.peek(MailMessage(uid: 0, threadId: nil, senderName: "Sanne de Vries",
+                                   senderAddress: "sanne@example.com",
+                                   subject: "Rooster week 45 · kun je dinsdag ruilen met donderdag?",
+                                   date: .now, isRead: false))
+        }
+        #endif
     }
 
     // MARK: - Focus
