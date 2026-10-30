@@ -35,3 +35,7 @@ jobs:
             build \
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGNING_REQUIRED=NO
+
+      - name: Check translations
+        # Every string the build found must have a Dutch translation in the String Catalog.
+        run: python3 scripts/strings.py check build
