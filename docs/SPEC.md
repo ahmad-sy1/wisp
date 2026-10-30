@@ -73,6 +73,8 @@ Rechts: **Instellingen** (open het Settings-venster).
 - Links: lijst met recente notities (tekst + tijd). Rechts: tekstveld "Typ een notitie…" + knop **Opslaan** → nieuwe notitie bovenaan.
 - Lokaal opslaan (JSON in Application Support). **Later optioneel:** sync naar Notion via de bestaande Notion-integratie.
 
+> **Stand van zaken:** gebouwd, lokaal (JSON). Klik op een notitie om hem te bewerken; rechtsklik om te kopiëren of te verwijderen. Sync naar Notion komt met de Notion-integratie.
+
 ### Systeem
 - Vier vakken naast elkaar: **Batterij** (% + balk + resterende tijd), **AirPods** (links/rechts/case %; best effort, mag weggelaten worden als het niet betrouwbaar lukt), **CPU** (% + mini-grafiek + grootste verbruiker), **Opslag** (vrij van totaal + balk).
 - Rechtsboven: huidige Wi-Fi-naam.

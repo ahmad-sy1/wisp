@@ -118,6 +118,18 @@ One scrolling card in the fixed 150 pt area (board 5):
 
 States the board doesn't show: nothing copied yet (*Kopieer iets en het verschijnt hier.*), nothing found for a search, and the history switched off in Settings, each as the clipboard icon with a short grey line.
 
+## Notes tab
+
+Two cards in the fixed 150 pt area (board 6):
+
+| Part | Spec |
+|---|---|
+| Left card (241 pt) | the notes, newest first: the first line (14 pt) and when (12 pt grey: *13:50*, *gisteren*, *28 okt*). A click puts a note in the editor (its row turns `activeTab`); right-click offers *Kopieer* and *Verwijderen* |
+| Right card | a text field with *Typ een notitie…*; at the bottom *Alleen op deze Mac* and *Opslaan* (accent; ⌘↩) |
+| Tab bar | *3 notities* just left of Settings |
+
+Differences from the board: the bottom line reads *Alleen op deze Mac* instead of *Synct naar Notion* until the Notion integration exists. While a note is being edited it reads *Notitie bewerken* with a cross to stop. No notes yet: the pencil icon and *Je notities verschijnen hier.*
+
 ## Music tab
 
 Two cards in the fixed 150 pt area (boards 9.1–9.6):
@@ -142,6 +154,10 @@ Deliberate differences from the boards:
 - The source label is the app's name (*SPOTIFY*, *BRAVE BROWSER*). macOS reports the app, not the website, so it can't say *YOUTUBE · SAFARI*.
 - The loudness reads "−10 dB" without the word *Luid*, so the line fits the card on one row; the word shows as a tooltip.
 - The playback keys are glass (see [Glass](#glass)), not the solid white key of the boards.
+
+## Buttons
+
+`AccentButtonStyle` (accent fill, white semibold) and `SecondaryButtonStyle` (`control` fill), 28 pt high, radius 9. Disabled, both drop to 40 % opacity.
 
 ## Glass
 
