@@ -32,6 +32,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         startClaudeHooks(notch: notch)
         startMail(notch: notch)
         startMusic(notch: notch)
+        startFocus(notch: notch)
         #if DEBUG
         // `open wisp.app --args -openOnLaunch mail` opens the panel on that tab (for screenshots).
         if let name = UserDefaults.standard.string(forKey: "openOnLaunch") {
@@ -79,6 +80,29 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         mail.start()
     }
 
+    // MARK: - Focus
+
+    private func startFocus(notch: NotchController) {
+        let focus = FocusStore.shared
+        focus.$phase
+            .map { phase in
+                switch phase {
+                case .running, .paused: true
+                case .idle, .finished: false
+                }
+            }
+            .removeDuplicates()
+            // @Published fires before the new value is stored; let the wings appear after.
+            .receive(on: RunLoop.main)
+            .sink { active in notch.setFocusWings(active && notch.model.hasNotch) }
+            .store(in: &subscriptions)
+        focus.onFinished = { notch.expand(to: .focus) }
+        #if DEBUG
+        // `-focusStart YES`: start a session at launch, for snapshots of the running timer.
+        if UserDefaults.standard.bool(forKey: "focusStart") { focus.start() }
+        #endif
+    }
+
     // MARK: - Music
 
     private func startMusic(notch: NotchController) {
@@ -97,10 +121,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             .sink { source, playing in spectrum.setPlayback(source: source, playing: playing) }
             .store(in: &subscriptions)
 
-        // The closed-notch wings show the mini-spectrum while they are visible.
+        // The closed-notch wings show the mini-spectrum while they are visible
+        // (and not taken over by a focus session).
         notch.model.$musicWings
-            .combineLatest(notch.model.$phase)
-            .map { wings, phase in wings && phase == .collapsed }
+            .combineLatest(notch.model.$phase, notch.model.$focusWings)
+            .map { wings, phase, focus in wings && !focus && phase == .collapsed }
             .removeDuplicates()
             .sink { visible in spectrum.setVisible(visible, by: "wings") }
             .store(in: &subscriptions)

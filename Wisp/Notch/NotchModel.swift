@@ -15,6 +15,8 @@ final class NotchModel: ObservableObject {
     @Published var hasNotch = true
     /// Music is playing: the closed notch grows a wing on each side (artwork, equalizer).
     @Published var musicWings = false
+    /// A focus session runs: the wings show its ring and time instead (they win over music).
+    @Published var focusWings = false
 
     var onTapCollapsed: () -> Void = {}
     var onOpenSettings: () -> Void = {}
@@ -27,9 +29,11 @@ final class NotchModel: ObservableObject {
     /// Width of one music wing: about square with the notch height.
     var wingWidth: CGFloat { notchSize.height + 2 }
 
-    /// The closed notch, including the music wings when they show.
+    var showsWings: Bool { musicWings || focusWings }
+
+    /// The closed notch, including the wings when they show.
     var restingSize: CGSize {
-        CGSize(width: notchSize.width + (musicWings ? 2 * wingWidth : 0), height: notchSize.height)
+        CGSize(width: notchSize.width + (showsWings ? 2 * wingWidth : 0), height: notchSize.height)
     }
 
     var shapeSize: CGSize {
