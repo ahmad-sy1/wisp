@@ -204,7 +204,7 @@ A 760 × 620 pt window with the title bar drawn over it (boards 10.1–10.6), al
 
 Built in the same style, not on the boards (open to a design):
 
-- **Notch**: a tab's options open below its row (indented under the title, small switches); tabs without options have no chevron. The switches, drag handles and Home tiles of board 10.1 come with #24.
+- **Notch**: a tab's options open below its row (indented under the title, small switches) when you click the row. Rows move out of the way while you drag one (whole row is the handle); a switched-off tab's icon and title are dimmed. The Home tiles of board 10.1 come once GitHub, Notion and WHOOP exist.
 - **Integrations**: *Add integration* is a menu (only Gmail for now) and dims when everything is added. Gmail's *Manage* opens a sheet with address and app password; ✕ asks before it disconnects. Music has *Manage* (opens the Music page) but no ✕. The dot is the service's colour; errors show in the grey line.
 - **Calendar & weather**: without access, one row with *Give access* or *Open System Settings*. *Change* opens a search sheet.
 - **Music**: macOS doesn't tell apps whether system audio is allowed, so the dot shows wisp's own switch (*On* / *Off*).
