@@ -1,23 +1,26 @@
 import SwiftUI
 
-/// Settings → Claude Code: hook status and the confirm-before-write installer.
-struct ClaudeHooksSection: View {
+/// Settings → General → Claude Code: hook status and the confirm-before-write installer.
+struct ClaudeHooksGroup: View {
     @State private var status = HookInstaller.status()
     @State private var plan: HookInstaller.Plan?
     @State private var message: String?
 
     var body: some View {
-        Section("Claude Code") {
-            LabeledContent("Hooks") {
-                HStack(spacing: 8) {
-                    Text(statusText).foregroundStyle(.secondary)
-                    Button(status == .installed ? String(localized: "Reinstall…") : String(localized: "Install…")) { prepare() }
-                        .disabled(status == .noHelper)
+        SettingsGroup(header: String(localized: "Claude Code")) {
+            SettingsRow(title: String(localized: "Hooks")) {
+                VStack(alignment: .leading, spacing: 2) {
+                    SettingsStatus(text: statusText, color: status == .installed ? Theme.ok : Theme.warning)
+                    if let message {
+                        Text(message).textSelection(.enabled)
+                    }
                 }
+            } trailing: {
+                Button(status == .installed ? String(localized: "Reinstall…") : String(localized: "Install…")) { prepare() }
+                    .buttonStyle(.settings)
+                    .disabled(status == .noHelper)
             }
-            if let message {
-                Text(message).font(.caption).foregroundStyle(.secondary).textSelection(.enabled)
-            }
+            .padding(.vertical, 6)
         }
         .sheet(isPresented: Binding(get: { plan != nil }, set: { if !$0 { plan = nil } })) {
             if let plan { confirmSheet(plan) }

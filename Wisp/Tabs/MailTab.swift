@@ -5,13 +5,19 @@ struct MailTab: View {
     @ObservedObject var store: MailStore
     let openSettings: () -> Void
 
+    /// Gmail is set up under Settings → Integrations.
+    private func openIntegrations() {
+        SettingsNavigation.shared.page = .integrations
+        openSettings()
+    }
+
     var body: some View {
         Card {
             switch store.status {
             case .notConfigured:
-                message(String(localized: "Connect Gmail to see your mail here."), action: (String(localized: "Connect Gmail"), openSettings))
+                message(String(localized: "Connect Gmail to see your mail here."), action: (String(localized: "Connect Gmail"), openIntegrations))
             case .failed(let text) where store.messages.isEmpty:
-                message(text, action: (String(localized: "Settings"), openSettings))
+                message(text, action: (String(localized: "Settings"), openIntegrations))
             case .connecting where store.messages.isEmpty:
                 message(String(localized: "Connecting to Gmail…"))
             default:
