@@ -33,6 +33,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         startMail(notch: notch)
         startMusic(notch: notch)
         startFocus(notch: notch)
+        ClipboardStore.shared.start()
         #if DEBUG
         // `open wisp.app --args -openOnLaunch mail` opens the panel on that tab (for screenshots).
         if let name = UserDefaults.standard.string(forKey: "openOnLaunch") {
