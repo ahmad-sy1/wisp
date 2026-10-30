@@ -7,6 +7,11 @@ What is planned, roughly in order. Every item becomes its own branch and pull re
 | Item | Notes | Tracking |
 |---|---|---|
 | **Files tab** | The drop zone, restyled. | |
+| **Settings window with a sidebar** | General, Notch, Integrations, Calendar & weather, Music, Focus as pages instead of one long form. Boards 10.1–10.6. | [#28](https://github.com/ahmad-sy1/wisp/issues/28) |
+| **Choose and reorder tabs** | Tabs on/off, drag to reorder, pick the Home tiles. Board 10.1. | [#24](https://github.com/ahmad-sy1/wisp/issues/24) |
+| **Keyboard shortcut** | Open the notch with ⌥Space (changeable). Board 10.2. | [#25](https://github.com/ahmad-sy1/wisp/issues/25) |
+| **Music settings** | Mini spectrum on/off, battery saver, which sources show. Board 10.5. | [#26](https://github.com/ahmad-sy1/wisp/issues/26) |
+| **Focus task rules** | See, add and remove app/project/site → task rules. Board 10.6. | [#27](https://github.com/ahmad-sy1/wisp/issues/27) |
 | **GitHub, Notion, WHOOP** | Sign in with OAuth (PKCE), tokens in the Keychain; fills the Home tiles. See [INTEGRATIONS.md](INTEGRATIONS.md#planned-github-notion-whoop). | |
 | **Own app icon and sounds** | The wisp mark from board 0; short, quiet system-like sounds. | |
 | **First signed release** | `./scripts/release.sh` once the main tabs are in. See [RELEASING.md](RELEASING.md). | |
