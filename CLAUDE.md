@@ -29,7 +29,7 @@ xcodegen && xcodebuild -scheme wisp -configuration Debug -derivedDataPath build 
 - 0 % CPU when the notch is closed: no timers or animations while nothing is visible.
 - The notch never grows beyond the 600 × 242 pt panel; content scrolls inside its card.
 - Use the `Theme` tokens; visual changes must match `design/boards/`.
-- Interface text is Dutch for now; English becomes the base language with Dutch as a translation (issue #12, `docs/ROADMAP.md`). Code, comments and commits in English.
+- Interface text is English, with Dutch as a translation in the String Catalogs. Use `String(localized:)` for text that passes through a `String`, run `scripts/strings.py sync` after adding text and fill in the Dutch; `scripts/strings.py check` must pass (see *Translations* in `CONTRIBUTING.md`). Code, comments and commits in English.
 - One branch and pull request per piece of work, Conventional Commits, no AI attribution lines.
 - Keep the bundle identifier `com.ahmadalasmi.wisp`.
 

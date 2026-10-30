@@ -121,4 +121,4 @@ Small controls may use glass: Liquid Glass (`glassEffect`) on macOS 26, a froste
 
 ## Language
 
-The interface is in Dutch today. The plan is English as the base language with Dutch as the first translation, so wisp works for everyone ([#12](https://github.com/ahmad-sy1/wisp/issues/12), [ROADMAP.md](ROADMAP.md)). Until then, keep new interface text short and easy to translate, and don't build text into images. Code, comments, commit messages and these documents are in English.
+The interface is English, with Dutch as the first translation; wisp follows the Mac's language unless one is picked in Settings ([#12](https://github.com/ahmad-sy1/wisp/issues/12)). The boards and the texts quoted in this document are the Dutch version; the English text is in `Wisp/Resources/Localizable.xcstrings`. Keep interface text short (Dutch runs about a third longer than English, so check that it fits) and don't build text into images. Code, comments, commit messages and these documents are in English.

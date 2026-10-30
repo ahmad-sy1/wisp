@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- English interface with Dutch as the first translation (String Catalogs), a language choice in Settings, and a CI check for missing translations (#12)
 - Debug builds: `-snapshot <file.png>` draws the open panel to a PNG, also with the screen locked
 - Agenda: once nothing is left today, the timeline shows tomorrow's first two events under *Morgen*
 - Agenda & weather tab: today's timeline from the macOS Calendar app with a *nu* line and a countdown, the weather from Open-Meteo, and when to leave for your next shift (board 3); Settings → Agenda & weer for calendars, shifts, the ride and the place
