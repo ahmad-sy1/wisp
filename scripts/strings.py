@@ -30,6 +30,9 @@ def extracted(build: Path) -> dict[str, str]:
         sys.exit(f"error: no .stringsdata in {build}; build wisp first (SWIFT_EMIT_LOC_STRINGS)")
     for path in files:
         data = json.loads(path.read_text())
+        # A build folder shared between branches keeps files for sources that are gone.
+        if not Path(data.get("source", "")).exists():
+            continue
         for entry in data.get("tables", {}).get("Localizable", []):
             found.setdefault(entry["key"], entry.get("comment", ""))
     return found

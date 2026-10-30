@@ -28,6 +28,14 @@ Add `-snapshot <file.png>` and the debug build draws the open panel into that PN
 open -W build/Build/Products/Debug/wisp.app --args -openOnLaunch music -snapshot /tmp/music.png
 ```
 
+Start it with `open`: run straight from a shell, macOS checks the shell's permissions (Calendar and the like) instead of wisp's.
+
+The Agenda tab can pretend it is another time of today, to check the morning, a running event or the evening without waiting:
+
+```bash
+open build/Build/Products/Debug/wisp.app --args -openOnLaunch agenda -agendaTime 21:30
+```
+
 To install your build in `/Applications`, use `./scripts/install.sh`.
 
 Only one wisp can own the notch and the hook socket: quit the installed one (or let `install.sh` do it) before running a debug build.
@@ -66,7 +74,7 @@ English is the source language. Every other language lives in `Wisp/Resources/Lo
 - `Text("…")`, `Button("…")`, `Toggle`, `Section`, `.help("…")` and friends are translated automatically. Text that ends up in a `String` first (a status line, a computed label, a menu item) needs `String(localized: "…")`; a plain `String` shown with `Text(_:)` is never translated.
 - Text that shouldn't be translated (a number, a symbol, a name) goes through `Text(verbatim:)`.
 - Dates and times use `formatted()` without a fixed locale, so they follow the language too.
-- After a build, `scripts/strings.py sync` adds new strings to the catalog and drops unused ones. Fill in the Dutch in Xcode's catalog editor or in the JSON. `scripts/strings.py check` fails while a string has no Dutch; CI runs it after every build.
+- After a build, `scripts/strings.py sync` adds new strings to the catalog and drops unused ones. After switching branches, run `xcodegen` and build clean first (`rm -rf build/Build/Intermediates.noindex/wisp.build`): the build only re-reads the files it recompiles. Fill in the Dutch in Xcode's catalog editor or in the JSON. `scripts/strings.py check` fails while a string has no Dutch; CI runs it after every build.
 - To see the app in one language: `open build/Build/Products/Debug/wisp.app --args -AppleLanguages '(nl)'`.
 
 ## Branches and commits
