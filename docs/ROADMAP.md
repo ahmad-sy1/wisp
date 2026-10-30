@@ -7,7 +7,7 @@ What is planned, roughly in order. Every item becomes its own branch and pull re
 | Item | Notes | Tracking |
 |---|---|---|
 | **Files tab** | The drop zone, restyled. | |
-| **Choose and reorder tabs** | Tabs on/off, drag to reorder, pick the Home tiles. Board 10.1. | [#24](https://github.com/ahmad-sy1/wisp/issues/24) |
+| **Home tiles** | Pick the Home tiles as chips (board 10.1), once GitHub, Notion and WHOOP exist. | [#24](https://github.com/ahmad-sy1/wisp/issues/24) |
 | **Keyboard shortcut** | Open the notch with ⌥Space (changeable). Board 10.2. | [#25](https://github.com/ahmad-sy1/wisp/issues/25) |
 | **Music settings** | Mini spectrum on/off, battery saver, which sources show. Board 10.5. | [#26](https://github.com/ahmad-sy1/wisp/issues/26) |
 | **Focus task rules** | See, add and remove app/project/site → task rules. Board 10.6. | [#27](https://github.com/ahmad-sy1/wisp/issues/27) |

@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Settings → Notch: switch tabs on or off and drag them into your own order; the tab bar follows (board 10.1, #24)
 - Settings is a window with a sidebar: General, Notch (each tab's options), Integrations, Calendar & weather, Music and Focus (boards 10.1–10.6, #28); the departure card says how you travel (*22 min fietsen*)
 - New mail peeks out of the notch with *Open / Delete / Later* (Delete moves it to the Gmail trash), and the closed notch shows the unread count; both can be switched off (board 8)
 - System tab: battery, AirPods, CPU with the busiest app, storage, and the Wi-Fi name (with Location access from Settings) (board 7)

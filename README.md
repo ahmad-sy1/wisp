@@ -124,7 +124,7 @@ cd wisp
 
 ## Setup
 
-Open **Settings**: click the notch, then the sliders icon on the right. On a full menu bar the wisp icon can hide behind the notch; opening wisp again from Spotlight also brings up Settings. The window has a page per topic: *General*, *Notch* (each tab's options), *Integrations*, *Calendar & weather*, *Music* and *Focus*.
+Open **Settings**: click the notch, then the sliders icon on the right. On a full menu bar the wisp icon can hide behind the notch; opening wisp again from Spotlight also brings up Settings. The window has a page per topic: *General*, *Notch* (which tabs show, their order by drag and drop, and each tab's options), *Integrations*, *Calendar & weather*, *Music* and *Focus*.
 
 | What | Why | How |
 |---|---|---|

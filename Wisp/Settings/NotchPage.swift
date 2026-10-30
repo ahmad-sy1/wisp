@@ -1,35 +1,46 @@
 import SwiftUI
 
-/// Settings → Notch (board 10.1): a preview of the tab bar and the tabs, each with its
-/// options under a click. Turning tabs off, reordering them and the Home tiles follow
-/// in #24.
+/// Settings → Notch (board 10.1): a live preview of the tab bar, and the tabs: drag to
+/// reorder, a switch to show or hide, and each tab's options under a click.
 struct NotchPage: View {
+    @ObservedObject var prefs: Preferences
     @ObservedObject var mail: MailStore
     @ObservedObject var clipboard: ClipboardStore
     @ObservedObject var stats: SystemStats
     @State private var expanded: WispTab?
+    /// The tab being dragged; rows move out of its way while it hovers.
+    @State private var dragging: WispTab?
 
     var body: some View {
         SettingsPage(title: String(localized: "Notch"),
-                     subtitle: String(localized: "The tabs in the notch and their options.")) {
+                     subtitle: String(localized: "Choose which tabs you see and drag them into your own order.")) {
             VStack(alignment: .leading, spacing: 8) {
                 Text("Preview")
                     .font(.system(size: 12))
                     .foregroundStyle(Theme.textSecondary)
-                TabBarPreview()
+                TabBarPreview(tabs: prefs.visibleTabs)
             }
 
             SettingsGroup(header: String(localized: "Tabs · click a tab for its options")) {
-                ForEach(WispTab.allCases) { tab in
-                    TabRow(tab: tab, optionCount: optionCount(tab), expanded: expanded == tab) {
+                ForEach(prefs.tabOrder) { tab in
+                    TabRow(tab: tab, optionCount: optionCount(tab), expanded: expanded == tab,
+                           shown: Binding(get: { !prefs.hiddenTabs.contains(tab) },
+                                          set: { prefs.setTab(tab, shown: $0) })) {
                         withAnimation(.easeInOut(duration: 0.15)) { expanded = expanded == tab ? nil : tab }
                     } options: {
                         options(for: tab)
                     }
+                    .onDrag {
+                        dragging = tab
+                        return NSItemProvider(object: tab.rawValue as NSString)
+                    }
+                    .onDrop(of: [.text], delegate: TabDropDelegate(target: tab, dragging: $dragging, prefs: prefs))
                 }
             }
         }
         .onAppear { stats.refreshWiFi() }
+        // macOS doesn't say when a drag ends outside a row; a drag always starts afresh.
+        .onDisappear { dragging = nil }
     }
 
     private func optionCount(_ tab: WispTab) -> Int {
@@ -75,10 +86,31 @@ struct NotchPage: View {
 }
 
 /// The notch's tab bar as it looks open, Home active.
+/// Moves the dragged tab into a row's place as soon as it hovers there.
+private struct TabDropDelegate: DropDelegate {
+    let target: WispTab
+    @Binding var dragging: WispTab?
+    let prefs: Preferences
+
+    func dropEntered(info: DropInfo) {
+        guard let dragging, dragging != target else { return }
+        withAnimation(.easeInOut(duration: 0.15)) { prefs.moveTab(dragging, to: target) }
+    }
+
+    func dropUpdated(info: DropInfo) -> DropProposal? { DropProposal(operation: .move) }
+
+    func performDrop(info: DropInfo) -> Bool {
+        dragging = nil
+        return true
+    }
+}
+
 private struct TabBarPreview: View {
+    let tabs: [WispTab]
+
     var body: some View {
         HStack(spacing: 0) {
-            ForEach(WispTab.allCases) { tab in
+            ForEach(tabs) { tab in
                 Image(systemName: tab.symbol)
                     .font(.system(size: 13))
                     .foregroundStyle(tab == .home ? Theme.textPrimary : Theme.textSecondary)
@@ -101,41 +133,48 @@ private struct TabBarPreview: View {
     }
 }
 
+/// ⠿ icon title "2 options" … switch. Drag anywhere on the row; click it for the options.
 private struct TabRow<Options: View>: View {
     let tab: WispTab
     let optionCount: Int
     let expanded: Bool
+    @Binding var shown: Bool
     let toggle: () -> Void
     @ViewBuilder var options: Options
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            Button(action: toggle) {
-                HStack(spacing: 12) {
+            HStack(spacing: 12) {
+                Grip()
+                Group {
                     Image(systemName: tab.symbol)
                         .font(.system(size: 14))
                         .frame(width: 20)
                     Text(tab.title)
                         .font(.system(size: 13.5))
-                    if optionCount > 0 {
-                        Text(optionCount == 1 ? String(localized: "1 option") : String(localized: "\(optionCount) options"))
-                            .font(.system(size: 12))
-                            .foregroundStyle(Theme.textSecondary)
-                    }
-                    Spacer()
-                    if optionCount > 0 {
-                        Image(systemName: "chevron.right")
-                            .font(.system(size: 11, weight: .semibold))
-                            .foregroundStyle(Theme.textSecondary)
-                            .rotationEffect(.degrees(expanded ? 90 : 0))
-                    }
                 }
-                .padding(.horizontal, 15)
-                .frame(height: 41)
-                .contentShape(Rectangle())
+                .opacity(shown ? 1 : 0.45)
+                if optionCount > 0 {
+                    Text(optionCount == 1 ? String(localized: "1 option") : String(localized: "\(optionCount) options"))
+                        .font(.system(size: 12))
+                        .foregroundStyle(Theme.textSecondary)
+                }
+                Spacer()
+                if tab == .home {
+                    Text("Always on")
+                        .font(.system(size: 12))
+                        .foregroundStyle(Theme.textSecondary)
+                } else {
+                    Toggle(tab.title, isOn: $shown)
+                        .toggleStyle(.switch)
+                        .labelsHidden()
+                }
             }
-            .buttonStyle(.plain)
-            .allowsHitTesting(optionCount > 0)
+            .padding(.leading, 12)
+            .padding(.trailing, 15)
+            .frame(height: 41)
+            .contentShape(Rectangle())
+            .onTapGesture { if optionCount > 0 { toggle() } }
 
             if expanded {
                 VStack(alignment: .leading, spacing: 0) { options }
@@ -144,6 +183,23 @@ private struct TabRow<Options: View>: View {
                     .padding(.bottom, 10)
             }
         }
+    }
+}
+
+/// The six-dot drag handle.
+private struct Grip: View {
+    var body: some View {
+        Grid(horizontalSpacing: 3, verticalSpacing: 3) {
+            ForEach(0..<3, id: \.self) { _ in
+                GridRow {
+                    Circle().frame(width: 2.5, height: 2.5)
+                    Circle().frame(width: 2.5, height: 2.5)
+                }
+            }
+        }
+        .foregroundStyle(Theme.textSecondary.opacity(0.6))
+        .frame(width: 12)
+        .accessibilityHidden(true)
     }
 }
 

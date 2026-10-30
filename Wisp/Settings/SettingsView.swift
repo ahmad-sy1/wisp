@@ -84,7 +84,7 @@ struct SettingsView: View {
     private var page: some View {
         switch navigation.page {
         case .general:      GeneralPage(prefs: prefs)
-        case .notch:        NotchPage(mail: .shared, clipboard: .shared, stats: .shared)
+        case .notch:        NotchPage(prefs: prefs, mail: .shared, clipboard: .shared, stats: .shared)
         case .integrations: IntegrationsPage(mail: .shared, nowPlaying: .shared)
         case .agenda:       CalendarPage(agenda: .shared, weather: .shared)
         case .music:        MusicPage(spectrum: .shared)

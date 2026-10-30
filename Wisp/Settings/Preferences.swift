@@ -21,6 +21,19 @@ final class Preferences: ObservableObject {
 
     @Published private(set) var launchAtLogin: Bool
 
+    /// Every tab in tab-bar order, shown or not (Settings → Notch).
+    @Published var tabOrder: [WispTab] {
+        didSet { defaults.set(tabOrder.map(\.rawValue), forKey: Key.tabOrder) }
+    }
+
+    /// Tabs switched off in Settings → Notch. Home can't be switched off.
+    @Published var hiddenTabs: Set<WispTab> {
+        didSet { defaults.set(hiddenTabs.map(\.rawValue), forKey: Key.hiddenTabs) }
+    }
+
+    /// The tabs in the tab bar, in order.
+    var visibleTabs: [WispTab] { tabOrder.filter { !hiddenTabs.contains($0) } }
+
     /// wisp's own language; `.system` follows macOS. Takes effect after a restart.
     @Published var language: AppLanguage {
         didSet {
@@ -41,6 +54,8 @@ final class Preferences: ObservableObject {
         static let closeDelay = "closeDelay"
         static let sounds = "soundsEnabled"
         static let languages = "AppleLanguages"
+        static let tabOrder = "tabOrder"
+        static let hiddenTabs = "hiddenTabs"
     }
 
     private init() {
@@ -48,11 +63,31 @@ final class Preferences: ObservableObject {
         closeDelay = defaults.object(forKey: Key.closeDelay) as? Double ?? 0.6
         soundsEnabled = defaults.object(forKey: Key.sounds) as? Bool ?? true
         launchAtLogin = SMAppService.mainApp.status == .enabled
+        // Saved order first; tabs added in a later version go at the end.
+        let saved = (defaults.stringArray(forKey: Key.tabOrder) ?? []).compactMap(WispTab.init(rawValue:))
+        tabOrder = saved + WispTab.allCases.filter { !saved.contains($0) }
+        hiddenTabs = Set((defaults.stringArray(forKey: Key.hiddenTabs) ?? []).compactMap(WispTab.init(rawValue:)))
+            .subtracting([.home])
         // Only wisp's own domain, not the global language list.
         let own = defaults.persistentDomain(forName: Bundle.main.bundleIdentifier ?? "")?[Key.languages] as? [String]
         let current = own?.first.flatMap(AppLanguage.init(code:)) ?? .system
         language = current
         launchLanguage = current
+    }
+
+    /// Moves a tab to where another one is now (drag and drop in Settings → Notch).
+    func moveTab(_ tab: WispTab, to target: WispTab) {
+        guard tab != target, let from = tabOrder.firstIndex(of: tab),
+              let to = tabOrder.firstIndex(of: target) else { return }
+        var order = tabOrder
+        order.remove(at: from)
+        order.insert(tab, at: to)
+        tabOrder = order
+    }
+
+    func setTab(_ tab: WispTab, shown: Bool) {
+        guard tab != .home else { return }
+        if shown { hiddenTabs.remove(tab) } else { hiddenTabs.insert(tab) }
     }
 
     /// Quits and opens wisp again, for a language change.

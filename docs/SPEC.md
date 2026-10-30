@@ -100,7 +100,7 @@ Rechts: **Instellingen** (open het Settings-venster).
 
 ## Settings-aanpassingen
 
-> **Stand van zaken:** een venster met zijbalk (boards 10.1–10.6): Algemeen (taal, accentkleur, sluitvertraging, geluiden, opstarten bij inloggen, Claude Code-hooks), Notch (de opties per tab), Integraties (Gmail, Muziek), Agenda & weer (agenda's, diensten, reistijd en reiswijze, plaats), Muziek (spectrum) en Focus (standaardduur, Niet storen, muziek, geleerde koppelingen). Tabs aan/uit en volgorde, Home-tegels, sneltoets, extra muziekopties en zelf koppelingen toevoegen nog niet (#24–#27).
+> **Stand van zaken:** een venster met zijbalk (boards 10.1–10.6): Algemeen (taal, accentkleur, sluitvertraging, geluiden, opstarten bij inloggen, Claude Code-hooks), Notch (de opties per tab), Integraties (Gmail, Muziek), Agenda & weer (agenda's, diensten, reistijd en reiswijze, plaats), Muziek (spectrum) en Focus (standaardduur, Niet storen, muziek, geleerde koppelingen). Tabs aan/uit en slepen naar je eigen volgorde zijn er ook. Home-tegels, sneltoets, extra muziekopties en zelf koppelingen toevoegen nog niet (#24–#27).
 
 - Bovenaan: accentkleur kiezen (4 opties).
 - Sectie **Tabs**: tabs aan/uit en volgorde.
