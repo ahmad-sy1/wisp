@@ -163,6 +163,7 @@ The details are in [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) and [`docs/INT
 | [INTEGRATIONS.md](docs/INTEGRATIONS.md) | Claude Code hooks, Gmail, Now Playing, and the plan for the next integrations |
 | [DESIGN.md](docs/DESIGN.md) | colours, sizes, typography and the rules every screen follows |
 | [RELEASING.md](docs/RELEASING.md) | signing, notarization and publishing a release |
+| [LAUNCH.md](docs/LAUNCH.md) | everything to sort out before a public download: Apple, licence, privacy, domain |
 | [CONTRIBUTING.md](CONTRIBUTING.md) | how to build, branch and open a pull request |
 | [SPEC.md](docs/SPEC.md) | what every tab should do (in Dutch) |
 | [ROADMAP.md](docs/ROADMAP.md) | what's planned next, and what was decided against |
