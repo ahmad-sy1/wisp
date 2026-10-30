@@ -90,6 +90,23 @@ States the board doesn't show, built in the style of the other tabs and open to 
 - Leaving time passed but the shift hasn't started: *Nu · 22 min reizen*.
 - All-day events sit at the top as *hele dag*.
 
+## Focus tab
+
+Two cards in the fixed 150 pt area (board 4):
+
+| Part | Spec |
+|---|---|
+| Left card (315 pt) | a 108 pt ring (7 pt, accent colour) that empties clockwise; the time left (26 pt bold) and the state (*gereed*, *focus*, *gepauzeerd*, *klaar*, 12 pt grey) inside. Next to it the task (15 pt semibold) with a pencil, *Start* / *Pauze* (accent) and *Reset*, and the source with a dot: green for *Automatisch · IntelliJ IDEA · wisp* and *Uit agenda*, grey for *Zelf gekozen* |
+| Right card | *Duur* (12 pt grey), three 30 pt pills *25 / 50 / 90 min* (active `activeTab`, white semibold), two checkboxes |
+| Tab bar | *Vandaag 3 sessies · 1u 45m* just left of Settings |
+| Closed notch | while a session runs or is paused: a small ring left of the camera, the time left (10.5 pt semibold) right of it. It replaces the music wings; paused shows both in grey |
+
+States the board doesn't show, built in the same style:
+
+- Before a session: a full ring, the chosen duration and *gereed*. The durations can't change while a session runs.
+- Done: an empty ring, *00:00* and *klaar*; the notch opens on the Focus tab and plays the *Glass* sound if sounds are on.
+- Editing the task: the title becomes a text field; Return saves, Escape cancels.
+
 ## Music tab
 
 Two cards in the fixed 150 pt area (boards 9.1–9.6):

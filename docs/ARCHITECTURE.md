@@ -20,6 +20,7 @@ wisp.app
 | `Wisp/Mail` | IMAP client and `MailStore` |
 | `Wisp/Music` | `NowPlaying` (bridge process), `AudioOutput` (device, quality, volume), `Spectrum`, `AudioTap` and `SpectrumAnalyzer` (live spectrum) |
 | `Wisp/Agenda` | `AgendaStore` (EventKit, today's events, shifts) and `WeatherStore` (Open-Meteo) |
+| `Wisp/Focus` | `FocusStore`: the focus timer, today's sessions, the task guess and what it learned |
 | `Wisp/Settings` | `Preferences` (UserDefaults) and the Settings sections |
 | `Wisp/Design` | `Theme`: colours, sizes, the accent options |
 | `Wisp/Support` | small helpers, such as `Keychain` |
@@ -111,15 +112,23 @@ Open-Meteo (HTTPS, no key) ─► WeatherStore ┘
 - **`WeatherStore`** fetches the current temperature and WMO weather code, the hourly chance and amount of rain, and today's low and high from `api.open-meteo.com` for the place in Settings, at most once every 15 minutes and only when the tab opens. An hour counts as wet from a 50 % chance or 0.2 mm; that gives *Droog tot 22:00* or *Regen tot 15:00*. Settings looks up places with Open-Meteo's geocoding API.
 - The tab redraws once a minute (`TimelineView(.everyMinute)`) for the *nu* line and the countdowns, and only exists while it is open.
 
+## Focus timer
+
+- **`FocusStore`** keeps no ticking timer. A running session is an end date and one `DispatchWorkItem` for the moment it ends; the countdown is worked out when something draws it. When it ends: today's count goes up, the notch opens on the Focus tab and, with sounds on, *Glass* plays.
+- **The task** is guessed when the tab opens and when a session starts: the timed calendar event that is on now (`AgendaStore.eventNow()`, one small query), otherwise the app in front. For an IDE or terminal the guess is *Coding*, with the project from the newest Claude Code session in that app; for other apps, the app's name. Typing a different task remembers it for that app (and project) in `focusLearnedTasks`; Settings → Focus lists and forgets them.
+- **Do not disturb** runs the user's Shortcuts *wisp Focus On* and *wisp Focus Off* (`/usr/bin/shortcuts run`), since macOS lets apps switch a Focus mode only through Shortcuts. **Start music** sends play to Now Playing if something is paused.
+- The tab and the closed-notch wings redraw once a second only while a session runs (`TimelineView(.periodic)`); before, after and while paused they are still. The wings come from `NotchModel.focusWings` and win over the music wings; the mini spectrum stops while they show.
+
 ## Settings and secrets
 
-- `Preferences` (UserDefaults): accent colour, close delay, sounds, open at login (`SMAppService`), and the language (`AppleLanguages` in wisp's own domain, the same key System Settings → Language & Region → Apps uses; applied after a restart). `Spectrum` keeps the spectrum permission choice (`spectrumConsent`); `AgendaStore` the hidden calendars, the shift calendar and the ride (`agenda…`); `WeatherStore` the place (`weatherPlace`).
+- `Preferences` (UserDefaults): accent colour, close delay, sounds, open at login (`SMAppService`), and the language (`AppleLanguages` in wisp's own domain, the same key System Settings → Language & Region → Apps uses; applied after a restart). `Spectrum` keeps the spectrum permission choice (`spectrumConsent`); `AgendaStore` the hidden calendars, the shift calendar and the ride (`agenda…`); `WeatherStore` the place (`weatherPlace`); `FocusStore` the duration, the two options, the learned tasks and today's numbers (`focus…`).
 - `Keychain`: generic passwords under the service `com.ahmadalasmi.wisp`, accessible after first unlock, this device only. Nothing secret is ever written to UserDefaults, to disk or to git.
 
 ## Performance rules
 
 - Closed: no timers, no animations, nothing redrawn. The only background work is event-driven (the hook socket, the IMAP IDLE connection, the Now Playing bridge).
 - Open: views that tick (the session timer, the music progress) use `TimelineView(.periodic)` at one update per second or once a minute, and only exist while their tab is visible.
+- A running focus session redraws its ring and time once a second, in the tab and on the closed notch. Nothing runs before or after a session.
 - The live spectrum and the music wings are the exception: they move while music plays, because that is what they are for. The audio tap only runs while one of them is on screen and music plays: about 3–4 % CPU for the Release build (the FFT itself is a fraction of that; the rest is drawing). Bars are drawn in a single `Canvas`, and only the views that draw them observe `SpectrumLevels`, so nothing else redraws 30 times a second. Measure in Release: a Debug build is several times slower.
 
 ## Signing

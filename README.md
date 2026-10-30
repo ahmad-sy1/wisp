@@ -31,6 +31,7 @@ The notch is the one bit of screen you never use. wisp turns it into a quiet das
 - **Mail**: your Gmail inbox, read-only, with an *All / Unread* filter and an unread badge on the tab. New mail arrives by push (IMAP IDLE), not by polling. wisp never marks anything as read.
 - **Music**: whatever your Mac is playing (Spotify, Music, YouTube in the browser), with artwork, progress and glass controls. Next to it, a **live spectrum** of what you hear: 24 bands from bass to treble, the bass/mid/treble mix and the loudness. While music plays, the closed notch grows a little wing on each side: artwork on the left, a mini spectrum on the right.
 - **Calendar & weather**: today's timeline from the macOS Calendar app (and so from Google Calendar too), with what's done struck through, a red *now* line and a countdown to what's next. Next to it the weather where you are and, on a work day, when to leave for your shift and whether it stays dry.
+- **Focus timer**: 25, 50 or 90 minutes with a ring that keeps counting in the closed notch. It guesses what you work on (the calendar event that's on, or the app and Claude Code project in front) and learns from your corrections; today's sessions sit in the tab bar.
 - **English and Dutch**: wisp follows your Mac's language, or pick one in Settings.
 - **Calm by default**: the closed notch draws nothing extra and uses 0 % CPU. No timers run while it is closed.
 - **Any Mac**: on a screen without a notch, wisp sits in a small bar at the top centre.
@@ -55,7 +56,13 @@ The notch is the one bit of screen you never use. wisp turns it into a quiet das
 <td colspan="2"><img src="docs/media/agenda.png" alt="The Agenda tab with today's timeline and the weather"></td>
 </tr>
 <tr>
-<td colspan="2" align="center"><sub>Agenda: today's timeline, the weather, and when to leave for your shift</sub></td>
+<td colspan="2" align="center"><sub>Calendar: today's timeline, the weather, and when to leave for your shift</sub></td>
+</tr>
+<tr>
+<td colspan="2"><img src="docs/media/focus.png" alt="The Focus tab with a running session"></td>
+</tr>
+<tr>
+<td colspan="2" align="center"><sub>Focus: a session that keeps counting in the closed notch</sub></td>
 </tr>
 </table>
 

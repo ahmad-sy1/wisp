@@ -45,13 +45,24 @@ def save(path: Path, catalog: dict) -> None:
     path.write_text(text + "\n")
 
 
+def units(localization: dict) -> list[dict]:
+    """The string units of one language: one, or one per plural (or device) variation."""
+    if "stringUnit" in localization:
+        return [localization["stringUnit"]]
+    found = []
+    for variations in localization.get("variations", {}).values():
+        for case in variations.values():
+            found += units(case)
+    return found
+
+
 def missing(catalog: dict, keys) -> list[str]:
     problems = []
     for key in sorted(keys):
         entry = catalog["strings"].get(key, {})
         for lang in LANGUAGES:
-            unit = entry.get("localizations", {}).get(lang, {}).get("stringUnit", {})
-            if unit.get("state") != "translated" or not unit.get("value"):
+            found = units(entry.get("localizations", {}).get(lang, {}))
+            if not found or any(u.get("state") != "translated" or not u.get("value") for u in found):
                 problems.append(f"{lang}: no translation for {key!r}")
     return problems
 

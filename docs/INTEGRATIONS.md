@@ -13,6 +13,7 @@ Golden rule: **check the official documentation when you build or change an inte
 | WHOOP | planned | sign in with WHOOP |
 | Agenda | ✓ live | macOS Calendar access (EventKit) |
 | Weather | ✓ live | nothing (Open-Meteo, no key) |
+| Shortcuts (Focus mode) | ✓ live | two Shortcuts you make yourself, only for *Do not disturb* |
 
 ## Claude Code
 
@@ -92,6 +93,14 @@ Docs: <https://developer.apple.com/documentation/eventkit>
 - Source: the macOS Calendar app, so every account in it counts (iCloud, Google, Exchange…). No key or sign-in of its own.
 - Permission: *Agenda's* under Privacy & Security, asked from the Agenda tab or Settings → Agenda & weer (`NSCalendarsFullAccessUsageDescription`). Reading needs full access; wisp never writes.
 - Read: today's events (title, start, end, all-day, calendar and its colour) from the calendars that are switched on in Settings. Nothing is stored or sent.
+- The focus timer asks for the timed event that is on right now, to name the task.
+
+## Shortcuts (Focus mode)
+
+Docs: <https://support.apple.com/guide/shortcuts-mac/run-shortcuts-from-the-command-line-apd455c82f02/mac>
+
+- macOS has no API for apps to turn a Focus mode on or off. *Do not disturb during focus* therefore runs two Shortcuts by name with `/usr/bin/shortcuts run`: **wisp Focus On** when a session starts and **wisp Focus Off** when it ends or is reset.
+- The user makes them once in the Shortcuts app, each with the action *Set Focus* (*Do Not Disturb* on / off). If they don't exist, nothing happens.
 
 ## Weather (Open-Meteo)
 
