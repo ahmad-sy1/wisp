@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Debug builds: `-snapshot <file.png>` draws the open panel to a PNG, also with the screen locked
 - Agenda: once nothing is left today, the timeline shows tomorrow's first two events under *Morgen*
 - Agenda: the event that is on now gets its own card with *NU*, the time left and a progress bar (board 3.1)
 - Debug builds: `-agendaTime 21:30` shows the Agenda tab at another time of today

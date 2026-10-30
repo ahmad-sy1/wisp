@@ -37,6 +37,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         if let name = UserDefaults.standard.string(forKey: "openOnLaunch") {
             notch.expand(to: WispTab(rawValue: name) ?? .home)
         }
+        // `--args -openOnLaunch agenda -snapshot /tmp/agenda.png` draws the open panel to
+        // a PNG once it has settled (data loaded, animations done) and quits.
+        if let path = UserDefaults.standard.string(forKey: "snapshot") {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                notch.snapshot(to: URL(fileURLWithPath: path))
+                NSApp.terminate(nil)
+            }
+        }
         #endif
     }
 
