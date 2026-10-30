@@ -24,6 +24,10 @@ enum Theme {
     static let tabBarGap: CGFloat      = 10
     static let contentHeight: CGFloat  = 150
 
+    // Mail peek (board 8)
+    static let peekWidth: CGFloat  = 420
+    static let peekHeight: CGFloat = 132
+
     static var panelHeight: CGFloat {
         panelTopInset + tabBarHeight + tabBarGap + contentHeight + panelInset
     }
