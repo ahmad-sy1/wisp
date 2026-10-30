@@ -116,6 +116,20 @@ final class AgendaStore: ObservableObject {
         events.first { $0.isShift && !$0.isAllDay && $0.start > now }
     }
 
+    /// The title of the timed event that is on right now, for the focus timer.
+    /// One small EventKit query; nothing is kept or observed.
+    func eventNow() -> String? {
+        guard Self.currentAccess() == .granted else { return nil }
+        let now = Date()
+        let shown = store.calendars(for: .event).filter { !hiddenCalendars.contains($0.calendarIdentifier) }
+        guard !shown.isEmpty else { return nil }
+        let predicate = store.predicateForEvents(withStart: now, end: now.addingTimeInterval(1), calendars: shown)
+        return store.events(matching: predicate)
+            .filter { !$0.isAllDay && $0.startDate <= now && now < $0.endDate }
+            .min { $0.startDate > $1.startDate }?
+            .title.flatMap { $0.isEmpty ? nil : $0 }
+    }
+
     /// Settings shows the calendars too, also while the tab is closed.
     func loadCalendars() {
         access = Self.currentAccess()

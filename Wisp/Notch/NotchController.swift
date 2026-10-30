@@ -90,21 +90,27 @@ final class NotchController {
     #endif
 
     /// Shows or hides the music wings on the closed notch.
-    func setMusicWings(_ on: Bool) {
-        guard model.musicWings != on else { return }
-        if model.isExpanded {
-            model.musicWings = on
+    func setMusicWings(_ on: Bool) { setWings(\.musicWings, on) }
+
+    /// Shows or hides the focus timer's wings on the closed notch.
+    func setFocusWings(_ on: Bool) { setWings(\.focusWings, on) }
+
+    private func setWings(_ wings: ReferenceWritableKeyPath<NotchModel, Bool>, _ on: Bool) {
+        guard model[keyPath: wings] != on else { return }
+        // Already wide (the other wings show), or open: only the content changes.
+        if model.isExpanded || (on ? model.showsWings : model.restingSize == restingSize(without: wings)) {
+            withAnimation(.easeInOut(duration: 0.2)) { model[keyPath: wings] = on }
             return
         }
         if on {
             // Grow the window first, then let the shape spring out into it.
-            model.musicWings = true
+            model[keyPath: wings] = true
             panel.setFrame(collapsedFrame, display: true)
-            model.musicWings = false
-            withAnimation(openSpring) { model.musicWings = true }
+            model[keyPath: wings] = false
+            withAnimation(openSpring) { model[keyPath: wings] = true }
         } else {
             withAnimation(closeSpring) {
-                model.musicWings = false
+                model[keyPath: wings] = false
             } completion: { [weak self] in
                 guard let self, !self.model.isExpanded else { return }
                 self.panel.setFrame(self.collapsedFrame, display: true)
@@ -144,6 +150,13 @@ final class NotchController {
     }
 
     // MARK: - Geometry
+
+    /// The resting size if these wings were off (the other wings may keep it wide).
+    private func restingSize(without wings: ReferenceWritableKeyPath<NotchModel, Bool>) -> CGSize {
+        let others = wings == \NotchModel.musicWings ? model.focusWings : model.musicWings
+        return CGSize(width: model.notchSize.width + (others ? 2 * model.wingWidth : 0),
+                      height: model.notchSize.height)
+    }
 
     private var collapsedFrame: NSRect {
         let n = model.restingSize

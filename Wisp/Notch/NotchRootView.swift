@@ -6,6 +6,7 @@ struct NotchRootView: View {
     @ObservedObject var prefs: Preferences
     @ObservedObject var player: NowPlaying = .shared
     @ObservedObject var spectrum: Spectrum = .shared
+    @ObservedObject var focus: FocusStore = .shared
 
     var body: some View {
         let size = model.shapeSize
@@ -14,7 +15,11 @@ struct NotchRootView: View {
         ZStack(alignment: .top) {
             shape.fill(Theme.panel)
 
-            if !model.isExpanded && model.musicWings, let track = player.track {
+            if !model.isExpanded && model.focusWings {
+                FocusWings(focus: focus, color: prefs.accent.color,
+                           height: model.notchSize.height, wing: model.wingWidth)
+                    .transition(.opacity)
+            } else if !model.isExpanded && model.musicWings, let track = player.track {
                 MusicWings(track: track, levels: spectrum.isRunning ? spectrum.levels : nil,
                            height: model.notchSize.height, wing: model.wingWidth)
                     .transition(.opacity)
@@ -61,6 +66,44 @@ private struct MusicWings: View {
                 }
             }
             .frame(width: wing, height: min(14, art * 0.7))
+        }
+        .padding(.horizontal, 3)
+        .frame(height: height)
+    }
+}
+
+/// A running focus session on the closed notch: a small ring left of the camera, the
+/// time left right of it. Ticks once a second while it runs; frozen while paused.
+private struct FocusWings: View {
+    @ObservedObject var focus: FocusStore
+    let color: Color
+    let height: CGFloat
+    let wing: CGFloat
+
+    var body: some View {
+        if focus.phase.isRunning {
+            TimelineView(.periodic(from: .now, by: 1)) { context in wings(now: context.date) }
+        } else {
+            wings(now: .now)
+        }
+    }
+
+    private func wings(now: Date) -> some View {
+        let running = focus.phase.isRunning
+        let ring = max(12, height - 16)
+        return HStack(spacing: 0) {
+            FocusRing(progress: focus.progress(at: now), color: running ? color : Theme.textSecondary,
+                      lineWidth: 2.5) { EmptyView() }
+                .frame(width: ring, height: ring)
+                .frame(width: wing)
+            Spacer(minLength: 0)
+            Text(verbatim: FocusClock.text(focus.remaining(at: now)))
+                .font(.system(size: 10.5, weight: .semibold))
+                .monospacedDigit()
+                .foregroundStyle(running ? Theme.textPrimary : Theme.textSecondary)
+                .lineLimit(1)
+                .fixedSize()
+                .frame(width: wing)
         }
         .padding(.horizontal, 3)
         .frame(height: height)

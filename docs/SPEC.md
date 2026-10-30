@@ -51,6 +51,8 @@ Rechts: **Instellingen** (open het Settings-venster).
 - Op de taaknaam tikken (potlood-icoon) → taak kiezen of zelf typen.
 - In Settings: lijst met koppelingen app/project → taak, aan te passen of te verwijderen.
 
+> **Stand van zaken:** gebouwd. Taak uit de agenda of de app vooraan (met het Claude Code-project), correcties worden onthouden en staan in Settings → Focus. *Niet storen* werkt via twee eigen opdrachten in de Opdrachten-app ("wisp Focus On/Off"), omdat macOS apps geen focusmodus laat aanzetten. Browser-tabbladen en documentnamen (Accessibility/AppleScript) en de vraag bij twijfel zitten er nog niet in.
+
 ### Muziek
 - Bestaande muziek-integratie, nieuw design.
 - Links: albumhoes (120 pt), titel, artiest, voortgangsbalk met tijden, vorige / play-pauze / volgende, groene equalizer-balkjes als er iets speelt.

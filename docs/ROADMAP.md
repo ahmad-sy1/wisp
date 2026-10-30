@@ -6,7 +6,6 @@ What is planned, roughly in order. Every item becomes its own branch and pull re
 
 | Item | Notes | Tracking |
 |---|---|---|
-| **Focus timer tab** | 25 / 50 / 90 min, works out what you are working on from the calendar or the app in front. Ring in the closed notch while it runs. Board 4. | |
 | **Clipboard tab** | Last ~20 items, local only, never passwords (`ConcealedType` / `TransientType` are skipped). Board 5. | |
 | **Notes tab** | Quick notes stored as JSON in Application Support. Board 6. | |
 | **System tab** | Battery, CPU, storage, Wi-Fi name; AirPods only if it can be read reliably. Board 7. | |
