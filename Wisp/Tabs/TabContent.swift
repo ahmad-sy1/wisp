@@ -12,6 +12,7 @@ struct TabContent: View {
         case .agenda: AgendaTab(agenda: .shared, weather: .shared)
         case .focus: FocusTab(focus: .shared)
         case .clipboard: ClipboardTab(clipboard: .shared)
+        case .notes: NotesTab(notes: .shared)
         case .music: MusicTab(player: .shared)
         // The other tabs get their real view in a later step; until then a calm placeholder.
         default:    PlaceholderTab(tab: tab)
