@@ -6,7 +6,6 @@ What is planned, roughly in order. Every item becomes its own branch and pull re
 
 | Item | Notes | Tracking |
 |---|---|---|
-| **System tab** | Battery, CPU, storage, Wi-Fi name; AirPods only if it can be read reliably. Board 7. | |
 | **Files tab** | The drop zone, restyled. | |
 | **Mail notifications in the notch** | A short peek with *Openen / Verwijderen / Later*, and the unread count on the closed notch. Board 8. | |
 | **GitHub, Notion, WHOOP** | Sign in with OAuth (PKCE), tokens in the Keychain; fills the Home tiles. See [INTEGRATIONS.md](INTEGRATIONS.md#planned-github-notion-whoop). | |

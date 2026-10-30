@@ -28,6 +28,9 @@ struct TabBar: View {
             } else if model.tab == .notes {
                 NotesToolbar(notes: .shared)
                     .padding(.trailing, 10)
+            } else if model.tab == .system {
+                SystemToolbar(stats: .shared)
+                    .padding(.trailing, 10)
             } else if model.tab == .music {
                 MusicToolbar()
                     .padding(.trailing, 10)

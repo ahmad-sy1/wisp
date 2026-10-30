@@ -72,6 +72,8 @@ targets:
         NSAudioCaptureUsageDescription: "wisp analyses the sound of what plays, live, for the spectrum in the Music tab. Nothing is recorded, stored or sent."
         NSCalendarsFullAccessUsageDescription: "wisp shows what's on your calendar today in the Calendar tab. Your calendar is only read and stays on your Mac."
         NSCalendarsUsageDescription: "wisp shows what's on your calendar today in the Calendar tab. Your calendar is only read and stays on your Mac."
+        NSLocationUsageDescription: "macOS gives apps the name of your Wi‑Fi network only with Location access. wisp uses it for the System tab and never reads where you are."
+        NSLocationWhenInUseUsageDescription: "macOS gives apps the name of your Wi‑Fi network only with Location access. wisp uses it for the System tab and never reads where you are."
         LSApplicationCategoryType: public.app-category.productivity
         NSHumanReadableCopyright: "Copyright © 2026 Ahmad Alasmi. All rights reserved."
     entitlements:
@@ -79,6 +81,8 @@ targets:
       path: Wisp/Resources/wisp.entitlements
       properties:
         com.apple.security.personal-information.calendars: true
+        # Location only so macOS hands out the Wi-Fi name (System tab).
+        com.apple.security.personal-information.location: true
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.ahmadalasmi.wisp

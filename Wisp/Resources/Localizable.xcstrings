@@ -11,6 +11,16 @@
         }
       }
     },
+    "%@ uses %lld%%" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ gebruikt %2$lld%%"
+          }
+        }
+      }
+    },
     "%@ wants to use %@" : {
       "localizations" : {
         "nl" : {
@@ -201,6 +211,16 @@
         }
       }
     },
+    "Allow…" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toestaan…"
+          }
+        }
+      }
+    },
     "Analyses the sound of what plays, live. Nothing is recorded, stored or sent. macOS asks for permission for system audio the first time." : {
       "localizations" : {
         "nl" : {
@@ -247,6 +267,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bas %1$@ · Mid %2$@ · Hoog %3$@"
+          }
+        }
+      }
+    },
+    "Battery" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Batterij"
           }
         }
       }
@@ -301,6 +331,16 @@
         }
       }
     },
+    "Case" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Case"
+          }
+        }
+      }
+    },
     "Change the task" : {
       "localizations" : {
         "nl" : {
@@ -317,6 +357,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Wijzigingen in ~/.claude/settings.json"
+          }
+        }
+      }
+    },
+    "Charging" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Opladen"
           }
         }
       }
@@ -661,6 +711,16 @@
         }
       }
     },
+    "Full in %@" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vol over %@"
+          }
+        }
+      }
+    },
     "Give access" : {
       "localizations" : {
         "nl" : {
@@ -821,6 +881,16 @@
         }
       }
     },
+    "Left" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Links"
+          }
+        }
+      }
+    },
     "Let wisp listen along?" : {
       "localizations" : {
         "nl" : {
@@ -881,6 +951,16 @@
         }
       }
     },
+    "Measuring…" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Meten…"
+          }
+        }
+      }
+    },
     "Music" : {
       "localizations" : {
         "nl" : {
@@ -907,6 +987,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "NU"
+          }
+        }
+      }
+    },
+    "No battery" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geen batterij"
           }
         }
       }
@@ -1067,6 +1157,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Offline, probeert opnieuw…"
+          }
+        }
+      }
+    },
+    "On power" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aan de lader"
           }
         }
       }
@@ -1301,6 +1401,16 @@
         }
       }
     },
+    "Right" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rechts"
+          }
+        }
+      }
+    },
     "Runs your Shortcuts “%@” and “%@”" : {
       "localizations" : {
         "nl" : {
@@ -1411,6 +1521,16 @@
         }
       }
     },
+    "Shown" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zichtbaar"
+          }
+        }
+      }
+    },
     "Sign-in failed: check the address and app password" : {
       "localizations" : {
         "nl" : {
@@ -1507,6 +1627,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Gestopt met een fout"
+          }
+        }
+      }
+    },
+    "Storage" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Opslag"
           }
         }
       }
@@ -1741,12 +1871,42 @@
         }
       }
     },
+    "Wi‑Fi name" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wifinaam"
+          }
+        }
+      }
+    },
+    "Wi‑Fi off" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wifi uit"
+          }
+        }
+      }
+    },
     "Work" : {
       "localizations" : {
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Werk"
+          }
+        }
+      }
+    },
+    "Working it out…" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wordt berekend…"
           }
         }
       }
@@ -1861,6 +2021,16 @@
         }
       }
     },
+    "free of %@" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "vrij van %@"
+          }
+        }
+      }
+    },
     "freezing rain" : {
       "localizations" : {
         "nl" : {
@@ -1907,6 +2077,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "lichte regen"
+          }
+        }
+      }
+    },
+    "macOS gives apps the name of your Wi‑Fi network only with Location access. wisp uses it for nothing else and never reads where you are." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "macOS geeft apps de naam van je wifinetwerk alleen met toegang tot je locatie. wisp gebruikt die nergens anders voor en leest nooit waar je bent."
+          }
+        }
+      }
+    },
+    "macOS shows the network name only with Location access: Settings → System" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "macOS toont de netwerknaam alleen met toegang tot je locatie: Instellingen → Systeem"
           }
         }
       }

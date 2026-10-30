@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- System tab: battery, AirPods, CPU with the busiest app, storage, and the Wi-Fi name (with Location access from Settings) (board 7)
 - Notes tab: quick notes stored on this Mac, click to edit, right-click to copy or delete (board 6)
 - Disabled buttons are dimmed
 - Clipboard tab: the last 20 copied texts with search and *Copy*, stored only on this Mac, never passwords; can be switched off in Settings (board 5)
