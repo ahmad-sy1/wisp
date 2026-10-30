@@ -78,12 +78,12 @@ If wisp is shared with more people later, "Sign in with Google" (OAuth) is frien
 ## Live spectrum (system audio)
 
 - Core Audio process taps (macOS 14.2+): wisp listens to the playing app's audio while the spectrum is visible. See [ARCHITECTURE.md](ARCHITECTURE.md#live-spectrum).
-- Permission: macOS's *System Audio Recording* (Privacy & Security). wisp asks inside the Music tab first (board 9.5); *Niet nu*, or Settings → Muziek → *Live spectrum*, turns it off.
+- Permission: macOS's *System Audio Recording* (Privacy & Security). wisp asks inside the Music tab first (board 9.5); *Niet nu*, or Settings → Music → *Live spectrum*, turns it off.
 - Nothing is recorded, written to disk or sent anywhere: each block of samples goes through the FFT and is dropped.
 
 ## Planned: GitHub, Notion, WHOOP
 
-Plan: each gets a *Koppelen* button in Settings that opens the service's own sign-in page (OAuth 2.0 with PKCE), so nobody has to paste tokens. The redirect comes back to wisp through a custom URL scheme; tokens are stored in the Keychain and refreshed automatically. Each service needs wisp registered once as an OAuth app (client ID only, no secret in the app where the service allows it).
+Plan: each is added under Settings → Integrations → *Add integration* that opens the service's own sign-in page (OAuth 2.0 with PKCE), so nobody has to paste tokens. The redirect comes back to wisp through a custom URL scheme; tokens are stored in the Keychain and refreshed automatically. Each service needs wisp registered once as an OAuth app (client ID only, no secret in the app where the service allows it).
 
 | Service | Home tile | Data |
 |---|---|---|
@@ -96,7 +96,7 @@ Plan: each gets a *Koppelen* button in Settings that opens the service's own sig
 Docs: <https://developer.apple.com/documentation/eventkit>
 
 - Source: the macOS Calendar app, so every account in it counts (iCloud, Google, Exchange…). No key or sign-in of its own.
-- Permission: *Agenda's* under Privacy & Security, asked from the Agenda tab or Settings → Agenda & weer (`NSCalendarsFullAccessUsageDescription`). Reading needs full access; wisp never writes.
+- Permission: *Agenda's* under Privacy & Security, asked from the Agenda tab or Settings → Calendar & weather (`NSCalendarsFullAccessUsageDescription`). Reading needs full access; wisp never writes.
 - Read: today's events (title, start, end, all-day, calendar and its colour) from the calendars that are switched on in Settings. Nothing is stored or sent.
 - The focus timer asks for the timed event that is on right now, to name the task.
 

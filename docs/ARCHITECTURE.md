@@ -24,7 +24,7 @@ wisp.app
 | `Wisp/Notes` | `NotesStore`: quick notes, stored in `notes.json` |
 | `Wisp/System` | `SystemStats`: battery, AirPods, CPU, storage and Wi-Fi for the System tab |
 | `Wisp/Focus` | `FocusStore`: the focus timer, today's sessions, the task guess and what it learned |
-| `Wisp/Settings` | `Preferences` (UserDefaults) and the Settings sections |
+| `Wisp/Settings` | `Preferences` (UserDefaults), the Settings window (`SettingsView`: sidebar + one page per topic) and its building blocks (`SettingsComponents`) |
 | `Wisp/Design` | `Theme`: colours, sizes, the accent options |
 | `Wisp/Support` | small helpers, such as `Keychain` |
 | `Wisp/Resources` | `Info.plist`, entitlements, and the String Catalogs: `Localizable.xcstrings` (interface) and `InfoPlist.xcstrings` (permission texts), English source with Dutch |
@@ -117,7 +117,7 @@ Open-Meteo (HTTPS, no key) ─► WeatherStore ┘
 ```
 
 - **`AgendaStore`** asks for full Calendar access the first time (`requestFullAccessToEvents`; the hardened runtime needs the `com.apple.security.personal-information.calendars` entitlement in `Wisp/Resources/wisp.entitlements`). It reads only while the tab is visible (`setVisible(_:)`): one `events(matching:)` for today and tomorrow (tomorrow is shown once nothing is left today) over the calendars that aren't switched off, and a listener for `EKEventStoreChanged` that is removed again when the tab closes. Nothing is written to the calendar.
-- An event is a **shift** when its title contains *dienst*, or, if chosen in Settings, when it is in a given calendar. Shifts get the `warning` colour; other events the colour of their calendar. *Vertrek voor je dienst* is the next shift's start minus the ride in minutes from Settings.
+- An event is a **shift** when its title contains *dienst*, or, if chosen in Settings, when it is in a given calendar. Shifts get the `warning` colour; other events the colour of their calendar. *Vertrek voor je dienst* is the next shift's start minus the ride in minutes from Settings; the travel mode there only changes the words (*22 min fietsen*).
 - **`WeatherStore`** fetches the current temperature and WMO weather code, the hourly chance and amount of rain, and today's low and high from `api.open-meteo.com` for the place in Settings, at most once every 15 minutes and only when the tab opens. An hour counts as wet from a 50 % chance or 0.2 mm; that gives *Droog tot 22:00* or *Regen tot 15:00*. Settings looks up places with Open-Meteo's geocoding API.
 - The tab redraws once a minute (`TimelineView(.everyMinute)`) for the *nu* line, the countdowns and the bar of the event on now, and only exists while it is open. All of it reads the time through `AgendaClock.now`, which in Debug builds can be set with `-agendaTime HH:mm`.
 
@@ -139,7 +139,7 @@ Open-Meteo (HTTPS, no key) ─► WeatherStore ┘
 - Battery from IOKit power sources (`IOPSCopyPowerSourcesInfo`); storage from the `/` volume (`volumeAvailableCapacityForImportantUsage`).
 - CPU: `host_statistics(HOST_CPU_LOAD_INFO)` tick deltas. The busiest app is the largest `proc_pid_rusage` delta, with helper processes counted under their app (" Helper" stripped); a sample takes under 1 ms.
 - AirPods: there is no public API, so `system_profiler SPBluetoothDataType -json` is run in the background and the first connected device with left/right levels is shown. Best effort, as the spec allows.
-- Wi-Fi name: `CoreWLAN` returns it only to apps with Location access (macOS 14+). Settings → System asks for it (`requestWhenInUseAuthorization`; entitlement `com.apple.security.personal-information.location`); the location itself is never read.
+- Wi-Fi name: `CoreWLAN` returns it only to apps with Location access (macOS 14+). Settings → Notch → System asks for it (`requestWhenInUseAuthorization`; entitlement `com.apple.security.personal-information.location`); the location itself is never read.
 
 ## Focus timer
 
@@ -150,7 +150,9 @@ Open-Meteo (HTTPS, no key) ─► WeatherStore ┘
 
 ## Settings and secrets
 
-- `Preferences` (UserDefaults): accent colour, close delay, sounds, open at login (`SMAppService`), and the language (`AppleLanguages` in wisp's own domain, the same key System Settings → Language & Region → Apps uses; applied after a restart). `Spectrum` keeps the spectrum permission choice (`spectrumConsent`); `AgendaStore` the hidden calendars, the shift calendar and the ride (`agenda…`); `WeatherStore` the place (`weatherPlace`); `FocusStore` the duration, the two options, the learned tasks and today's numbers (`focus…`).
+- The Settings window (boards 10.1–10.6) is one `NSWindow` with a full-size content view: `SettingsView` draws the sidebar and the page that `SettingsNavigation.shared.page` names, so other places can open a given page (the Mail tab's *Connect Gmail* opens *Integrations*). Pages are built from `SettingsPage`, `SettingsGroup` (a header above a card; rows split by hairlines) and `SettingsRow`. The options of single tabs (Mail, Clipboard, System) sit under *Notch*, behind a click on the tab.
+
+- `Preferences` (UserDefaults): accent colour, close delay, sounds, open at login (`SMAppService`), and the language (`AppleLanguages` in wisp's own domain, the same key System Settings → Language & Region → Apps uses; applied after a restart). `Spectrum` keeps the spectrum permission choice (`spectrumConsent`); `AgendaStore` the hidden calendars, the shift calendar, the ride and how you travel (`agenda…`); `WeatherStore` the place (`weatherPlace`); `FocusStore` the duration, the two options, the learned tasks and today's numbers (`focus…`).
 - `Keychain`: generic passwords under the service `com.ahmadalasmi.wisp`, accessible after first unlock, this device only. Nothing secret is ever written to UserDefaults, to disk or to git.
 
 ## Performance rules

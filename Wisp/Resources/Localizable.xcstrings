@@ -31,12 +31,12 @@
         }
       }
     },
-    "%@ · %lld min travel" : {
+    "%@ · works automatically" : {
       "localizations" : {
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%1$@ · %2$lld min reizen"
+            "value" : "%@ · werkt automatisch"
           }
         }
       }
@@ -67,6 +67,46 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld min"
+          }
+        }
+      }
+    },
+    "%lld min by transit" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld min met het OV"
+          }
+        }
+      }
+    },
+    "%lld min cycling" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld min fietsen"
+          }
+        }
+      }
+    },
+    "%lld min driving" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld min rijden"
+          }
+        }
+      }
+    },
+    "%lld min walking" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld min lopen"
           }
         }
       }
@@ -111,6 +151,16 @@
         }
       }
     },
+    "%lld options" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld opties"
+          }
+        }
+      }
+    },
     "%lldh" : {
       "localizations" : {
         "nl" : {
@@ -151,6 +201,16 @@
         }
       }
     },
+    "1 option" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 optie"
+          }
+        }
+      }
+    },
     "16 characters" : {
       "localizations" : {
         "nl" : {
@@ -171,6 +231,26 @@
         }
       }
     },
+    "A calendar" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Een agenda"
+          }
+        }
+      }
+    },
+    "A soft sound with notifications" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zacht geluidje bij meldingen"
+          }
+        }
+      }
+    },
     "Accent colour" : {
       "localizations" : {
         "nl" : {
@@ -181,12 +261,12 @@
         }
       }
     },
-    "Account" : {
+    "Add integration" : {
       "localizations" : {
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Account"
+            "value" : "Integratie toevoegen"
           }
         }
       }
@@ -221,16 +301,6 @@
         }
       }
     },
-    "Analyses the sound of what plays, live. Nothing is recorded, stored or sent. macOS asks for permission for system audio the first time." : {
-      "localizations" : {
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Analyseert live het geluid van wat er speelt. Er wordt niets opgenomen, opgeslagen of verstuurd. macOS vraagt de eerste keer om toestemming voor systeemaudio."
-          }
-        }
-      }
-    },
     "App password" : {
       "localizations" : {
         "nl" : {
@@ -257,6 +327,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Automatisch · %1$@ · %2$@"
+          }
+        }
+      }
+    },
+    "Bars that move with the music in the Music tab" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Balkjes die meebewegen in de Muziek-tab"
           }
         }
       }
@@ -291,6 +371,16 @@
         }
       }
     },
+    "Bike" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fiets"
+          }
+        }
+      }
+    },
     "Calendar" : {
       "localizations" : {
         "nl" : {
@@ -321,6 +411,16 @@
         }
       }
     },
+    "Calendars in the notch" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Agenda's in de notch"
+          }
+        }
+      }
+    },
     "Cancel" : {
       "localizations" : {
         "nl" : {
@@ -331,12 +431,42 @@
         }
       }
     },
+    "Car" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Auto"
+          }
+        }
+      }
+    },
     "Case" : {
       "localizations" : {
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Case"
+          }
+        }
+      }
+    },
+    "Change" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wijzig"
+          }
+        }
+      }
+    },
+    "Change a task the timer guessed and wisp remembers it for that app or project." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pas een taak aan die de timer raadde en wisp onthoudt hem voor die app of dat project."
           }
         }
       }
@@ -471,22 +601,32 @@
         }
       }
     },
+    "Connect Gmail under Integrations to see your mail." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verbind Gmail onder Integraties om je mail te zien."
+          }
+        }
+      }
+    },
+    "Connected · %@" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verbonden · %@"
+          }
+        }
+      }
+    },
     "Connected · %@ focused" : {
       "localizations" : {
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Verbonden · %@ gefocust"
-          }
-        }
-      }
-    },
-    "Connected · %lld unread" : {
-      "localizations" : {
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Verbonden · %lld ongelezen"
           }
         }
       }
@@ -551,6 +691,16 @@
         }
       }
     },
+    "Default duration" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Standaardduur"
+          }
+        }
+      }
+    },
     "Delete" : {
       "localizations" : {
         "nl" : {
@@ -567,16 +717,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Weigeren"
-          }
-        }
-      }
-    },
-    "Disconnect" : {
-      "localizations" : {
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ontkoppelen"
           }
         }
       }
@@ -681,22 +821,22 @@
         }
       }
     },
+    "For the notch and this window" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geldt voor de notch en dit venster"
+          }
+        }
+      }
+    },
     "For the spectrum, wisp analyses your Mac's sound live. Nothing is recorded or sent." : {
       "localizations" : {
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Voor het spectrum analyseert wisp live het geluid van je Mac. Er wordt niets opgenomen of verstuurd."
-          }
-        }
-      }
-    },
-    "Forget" : {
-      "localizations" : {
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Vergeten"
           }
         }
       }
@@ -721,22 +861,22 @@
         }
       }
     },
+    "General" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Algemeen"
+          }
+        }
+      }
+    },
     "Give access" : {
       "localizations" : {
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Toegang geven"
-          }
-        }
-      }
-    },
-    "Gmail" : {
-      "localizations" : {
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gmail"
           }
         }
       }
@@ -811,6 +951,16 @@
         }
       }
     },
+    "In use" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In gebruik"
+          }
+        }
+      }
+    },
     "Install" : {
       "localizations" : {
         "nl" : {
@@ -851,12 +1001,32 @@
         }
       }
     },
+    "Integrations" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Integraties"
+          }
+        }
+      }
+    },
     "Keep a clipboard history" : {
       "localizations" : {
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Klembordgeschiedenis bijhouden"
+          }
+        }
+      }
+    },
+    "Keys and passwords are kept safely in your Mac's Keychain. Removing an integration disconnects it and deletes its key." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sleutels en wachtwoorden worden veilig in de Sleutelhanger van je Mac bewaard. Verwijderen koppelt de integratie los en wist de sleutel."
           }
         }
       }
@@ -871,12 +1041,32 @@
         }
       }
     },
+    "Language & appearance" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Taal & uiterlijk"
+          }
+        }
+      }
+    },
     "Later" : {
       "localizations" : {
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Later"
+          }
+        }
+      }
+    },
+    "Learned" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geleerd"
           }
         }
       }
@@ -941,6 +1131,16 @@
         }
       }
     },
+    "Longer" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Langer"
+          }
+        }
+      }
+    },
     "Loudness" : {
       "localizations" : {
         "nl" : {
@@ -957,6 +1157,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Mail"
+          }
+        }
+      }
+    },
+    "Manage" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Beheer"
           }
         }
       }
@@ -1051,6 +1261,16 @@
         }
       }
     },
+    "No rules yet" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nog geen koppelingen"
+          }
+        }
+      }
+    },
     "No session" : {
       "localizations" : {
         "nl" : {
@@ -1107,6 +1327,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Niet nu"
+          }
+        }
+      }
+    },
+    "Notch" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notch"
           }
         }
       }
@@ -1171,12 +1401,42 @@
         }
       }
     },
+    "Off" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uit"
+          }
+        }
+      }
+    },
     "Offline, trying again…" : {
       "localizations" : {
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Offline, probeert opnieuw…"
+          }
+        }
+      }
+    },
+    "On" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aan"
+          }
+        }
+      }
+    },
+    "On foot" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Te voet"
           }
         }
       }
@@ -1197,6 +1457,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Alleen op deze Mac"
+          }
+        }
+      }
+    },
+    "Only what you use is listed here. Add what you need." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alleen wat je gebruikt staat hier. Voeg toe wat je nodig hebt."
           }
         }
       }
@@ -1257,6 +1527,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Openen in Gmail"
+          }
+        }
+      }
+    },
+    "Open in System Settings" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open in Systeeminstellingen"
           }
         }
       }
@@ -1331,12 +1611,62 @@
         }
       }
     },
+    "Permission" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toestemming"
+          }
+        }
+      }
+    },
+    "Place" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Plaats"
+          }
+        }
+      }
+    },
+    "Place for the weather" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Plaats voor het weer"
+          }
+        }
+      }
+    },
     "Points to another wisp" : {
       "localizations" : {
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Verwijst naar een andere wisp"
+          }
+        }
+      }
+    },
+    "Preview" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Voorbeeld"
+          }
+        }
+      }
+    },
+    "Public transport" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OV"
           }
         }
       }
@@ -1381,12 +1711,42 @@
         }
       }
     },
+    "Recognising the task · your calendar first, then the app you use" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Taak herkennen · eerst je agenda, dan de app die je gebruikt"
+          }
+        }
+      }
+    },
     "Reinstall…" : {
       "localizations" : {
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Opnieuw…"
+          }
+        }
+      }
+    },
+    "Remove" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verwijderen"
+          }
+        }
+      }
+    },
+    "Remove Gmail?" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gmail verwijderen?"
           }
         }
       }
@@ -1451,12 +1811,12 @@
         }
       }
     },
-    "Same as macOS" : {
+    "Same as macOS (%@)" : {
       "localizations" : {
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zelfde als macOS"
+            "value" : "Systeemtaal (%@)"
           }
         }
       }
@@ -1467,6 +1827,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Opslaan"
+          }
+        }
+      }
+    },
+    "Search" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zoeken"
           }
         }
       }
@@ -1541,12 +1911,52 @@
         }
       }
     },
+    "Shifts & travel" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diensten & reizen"
+          }
+        }
+      }
+    },
+    "Shorter" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Korter"
+          }
+        }
+      }
+    },
+    "Show all calendars (%lld hidden)" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alle agenda's tonen (%lld verborgen)"
+          }
+        }
+      }
+    },
     "Show new mail in the notch" : {
       "localizations" : {
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Nieuwe mail tonen in de notch"
+          }
+        }
+      }
+    },
+    "Show only the calendars in use" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alleen gebruikte agenda's tonen"
           }
         }
       }
@@ -1581,6 +1991,16 @@
         }
       }
     },
+    "Spectrum" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spectrum"
+          }
+        }
+      }
+    },
     "Spectrum is off" : {
       "localizations" : {
         "nl" : {
@@ -1611,6 +2031,16 @@
         }
       }
     },
+    "Start music when a session begins" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Muziek starten bij begin"
+          }
+        }
+      }
+    },
     "Start music when it begins" : {
       "localizations" : {
         "nl" : {
@@ -1627,16 +2057,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Start iets in Spotify of YouTube"
-          }
-        }
-      }
-    },
-    "Status" : {
-      "localizations" : {
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Status"
           }
         }
       }
@@ -1681,12 +2101,22 @@
         }
       }
     },
-    "The calendar comes from the macOS Calendar app and is only read. The weather comes from Open-Meteo; only the place is sent there." : {
+    "System audio" : {
       "localizations" : {
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "De agenda komt uit de Agenda-app van macOS en wordt alleen gelezen. Het weer komt van Open-Meteo; alleen de plaats gaat daarheen."
+            "value" : "Systeemaudio"
+          }
+        }
+      }
+    },
+    "Tabs · click a tab for its options" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tabs · klik op een tab voor opties"
           }
         }
       }
@@ -1711,12 +2141,42 @@
         }
       }
     },
+    "The spectrum analyses the sound of what plays, live. Nothing is recorded, stored or sent." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Het spectrum analyseert live het geluid van wat er speelt. Er wordt niets opgenomen, opgeslagen of verstuurd."
+          }
+        }
+      }
+    },
     "The spectrum starts when something plays" : {
       "localizations" : {
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Spectrum start zodra er iets speelt"
+          }
+        }
+      }
+    },
+    "The tabs in the notch and their options." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "De tabs in de notch en hun opties."
+          }
+        }
+      }
+    },
+    "Timer" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Timer"
           }
         }
       }
@@ -1787,6 +2247,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Morgen · %@"
+          }
+        }
+      }
+    },
+    "Travel mode" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reiswijze"
           }
         }
       }
@@ -1871,12 +2341,12 @@
         }
       }
     },
-    "Weather for" : {
+    "Weather" : {
       "localizations" : {
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Weer voor"
+            "value" : "Weer"
           }
         }
       }
@@ -1901,12 +2371,12 @@
         }
       }
     },
-    "When you change a task the timer guessed, wisp remembers it for that app or project." : {
+    "When you change a task in the notch, wisp remembers it here as “Learned”. You can always remove a rule." : {
       "localizations" : {
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Pas je een taak aan die de timer raadde, dan onthoudt wisp die voor die app of dat project."
+            "value" : "Pas je in de notch een taak aan, dan onthoudt wisp dat hier als \"Geleerd\". Je kunt koppelingen altijd verwijderen."
           }
         }
       }
@@ -1967,6 +2437,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bezig…"
+          }
+        }
+      }
+    },
+    "Works automatically" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Werkt automatisch"
+          }
+        }
+      }
+    },
+    "Your calendar is only read, never changed. For the weather only the place name goes to Open-Meteo." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Je agenda wordt alleen gelezen, nooit aangepast. Voor het weer gaat alleen de plaatsnaam naar Open-Meteo."
           }
         }
       }
@@ -2302,6 +2792,16 @@
         }
       }
     },
+    "wisp disconnects and deletes the app password from your Keychain." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "wisp verbreekt de verbinding en wist het app-wachtwoord uit je Sleutelhanger."
+          }
+        }
+      }
+    },
     "wisp has no access to your calendar." : {
       "localizations" : {
         "nl" : {
@@ -2328,6 +2828,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "wisp markeert niets als gelezen en verandert je mailbox alleen als je bij nieuwe mail op Verwijderen klikt (hij gaat naar de Gmail-prullenbak). Adres en wachtwoord staan alleen in je Keychain."
+          }
+        }
+      }
+    },
+    "wisp reads the macOS Calendar app." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "wisp leest de Agenda-app van macOS."
+          }
+        }
+      }
+    },
+    "wisp starts with your Mac" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "wisp start automatisch met je Mac"
           }
         }
       }
@@ -2378,16 +2898,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "‘%@’ in de titel"
-          }
-        }
-      }
-    },
-    "“Do not disturb during focus” runs your Shortcuts “%@” and “%@”. Make them in the Shortcuts app with the action Set Focus." : {
-      "localizations" : {
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "“Niet storen tijdens focus” start je opdrachten “%1$@” en “%2$@”. Maak ze in de Opdrachten-app met de actie Stel focus in."
           }
         }
       }

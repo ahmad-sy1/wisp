@@ -41,9 +41,17 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         }
         // `--args -openOnLaunch agenda -snapshot /tmp/agenda.png` draws the open panel to
         // a PNG once it has settled (data loaded, animations done) and quits.
+        // `-settingsPage notch` opens Settings on that page; with `-snapshot` it draws
+        // that window instead of the panel.
+        let settingsPage = UserDefaults.standard.string(forKey: "settingsPage").flatMap(SettingsPageID.init(rawValue:))
+        if let settingsPage {
+            SettingsNavigation.shared.page = settingsPage
+            openSettings()
+        }
         if let path = UserDefaults.standard.string(forKey: "snapshot") {
             DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                notch.snapshot(to: URL(fileURLWithPath: path))
+                let url = URL(fileURLWithPath: path)
+                if settingsPage != nil { self.snapshotSettings(to: url) } else { notch.snapshot(to: url) }
                 NSApp.terminate(nil)
             }
         }
@@ -187,14 +195,34 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     @objc private func openSettings() {
         if settingsWindow == nil {
-            let window = NSWindow(contentViewController: NSHostingController(rootView: SettingsView(prefs: .shared)))
+            let host = NSHostingController(rootView: SettingsView(prefs: .shared))
+            // The page fills the window, title bar included; don't let SwiftUI add its height.
+            host.sizingOptions = []
+            let window = NSWindow(contentViewController: host)
+            window.styleMask = [.titled, .closable, .miniaturizable, .fullSizeContentView]
+            window.titlebarAppearsTransparent = true
+            window.titleVisibility = .hidden
+            window.appearance = NSAppearance(named: .darkAqua)
             window.title = String(localized: "Settings — wisp")
-            window.styleMask = [.titled, .closable]
             window.isReleasedWhenClosed = false
+            window.setContentSize(NSSize(width: 760, height: 620))
             window.center()
             settingsWindow = window
         }
         NSApp.activate()
         settingsWindow?.makeKeyAndOrderFront(nil)
     }
+
+    #if DEBUG
+    /// Draws the Settings window into a PNG (see `-settingsPage`). `cacheDisplay` leaves
+    /// scroll views empty, so this asks the window server for the window instead.
+    private func snapshotSettings(to url: URL) {
+        guard let window = settingsWindow else { return }
+        let task = Process()
+        task.executableURL = URL(fileURLWithPath: "/usr/sbin/screencapture")
+        task.arguments = ["-x", "-o", "-l\(window.windowNumber)", url.path]
+        try? task.run()
+        task.waitUntilExit()
+    }
+    #endif
 }

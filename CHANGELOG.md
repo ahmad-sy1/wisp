@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Settings is a window with a sidebar: General, Notch (each tab's options), Integrations, Calendar & weather, Music and Focus (boards 10.1–10.6, #28); the departure card says how you travel (*22 min fietsen*)
 - New mail peeks out of the notch with *Open / Delete / Later* (Delete moves it to the Gmail trash), and the closed notch shows the unread count; both can be switched off (board 8)
 - System tab: battery, AirPods, CPU with the busiest app, storage, and the Wi-Fi name (with Location access from Settings) (board 7)
 - Notes tab: quick notes stored on this Mac, click to edit, right-click to copy or delete (board 6)
@@ -9,6 +10,7 @@
 - Clipboard tab: the last 20 copied texts with search and *Copy*, stored only on this Mac, never passwords; can be switched off in Settings (board 5)
 - Focus timer tab: 25 / 50 / 90 minutes, a ring that keeps counting in the closed notch, the task from the calendar or the app in front (learns from corrections), today's sessions, *Do not disturb* through Shortcuts and *Start music* (board 4)
 - English interface with Dutch as the first translation (String Catalogs), a language choice in Settings, and a CI check for missing translations (#12)
+- Debug builds: `-settingsPage <page>` opens Settings on a page, and with `-snapshot` draws that window
 - Debug builds: `-snapshot <file.png>` draws the open panel to a PNG, also with the screen locked
 - Agenda: once nothing is left today, the timeline shows tomorrow's first two events under *Morgen*
 - Agenda: the event that is on now gets its own card with *NU*, the time left and a progress bar (board 3.1)
