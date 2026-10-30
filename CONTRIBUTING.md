@@ -22,6 +22,12 @@ Debug builds can open straight on a tab, which helps for screenshots:
 open build/Build/Products/Debug/wisp.app --args -openOnLaunch music
 ```
 
+The Agenda tab can pretend it is another time of today, to check the morning, a running event or the evening without waiting:
+
+```bash
+open build/Build/Products/Debug/wisp.app --args -openOnLaunch agenda -agendaTime 21:30
+```
+
 To install your build in `/Applications`, use `./scripts/install.sh`.
 
 Only one wisp can own the notch and the hook socket: quit the installed one (or let `install.sh` do it) before running a debug build.
