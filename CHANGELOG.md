@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- Settings → Notch: choose what Home shows, as chips under the Home tab; what's left takes the room of what is off (#24)
+- Settings → Focus: add your own rules (app, optional project → task), marked *Set by you* next to the *Learned* ones (#27)
+- Settings → Music: the mini spectrum on or off, a battery saver for the spectrum, and which players show: Spotify, Apple Music, the browser (#26)
+- Open the notch from the keyboard with ⌥Space, changeable in Settings → General (#25); opened that way it stays until you press the keys again, press Esc or click elsewhere, and ← → walk through the tabs
+- Closing the notch hands typing back to the app you were in, and Esc can't close the notch window itself
+- The notch no longer stays open by accident: when something reopens it while it is open, or when it grew under a mouse that stood still
+- A focus session ends on time after the Mac has slept; its duration can't change in Settings while it runs
+- The closed notch follows the lid: wings come back when the notch screen does, and empty music wings go after 3 s; a paused player can't keep them for longer than the minute
 - Settings → Notch: switch tabs on or off and drag them into your own order; the tab bar follows (board 10.1, #24)
 - Settings is a window with a sidebar: General, Notch (each tab's options), Integrations, Calendar & weather, Music and Focus (boards 10.1–10.6, #28); the departure card says how you travel (*22 min fietsen*)
 - New mail peeks out of the notch with *Open / Delete / Later* (Delete moves it to the Gmail trash), and the closed notch shows the unread count; both can be switched off (board 8)

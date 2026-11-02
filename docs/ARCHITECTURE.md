@@ -52,7 +52,9 @@ Opening resizes the window first and then springs the SwiftUI shape out into it;
 
 ### When the panel stays open
 
-The panel closes after the mouse leaves it (*Sluiten na verlaten* in Settings). A pending Claude Code permission request keeps it open until it is answered (`NotchController.canCollapse`).
+The panel closes after the mouse leaves it (*Sluiten na verlaten* in Settings). A pending Claude Code permission request keeps it open until it is answered (`NotchController.canCollapse`). Whether the mouse is on it is asked of the window at that moment (`mouseInside`), not remembered from enter and exit events: those don't come when the window changes size under a mouse that stands still.
+
+**Shortcut.** `HotKeyCenter` registers the keys with Carbon's `RegisterEventHotKey`: no Accessibility permission, no event tap, nothing runs until they are pressed. It can only report a refusal when macOS refuses (`failed`); another app holding the same keys usually doesn't count, so the last one to register simply wins. Opened this way the panel becomes key without activating wisp and a global click monitor exists only while it is open. On closing, a key panel is ordered out for a moment so typing returns to the app in front. Esc goes through `NotchPanel.cancelOperation`, because `NSPanel` would otherwise close the window itself.
 
 ## Claude Code
 
@@ -94,7 +96,7 @@ MediaRemote, the private framework behind Control Center's Now Playing, only ans
 - reads `toggle`, `next` and `previous` from stdin;
 - exits when stdin closes, so it never outlives wisp.
 
-`NowPlaying` turns those lines into a `NowPlayingTrack`, extrapolates the position between updates, and keeps `isActive` true for a minute after a pause: the closed-notch wings stay (greyed) for that minute and don't flicker on track changes. `AudioOutput` reads the default output device, its sample rate and bit depth ("48 kHz · 24-bit") and its volume through Core Audio, only while the Music tab is open.
+`NowPlaying` turns those lines into a `NowPlayingTrack`, publishes nothing for a player switched off in Settings → Music (Spotify, Apple Music, browsers; other apps always show; with the mini spectrum off the wings run no tap), extrapolates the position between updates, and keeps `isActive` true for a minute after a pause (three seconds when there is no track at all): the closed-notch wings stay (greyed) for that minute and don't flicker on track changes. `AudioOutput` reads the default output device, its sample rate and bit depth ("48 kHz · 24-bit") and its volume through Core Audio, only while the Music tab is open.
 
 ### Live spectrum
 
@@ -106,7 +108,7 @@ playing app (Spotify, Brave helper…) ─► Core Audio process tap ─► priv
 
 - `AudioTap` creates a **process tap** (macOS 14.2+) on every audio process whose bundle id starts with the playing app's (a browser plays through helper processes such as `com.brave.Browser.helper`), falling back to a global tap. The tap is private and unmuted, wrapped in a private aggregate device, and read in an IOProc. macOS asks once for *System Audio Recording* permission (`NSAudioCaptureUsageDescription`).
 - `SpectrumAnalyzer` mixes to mono and runs a 2048-point FFT (Accelerate, Hann window) every 1024 samples, about 45 times a second at 48 kHz. It groups the bins into 24 log-spaced bands from 40 Hz to 16 kHz (−70…−10 dB mapped to 0…1, fast attack and slow release), computes the energy shares below 250 Hz, 250 Hz–4 kHz and above 4 kHz, and the RMS loudness in dBFS. All buffers are allocated up front; nothing is recorded or kept.
-- `Spectrum` runs the tap only while **someone shows it** (`setVisible(_:by:)`: the right card of the Music tab, the closed-notch wings), **music plays** and the user **allowed** it (board 9.5, or Settings → Muziek). Otherwise the tap and aggregate device are destroyed. It publishes bands at most 30 times a second and the text summary four times a second (`SpectrumLevels`); the wings use 8 bands (the maximum of each group of three).
+- `Spectrum` runs the tap only while **someone shows it** (`setVisible(_:by:)`: the right card of the Music tab, the closed-notch wings), **music plays** and the user **allowed** it (board 9.5, or Settings → Muziek). Otherwise the tap and aggregate device are destroyed. It publishes bands at most 30 times a second (12 on battery with the saver on; macOS reports power changes, nothing polls) and the text summary four times a second (`SpectrumLevels`); the wings use 8 bands (the maximum of each group of three).
 
 ## Agenda and weather
 
@@ -145,13 +147,14 @@ Open-Meteo (HTTPS, no key) ─► WeatherStore ┘
 
 - **`FocusStore`** keeps no ticking timer. A running session is an end date and one `DispatchWorkItem` for the moment it ends; the countdown is worked out when something draws it. When it ends: today's count goes up, the notch opens on the Focus tab and, with sounds on, *Glass* plays.
 - **The task** is guessed when the tab opens and when a session starts: the timed calendar event that is on now (`AgendaStore.eventNow()`, one small query), otherwise the app in front. For an IDE or terminal the guess is *Coding*, with the project from the newest Claude Code session in that app; for other apps, the app's name. Typing a different task remembers it for that app (and project) in `focusLearnedTasks`; Settings → Focus lists and forgets them.
+- **Rules**: `FocusStore.learned` (from corrections, saved as `focusLearnedTasks`) and `ownRules` (from Settings, `focusOwnRules`) map `bundle|project` or `bundle` to a task; your own rule wins, and a correction in the notch replaces it.
 - **Do not disturb** runs the user's Shortcuts *wisp Focus On* and *wisp Focus Off* (`/usr/bin/shortcuts run`), since macOS lets apps switch a Focus mode only through Shortcuts. **Start music** sends play to Now Playing if something is paused.
 - The tab and the closed-notch wings redraw once a second only while a session runs (`TimelineView(.periodic)`); before, after and while paused they are still. The wings come from `NotchModel.focusWings` and win over the music wings; the mini spectrum stops while they show.
 
 ## Settings and secrets
 
 - The Settings window (boards 10.1–10.6) is one `NSWindow` with a full-size content view: `SettingsView` draws the sidebar and the page that `SettingsNavigation.shared.page` names, so other places can open a given page (the Mail tab's *Connect Gmail* opens *Integrations*). Pages are built from `SettingsPage`, `SettingsGroup` (a header above a card; rows split by hairlines) and `SettingsRow`. The options of single tabs (Mail, Clipboard, System) sit under *Notch*, behind a click on the tab.
-- The tab bar shows `Preferences.visibleTabs`: `tabOrder` (all tabs, saved as `tabOrder`; tabs a later version adds go at the end) minus `hiddenTabs` (`hiddenTabs`; never Home). Settings → Notch reorders with SwiftUI drag and drop (`onDrag` / `DropDelegate`, moving live while hovering). Opening the notch on a hidden tab, or hiding the open one, shows Home.
+- The tab bar shows `Preferences.visibleTabs`: `tabOrder` (all tabs, saved as `tabOrder`; tabs a later version adds go at the end) minus `hiddenTabs` (`hiddenTabs`; never Home). Settings → Notch reorders with SwiftUI drag and drop (`onDrag` / `DropDelegate`, moving live while hovering). Opening the notch on a hidden tab, or hiding the open one, shows Home. `hiddenHomeTiles` works the same way for what Home shows (`HomeTile`).
 
 - `Preferences` (UserDefaults): accent colour, close delay, sounds, open at login (`SMAppService`), and the language (`AppleLanguages` in wisp's own domain, the same key System Settings → Language & Region → Apps uses; applied after a restart). `Spectrum` keeps the spectrum permission choice (`spectrumConsent`); `AgendaStore` the hidden calendars, the shift calendar, the ride and how you travel (`agenda…`); `WeatherStore` the place (`weatherPlace`); `FocusStore` the duration, the two options, the learned tasks and today's numbers (`focus…`).
 - `Keychain`: generic passwords under the service `com.ahmadalasmi.wisp`, accessible after first unlock, this device only. Nothing secret is ever written to UserDefaults, to disk or to git.

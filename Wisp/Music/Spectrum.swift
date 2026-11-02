@@ -1,4 +1,5 @@
 import Foundation
+import IOKit.ps
 
 /// Live spectrum of what is playing, for the Music tab and the closed-notch wings.
 ///
@@ -27,6 +28,8 @@ final class Spectrum: ObservableObject {
     /// Who currently shows the spectrum ("tab", "wings"); it runs only while someone does.
     private var viewers: Set<String> = []
     private var lastPublish = Date.distantPast
+    private var onBattery = false
+    private var powerSource: CFRunLoopSource?
 
     private init() {
         consent = Consent(rawValue: UserDefaults.standard.string(forKey: Self.consentKey) ?? "") ?? .notAsked
@@ -63,6 +66,7 @@ final class Spectrum: ObservableObject {
     }
 
     private func start() {
+        watchPower()
         let deliver: @Sendable (SpectrumFrame) -> Void = { frame in
             Task { @MainActor in Spectrum.shared.publish(frame) }
         }
@@ -90,11 +94,29 @@ final class Spectrum: ObservableObject {
         levels.reset()
     }
 
+    /// Keeps `onBattery` current. macOS calls back when the power source changes, so
+    /// nothing is polled; set up the first time the spectrum runs.
+    private func watchPower() {
+        guard powerSource == nil else { return }
+        readPower()
+        let source = IOPSNotificationCreateRunLoopSource({ _ in
+            Task { @MainActor in Spectrum.shared.readPower() }
+        }, nil)?.takeRetainedValue()
+        if let source { CFRunLoopAddSource(CFRunLoopGetMain(), source, .defaultMode) }
+        powerSource = source
+    }
+
+    private func readPower() {
+        guard let info = IOPSCopyPowerSourcesInfo()?.takeRetainedValue() else { return }
+        onBattery = IOPSGetProvidingPowerSourceType(info)?.takeUnretainedValue() as String? == kIOPSBatteryPowerValue
+    }
+
     private func publish(_ new: SpectrumFrame) {
         guard isRunning else { return }
-        // 30 updates a second is plenty for the eye.
+        // 30 updates a second is plenty for the eye; on battery the saver makes do with 12.
+        let fps: Double = onBattery && Preferences.shared.spectrumBatterySaver ? 12 : 30
         let now = Date()
-        guard now.timeIntervalSince(lastPublish) >= 1.0 / 30 else { return }
+        guard now.timeIntervalSince(lastPublish) >= 1 / fps else { return }
         lastPublish = now
         levels.update(new)
     }

@@ -76,6 +76,12 @@ The boards in [`design/boards/`](../design/boards) are the visual source of trut
 
 Left, in this order: **Home · Mail · Agenda · Focus · Muziek · Klembord · Notities · Systeem · Bestanden**. Right: **Settings** (sliders icon). A tab may put its own controls just left of Settings, as Mail does with *Alles / Ongelezen / ↗*, Agenda with today's date and Music with the output device.
 
+Opened with the shortcut (⌥Space, Settings → General, board 10.2) the panel stays until the shortcut again, Esc or a click elsewhere; ← and → walk through the visible tabs when no text field has the keyboard.
+
+## Home tab
+
+Settings → Notch (board 10.1) has a chip per tile: *Nu bezig*, GitHub, WHOOP, Muziek, Notion. The board switches Notion off to show the *+* chip; by default all five are on. At least one stays on. What is left fills the room, in the fixed 150 pt area: with *Nu bezig* on, one tile fills the column, two go below each other, three are two above one; with it off the tiles take the full width, and *Nu bezig* alone does too.
+
 ## Agenda tab
 
 Three cards in the fixed 150 pt area (boards 3 and 3.1):
@@ -115,6 +121,8 @@ States the board doesn't show, built in the same style:
 - Before a session: a full ring, the chosen duration and *gereed*. The durations can't change while a session runs.
 - Done: an empty ring, *00:00* and *klaar*; the notch opens on the Focus tab and plays the *Glass* sound if sounds are on.
 - Editing the task: the title becomes a text field; Return saves, Escape cancels.
+
+Settings → Focus (board 10.6): each rule shows *Geleerd* or *Zelf ingesteld*. *+ Koppeling toevoegen* opens a form inside the card, which the board doesn't show: an app menu (the running apps and *Andere…*), an optional project, the task, *Annuleren* and *Toevoegen*. Not built yet: the board's *Standaard* rules and sites (*Safari · trello.com*).
 
 ## Clipboard tab
 
@@ -210,6 +218,8 @@ Built in the same style, not on the boards (open to a design):
 - **Music**: macOS doesn't tell apps whether system audio is allowed, so the dot shows wisp's own switch (*On* / *Off*).
 - **Focus**: with no learned rules, one row *No rules yet*.
 - **General**: after a language change, the grey line says to restart and a *Restart* button appears next to the pop-up.
+
+Settings → Music (board 10.5): the system-audio row reads *Aan* / *Uit*, not *Toegestaan*, because macOS doesn't tell apps whether it granted access. *Mini spectrum* and *Battery saver* are dimmed while the live spectrum is off.
 
 ## Buttons
 

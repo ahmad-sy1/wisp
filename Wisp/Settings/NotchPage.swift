@@ -45,6 +45,7 @@ struct NotchPage: View {
 
     private func optionCount(_ tab: WispTab) -> Int {
         switch tab {
+        case .home:      HomeTile.allCases.count
         case .mail:      2
         case .clipboard: 2
         case .system:    1
@@ -55,6 +56,16 @@ struct NotchPage: View {
     @ViewBuilder
     private func options(for tab: WispTab) -> some View {
         switch tab {
+        case .home:
+            HStack(spacing: 6) {
+                ForEach(HomeTile.allCases) { tile in
+                    let shown = !prefs.hiddenHomeTiles.contains(tile)
+                    HomeTileChip(title: tile.title, shown: shown, color: prefs.accent.color) {
+                        prefs.setHomeTile(tile, shown: !shown)
+                    }
+                }
+            }
+            .padding(.bottom, 4)
         case .mail:
             OptionToggle(String(localized: "Show new mail in the notch"), isOn: $mail.peekNewMail)
             OptionToggle(String(localized: "Unread count on the closed notch"), isOn: $mail.showUnreadOnNotch)
@@ -183,6 +194,35 @@ private struct TabRow<Options: View>: View {
                     .padding(.bottom, 10)
             }
         }
+    }
+}
+
+/// *✓ GitHub* with an accent border when on, *+ Notion* in grey when off.
+private struct HomeTileChip: View {
+    let title: String
+    let shown: Bool
+    let color: Color
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            HStack(spacing: 4) {
+                Image(systemName: shown ? "checkmark" : "plus")
+                    .font(.system(size: 10, weight: .semibold))
+                Text(verbatim: title)
+                    .font(.system(size: 13))
+                    .lineLimit(1)
+                    .fixedSize()
+            }
+            .foregroundStyle(shown ? Theme.textPrimary : Theme.textSecondary)
+            .padding(.horizontal, 8)
+            .frame(height: 26)
+            .overlay(RoundedRectangle(cornerRadius: 8)
+                .strokeBorder(shown ? color : Theme.cardBorder, lineWidth: 1))
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .accessibilityAddTraits(shown ? .isSelected : [])
     }
 }
 

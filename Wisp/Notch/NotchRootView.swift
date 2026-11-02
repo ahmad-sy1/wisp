@@ -20,7 +20,7 @@ struct NotchRootView: View {
                            height: model.notchSize.height, wing: model.wingWidth)
                     .transition(.opacity)
             } else if model.isCollapsed && model.musicWings, let track = player.track {
-                MusicWings(track: track, levels: spectrum.isRunning ? spectrum.levels : nil,
+                MusicWings(track: track, levels: spectrum.isRunning && prefs.miniSpectrum ? spectrum.levels : nil,
                            height: model.notchSize.height, wing: model.wingWidth)
                     .transition(.opacity)
             } else if model.isCollapsed && model.mailWings {

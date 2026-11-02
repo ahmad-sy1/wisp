@@ -12,7 +12,25 @@ struct SettingsPage<Content: View, Action: View>: View {
     @ViewBuilder var content: Content
 
     var body: some View {
-        ScrollView {
+        #if DEBUG
+        // `cacheDisplay` leaves scroll views empty, and it is all that works on a locked screen.
+        if UserDefaults.standard.string(forKey: "snapshot") != nil {
+            page
+                .frame(maxHeight: .infinity, alignment: .top)
+        } else {
+            scrolling
+        }
+        #else
+        scrolling
+        #endif
+    }
+
+    private var scrolling: some View {
+        ScrollView { page }
+            .scrollIndicators(.automatic)
+    }
+
+    private var page: some View {
             VStack(alignment: .leading, spacing: 22) {
                 HStack(alignment: .top, spacing: 16) {
                     VStack(alignment: .leading, spacing: 4) {
@@ -41,8 +59,6 @@ struct SettingsPage<Content: View, Action: View>: View {
             .padding(.top, 22)
             .padding(.bottom, 28)
             .frame(maxWidth: .infinity, alignment: .leading)
-        }
-        .scrollIndicators(.automatic)
     }
 }
 
