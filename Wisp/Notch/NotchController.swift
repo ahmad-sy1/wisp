@@ -19,8 +19,9 @@ final class NotchController {
     /// The wings each source asks for; shown only on a screen with a notch.
     private var wantedWings: [ReferenceWritableKeyPath<NotchModel, Bool>: Bool] = [:]
     /// Asked of the window, not remembered from enter and exit events: those don't come
-    /// when the window changes size under a mouse that stands still.
-    private var mouseInside: Bool { panel.frame.contains(NSEvent.mouseLocation) }
+    /// when the window changes size under a mouse that stands still. `NSMouseInRect`: on the
+    /// top row of pixels the mouse is at maxY, which `contains` leaves out.
+    private var mouseInside: Bool { NSMouseInRect(NSEvent.mouseLocation, panel.frame, false) }
 
     private let openSpring = Animation.spring(response: 0.42, dampingFraction: 0.82)
     private let closeSpring = Animation.spring(response: 0.32, dampingFraction: 0.95)
@@ -61,7 +62,7 @@ final class NotchController {
         if Preferences.shared.hiddenTabs.contains(model.tab) { model.tab = .home }
         guard !model.isExpanded else {
             // The cancel above must not leave it open for good.
-            if !mouseInside { scheduleCollapse(after: 4) }
+            scheduleCollapse(after: 4)
             return
         }
         panel.setFrame(geometry.frame(for: CGSize(width: Theme.panelWidth, height: Theme.panelHeight)),
@@ -70,8 +71,9 @@ final class NotchController {
             model.phase = .expanded
             model.hovering = false
         }
-        // Opened from the menu or a shortcut: close again unless the mouse comes in.
-        if !mouseInside { scheduleCollapse(after: 4) }
+        // Opened from the menu or a shortcut: close again unless the mouse comes in. Always
+        // scheduled: a mouse already there sends no enter, and so maybe no exit either.
+        scheduleCollapse(after: 4)
     }
 
     func collapse() {
@@ -97,7 +99,7 @@ final class NotchController {
             model.phase = .peek
             model.hovering = false
         }
-        if !mouseInside { scheduleCollapse(after: 6) }
+        scheduleCollapse(after: 6)
     }
 
     func toggle() { model.isCollapsed ? expand() : collapse() }
@@ -151,7 +153,6 @@ final class NotchController {
 
     /// Close after the usual delay, unless the mouse is on the panel.
     func collapseSoon() {
-        guard !mouseInside else { return }
         scheduleCollapse(after: Preferences.shared.closeDelay)
     }
 
