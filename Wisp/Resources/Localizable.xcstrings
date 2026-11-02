@@ -201,6 +201,16 @@
         }
       }
     },
+    "+ Add rule" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "+ Koppeling toevoegen"
+          }
+        }
+      }
+    },
     "1 option" : {
       "localizations" : {
         "nl" : {
@@ -257,6 +267,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Accentkleur"
+          }
+        }
+      }
+    },
+    "Add" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toevoegen"
           }
         }
       }
@@ -547,6 +567,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Opladen"
+          }
+        }
+      }
+    },
+    "Choose an app" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kies een app"
           }
         }
       }
@@ -1681,6 +1711,16 @@
         }
       }
     },
+    "Other…" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Andere…"
+          }
+        }
+      }
+    },
     "PERMISSION NEEDED" : {
       "localizations" : {
         "nl" : {
@@ -1757,6 +1797,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Voorbeeld"
+          }
+        }
+      }
+    },
+    "Project (optional)" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Project (optioneel)"
           }
         }
       }
@@ -1977,6 +2027,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Zie hier wat er vandaag in je agenda staat."
+          }
+        }
+      }
+    },
+    "Set by you" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zelf ingesteld"
           }
         }
       }
@@ -2261,6 +2321,16 @@
         }
       }
     },
+    "Task" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Taak"
+          }
+        }
+      }
+    },
     "The clipboard history is off in Settings." : {
       "localizations" : {
         "nl" : {
@@ -2277,6 +2347,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "De laatste %lld teksten die je kopieerde, alleen op deze Mac bewaard. Wachtwoorden en eenmalige codes die apps als zodanig markeren worden nooit bewaard."
+          }
+        }
+      }
+    },
+    "The project is the one Claude Code works in." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Het project is dat waarin Claude Code werkt."
           }
         }
       }
