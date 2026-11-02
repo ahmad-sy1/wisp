@@ -96,7 +96,7 @@ MediaRemote, the private framework behind Control Center's Now Playing, only ans
 - reads `toggle`, `next` and `previous` from stdin;
 - exits when stdin closes, so it never outlives wisp.
 
-`NowPlaying` turns those lines into a `NowPlayingTrack`, extrapolates the position between updates, and keeps `isActive` true for a minute after a pause (three seconds when there is no track at all): the closed-notch wings stay (greyed) for that minute and don't flicker on track changes. `AudioOutput` reads the default output device, its sample rate and bit depth ("48 kHz · 24-bit") and its volume through Core Audio, only while the Music tab is open.
+`NowPlaying` turns those lines into a `NowPlayingTrack`, publishes nothing for a player switched off in Settings → Music (Spotify, Apple Music, browsers; other apps always show; with the mini spectrum off the wings run no tap), extrapolates the position between updates, and keeps `isActive` true for a minute after a pause (three seconds when there is no track at all): the closed-notch wings stay (greyed) for that minute and don't flicker on track changes. `AudioOutput` reads the default output device, its sample rate and bit depth ("48 kHz · 24-bit") and its volume through Core Audio, only while the Music tab is open.
 
 ### Live spectrum
 
@@ -108,7 +108,7 @@ playing app (Spotify, Brave helper…) ─► Core Audio process tap ─► priv
 
 - `AudioTap` creates a **process tap** (macOS 14.2+) on every audio process whose bundle id starts with the playing app's (a browser plays through helper processes such as `com.brave.Browser.helper`), falling back to a global tap. The tap is private and unmuted, wrapped in a private aggregate device, and read in an IOProc. macOS asks once for *System Audio Recording* permission (`NSAudioCaptureUsageDescription`).
 - `SpectrumAnalyzer` mixes to mono and runs a 2048-point FFT (Accelerate, Hann window) every 1024 samples, about 45 times a second at 48 kHz. It groups the bins into 24 log-spaced bands from 40 Hz to 16 kHz (−70…−10 dB mapped to 0…1, fast attack and slow release), computes the energy shares below 250 Hz, 250 Hz–4 kHz and above 4 kHz, and the RMS loudness in dBFS. All buffers are allocated up front; nothing is recorded or kept.
-- `Spectrum` runs the tap only while **someone shows it** (`setVisible(_:by:)`: the right card of the Music tab, the closed-notch wings), **music plays** and the user **allowed** it (board 9.5, or Settings → Muziek). Otherwise the tap and aggregate device are destroyed. It publishes bands at most 30 times a second and the text summary four times a second (`SpectrumLevels`); the wings use 8 bands (the maximum of each group of three).
+- `Spectrum` runs the tap only while **someone shows it** (`setVisible(_:by:)`: the right card of the Music tab, the closed-notch wings), **music plays** and the user **allowed** it (board 9.5, or Settings → Muziek). Otherwise the tap and aggregate device are destroyed. It publishes bands at most 30 times a second (12 on battery with the saver on; macOS reports power changes, nothing polls) and the text summary four times a second (`SpectrumLevels`); the wings use 8 bands (the maximum of each group of three).
 
 ## Agenda and weather
 
