@@ -9,8 +9,11 @@ struct FocusPage: View {
         SettingsPage(title: String(localized: "Focus"),
                      note: String(localized: "When you change a task in the notch, wisp remembers it here as “Learned”. You can always remove a rule.")) {
             SettingsGroup(header: String(localized: "Timer")) {
-                SettingsRow(String(localized: "Default duration")) {
+                SettingsRow(String(localized: "Default duration"),
+                            subtitle: focus.isActive ? String(localized: "Can't change while a session runs") : nil) {
                     DurationPicker(minutes: $focus.minutes)
+                        .disabled(focus.isActive)
+                        .opacity(focus.isActive ? 0.45 : 1)
                 }
                 SettingsToggle(String(localized: "Do not disturb during focus"),
                                subtitle: String(localized: "Runs your Shortcuts “\(FocusStore.shortcutOn)” and “\(FocusStore.shortcutOff)”"),
