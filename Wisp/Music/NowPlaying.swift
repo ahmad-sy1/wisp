@@ -91,6 +91,8 @@ final class NowPlaying: ObservableObject {
     private var buffer = Data()
     private var restarts = 0
     private var hideWork: DispatchWorkItem?
+    /// `hideWork` is the short grace, for when there is no track.
+    private var hidingEmpty = false
     /// Board 9.6: after a pause the wings stay (greyed) for a minute, then go.
     private let pauseGrace: TimeInterval = 60
     /// No track at all: the wings would be empty, so this only bridges a track change.
@@ -217,9 +219,11 @@ final class NowPlaying: ObservableObject {
             hideWork?.cancel()
             hideWork = nil
             if !isActive { isActive = true }
-        } else if isActive, hideWork == nil || new == nil {
-            // More reports while paused don't extend the grace; nothing left to show ends it soon.
+        } else if isActive, hideWork == nil || hidingEmpty != (new == nil) {
+            // More reports of the same kind don't extend the grace; a paused track replaces
+            // the short one for an empty notch, and the other way round.
             hideWork?.cancel()
+            hidingEmpty = new == nil
             let work = DispatchWorkItem { [weak self] in
                 self?.isActive = false
                 self?.hideWork = nil

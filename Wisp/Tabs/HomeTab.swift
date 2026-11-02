@@ -166,12 +166,17 @@ private struct ApprovalCard: View {
 
                 HStack(spacing: 8) {
                     Spacer()
+                    // Not focusable: an answer takes a click, never a key (the panel can be
+                    // key since the shortcut, and Space presses a focused button).
                     Button("In terminal") { answer("ask") }
                         .buttonStyle(SecondaryButtonStyle())
+                        .focusable(false)
                     Button("Deny") { answer("deny") }
                         .buttonStyle(SecondaryButtonStyle())
+                        .focusable(false)
                     Button("Allow") { answer("allow") }
                         .buttonStyle(AccentButtonStyle())
+                        .focusable(false)
                 }
             }
             .padding(14)
