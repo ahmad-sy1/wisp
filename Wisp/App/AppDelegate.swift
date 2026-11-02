@@ -214,15 +214,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     #if DEBUG
-    /// Draws the Settings window into a PNG (see `-settingsPage`). `cacheDisplay` leaves
-    /// scroll views empty, so this asks the window server for the window instead.
+    /// Draws the Settings window into a PNG (see `-settingsPage`), also on a locked screen:
+    /// while snapshotting the pages leave out their scroll view, which `cacheDisplay` can't draw.
     private func snapshotSettings(to url: URL) {
-        guard let window = settingsWindow else { return }
-        let task = Process()
-        task.executableURL = URL(fileURLWithPath: "/usr/sbin/screencapture")
-        task.arguments = ["-x", "-o", "-l\(window.windowNumber)", url.path]
-        try? task.run()
-        task.waitUntilExit()
+        guard let view = settingsWindow?.contentView,
+              let rep = view.bitmapImageRepForCachingDisplay(in: view.bounds) else { return }
+        view.cacheDisplay(in: view.bounds, to: rep)
+        try? rep.representation(using: .png, properties: [:])?.write(to: url)
     }
     #endif
 }
