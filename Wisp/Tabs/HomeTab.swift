@@ -33,7 +33,7 @@ struct HomeTab: View {
             HStack(spacing: 10) {
                 if showsNow {
                     NowCard(session: sessions.primary)
-                        .frame(maxWidth: tiles.isEmpty ? .infinity : 296)
+                        .frame(minWidth: tiles.isEmpty ? nil : 296, maxWidth: tiles.isEmpty ? .infinity : 296)
                 }
                 if !tiles.isEmpty {
                     IntegrationGrid(tiles: tiles, narrow: showsNow)
