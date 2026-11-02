@@ -431,6 +431,16 @@
         }
       }
     },
+    "Can't change while a session runs" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kan niet tijdens een sessie"
+          }
+        }
+      }
+    },
     "Cancel" : {
       "localizations" : {
         "nl" : {
