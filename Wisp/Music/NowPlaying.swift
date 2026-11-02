@@ -73,8 +73,12 @@ final class NowPlaying: ObservableObject {
     private var buffer = Data()
     private var restarts = 0
     private var hideWork: DispatchWorkItem?
+    /// `hideWork` is the short grace, for when there is no track.
+    private var hidingEmpty = false
     /// Board 9.6: after a pause the wings stay (greyed) for a minute, then go.
     private let pauseGrace: TimeInterval = 60
+    /// No track at all: the wings would be empty, so this only bridges a track change.
+    private let emptyGrace: TimeInterval = 3
 
     private static let perlScript = """
     use DynaLoader;
@@ -186,14 +190,22 @@ final class NowPlaying: ObservableObject {
     private func apply(_ new: NowPlayingTrack?) {
         if track != new { track = new }
 
-        // On immediately, off only after a short pause.
-        hideWork?.cancel()
+        // On immediately, off only after a while.
         if new?.isPlaying == true {
+            hideWork?.cancel()
+            hideWork = nil
             if !isActive { isActive = true }
-        } else if isActive {
-            let work = DispatchWorkItem { [weak self] in self?.isActive = false }
+        } else if isActive, hideWork == nil || hidingEmpty != (new == nil) {
+            // More reports of the same kind don't extend the grace; a paused track replaces
+            // the short one for an empty notch, and the other way round.
+            hideWork?.cancel()
+            hidingEmpty = new == nil
+            let work = DispatchWorkItem { [weak self] in
+                self?.isActive = false
+                self?.hideWork = nil
+            }
             hideWork = work
-            DispatchQueue.main.asyncAfter(deadline: .now() + pauseGrace, execute: work)
+            DispatchQueue.main.asyncAfter(deadline: .now() + (new == nil ? emptyGrace : pauseGrace), execute: work)
         }
     }
 

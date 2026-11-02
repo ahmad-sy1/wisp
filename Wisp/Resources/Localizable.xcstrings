@@ -311,6 +311,16 @@
         }
       }
     },
+    "Another app uses these keys. Choose others." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Een andere app gebruikt deze toetsen. Kies andere."
+          }
+        }
+      }
+    },
     "App password" : {
       "localizations" : {
         "nl" : {
@@ -427,6 +437,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Agenda's in de notch"
+          }
+        }
+      }
+    },
+    "Can't change while a session runs" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kan niet tijdens een sessie"
           }
         }
       }
@@ -807,6 +827,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Notitie bewerken"
+          }
+        }
+      }
+    },
+    "Esc cancels · ⌫ turns it off" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esc annuleert · ⌫ zet hem uit"
           }
         }
       }
@@ -1571,6 +1601,16 @@
         }
       }
     },
+    "Open the notch with the keyboard" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notch openen met het toetsenbord"
+          }
+        }
+      }
+    },
     "Open wisp" : {
       "localizations" : {
         "nl" : {
@@ -1941,6 +1981,16 @@
         }
       }
     },
+    "Shortcut" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sneltoets"
+          }
+        }
+      }
+    },
     "Shorter" : {
       "localizations" : {
         "nl" : {
@@ -2007,6 +2057,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Geluiden"
+          }
+        }
+      }
+    },
+    "Space" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spatie"
           }
         }
       }
@@ -2297,6 +2357,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Typ een notitie…"
+          }
+        }
+      }
+    },
+    "Type shortcut…" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Typ sneltoets…"
           }
         }
       }

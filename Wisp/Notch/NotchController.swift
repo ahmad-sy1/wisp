@@ -1,4 +1,5 @@
 import AppKit
+import Carbon.HIToolbox
 import SwiftUI
 
 /// Owns the notch window and drives collapse/expand.
@@ -16,7 +17,15 @@ final class NotchController {
     private var geometry = NotchGeometry.current()
     private let panel: NotchPanel
     private var collapseWork: DispatchWorkItem?
-    private var mouseInside = false
+    /// Opened with the shortcut: stays until the shortcut, Esc or a click elsewhere.
+    private var keyboardOpen = false
+    private var outsideClickMonitors: [Any] = []
+    /// The wings each source asks for; shown only on a screen with a notch.
+    private var wantedWings: [ReferenceWritableKeyPath<NotchModel, Bool>: Bool] = [:]
+    /// Asked of the window, not remembered from enter and exit events: those don't come
+    /// when the window changes size under a mouse that stands still. `NSMouseInRect`: on the
+    /// top row of pixels the mouse is at maxY, which `contains` leaves out.
+    private var mouseInside: Bool { NSMouseInRect(NSEvent.mouseLocation, panel.frame, false) }
 
     private let openSpring = Animation.spring(response: 0.42, dampingFraction: 0.82)
     private let closeSpring = Animation.spring(response: 0.32, dampingFraction: 0.95)
@@ -37,6 +46,9 @@ final class NotchController {
             self?.openSettings()
         }
 
+        panel.onKey = { [weak self] in self?.handleKey($0) ?? false }
+        panel.onEscape = { [weak self] in self?.collapse() }
+
         panel.setFrame(collapsedFrame, display: true)
         panel.orderFrontRegardless()
 
@@ -55,26 +67,33 @@ final class NotchController {
         if let tab { model.tab = tab }
         // A tab switched off in Settings doesn't open; Home always can.
         if Preferences.shared.hiddenTabs.contains(model.tab) { model.tab = .home }
-        guard !model.isExpanded else { return }
+        guard !model.isExpanded else {
+            // The cancel above must not leave it open for good.
+            if !keyboardOpen { scheduleCollapse(after: 4) }
+            return
+        }
         panel.setFrame(geometry.frame(for: CGSize(width: Theme.panelWidth, height: Theme.panelHeight)),
                        display: true)
         withAnimation(openSpring) {
             model.phase = .expanded
             model.hovering = false
         }
-        // Opened from the menu or a shortcut: close again unless the mouse comes in.
-        if !mouseInside { scheduleCollapse(after: 4) }
+        // Opened from the menu or by an event: close again unless the mouse comes in. Always
+        // scheduled: a mouse already there sends no enter, and so maybe no exit either.
+        if !keyboardOpen { scheduleCollapse(after: 4) }
     }
 
     func collapse() {
         collapseWork?.cancel()
         guard !model.isCollapsed, canCollapse() else { return }
+        endKeyboardOpen()
         withAnimation(closeSpring) {
             model.phase = .collapsed
         } completion: { [weak self] in
             guard let self, self.model.isCollapsed else { return }
             self.model.peekMail = nil
             self.panel.setFrame(self.collapsedFrame, display: true)
+            self.giveBackKeyboard()
         }
     }
 
@@ -89,10 +108,66 @@ final class NotchController {
             model.phase = .peek
             model.hovering = false
         }
-        if !mouseInside { scheduleCollapse(after: 6) }
+        scheduleCollapse(after: 6)
     }
 
-    func toggle() { model.isCollapsed ? expand() : collapse() }
+    /// The global shortcut: opens (a peek too) ready for the keyboard, or closes.
+    func toggleFromKeyboard() {
+        guard !model.isExpanded else { return collapse() }
+        keyboardOpen = true
+        expand()
+        panel.makeKey()
+        // Only while open, and they only see clicks: nothing runs on the closed notch.
+        let clicks: NSEvent.EventTypeMask = [.leftMouseDown, .rightMouseDown]
+        let global = NSEvent.addGlobalMonitorForEvents(matching: clicks) { [weak self] _ in
+            MainActor.assumeIsolated { self?.collapse() }
+        }
+        // Clicks in wisp's own windows, such as Settings, don't reach the global one.
+        let local = NSEvent.addLocalMonitorForEvents(matching: clicks) { [weak self] event in
+            MainActor.assumeIsolated {
+                if event.window !== self?.panel { self?.collapse() }
+            }
+            return event
+        }
+        outsideClickMonitors = [global, local].compactMap { $0 }
+    }
+
+    private func endKeyboardOpen() {
+        keyboardOpen = false
+        outsideClickMonitors.forEach(NSEvent.removeMonitor)
+        outsideClickMonitors = []
+    }
+
+    /// A key window keeps the keyboard even when it is only the closed notch; ordering it
+    /// out for a moment hands typing back to the app you were in.
+    private func giveBackKeyboard() {
+        guard panel.isKeyWindow else { return }
+        panel.orderOut(nil)
+        panel.orderFrontRegardless()
+    }
+
+    /// ← and → walk through the tabs, Esc closes.
+    private func handleKey(_ event: NSEvent) -> Bool {
+        guard model.isExpanded else { return false }
+        switch Int(event.keyCode) {
+        case kVK_Escape:
+            collapse()
+        case kVK_LeftArrow:
+            moveTab(by: -1)
+        case kVK_RightArrow:
+            moveTab(by: 1)
+        default:
+            return false
+        }
+        return true
+    }
+
+    private func moveTab(by step: Int) {
+        let tabs = Preferences.shared.visibleTabs
+        guard let index = tabs.firstIndex(of: model.tab) else { return }
+        let next = tabs[(index + step + tabs.count) % tabs.count]
+        withAnimation(.easeInOut(duration: 0.18)) { model.tab = next }
+    }
 
     #if DEBUG
     /// Draws the panel into a PNG. Unlike `screencapture` this also works while the
@@ -116,7 +191,9 @@ final class NotchController {
     /// Shows or hides the unread-mail wings on the closed notch.
     func setMailWings(_ on: Bool) { setWings(\.mailWings, on) }
 
-    private func setWings(_ wings: ReferenceWritableKeyPath<NotchModel, Bool>, _ on: Bool) {
+    private func setWings(_ wings: ReferenceWritableKeyPath<NotchModel, Bool>, _ wanted: Bool) {
+        wantedWings[wings] = wanted
+        let on = wanted && model.hasNotch
         guard model[keyPath: wings] != on else { return }
         // Already wide (the other wings show), or open: only the content changes.
         if !model.isCollapsed || (on ? model.showsWings : model.restingSize == restingSize(without: wings)) {
@@ -141,13 +218,20 @@ final class NotchController {
 
     /// Close after the usual delay, unless the mouse is on the panel.
     func collapseSoon() {
-        guard !mouseInside else { return }
         scheduleCollapse(after: Preferences.shared.closeDelay)
     }
 
     private func scheduleCollapse(after delay: TimeInterval) {
         collapseWork?.cancel()
-        let work = DispatchWorkItem { [weak self] in self?.collapse() }
+        let work = DispatchWorkItem { [weak self] in
+            guard let self else { return }
+            // Still on it (the window can grow under a mouse that doesn't move): look again.
+            if self.mouseInside && !self.model.isCollapsed {
+                self.scheduleCollapse(after: 1)
+            } else {
+                self.collapse()
+            }
+        }
         collapseWork = work
         DispatchQueue.main.asyncAfter(deadline: .now() + delay, execute: work)
     }
@@ -155,14 +239,13 @@ final class NotchController {
     // MARK: - Mouse
 
     private func mouseEntered() {
-        mouseInside = true
         collapseWork?.cancel()
         guard model.isCollapsed else { return }
         withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) { model.hovering = true }
     }
 
     private func mouseExited() {
-        mouseInside = false
+        if keyboardOpen { return }
         if !model.isCollapsed {
             scheduleCollapse(after: Preferences.shared.closeDelay)
         } else {
@@ -194,6 +277,8 @@ final class NotchController {
     private func screensChanged() {
         geometry = .current()
         applyGeometry()
+        // The lid closed or opened: wings only make sense next to a real notch.
+        for (wings, wanted) in wantedWings { setWings(wings, wanted) }
         let frame = model.isCollapsed ? collapsedFrame : geometry.frame(for: model.shapeSize)
         panel.setFrame(frame, display: true)
     }

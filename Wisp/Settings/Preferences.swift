@@ -21,6 +21,14 @@ final class Preferences: ObservableObject {
 
     @Published private(set) var launchAtLogin: Bool
 
+    /// The global shortcut that opens the notch; nil is off.
+    @Published var hotKey: KeyCombo? {
+        didSet {
+            let data = hotKey.flatMap { try? JSONEncoder().encode($0) }
+            defaults.set(data ?? Data(), forKey: Key.hotKey)
+        }
+    }
+
     /// Every tab in tab-bar order, shown or not (Settings → Notch).
     @Published var tabOrder: [WispTab] {
         didSet { defaults.set(tabOrder.map(\.rawValue), forKey: Key.tabOrder) }
@@ -56,6 +64,7 @@ final class Preferences: ObservableObject {
         static let languages = "AppleLanguages"
         static let tabOrder = "tabOrder"
         static let hiddenTabs = "hiddenTabs"
+        static let hotKey = "hotKey"
     }
 
     private init() {
@@ -63,6 +72,8 @@ final class Preferences: ObservableObject {
         closeDelay = defaults.object(forKey: Key.closeDelay) as? Double ?? 0.6
         soundsEnabled = defaults.object(forKey: Key.sounds) as? Bool ?? true
         launchAtLogin = SMAppService.mainApp.status == .enabled
+        // Never set: the standard keys. Saved empty: switched off.
+        hotKey = defaults.data(forKey: Key.hotKey).map { try? JSONDecoder().decode(KeyCombo.self, from: $0) } ?? .standard
         // Saved order first; tabs added in a later version go at the end.
         let saved = (defaults.stringArray(forKey: Key.tabOrder) ?? []).compactMap(WispTab.init(rawValue:))
         tabOrder = saved + WispTab.allCases.filter { !saved.contains($0) }

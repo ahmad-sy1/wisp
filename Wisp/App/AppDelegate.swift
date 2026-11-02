@@ -34,6 +34,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         startMusic(notch: notch)
         startFocus(notch: notch)
         ClipboardStore.shared.start()
+        startHotKey(notch: notch)
         #if DEBUG
         // `open wisp.app --args -openOnLaunch mail` opens the panel on that tab (for screenshots).
         if let name = UserDefaults.standard.string(forKey: "openOnLaunch") {
@@ -63,6 +64,17 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
         openSettings()
         return false
+    }
+
+    // MARK: - Shortcut
+
+    private func startHotKey(notch: NotchController) {
+        let hotKey = HotKeyCenter.shared
+        hotKey.onPress = { notch.toggleFromKeyboard() }
+        Preferences.shared.$hotKey
+            .removeDuplicates()
+            .sink { hotKey.set($0) }
+            .store(in: &subscriptions)
     }
 
     // MARK: - Claude Code
@@ -95,7 +107,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             .map { count, show in show && count > 0 }
             .removeDuplicates()
             .receive(on: RunLoop.main)
-            .sink { on in notch.setMailWings(on && notch.model.hasNotch) }
+            .sink { on in notch.setMailWings(on) }
             .store(in: &subscriptions)
         mail.onNewMail = { message in
             let focus = FocusStore.shared
@@ -130,7 +142,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             .removeDuplicates()
             // @Published fires before the new value is stored; let the wings appear after.
             .receive(on: RunLoop.main)
-            .sink { active in notch.setFocusWings(active && notch.model.hasNotch) }
+            .sink { active in notch.setFocusWings(active) }
             .store(in: &subscriptions)
         focus.onFinished = { notch.expand(to: .focus) }
         #if DEBUG
@@ -147,7 +159,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
         player.$isActive
             .removeDuplicates()
-            .sink { active in notch.setMusicWings(active && notch.model.hasNotch) }
+            .sink { active in notch.setMusicWings(active) }
             .store(in: &subscriptions)
 
         // The spectrum follows what plays and stops when it pauses.
@@ -214,15 +226,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     #if DEBUG
-    /// Draws the Settings window into a PNG (see `-settingsPage`). `cacheDisplay` leaves
-    /// scroll views empty, so this asks the window server for the window instead.
+    /// Draws the Settings window into a PNG (see `-settingsPage`), also on a locked screen:
+    /// while snapshotting the pages leave out their scroll view, which `cacheDisplay` can't draw.
     private func snapshotSettings(to url: URL) {
-        guard let window = settingsWindow else { return }
-        let task = Process()
-        task.executableURL = URL(fileURLWithPath: "/usr/sbin/screencapture")
-        task.arguments = ["-x", "-o", "-l\(window.windowNumber)", url.path]
-        try? task.run()
-        task.waitUntilExit()
+        guard let view = settingsWindow?.contentView,
+              let rep = view.bitmapImageRepForCachingDisplay(in: view.bounds) else { return }
+        view.cacheDisplay(in: view.bounds, to: rep)
+        try? rep.representation(using: .png, properties: [:])?.write(to: url)
     }
     #endif
 }

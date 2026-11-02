@@ -52,7 +52,9 @@ Opening resizes the window first and then springs the SwiftUI shape out into it;
 
 ### When the panel stays open
 
-The panel closes after the mouse leaves it (*Sluiten na verlaten* in Settings). A pending Claude Code permission request keeps it open until it is answered (`NotchController.canCollapse`).
+The panel closes after the mouse leaves it (*Sluiten na verlaten* in Settings). A pending Claude Code permission request keeps it open until it is answered (`NotchController.canCollapse`). Whether the mouse is on it is asked of the window at that moment (`mouseInside`), not remembered from enter and exit events: those don't come when the window changes size under a mouse that stands still.
+
+**Shortcut.** `HotKeyCenter` registers the keys with Carbon's `RegisterEventHotKey`: no Accessibility permission, no event tap, nothing runs until they are pressed. It can only report a refusal when macOS refuses (`failed`); another app holding the same keys usually doesn't count, so the last one to register simply wins. Opened this way the panel becomes key without activating wisp and a global click monitor exists only while it is open. On closing, a key panel is ordered out for a moment so typing returns to the app in front. Esc goes through `NotchPanel.cancelOperation`, because `NSPanel` would otherwise close the window itself.
 
 ## Claude Code
 
@@ -94,7 +96,7 @@ MediaRemote, the private framework behind Control Center's Now Playing, only ans
 - reads `toggle`, `next` and `previous` from stdin;
 - exits when stdin closes, so it never outlives wisp.
 
-`NowPlaying` turns those lines into a `NowPlayingTrack`, extrapolates the position between updates, and keeps `isActive` true for a minute after a pause: the closed-notch wings stay (greyed) for that minute and don't flicker on track changes. `AudioOutput` reads the default output device, its sample rate and bit depth ("48 kHz · 24-bit") and its volume through Core Audio, only while the Music tab is open.
+`NowPlaying` turns those lines into a `NowPlayingTrack`, extrapolates the position between updates, and keeps `isActive` true for a minute after a pause (three seconds when there is no track at all): the closed-notch wings stay (greyed) for that minute and don't flicker on track changes. `AudioOutput` reads the default output device, its sample rate and bit depth ("48 kHz · 24-bit") and its volume through Core Audio, only while the Music tab is open.
 
 ### Live spectrum
 

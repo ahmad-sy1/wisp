@@ -150,7 +150,8 @@ final class FocusStore: ObservableObject {
         endWork?.cancel()
         let work = DispatchWorkItem { [weak self] in self?.finish() }
         endWork = work
-        DispatchQueue.main.asyncAfter(deadline: .now() + seconds, execute: work)
+        // Wall time: `deadline` stands still while the Mac sleeps, the end date doesn't.
+        DispatchQueue.main.asyncAfter(wallDeadline: .now() + seconds, execute: work)
     }
 
     private func finish() {

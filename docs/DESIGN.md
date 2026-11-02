@@ -76,6 +76,8 @@ The boards in [`design/boards/`](../design/boards) are the visual source of trut
 
 Left, in this order: **Home · Mail · Agenda · Focus · Muziek · Klembord · Notities · Systeem · Bestanden**. Right: **Settings** (sliders icon). A tab may put its own controls just left of Settings, as Mail does with *Alles / Ongelezen / ↗*, Agenda with today's date and Music with the output device.
 
+Opened with the shortcut (⌥Space, Settings → General, board 10.2) the panel stays until the shortcut again, Esc or a click elsewhere; ← and → walk through the visible tabs when no text field has the keyboard.
+
 ## Agenda tab
 
 Three cards in the fixed 150 pt area (boards 3 and 3.1):
