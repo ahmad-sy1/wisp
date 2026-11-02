@@ -23,8 +23,9 @@ final class NotchController {
     /// The wings each source asks for; shown only on a screen with a notch.
     private var wantedWings: [ReferenceWritableKeyPath<NotchModel, Bool>: Bool] = [:]
     /// Asked of the window, not remembered from enter and exit events: those don't come
-    /// when the window changes size under a mouse that stands still.
-    private var mouseInside: Bool { panel.frame.contains(NSEvent.mouseLocation) }
+    /// when the window changes size under a mouse that stands still. `NSMouseInRect`: on the
+    /// top row of pixels the mouse is at maxY, which `contains` leaves out.
+    private var mouseInside: Bool { NSMouseInRect(NSEvent.mouseLocation, panel.frame, false) }
 
     private let openSpring = Animation.spring(response: 0.42, dampingFraction: 0.82)
     private let closeSpring = Animation.spring(response: 0.32, dampingFraction: 0.95)
@@ -106,7 +107,7 @@ final class NotchController {
             model.phase = .peek
             model.hovering = false
         }
-        if !mouseInside { scheduleCollapse(after: 6) }
+        scheduleCollapse(after: 6)
     }
 
     /// The global shortcut: opens (a peek too) ready for the keyboard, or closes.
@@ -207,7 +208,6 @@ final class NotchController {
 
     /// Close after the usual delay, unless the mouse is on the panel.
     func collapseSoon() {
-        guard !mouseInside else { return }
         scheduleCollapse(after: Preferences.shared.closeDelay)
     }
 
