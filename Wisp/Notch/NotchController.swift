@@ -19,12 +19,13 @@ final class NotchController {
     private var collapseWork: DispatchWorkItem?
     /// Opened with the shortcut: stays until the shortcut, Esc or a click elsewhere.
     private var keyboardOpen = false
-    private var outsideClickMonitor: Any?
+    private var outsideClickMonitors: [Any] = []
     /// The wings each source asks for; shown only on a screen with a notch.
     private var wantedWings: [ReferenceWritableKeyPath<NotchModel, Bool>: Bool] = [:]
     /// Asked of the window, not remembered from enter and exit events: those don't come
-    /// when the window changes size under a mouse that stands still.
-    private var mouseInside: Bool { panel.frame.contains(NSEvent.mouseLocation) }
+    /// when the window changes size under a mouse that stands still. `NSMouseInRect`: on the
+    /// top row of pixels the mouse is at maxY, which `contains` leaves out.
+    private var mouseInside: Bool { NSMouseInRect(NSEvent.mouseLocation, panel.frame, false) }
 
     private let openSpring = Animation.spring(response: 0.42, dampingFraction: 0.82)
     private let closeSpring = Animation.spring(response: 0.32, dampingFraction: 0.95)
@@ -68,7 +69,7 @@ final class NotchController {
         if Preferences.shared.hiddenTabs.contains(model.tab) { model.tab = .home }
         guard !model.isExpanded else {
             // The cancel above must not leave it open for good.
-            if !mouseInside && !keyboardOpen { scheduleCollapse(after: 4) }
+            if !keyboardOpen { scheduleCollapse(after: 4) }
             return
         }
         panel.setFrame(geometry.frame(for: CGSize(width: Theme.panelWidth, height: Theme.panelHeight)),
@@ -77,8 +78,9 @@ final class NotchController {
             model.phase = .expanded
             model.hovering = false
         }
-        // Opened from the menu or by an event: close again unless the mouse comes in.
-        if !mouseInside && !keyboardOpen { scheduleCollapse(after: 4) }
+        // Opened from the menu or by an event: close again unless the mouse comes in. Always
+        // scheduled: a mouse already there sends no enter, and so maybe no exit either.
+        if !keyboardOpen { scheduleCollapse(after: 4) }
     }
 
     func collapse() {
@@ -106,7 +108,7 @@ final class NotchController {
             model.phase = .peek
             model.hovering = false
         }
-        if !mouseInside { scheduleCollapse(after: 6) }
+        scheduleCollapse(after: 6)
     }
 
     /// The global shortcut: opens (a peek too) ready for the keyboard, or closes.
@@ -115,16 +117,25 @@ final class NotchController {
         keyboardOpen = true
         expand()
         panel.makeKey()
-        // Only while open, and it only sees clicks: nothing runs on the closed notch.
-        outsideClickMonitor = NSEvent.addGlobalMonitorForEvents(matching: [.leftMouseDown, .rightMouseDown]) { [weak self] _ in
+        // Only while open, and they only see clicks: nothing runs on the closed notch.
+        let clicks: NSEvent.EventTypeMask = [.leftMouseDown, .rightMouseDown]
+        let global = NSEvent.addGlobalMonitorForEvents(matching: clicks) { [weak self] _ in
             MainActor.assumeIsolated { self?.collapse() }
         }
+        // Clicks in wisp's own windows, such as Settings, don't reach the global one.
+        let local = NSEvent.addLocalMonitorForEvents(matching: clicks) { [weak self] event in
+            MainActor.assumeIsolated {
+                if event.window !== self?.panel { self?.collapse() }
+            }
+            return event
+        }
+        outsideClickMonitors = [global, local].compactMap { $0 }
     }
 
     private func endKeyboardOpen() {
         keyboardOpen = false
-        if let outsideClickMonitor { NSEvent.removeMonitor(outsideClickMonitor) }
-        outsideClickMonitor = nil
+        outsideClickMonitors.forEach(NSEvent.removeMonitor)
+        outsideClickMonitors = []
     }
 
     /// A key window keeps the keyboard even when it is only the closed notch; ordering it
@@ -207,7 +218,6 @@ final class NotchController {
 
     /// Close after the usual delay, unless the mouse is on the panel.
     func collapseSoon() {
-        guard !mouseInside else { return }
         scheduleCollapse(after: Preferences.shared.closeDelay)
     }
 
