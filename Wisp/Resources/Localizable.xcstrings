@@ -1041,6 +1041,16 @@
         }
       }
     },
+    "In progress" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nu bezig"
+          }
+        }
+      }
+    },
     "In terminal" : {
       "localizations" : {
         "nl" : {
@@ -1447,6 +1457,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Niet nu"
+          }
+        }
+      }
+    },
+    "Not playing" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Er speelt niets"
           }
         }
       }

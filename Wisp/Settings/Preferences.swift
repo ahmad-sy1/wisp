@@ -29,6 +29,11 @@ final class Preferences: ObservableObject {
         }
     }
 
+    /// What Home leaves out (Settings → Notch). At least one tile stays.
+    @Published var hiddenHomeTiles: Set<HomeTile> {
+        didSet { defaults.set(hiddenHomeTiles.map(\.rawValue), forKey: Key.hiddenHomeTiles) }
+    }
+
     /// The closed notch shows the real mini spectrum; off is the fixed equalizer, and no audio tap.
     @Published var miniSpectrum: Bool {
         didSet { defaults.set(miniSpectrum, forKey: Key.miniSpectrum) }
@@ -80,6 +85,7 @@ final class Preferences: ObservableObject {
         static let tabOrder = "tabOrder"
         static let hiddenTabs = "hiddenTabs"
         static let hotKey = "hotKey"
+        static let hiddenHomeTiles = "hiddenHomeTiles"
         static let miniSpectrum = "miniSpectrum"
         static let spectrumBatterySaver = "spectrumBatterySaver"
         static let hiddenMusicSources = "hiddenMusicSources"
@@ -92,6 +98,7 @@ final class Preferences: ObservableObject {
         launchAtLogin = SMAppService.mainApp.status == .enabled
         // Never set: the standard keys. Saved empty: switched off.
         hotKey = defaults.data(forKey: Key.hotKey).map { try? JSONDecoder().decode(KeyCombo.self, from: $0) } ?? .standard
+        hiddenHomeTiles = Set((defaults.stringArray(forKey: Key.hiddenHomeTiles) ?? []).compactMap(HomeTile.init(rawValue:)))
         miniSpectrum = defaults.object(forKey: Key.miniSpectrum) as? Bool ?? true
         spectrumBatterySaver = defaults.object(forKey: Key.spectrumBatterySaver) as? Bool ?? true
         hiddenMusicSources = Set((defaults.stringArray(forKey: Key.hiddenMusicSources) ?? []).compactMap(MusicSource.init(rawValue:)))
@@ -129,6 +136,14 @@ final class Preferences: ObservableObject {
         task.arguments = ["-c", "sleep 0.5; /usr/bin/open \"$0\"", Bundle.main.bundlePath]
         try? task.run()
         NSApp.terminate(nil)
+    }
+
+    func setHomeTile(_ tile: HomeTile, shown: Bool) {
+        if shown {
+            hiddenHomeTiles.remove(tile)
+        } else if hiddenHomeTiles.count < HomeTile.allCases.count - 1 {
+            hiddenHomeTiles.insert(tile)
+        }
     }
 
     func setMusicSource(_ source: MusicSource, shown: Bool) {
