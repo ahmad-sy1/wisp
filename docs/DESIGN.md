@@ -118,6 +118,8 @@ States the board doesn't show, built in the same style:
 - Done: an empty ring, *00:00* and *klaar*; the notch opens on the Focus tab and plays the *Glass* sound if sounds are on.
 - Editing the task: the title becomes a text field; Return saves, Escape cancels.
 
+Settings → Focus (board 10.6): each rule shows *Geleerd* or *Zelf ingesteld*. *+ Koppeling toevoegen* opens a form inside the card, which the board doesn't show: an app menu (the running apps and *Andere…*), an optional project, the task, *Annuleren* and *Toevoegen*. Not built yet: the board's *Standaard* rules and sites (*Safari · trello.com*).
+
 ## Clipboard tab
 
 One scrolling card in the fixed 150 pt area (board 5):
