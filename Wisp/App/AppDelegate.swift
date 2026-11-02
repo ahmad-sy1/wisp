@@ -95,7 +95,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             .map { count, show in show && count > 0 }
             .removeDuplicates()
             .receive(on: RunLoop.main)
-            .sink { on in notch.setMailWings(on && notch.model.hasNotch) }
+            .sink { on in notch.setMailWings(on) }
             .store(in: &subscriptions)
         mail.onNewMail = { message in
             let focus = FocusStore.shared
@@ -130,7 +130,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             .removeDuplicates()
             // @Published fires before the new value is stored; let the wings appear after.
             .receive(on: RunLoop.main)
-            .sink { active in notch.setFocusWings(active && notch.model.hasNotch) }
+            .sink { active in notch.setFocusWings(active) }
             .store(in: &subscriptions)
         focus.onFinished = { notch.expand(to: .focus) }
         #if DEBUG
@@ -147,7 +147,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
         player.$isActive
             .removeDuplicates()
-            .sink { active in notch.setMusicWings(active && notch.model.hasNotch) }
+            .sink { active in notch.setMusicWings(active) }
             .store(in: &subscriptions)
 
         // The spectrum follows what plays and stops when it pauses.
