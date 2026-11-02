@@ -1,4 +1,5 @@
 import AppKit
+import Carbon.HIToolbox
 import SwiftUI
 
 /// Owns the notch window and drives collapse/expand.
@@ -16,6 +17,9 @@ final class NotchController {
     private var geometry = NotchGeometry.current()
     private let panel: NotchPanel
     private var collapseWork: DispatchWorkItem?
+    /// Opened with the shortcut: stays until the shortcut, Esc or a click elsewhere.
+    private var keyboardOpen = false
+    private var outsideClickMonitor: Any?
     /// The wings each source asks for; shown only on a screen with a notch.
     private var wantedWings: [ReferenceWritableKeyPath<NotchModel, Bool>: Bool] = [:]
     /// Asked of the window, not remembered from enter and exit events: those don't come
@@ -41,6 +45,9 @@ final class NotchController {
             self?.openSettings()
         }
 
+        panel.onKey = { [weak self] in self?.handleKey($0) ?? false }
+        panel.onEscape = { [weak self] in self?.collapse() }
+
         panel.setFrame(collapsedFrame, display: true)
         panel.orderFrontRegardless()
 
@@ -61,7 +68,7 @@ final class NotchController {
         if Preferences.shared.hiddenTabs.contains(model.tab) { model.tab = .home }
         guard !model.isExpanded else {
             // The cancel above must not leave it open for good.
-            if !mouseInside { scheduleCollapse(after: 4) }
+            if !mouseInside && !keyboardOpen { scheduleCollapse(after: 4) }
             return
         }
         panel.setFrame(geometry.frame(for: CGSize(width: Theme.panelWidth, height: Theme.panelHeight)),
@@ -70,19 +77,21 @@ final class NotchController {
             model.phase = .expanded
             model.hovering = false
         }
-        // Opened from the menu or a shortcut: close again unless the mouse comes in.
-        if !mouseInside { scheduleCollapse(after: 4) }
+        // Opened from the menu or by an event: close again unless the mouse comes in.
+        if !mouseInside && !keyboardOpen { scheduleCollapse(after: 4) }
     }
 
     func collapse() {
         collapseWork?.cancel()
         guard !model.isCollapsed, canCollapse() else { return }
+        endKeyboardOpen()
         withAnimation(closeSpring) {
             model.phase = .collapsed
         } completion: { [weak self] in
             guard let self, self.model.isCollapsed else { return }
             self.model.peekMail = nil
             self.panel.setFrame(self.collapsedFrame, display: true)
+            self.giveBackKeyboard()
         }
     }
 
@@ -100,7 +109,54 @@ final class NotchController {
         if !mouseInside { scheduleCollapse(after: 6) }
     }
 
-    func toggle() { model.isCollapsed ? expand() : collapse() }
+    /// The global shortcut: opens (a peek too) ready for the keyboard, or closes.
+    func toggleFromKeyboard() {
+        guard !model.isExpanded else { return collapse() }
+        keyboardOpen = true
+        expand()
+        panel.makeKey()
+        // Only while open, and it only sees clicks: nothing runs on the closed notch.
+        outsideClickMonitor = NSEvent.addGlobalMonitorForEvents(matching: [.leftMouseDown, .rightMouseDown]) { [weak self] _ in
+            MainActor.assumeIsolated { self?.collapse() }
+        }
+    }
+
+    private func endKeyboardOpen() {
+        keyboardOpen = false
+        if let outsideClickMonitor { NSEvent.removeMonitor(outsideClickMonitor) }
+        outsideClickMonitor = nil
+    }
+
+    /// A key window keeps the keyboard even when it is only the closed notch; ordering it
+    /// out for a moment hands typing back to the app you were in.
+    private func giveBackKeyboard() {
+        guard panel.isKeyWindow else { return }
+        panel.orderOut(nil)
+        panel.orderFrontRegardless()
+    }
+
+    /// ← and → walk through the tabs, Esc closes.
+    private func handleKey(_ event: NSEvent) -> Bool {
+        guard model.isExpanded else { return false }
+        switch Int(event.keyCode) {
+        case kVK_Escape:
+            collapse()
+        case kVK_LeftArrow:
+            moveTab(by: -1)
+        case kVK_RightArrow:
+            moveTab(by: 1)
+        default:
+            return false
+        }
+        return true
+    }
+
+    private func moveTab(by step: Int) {
+        let tabs = Preferences.shared.visibleTabs
+        guard let index = tabs.firstIndex(of: model.tab) else { return }
+        let next = tabs[(index + step + tabs.count) % tabs.count]
+        withAnimation(.easeInOut(duration: 0.18)) { model.tab = next }
+    }
 
     #if DEBUG
     /// Draws the panel into a PNG. Unlike `screencapture` this also works while the
@@ -179,6 +235,7 @@ final class NotchController {
     }
 
     private func mouseExited() {
+        if keyboardOpen { return }
         if !model.isCollapsed {
             scheduleCollapse(after: Preferences.shared.closeDelay)
         } else {

@@ -3,6 +3,10 @@ import SwiftUI
 
 /// Borderless, non-activating window that sits over the menu bar on every Space.
 final class NotchPanel: NSPanel {
+    /// Keys that no text field took. True when handled.
+    var onKey: (NSEvent) -> Bool = { _ in false }
+    var onEscape: () -> Void = {}
+
     init(frame: NSRect) {
         super.init(contentRect: frame,
                    styleMask: [.borderless, .nonactivatingPanel],
@@ -21,6 +25,13 @@ final class NotchPanel: NSPanel {
     // Key so later tabs (notes, clipboard search) can take typing.
     override var canBecomeKey: Bool { true }
     override var canBecomeMain: Bool { false }
+
+    override func keyDown(with event: NSEvent) {
+        if !onKey(event) { super.keyDown(with: event) }
+    }
+
+    // A panel would close itself on Esc, and the notch with it.
+    override func cancelOperation(_ sender: Any?) { onEscape() }
 }
 
 /// Hosting view that reports mouse enter/exit and accepts the first click,
