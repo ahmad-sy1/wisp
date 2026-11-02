@@ -381,6 +381,16 @@
         }
       }
     },
+    "Battery saver" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zuinig op batterij"
+          }
+        }
+      }
+    },
     "Behaviour" : {
       "localizations" : {
         "nl" : {
@@ -397,6 +407,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Fiets"
+          }
+        }
+      }
+    },
+    "Browser (YouTube etc.)" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Browser (YouTube e.d.)"
           }
         }
       }
@@ -1141,6 +1161,16 @@
         }
       }
     },
+    "Less smooth when your Mac isn't on power" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Minder vloeiend als je Mac niet aan de lader zit"
+          }
+        }
+      }
+    },
     "Let wisp listen along?" : {
       "localizations" : {
         "nl" : {
@@ -1227,6 +1257,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Meten…"
+          }
+        }
+      }
+    },
+    "Mini spectrum in the closed notch" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mini-spectrum in dichte notch"
           }
         }
       }
@@ -1811,6 +1851,16 @@
         }
       }
     },
+    "Replaces the fixed equalizer icon" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vervangt het vaste equalizer-icoontje"
+          }
+        }
+      }
+    },
     "Reset" : {
       "localizations" : {
         "nl" : {
@@ -2007,6 +2057,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Alle agenda's tonen (%lld verborgen)"
+          }
+        }
+      }
+    },
+    "Show for" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tonen voor"
           }
         }
       }
@@ -2397,6 +2457,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Zonder titel"
+          }
+        }
+      }
+    },
+    "Videos and music in Safari or Chrome" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Video's en muziek in Safari of Chrome"
           }
         }
       }

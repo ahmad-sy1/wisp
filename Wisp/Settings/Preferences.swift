@@ -29,6 +29,21 @@ final class Preferences: ObservableObject {
         }
     }
 
+    /// The closed notch shows the real mini spectrum; off is the fixed equalizer, and no audio tap.
+    @Published var miniSpectrum: Bool {
+        didSet { defaults.set(miniSpectrum, forKey: Key.miniSpectrum) }
+    }
+
+    /// Draws the spectrum less often while the Mac runs on its battery.
+    @Published var spectrumBatterySaver: Bool {
+        didSet { defaults.set(spectrumBatterySaver, forKey: Key.spectrumBatterySaver) }
+    }
+
+    /// Players wisp ignores (Settings → Music). Apps that aren't listed there always show.
+    @Published var hiddenMusicSources: Set<MusicSource> {
+        didSet { defaults.set(hiddenMusicSources.map(\.rawValue), forKey: Key.hiddenMusicSources) }
+    }
+
     /// Every tab in tab-bar order, shown or not (Settings → Notch).
     @Published var tabOrder: [WispTab] {
         didSet { defaults.set(tabOrder.map(\.rawValue), forKey: Key.tabOrder) }
@@ -65,6 +80,9 @@ final class Preferences: ObservableObject {
         static let tabOrder = "tabOrder"
         static let hiddenTabs = "hiddenTabs"
         static let hotKey = "hotKey"
+        static let miniSpectrum = "miniSpectrum"
+        static let spectrumBatterySaver = "spectrumBatterySaver"
+        static let hiddenMusicSources = "hiddenMusicSources"
     }
 
     private init() {
@@ -74,6 +92,9 @@ final class Preferences: ObservableObject {
         launchAtLogin = SMAppService.mainApp.status == .enabled
         // Never set: the standard keys. Saved empty: switched off.
         hotKey = defaults.data(forKey: Key.hotKey).map { try? JSONDecoder().decode(KeyCombo.self, from: $0) } ?? .standard
+        miniSpectrum = defaults.object(forKey: Key.miniSpectrum) as? Bool ?? true
+        spectrumBatterySaver = defaults.object(forKey: Key.spectrumBatterySaver) as? Bool ?? true
+        hiddenMusicSources = Set((defaults.stringArray(forKey: Key.hiddenMusicSources) ?? []).compactMap(MusicSource.init(rawValue:)))
         // Saved order first; tabs added in a later version go at the end.
         let saved = (defaults.stringArray(forKey: Key.tabOrder) ?? []).compactMap(WispTab.init(rawValue:))
         tabOrder = saved + WispTab.allCases.filter { !saved.contains($0) }
@@ -108,6 +129,10 @@ final class Preferences: ObservableObject {
         task.arguments = ["-c", "sleep 0.5; /usr/bin/open \"$0\"", Bundle.main.bundlePath]
         try? task.run()
         NSApp.terminate(nil)
+    }
+
+    func setMusicSource(_ source: MusicSource, shown: Bool) {
+        if shown { hiddenMusicSources.remove(source) } else { hiddenMusicSources.insert(source) }
     }
 
     func setLaunchAtLogin(_ on: Bool) {
