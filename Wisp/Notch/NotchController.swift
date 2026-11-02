@@ -19,7 +19,7 @@ final class NotchController {
     private var collapseWork: DispatchWorkItem?
     /// Opened with the shortcut: stays until the shortcut, Esc or a click elsewhere.
     private var keyboardOpen = false
-    private var outsideClickMonitor: Any?
+    private var outsideClickMonitors: [Any] = []
     /// The wings each source asks for; shown only on a screen with a notch.
     private var wantedWings: [ReferenceWritableKeyPath<NotchModel, Bool>: Bool] = [:]
     /// Asked of the window, not remembered from enter and exit events: those don't come
@@ -69,7 +69,7 @@ final class NotchController {
         if Preferences.shared.hiddenTabs.contains(model.tab) { model.tab = .home }
         guard !model.isExpanded else {
             // The cancel above must not leave it open for good.
-            if !mouseInside && !keyboardOpen { scheduleCollapse(after: 4) }
+            if !keyboardOpen { scheduleCollapse(after: 4) }
             return
         }
         panel.setFrame(geometry.frame(for: CGSize(width: Theme.panelWidth, height: Theme.panelHeight)),
@@ -78,8 +78,9 @@ final class NotchController {
             model.phase = .expanded
             model.hovering = false
         }
-        // Opened from the menu or by an event: close again unless the mouse comes in.
-        if !mouseInside && !keyboardOpen { scheduleCollapse(after: 4) }
+        // Opened from the menu or by an event: close again unless the mouse comes in. Always
+        // scheduled: a mouse already there sends no enter, and so maybe no exit either.
+        if !keyboardOpen { scheduleCollapse(after: 4) }
     }
 
     func collapse() {
@@ -116,16 +117,25 @@ final class NotchController {
         keyboardOpen = true
         expand()
         panel.makeKey()
-        // Only while open, and it only sees clicks: nothing runs on the closed notch.
-        outsideClickMonitor = NSEvent.addGlobalMonitorForEvents(matching: [.leftMouseDown, .rightMouseDown]) { [weak self] _ in
+        // Only while open, and they only see clicks: nothing runs on the closed notch.
+        let clicks: NSEvent.EventTypeMask = [.leftMouseDown, .rightMouseDown]
+        let global = NSEvent.addGlobalMonitorForEvents(matching: clicks) { [weak self] _ in
             MainActor.assumeIsolated { self?.collapse() }
         }
+        // Clicks in wisp's own windows, such as Settings, don't reach the global one.
+        let local = NSEvent.addLocalMonitorForEvents(matching: clicks) { [weak self] event in
+            MainActor.assumeIsolated {
+                if event.window !== self?.panel { self?.collapse() }
+            }
+            return event
+        }
+        outsideClickMonitors = [global, local].compactMap { $0 }
     }
 
     private func endKeyboardOpen() {
         keyboardOpen = false
-        if let outsideClickMonitor { NSEvent.removeMonitor(outsideClickMonitor) }
-        outsideClickMonitor = nil
+        outsideClickMonitors.forEach(NSEvent.removeMonitor)
+        outsideClickMonitors = []
     }
 
     /// A key window keeps the keyboard even when it is only the closed notch; ordering it
