@@ -51,7 +51,7 @@ Rechts: **Instellingen** (open het Settings-venster).
 - Op de taaknaam tikken (potlood-icoon) → taak kiezen of zelf typen.
 - In Settings: lijst met koppelingen app/project → taak, aan te passen of te verwijderen.
 
-> **Stand van zaken:** gebouwd. Taak uit de agenda of de app vooraan (met het Claude Code-project), correcties worden onthouden en staan in Settings → Focus. *Niet storen* werkt via twee eigen opdrachten in de Opdrachten-app ("wisp Focus On/Off"), omdat macOS apps geen focusmodus laat aanzetten. Browser-tabbladen en documentnamen (Accessibility/AppleScript) en de vraag bij twijfel zitten er nog niet in.
+> **Stand van zaken:** gebouwd. Taak uit de agenda of de app vooraan (met het Claude Code-project), correcties worden onthouden en staan in Settings → Focus, waar je ook zelf koppelingen toevoegt. *Niet storen* werkt via twee eigen opdrachten in de Opdrachten-app ("wisp Focus On/Off"), omdat macOS apps geen focusmodus laat aanzetten. Browser-tabbladen en documentnamen (Accessibility/AppleScript) en de vraag bij twijfel zitten er nog niet in.
 
 ### Muziek
 - Bestaande muziek-integratie, nieuw design.
@@ -100,7 +100,7 @@ Rechts: **Instellingen** (open het Settings-venster).
 
 ## Settings-aanpassingen
 
-> **Stand van zaken:** een venster met zijbalk (boards 10.1–10.6): Algemeen (taal, accentkleur, sluitvertraging, geluiden, opstarten bij inloggen, Claude Code-hooks), Notch (de opties per tab), Integraties (Gmail, Muziek), Agenda & weer (agenda's, diensten, reistijd en reiswijze, plaats), Muziek (spectrum) en Focus (standaardduur, Niet storen, muziek, geleerde koppelingen). Tabs aan/uit en slepen naar je eigen volgorde zijn er ook. Home-tegels, sneltoets, extra muziekopties en zelf koppelingen toevoegen nog niet (#24–#27).
+> **Stand van zaken:** een venster met zijbalk (boards 10.1–10.6): Algemeen (taal, accentkleur, sluitvertraging, geluiden, opstarten bij inloggen, sneltoets, Claude Code-hooks), Notch (de opties per tab), Integraties (Gmail, Muziek), Agenda & weer (agenda's, diensten, reistijd en reiswijze, plaats), Muziek (spectrum, mini-spectrum, zuinig op batterij, welke spelers) en Focus (standaardduur, Niet storen, muziek, koppelingen: geleerd of zelf toegevoegd). Tabs aan/uit en slepen naar je eigen volgorde zijn er ook. Home-tegels, koppelingen met websites en standaardkoppelingen nog niet (#24, #27).
 
 - Bovenaan: accentkleur kiezen (4 opties).
 - Sectie **Tabs**: tabs aan/uit en volgorde.

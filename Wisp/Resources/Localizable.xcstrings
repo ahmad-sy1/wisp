@@ -201,6 +201,16 @@
         }
       }
     },
+    "+ Add rule" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "+ Koppeling toevoegen"
+          }
+        }
+      }
+    },
     "1 option" : {
       "localizations" : {
         "nl" : {
@@ -261,6 +271,16 @@
         }
       }
     },
+    "Add" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toevoegen"
+          }
+        }
+      }
+    },
     "Add integration" : {
       "localizations" : {
         "nl" : {
@@ -307,6 +327,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Altijd aan"
+          }
+        }
+      }
+    },
+    "Another app uses these keys. Choose others." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Een andere app gebruikt deze toetsen. Kies andere."
           }
         }
       }
@@ -371,6 +401,16 @@
         }
       }
     },
+    "Battery saver" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zuinig op batterij"
+          }
+        }
+      }
+    },
     "Behaviour" : {
       "localizations" : {
         "nl" : {
@@ -387,6 +427,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Fiets"
+          }
+        }
+      }
+    },
+    "Browser (YouTube etc.)" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Browser (YouTube e.d.)"
           }
         }
       }
@@ -427,6 +477,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Agenda's in de notch"
+          }
+        }
+      }
+    },
+    "Can't change while a session runs" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kan niet tijdens een sessie"
           }
         }
       }
@@ -507,6 +567,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Opladen"
+          }
+        }
+      }
+    },
+    "Choose an app" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kies een app"
           }
         }
       }
@@ -811,6 +881,16 @@
         }
       }
     },
+    "Esc cancels · ⌫ turns it off" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esc annuleert · ⌫ zet hem uit"
+          }
+        }
+      }
+    },
     "Failed: %@" : {
       "localizations" : {
         "nl" : {
@@ -1111,6 +1191,16 @@
         }
       }
     },
+    "Less smooth when your Mac isn't on power" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Minder vloeiend als je Mac niet aan de lader zit"
+          }
+        }
+      }
+    },
     "Let wisp listen along?" : {
       "localizations" : {
         "nl" : {
@@ -1197,6 +1287,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Meten…"
+          }
+        }
+      }
+    },
+    "Mini spectrum in the closed notch" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mini-spectrum in dichte notch"
           }
         }
       }
@@ -1571,6 +1671,16 @@
         }
       }
     },
+    "Open the notch with the keyboard" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notch openen met het toetsenbord"
+          }
+        }
+      }
+    },
     "Open wisp" : {
       "localizations" : {
         "nl" : {
@@ -1597,6 +1707,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Andere plaats"
+          }
+        }
+      }
+    },
+    "Other…" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Andere…"
           }
         }
       }
@@ -1677,6 +1797,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Voorbeeld"
+          }
+        }
+      }
+    },
+    "Project (optional)" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Project (optioneel)"
           }
         }
       }
@@ -1767,6 +1897,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Gmail verwijderen?"
+          }
+        }
+      }
+    },
+    "Replaces the fixed equalizer icon" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vervangt het vaste equalizer-icoontje"
           }
         }
       }
@@ -1891,6 +2031,16 @@
         }
       }
     },
+    "Set by you" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zelf ingesteld"
+          }
+        }
+      }
+    },
     "Settings" : {
       "localizations" : {
         "nl" : {
@@ -1941,6 +2091,16 @@
         }
       }
     },
+    "Shortcut" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sneltoets"
+          }
+        }
+      }
+    },
     "Shorter" : {
       "localizations" : {
         "nl" : {
@@ -1957,6 +2117,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Alle agenda's tonen (%lld verborgen)"
+          }
+        }
+      }
+    },
+    "Show for" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tonen voor"
           }
         }
       }
@@ -2007,6 +2177,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Geluiden"
+          }
+        }
+      }
+    },
+    "Space" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spatie"
           }
         }
       }
@@ -2141,6 +2321,16 @@
         }
       }
     },
+    "Task" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Taak"
+          }
+        }
+      }
+    },
     "The clipboard history is off in Settings." : {
       "localizations" : {
         "nl" : {
@@ -2157,6 +2347,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "De laatste %lld teksten die je kopieerde, alleen op deze Mac bewaard. Wachtwoorden en eenmalige codes die apps als zodanig markeren worden nooit bewaard."
+          }
+        }
+      }
+    },
+    "The project is the one Claude Code works in." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Het project is dat waarin Claude Code werkt."
           }
         }
       }
@@ -2301,6 +2501,16 @@
         }
       }
     },
+    "Type shortcut…" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Typ sneltoets…"
+          }
+        }
+      }
+    },
     "Unread" : {
       "localizations" : {
         "nl" : {
@@ -2327,6 +2537,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Zonder titel"
+          }
+        }
+      }
+    },
+    "Videos and music in Safari or Chrome" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Video's en muziek in Safari of Chrome"
           }
         }
       }
