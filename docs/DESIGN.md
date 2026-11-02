@@ -76,6 +76,8 @@ The boards in [`design/boards/`](../design/boards) are the visual source of trut
 
 Left, in this order: **Home · Mail · Agenda · Focus · Muziek · Klembord · Notities · Systeem · Bestanden**. Right: **Settings** (sliders icon). A tab may put its own controls just left of Settings, as Mail does with *Alles / Ongelezen / ↗*, Agenda with today's date and Music with the output device.
 
+Opened with the shortcut (⌥Space, Settings → General, board 10.2) the panel stays until the shortcut again, Esc or a click elsewhere; ← and → walk through the visible tabs when no text field has the keyboard.
+
 ## Agenda tab
 
 Three cards in the fixed 150 pt area (boards 3 and 3.1):
@@ -210,6 +212,8 @@ Built in the same style, not on the boards (open to a design):
 - **Music**: macOS doesn't tell apps whether system audio is allowed, so the dot shows wisp's own switch (*On* / *Off*).
 - **Focus**: with no learned rules, one row *No rules yet*.
 - **General**: after a language change, the grey line says to restart and a *Restart* button appears next to the pop-up.
+
+Settings → Music (board 10.5): the system-audio row reads *Aan* / *Uit*, not *Toegestaan*, because macOS doesn't tell apps whether it granted access. *Mini spectrum* and *Battery saver* are dimmed while the live spectrum is off.
 
 ## Buttons
 

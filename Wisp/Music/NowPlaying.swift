@@ -2,6 +2,11 @@ import AppKit
 import CoreImage
 import Foundation
 
+/// The players Settings → Music can switch off.
+enum MusicSource: String, CaseIterable {
+    case spotify, appleMusic, browser
+}
+
 struct NowPlayingTrack: Equatable {
     let title: String
     let artist: String
@@ -35,6 +40,16 @@ struct NowPlayingTrack: Equatable {
         return Self.browsers.contains { id.hasPrefix($0) }
     }
 
+    /// Which switch in Settings → Music this falls under; nil for any other app.
+    var source: MusicSource? {
+        if isVideo { return .browser }
+        switch sourceBundleId {
+        case "com.spotify.client": return .spotify
+        case "com.apple.Music":    return .appleMusic
+        default:                   return nil
+        }
+    }
+
     /// Small label above the title: "Spotify", "Muziek", "Brave Browser"…
     var sourceLabel: String { sourceName ?? String(localized: "Now playing") }
 
@@ -63,18 +78,25 @@ struct NowPlayingTrack: Equatable {
 final class NowPlaying: ObservableObject {
     static let shared = NowPlaying()
 
+    /// What plays, unless its player is switched off in Settings → Music.
     @Published private(set) var track: NowPlayingTrack?
     /// True while something plays, and for a minute after it pauses, so the closed-notch
     /// wings don't flicker on track changes and show the paused state for a while.
     @Published private(set) var isActive = false
 
+    /// What macOS reports, whatever the switches say.
+    private var reported: NowPlayingTrack?
     private var process: Process?
     private var input: FileHandle?
     private var buffer = Data()
     private var restarts = 0
     private var hideWork: DispatchWorkItem?
+    /// `hideWork` is the short grace, for when there is no track.
+    private var hidingEmpty = false
     /// Board 9.6: after a pause the wings stay (greyed) for a minute, then go.
     private let pauseGrace: TimeInterval = 60
+    /// No track at all: the wings would be empty, so this only bridges a track change.
+    private let emptyGrace: TimeInterval = 3
 
     private static let perlScript = """
     use DynaLoader;
@@ -162,8 +184,8 @@ final class NowPlaying: ObservableObject {
         guard let title = json["title"] as? String, !title.isEmpty else { apply(nil); return }
 
         // Artwork is only sent when it changes ("" = the new item has none).
-        var artwork = track?.artwork
-        var tint = track?.tint
+        var artwork = reported?.artwork
+        var tint = reported?.tint
         if let b64 = json["artwork"] as? String {
             artwork = Data(base64Encoded: b64).flatMap(NSImage.init(data:))
             tint = artwork.flatMap(Self.averageColor)
@@ -183,17 +205,31 @@ final class NowPlaying: ObservableObject {
         ))
     }
 
-    private func apply(_ new: NowPlayingTrack?) {
+    /// A player was switched on or off in Settings → Music.
+    func sourcesChanged() { apply(reported) }
+
+    private func apply(_ report: NowPlayingTrack?) {
+        reported = report
+        var new = report
+        if let source = report?.source, Preferences.shared.hiddenMusicSources.contains(source) { new = nil }
         if track != new { track = new }
 
-        // On immediately, off only after a short pause.
-        hideWork?.cancel()
+        // On immediately, off only after a while.
         if new?.isPlaying == true {
+            hideWork?.cancel()
+            hideWork = nil
             if !isActive { isActive = true }
-        } else if isActive {
-            let work = DispatchWorkItem { [weak self] in self?.isActive = false }
+        } else if isActive, hideWork == nil || hidingEmpty != (new == nil) {
+            // More reports of the same kind don't extend the grace; a paused track replaces
+            // the short one for an empty notch, and the other way round.
+            hideWork?.cancel()
+            hidingEmpty = new == nil
+            let work = DispatchWorkItem { [weak self] in
+                self?.isActive = false
+                self?.hideWork = nil
+            }
             hideWork = work
-            DispatchQueue.main.asyncAfter(deadline: .now() + pauseGrace, execute: work)
+            DispatchQueue.main.asyncAfter(deadline: .now() + (new == nil ? emptyGrace : pauseGrace), execute: work)
         }
     }
 
