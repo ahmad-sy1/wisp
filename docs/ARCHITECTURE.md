@@ -142,6 +142,8 @@ GitHub REST/GraphQL ◄─ GitHubClient (ETags, rate limit) ◄─ RadarSync ◄
 
 `Wisp/Departure/Core` holds the logic, free of clock, network and UI. `DepartureEngine.plan` turns calendar events and settings into the one trip that matters (or none), `nextWake` says when that can next change, and `resolve` turns the providers' answers into one `DepartureOutput`: what to show, in which colour, how many minutes, which alternatives. `RoutineDetector` fills in the location of repeating events that have none, and `EventLocation` tells a place from a video call. Providers sit behind `TravelProvider`, `RainProvider` and `PlaceLookup`, with mocks.
 
+- **`DepartureStore`** holds one pending wake-up: at `nextWake` with no trip on, on each new minute during one. The providers are only asked when `refreshInterval` says so (15, 5 or 2 minutes as leaving comes closer); in between the countdown comes from the last answer. A car or bike moves along with the clock. A new event, a change in Settings or waking re-evaluates. Errors keep the last answer; with none, nothing shows. Settings are saved as `departureSettings`, the NS key in the Keychain.
+
 ## Clipboard
 
 - macOS has no notification for the pasteboard, so **`ClipboardStore`** reads `NSPasteboard.general.changeCount` once a second (timer tolerance 0.5 s, so the system can bundle the wake-ups) and only looks further when it changed. Measured on the Release build: 0.0 % CPU and 2–3 extra wake-ups a second (about 90 instead of 40 per 20 s, closed notch). Switched off in Settings, the timer doesn't exist.
