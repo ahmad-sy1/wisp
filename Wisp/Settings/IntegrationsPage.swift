@@ -7,6 +7,7 @@ struct IntegrationsPage: View {
     @ObservedObject var mail: MailStore
     @ObservedObject var nowPlaying: NowPlaying
     @ObservedObject private var prefs = Preferences.shared
+    @ObservedObject private var github = GitHubStore.shared
     @State private var managingGmail = false
     @State private var confirmRemoveGmail = false
 
@@ -17,6 +18,8 @@ struct IntegrationsPage: View {
             Menu {
                 Button { managingGmail = true } label: { Text(verbatim: "Gmail") }
                     .disabled(mail.isConfigured)
+                Button { SettingsNavigation.shared.page = .github } label: { Text(verbatim: "GitHub") }
+                    .disabled(github.status != .disconnected)
             } label: {
                 Label("Add integration", systemImage: "plus")
                     .font(.system(size: 13, weight: .semibold))
@@ -29,13 +32,18 @@ struct IntegrationsPage: View {
             .buttonStyle(.plain)
             .menuIndicator(.hidden)
             .fixedSize()
-            .disabled(mail.isConfigured)
+            .disabled(mail.isConfigured && github.status != .disconnected)
         } content: {
             SettingsGroup(header: String(localized: "In use")) {
                 if mail.isConfigured {
                     IntegrationRow(name: "Gmail", color: Color(hex: 0xEA4335), status: gmailStatus,
                                    manage: { managingGmail = true },
                                    remove: { confirmRemoveGmail = true })
+                }
+                if github.status != .disconnected {
+                    IntegrationRow(name: "GitHub", color: Color(hex: 0xF0F6FC), status: githubStatus,
+                                   manage: { SettingsNavigation.shared.page = .github },
+                                   remove: { github.disconnect() })
                 }
                 IntegrationRow(name: String(localized: "Music"), color: Theme.ok, status: musicStatus,
                                manage: { SettingsNavigation.shared.page = .music },
@@ -56,6 +64,15 @@ struct IntegrationsPage: View {
         case .connecting:        String(localized: "Connecting…")
         case .connected:         String(localized: "Connected · \(mail.address ?? "")")
         case .failed(let error): error
+        }
+    }
+
+    private var githubStatus: String {
+        switch github.status {
+        case .disconnected:        String(localized: "Not connected")
+        case .connecting:          String(localized: "Connecting…")
+        case .connected(let login): String(localized: "Connected · @\(login)")
+        case .failed(let message): message
         }
     }
 
