@@ -16,6 +16,10 @@ enum Theme {
     static let warning       = Color(hex: 0xFF9F0A)
     /// Review requests: the blue badge and dot, whatever the accent colour.
     static let info          = Color(hex: 0x0A84FF)
+    /// Rain on the closed notch.
+    static let rain          = Color(hex: 0x64D2FF)
+    /// The NS badge in a route.
+    static let nsYellow      = Color(hex: 0xFFC917)
 
     // Panel geometry (expanded)
     static let panelWidth: CGFloat     = 600
