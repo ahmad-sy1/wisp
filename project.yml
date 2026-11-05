@@ -88,6 +88,26 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: com.ahmadalasmi.wisp
         PRODUCT_NAME: wisp
         GENERATE_INFOPLIST_FILE: NO
+  # Logic only: compiles the pure Core folders itself, with no host app, so running the
+  # tests never starts wisp (which would claim the notch and the hook socket).
+  wispTests:
+    type: bundle.unit-test
+    platform: macOS
+    sources:
+      - path: WispTests
+      - path: Wisp/GitHub/Core
+      - path: Wisp/Support/HTTPTransport.swift
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.ahmadalasmi.wisp.tests
+        GENERATE_INFOPLIST_FILE: YES
+        CODE_SIGN_IDENTITY: "-"
+        CODE_SIGN_STYLE: Manual
+        DEVELOPMENT_TEAM: ""
+        ENABLE_HARDENED_RUNTIME: NO
+    scheme:
+      testTargets:
+        - wispTests
   wisp-hook:
     type: tool
     platform: macOS
