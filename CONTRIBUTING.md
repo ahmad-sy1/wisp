@@ -42,6 +42,14 @@ To install your build in `/Applications`, use `./scripts/install.sh`.
 
 Only one wisp can own the notch and the hook socket: quit the installed one (or let `install.sh` do it) before running a debug build.
 
+## Tests
+
+```bash
+./scripts/test.sh
+```
+
+Logic lives in `Core` folders without UI, and network code behind a protocol with a mock, so it is tested without keys. The test target compiles those folders itself and doesn't start wisp. CI runs the tests too. Views aren't tested.
+
 ## Testing Claude Code without Claude Code
 
 Pipe a hook payload into the helper, as Claude Code would:

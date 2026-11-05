@@ -19,6 +19,7 @@ wisp.app
 | `Wisp/Claude` | hook server, Claude Code sessions, approvals, hooks installer, IDE detection, git branch |
 | `Wisp/Mail` | IMAP client and `MailStore` |
 | `Wisp/Music` | `NowPlaying` (bridge process), `AudioOutput` (device, quality, volume), `Spectrum`, `AudioTap` and `SpectrumAnalyzer` (live spectrum) |
+| `Wisp/GitHub` | `GitHubStore`; `Core`: the API client, models and radar logic (no UI, unit tested) |
 | `Wisp/Agenda` | `AgendaStore` (EventKit, today's events, shifts) and `WeatherStore` (Open-Meteo) |
 | `Wisp/Clipboard` | `ClipboardStore`: the last 20 copied texts, stored in `clipboard.json` |
 | `Wisp/Notes` | `NotesStore`: quick notes, stored in `notes.json` |
@@ -26,8 +27,9 @@ wisp.app
 | `Wisp/Focus` | `FocusStore`: the focus timer, today's sessions, the task guess and what it learned |
 | `Wisp/Settings` | `Preferences` (UserDefaults), the Settings window (`SettingsView`: sidebar + one page per topic) and its building blocks (`SettingsComponents`) |
 | `Wisp/Design` | `Theme`: colours, sizes, the accent options |
-| `Wisp/Support` | small helpers, such as `Keychain` |
+| `Wisp/Support` | small helpers: `Keychain`, `HTTPTransport` (the protocol all newer network code goes through) |
 | `Wisp/Resources` | `Info.plist`, entitlements, and the String Catalogs: `Localizable.xcstrings` (interface) and `InfoPlist.xcstrings` (permission texts), English source with Dutch |
+| `WispTests` | unit tests of the `Core` folders; they run without starting wisp (`scripts/test.sh`) |
 | `WispHook` | the `wisp-hook` command-line tool |
 | `Shared` | code used by both the app and `wisp-hook` (the socket path) |
 | `Helpers` | `NowPlayingBridge.m`, compiled into the dylib by a build phase |
@@ -122,6 +124,17 @@ Open-Meteo (HTTPS, no key) ─► WeatherStore ┘
 - An event is a **shift** when its title contains *dienst*, or, if chosen in Settings, when it is in a given calendar. Shifts get the `warning` colour; other events the colour of their calendar. *Vertrek voor je dienst* is the next shift's start minus the ride in minutes from Settings; the travel mode there only changes the words (*22 min fietsen*).
 - **`WeatherStore`** fetches the current temperature and WMO weather code, the hourly chance and amount of rain, and today's low and high from `api.open-meteo.com` for the place in Settings, at most once every 15 minutes and only when the tab opens. An hour counts as wet from a 50 % chance or 0.2 mm; that gives *Droog tot 22:00* or *Regen tot 15:00*. Settings looks up places with Open-Meteo's geocoding API.
 - The tab redraws once a minute (`TimelineView(.everyMinute)`) for the *nu* line, the countdowns and the bar of the event on now, and only exists while it is open. All of it reads the time through `AgendaClock.now`, which in Debug builds can be set with `-agendaTime HH:mm`.
+
+## CI & PR radar
+
+```
+GitHub REST/GraphQL ◄─ GitHubClient (ETags, rate limit) ◄─ RadarSync ◄─ GitHubStore ─► notch, GitHub tab
+                       └── GitHubService protocol; MockGitHubService for tests and -githubDemo
+```
+
+- `Wisp/GitHub/Core` is free of UI and is what the tests compile: `CheckAggregator` (jobs → one status), `PollSchedule` (the next delay), `Radar` (`diff`: what is new; `compact`: what the closed notch shows; `acknowledge`: you looked; `streak`), `RadarSync` (one round, asking only what may have changed).
+- **`GitHubStore`** has one pending `DispatchWorkItem` at a time, with a delay from `PollSchedule`. Sleep and screen lock cancel it; waking schedules a round after 3 s. Errors keep the last data on screen. A rejected key stops polling until you reconnect.
+- **`RadarSeen`** (UserDefaults, `githubSeen`) remembers what was reported, per commit and per pull request, so an animation goes off once and not again after a restart. It holds no secrets, only repository names and numbers.
 
 ## Clipboard
 
