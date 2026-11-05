@@ -169,6 +169,7 @@ enum DepartureEngine {
     /// Puts the providers' answers together. `later` and `rain` are nil when not asked for.
     static func resolve(plan: TripPlan, options: [TravelOption], later: LaterAdvice? = nil, rainForecast: RainForecast? = nil,
                         now: Date) -> DepartureOutput {
+        let options = options.map { rolledForward($0, now: now) }
         let chosen = choose(plan: plan, options: options, now: now)
         var output = DepartureOutput(plan: plan, chosen: chosen)
         output.later = later
@@ -191,6 +192,17 @@ enum DepartureEngine {
             output.rain = rainAdvice(rainForecast, leave: max(now, chosen.departure), minutes: chosen.minutes, now: now)
         }
         return output
+    }
+
+    /// A car or bike leaves when you do, not at a set time: a moment that has passed moves along
+    /// with the clock until the next answer. A train that has gone is gone.
+    private static func rolledForward(_ option: TravelOption, now: Date) -> TravelOption {
+        let scheduled: Set<TravelLeg.Kind> = [.rail, .bus, .tram, .metro, .ferry]
+        guard option.departure < now, !option.legs.contains(where: { scheduled.contains($0.kind) }) else { return option }
+        var moved = option
+        moved.arrival = option.arrival.addingTimeInterval(now.timeIntervalSince(option.departure))
+        moved.departure = now
+        return moved
     }
 
     private static func choose(plan: TripPlan, options: [TravelOption], now: Date) -> TravelOption? {

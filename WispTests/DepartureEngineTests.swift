@@ -245,6 +245,24 @@ final class ResolveTests: XCTestCase {
         XCTAssertTrue(DepartureEngine.resolve(plan: outbound, options: [option(at(9, 20), 30)], now: at(8, 40)).isVisible)
     }
 
+    func testACarRollsAlongWithTheClockButATrainDoesnt() {
+        var car = option(at(16), 40)
+        car.legs = [TravelLeg(kind: .drive, minutes: 40)]
+        let out = DepartureEngine.resolve(plan: home, options: [car], now: at(16, 5))
+        XCTAssertEqual(out.chosen?.departure, at(16, 5))
+        XCTAssertEqual(out.chosen?.arrival, at(16, 45))
+        var train = option(at(16), 40)
+        train.legs = [TravelLeg(kind: .rail, minutes: 40)]
+        XCTAssertNil(DepartureEngine.resolve(plan: home, options: [train], now: at(16, 5)).chosen)
+    }
+
+    func testLeavingTooLateByCarMeansLate() {
+        var car = option(at(9), 50)
+        car.legs = [TravelLeg(kind: .drive, minutes: 50)]
+        let out = DepartureEngine.resolve(plan: outbound, options: [car], now: at(9, 20))
+        XCTAssertTrue(out.isLate)
+    }
+
     func testNoOptionsMeansNoAnswerNotACrash() {
         let out = DepartureEngine.resolve(plan: home, options: [], now: at(16))
         XCTAssertNil(out.chosen)
