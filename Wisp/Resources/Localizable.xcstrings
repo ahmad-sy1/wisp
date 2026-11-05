@@ -11,6 +11,16 @@
         }
       }
     },
+    "%@ platform %@" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ spoor %2$@"
+          }
+        }
+      }
+    },
     "%@ uses %lld%%" : {
       "localizations" : {
         "nl" : {
@@ -27,6 +37,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%1$@ wil %2$@ gebruiken"
+          }
+        }
+      }
+    },
+    "%@ · stop %@" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ · halte %2$@"
           }
         }
       }
@@ -121,12 +141,12 @@
         }
       }
     },
-    "%lld min walking" : {
+    "%lld min with traffic" : {
       "localizations" : {
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%lld min lopen"
+            "value" : "%lld min met verkeer"
           }
         }
       }
@@ -261,6 +281,36 @@
         }
       }
     },
+    "+%lld min delay" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "+%lld min vertraging"
+          }
+        }
+      }
+    },
+    "+%lld min traffic%@" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "+%1$lld min file%2$@"
+          }
+        }
+      }
+    },
+    "+%lld traffic%@" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "+%1$lld file%2$@"
+          }
+        }
+      }
+    },
     "1 comment" : {
       "localizations" : {
         "nl" : {
@@ -351,6 +401,36 @@
         }
       }
     },
+    "A total time from Apple Maps. Add an NS key under Integrations for lines, platforms and delays." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Een totale reistijd van Apple Kaarten. Voeg onder Integraties een NS-sleutel toe voor lijnen, sporen en vertraging."
+          }
+        }
+      }
+    },
+    "ALTERNATIVES" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ALTERNATIEVEN"
+          }
+        }
+      }
+    },
+    "API key" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "API-sleutel"
+          }
+        }
+      }
+    },
     "Accent colour" : {
       "localizations" : {
         "nl" : {
@@ -397,6 +477,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Token toevoegen…"
+          }
+        }
+      }
+    },
+    "Add your home address to see when to leave." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vul je thuisadres in om te zien wanneer je weg moet."
+          }
+        }
+      }
+    },
+    "After your last event with a location" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Na je laatste afspraak met een locatie"
           }
         }
       }
@@ -471,6 +571,16 @@
         }
       }
     },
+    "Apple Maps can't find this address." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apple Kaarten kan dit adres niet vinden."
+          }
+        }
+      }
+    },
     "Automatic · %@ active" : {
       "localizations" : {
         "nl" : {
@@ -491,12 +601,32 @@
         }
       }
     },
+    "Back home" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Terug naar huis"
+          }
+        }
+      }
+    },
     "Bars that move with the music in the Music tab" : {
       "localizations" : {
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Balkjes die meebewegen in de Muziek-tab"
+          }
+        }
+      }
+    },
+    "Basics" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Basis"
           }
         }
       }
@@ -551,12 +681,42 @@
         }
       }
     },
+    "Bike: warn about showers" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fiets: waarschuwen voor buien"
+          }
+        }
+      }
+    },
     "Browser (YouTube etc.)" : {
       "localizations" : {
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Browser (YouTube e.d.)"
+          }
+        }
+      }
+    },
+    "Bus" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bus"
+          }
+        }
+      }
+    },
+    "Bus %@" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bus %@"
           }
         }
       }
@@ -667,6 +827,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Auto"
+          }
+        }
+      }
+    },
+    "Car: wait if that avoids traffic" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Auto: wachten als dat file scheelt"
           }
         }
       }
@@ -991,6 +1161,16 @@
         }
       }
     },
+    "Default transport" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Standaard vervoer"
+          }
+        }
+      }
+    },
     "Delete" : {
       "localizations" : {
         "nl" : {
@@ -1007,6 +1187,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Weigeren"
+          }
+        }
+      }
+    },
+    "Departure" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vertrek"
           }
         }
       }
@@ -1051,12 +1241,32 @@
         }
       }
     },
+    "Drive" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rijden"
+          }
+        }
+      }
+    },
     "Dry for the coming hours" : {
       "localizations" : {
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Droog de komende uren"
+          }
+        }
+      }
+    },
+    "Dry on the way" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Droog onderweg"
           }
         }
       }
@@ -1121,6 +1331,16 @@
         }
       }
     },
+    "Ferry" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Veer"
+          }
+        }
+      }
+    },
     "Files" : {
       "localizations" : {
         "nl" : {
@@ -1137,6 +1357,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Focus"
+          }
+        }
+      }
+    },
+    "For lines, platforms and delays in the Departure tab. Without it, wisp shows a total time from Apple Maps. The key is kept only in your Keychain." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Voor lijnen, sporen en vertraging in de Vertrek-tab. Zonder sleutel toont wisp een totale reistijd van Apple Kaarten. De sleutel staat alleen in je Sleutelhanger."
           }
         }
       }
@@ -1187,6 +1417,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Algemeen"
+          }
+        }
+      }
+    },
+    "Get a free key…" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vraag een gratis sleutel aan…"
           }
         }
       }
@@ -1251,6 +1491,46 @@
         }
       }
     },
+    "Go now or wait %lld min" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ga nu of wacht %lld min"
+          }
+        }
+      }
+    },
+    "Go now, waiting doesn't help" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ga nu, wachten helpt niet"
+          }
+        }
+      }
+    },
+    "Going there" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Heenreis"
+          }
+        }
+      }
+    },
+    "HEADING HOME" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "NAAR HUIS"
+          }
+        }
+      }
+    },
     "Has a question for you" : {
       "localizations" : {
         "nl" : {
@@ -1281,6 +1561,26 @@
         }
       }
     },
+    "Home %@" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thuis %@"
+          }
+        }
+      }
+    },
+    "Home address" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thuisadres"
+          }
+        }
+      }
+    },
     "Hooks" : {
       "localizations" : {
         "nl" : {
@@ -1297,6 +1597,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "NU BEZIG"
+          }
+        }
+      }
+    },
+    "In %lld min" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Over %lld min"
           }
         }
       }
@@ -1381,12 +1691,32 @@
         }
       }
     },
+    "It stays wet for now" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Het blijft voorlopig nat"
+          }
+        }
+      }
+    },
     "Keep a clipboard history" : {
       "localizations" : {
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Klembordgeschiedenis bijhouden"
+          }
+        }
+      }
+    },
+    "Key in your Keychain" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sleutel in je Sleutelhanger"
           }
         }
       }
@@ -1421,6 +1751,16 @@
         }
       }
     },
+    "Late" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Te laat"
+          }
+        }
+      }
+    },
     "Later" : {
       "localizations" : {
         "nl" : {
@@ -1441,12 +1781,32 @@
         }
       }
     },
+    "Leave" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vertrek"
+          }
+        }
+      }
+    },
     "Leave for your shift" : {
       "localizations" : {
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Vertrek voor je dienst"
+          }
+        }
+      }
+    },
+    "Leave in" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vertrek over"
           }
         }
       }
@@ -1571,6 +1931,26 @@
         }
       }
     },
+    "Metro" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Metro"
+          }
+        }
+      }
+    },
+    "Metro %@" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Metro %@"
+          }
+        }
+      }
+    },
     "Mini spectrum in the closed notch" : {
       "localizations" : {
         "nl" : {
@@ -1627,6 +2007,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "NU"
+          }
+        }
+      }
+    },
+    "NOW OR LATER" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "NU OF STRAKS"
           }
         }
       }
@@ -1711,6 +2101,16 @@
         }
       }
     },
+    "No trip coming up." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geen reis in zicht."
+          }
+        }
+      }
+    },
     "No unread mail." : {
       "localizations" : {
         "nl" : {
@@ -1767,6 +2167,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Er speelt niets"
+          }
+        }
+      }
+    },
+    "Not set" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Niet ingesteld"
           }
         }
       }
@@ -1861,6 +2271,16 @@
         }
       }
     },
+    "Now-or-later advice" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nu-of-straks advies"
+          }
+        }
+      }
+    },
     "Off" : {
       "localizations" : {
         "nl" : {
@@ -1891,22 +2311,22 @@
         }
       }
     },
-    "On foot" : {
-      "localizations" : {
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Te voet"
-          }
-        }
-      }
-    },
     "On power" : {
       "localizations" : {
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Aan de lader"
+          }
+        }
+      }
+    },
+    "On time" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Op tijd"
           }
         }
       }
@@ -1967,6 +2387,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Open %@"
+          }
+        }
+      }
+    },
+    "Open Settings" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open Instellingen"
           }
         }
       }
@@ -2171,6 +2601,16 @@
         }
       }
     },
+    "Primary key" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Primaire sleutel"
+          }
+        }
+      }
+    },
     "Project (optional)" : {
       "localizations" : {
         "nl" : {
@@ -2201,6 +2641,16 @@
         }
       }
     },
+    "Rain check" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Regencheck"
+          }
+        }
+      }
+    },
     "Rain for the coming hours" : {
       "localizations" : {
         "nl" : {
@@ -2211,12 +2661,42 @@
         }
       }
     },
+    "Rain from Buienradar or Open-Meteo" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Regen van Buienradar of Open-Meteo"
+          }
+        }
+      }
+    },
+    "Rain in %lld min" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Regen over %lld min"
+          }
+        }
+      }
+    },
     "Rain until %@" : {
       "localizations" : {
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Regen tot %@"
+          }
+        }
+      }
+    },
+    "Recognise routine" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Routine herkennen"
           }
         }
       }
@@ -2267,6 +2747,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Gmail verwijderen?"
+          }
+        }
+      }
+    },
+    "Repeating locations count as trips automatically" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Terugkerende locaties automatisch als reis"
           }
         }
       }
@@ -2367,6 +2857,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Start je opdrachten “%1$@” en “%2$@”"
+          }
+        }
+      }
+    },
+    "SHOWERS" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "BUIEN"
           }
         }
       }
@@ -2501,12 +3001,12 @@
         }
       }
     },
-    "Shifts & travel" : {
+    "Shifts" : {
       "localizations" : {
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Diensten & reizen"
+            "value" : "Diensten"
           }
         }
       }
@@ -2547,6 +3047,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tonen voor"
+          }
+        }
+      }
+    },
+    "Show from" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tonen vanaf"
           }
         }
       }
@@ -2711,6 +3221,16 @@
         }
       }
     },
+    "Street and number, town" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Straat en nummer, plaats"
+          }
+        }
+      }
+    },
     "System" : {
       "localizations" : {
         "nl" : {
@@ -2727,6 +3247,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Systeemaudio"
+          }
+        }
+      }
+    },
+    "TO %@" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "NAAR %@"
           }
         }
       }
@@ -2791,6 +3321,16 @@
         }
       }
     },
+    "The rain check is off in Settings." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "De regencheck staat uit in Instellingen."
+          }
+        }
+      }
+    },
     "The spectrum analyses the sound of what plays, live. Nothing is recorded, stored or sent." : {
       "localizations" : {
         "nl" : {
@@ -2807,6 +3347,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Spectrum start zodra er iets speelt"
+          }
+        }
+      }
+    },
+    "There %@" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Daar %@"
           }
         }
       }
@@ -2911,12 +3461,32 @@
         }
       }
     },
-    "Travel mode" : {
+    "Train" : {
       "localizations" : {
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Reiswijze"
+            "value" : "Trein"
+          }
+        }
+      }
+    },
+    "Tram" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tram"
+          }
+        }
+      }
+    },
+    "Tram %@" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tram %@"
           }
         }
       }
@@ -3011,6 +3581,16 @@
         }
       }
     },
+    "Wait %lld min, saves %lld min" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wacht %1$lld min, scheelt %2$lld min"
+          }
+        }
+      }
+    },
     "Waiting for permission" : {
       "localizations" : {
         "nl" : {
@@ -3027,6 +3607,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Wacht op geluid"
+          }
+        }
+      }
+    },
+    "Walk" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lopen"
           }
         }
       }
@@ -3071,12 +3661,32 @@
         }
       }
     },
+    "When you have to leave for an event" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wanneer je weg moet voor een afspraak"
+          }
+        }
+      }
+    },
     "Which repositories count" : {
       "localizations" : {
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Welke repo's meetellen"
+          }
+        }
+      }
+    },
+    "Without a home address, or when no route is known" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zonder thuisadres, of als er geen route bekend is"
           }
         }
       }
@@ -3161,6 +3771,16 @@
         }
       }
     },
+    "Your calendar is only read. Travel times come from NS, OVapi and Apple Maps, rain from Buienradar and Open-Meteo. Your home address stays on this Mac and only goes to Apple for routes." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Je agenda wordt alleen gelezen. Reistijden komen van NS, OVapi en Apple Kaarten, regen van Buienradar en Open-Meteo. Je thuisadres blijft op deze Mac en gaat alleen naar Apple voor routes."
+          }
+        }
+      }
+    },
     "Your inbox is empty." : {
       "localizations" : {
         "nl" : {
@@ -3187,6 +3807,46 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "hele dag"
+          }
+        }
+      }
+    },
+    "before the end of your last event" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "voor het einde van je laatste afspraak"
+          }
+        }
+      }
+    },
+    "bike" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "fiets"
+          }
+        }
+      }
+    },
+    "cancelled" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "uitval"
+          }
+        }
+      }
+    },
+    "car" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "auto"
           }
         }
       }
@@ -3381,6 +4041,16 @@
         }
       }
     },
+    "min" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "min"
+          }
+        }
+      }
+    },
     "mostly clear" : {
       "localizations" : {
         "nl" : {
@@ -3421,6 +4091,16 @@
         }
       }
     },
+    "on time" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "op tijd"
+          }
+        }
+      }
+    },
     "partly cloudy" : {
       "localizations" : {
         "nl" : {
@@ -3441,12 +4121,32 @@
         }
       }
     },
+    "platform %@" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "spoor %@"
+          }
+        }
+      }
+    },
     "rain" : {
       "localizations" : {
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "regen"
+          }
+        }
+      }
+    },
+    "rain %lld min" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "regen %lld min"
           }
         }
       }
@@ -3542,6 +4242,16 @@
         }
       }
     },
+    "walk" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "loop"
+          }
+        }
+      }
+    },
     "wisp checks more often while a run is going and calmly after that, to save your GitHub limit and battery." : {
       "localizations" : {
         "nl" : {
@@ -3588,6 +4298,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "wisp markeert niets als gelezen en verandert je mailbox alleen als je bij nieuwe mail op Verwijderen klikt (hij gaat naar de Gmail-prullenbak). Adres en wachtwoord staan alleen in je Keychain."
+          }
+        }
+      }
+    },
+    "wisp needs your calendar to see where you have to be." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "wisp heeft je agenda nodig om te zien waar je moet zijn."
           }
         }
       }

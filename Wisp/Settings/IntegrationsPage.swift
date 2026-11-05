@@ -8,6 +8,8 @@ struct IntegrationsPage: View {
     @ObservedObject var nowPlaying: NowPlaying
     @ObservedObject private var prefs = Preferences.shared
     @ObservedObject private var github = GitHubStore.shared
+    @ObservedObject private var departure = DepartureStore.shared
+    @State private var managingNS = false
     @State private var managingGmail = false
     @State private var confirmRemoveGmail = false
 
@@ -20,6 +22,8 @@ struct IntegrationsPage: View {
                     .disabled(mail.isConfigured)
                 Button { SettingsNavigation.shared.page = .github } label: { Text(verbatim: "GitHub") }
                     .disabled(github.status != .disconnected)
+                Button { managingNS = true } label: { Text(verbatim: "NS") }
+                    .disabled(departure.hasNSKey)
             } label: {
                 Label("Add integration", systemImage: "plus")
                     .font(.system(size: 13, weight: .semibold))
@@ -32,7 +36,7 @@ struct IntegrationsPage: View {
             .buttonStyle(.plain)
             .menuIndicator(.hidden)
             .fixedSize()
-            .disabled(mail.isConfigured && github.status != .disconnected)
+            .disabled(mail.isConfigured && github.status != .disconnected && departure.hasNSKey)
         } content: {
             SettingsGroup(header: String(localized: "In use")) {
                 if mail.isConfigured {
@@ -45,12 +49,18 @@ struct IntegrationsPage: View {
                                    manage: { SettingsNavigation.shared.page = .github },
                                    remove: { github.disconnect() })
                 }
+                if departure.hasNSKey {
+                    IntegrationRow(name: "NS", color: Theme.nsYellow, status: String(localized: "Key in your Keychain"),
+                                   manage: { managingNS = true },
+                                   remove: { departure.setNSKey(nil) })
+                }
                 IntegrationRow(name: String(localized: "Music"), color: Theme.ok, status: musicStatus,
                                manage: { SettingsNavigation.shared.page = .music },
                                remove: nil)
             }
         }
         .sheet(isPresented: $managingGmail) { GmailSheet(store: mail) }
+        .sheet(isPresented: $managingNS) { NSKeySheet(store: departure) }
         .confirmationDialog(String(localized: "Remove Gmail?"), isPresented: $confirmRemoveGmail) {
             Button("Remove", role: .destructive) { mail.disconnect() }
         } message: {
@@ -151,6 +161,41 @@ private struct GmailSheet: View {
                 }
                 .keyboardShortcut(.defaultAction)
                 .disabled(!address.contains("@") || password.replacingOccurrences(of: " ", with: "").count < 16)
+            }
+        }
+        .padding(20)
+        .frame(width: 420)
+    }
+}
+
+/// The key for NS's travel information: departures, tracks and delays. Keychain only.
+private struct NSKeySheet: View {
+    @ObservedObject var store: DepartureStore
+    @Environment(\.dismiss) private var dismiss
+    @State private var key = ""
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            Text(verbatim: "NS").font(.headline)
+            SecureField("API key", text: $key, prompt: Text("Primary key"))
+                .textFieldStyle(.roundedBorder)
+            Link("Get a free key…", destination: URL(string: "https://apiportal.ns.nl")!)
+                .font(.caption)
+            Text("For lines, platforms and delays in the Departure tab. Without it, wisp shows a total time from Apple Maps. The key is kept only in your Keychain.")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+            HStack {
+                Spacer()
+                Button("Cancel", role: .cancel) { dismiss() }
+                    .keyboardShortcut(.cancelAction)
+                Button("Save") {
+                    store.setNSKey(key.trimmingCharacters(in: .whitespacesAndNewlines))
+                    key = ""
+                    dismiss()
+                }
+                .keyboardShortcut(.defaultAction)
+                .disabled(key.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
             }
         }
         .padding(20)

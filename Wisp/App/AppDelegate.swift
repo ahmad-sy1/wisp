@@ -165,11 +165,15 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             .removeDuplicates()
             .sink { count in notch.model.badges[.github] = count }
             .store(in: &subscriptions)
+        // One status on the notch: a trip is on the clock, so it goes before GitHub.
         github.$compact
             .removeDuplicates()
+            .combineLatest(DepartureStore.shared.$output.removeDuplicates())
             // @Published fires before the new value is stored.
             .receive(on: RunLoop.main)
-            .sink { compact in notch.setStatus(StatusWings(compact)) }
+            .sink { compact, output in
+                notch.setStatus(output.map { StatusWings($0) } ?? StatusWings(compact))
+            }
             .store(in: &subscriptions)
         github.onEvent = { event in
             let focus = FocusStore.shared
@@ -188,6 +192,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             }
         }
         github.start()
+        DepartureStore.shared.start()
     }
 
     // MARK: - Music

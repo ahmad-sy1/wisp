@@ -2,7 +2,7 @@ import SwiftUI
 
 /// The pages in the Settings sidebar, in order (boards 10.1–10.6).
 enum SettingsPageID: String, CaseIterable, Identifiable {
-    case general, notch, integrations, agenda, github, music, focus
+    case general, notch, integrations, agenda, departure, github, music, focus
 
     var id: String { rawValue }
 
@@ -12,6 +12,7 @@ enum SettingsPageID: String, CaseIterable, Identifiable {
         case .notch:        String(localized: "Notch")
         case .integrations: String(localized: "Integrations")
         case .agenda:       String(localized: "Calendar & weather")
+        case .departure:    String(localized: "Departure")
         case .github:       "GitHub"
         case .music:        String(localized: "Music")
         case .focus:        String(localized: "Focus")
@@ -24,6 +25,7 @@ enum SettingsPageID: String, CaseIterable, Identifiable {
         case .notch:        "rectangle.topthird.inset.filled"
         case .integrations: "powerplug.portrait"
         case .agenda:       "calendar"
+        case .departure:    "tram"
         case .github:       WispGlyph.pullRequest
         case .music:        "music.note"
         case .focus:        "timer"
@@ -89,6 +91,7 @@ struct SettingsView: View {
         case .notch:        NotchPage(prefs: prefs, mail: .shared, clipboard: .shared, stats: .shared)
         case .integrations: IntegrationsPage(mail: .shared, nowPlaying: .shared)
         case .agenda:       CalendarPage(agenda: .shared, weather: .shared)
+        case .departure:    DeparturePage(store: .shared, agenda: .shared)
         case .github:       GitHubPage(store: .shared)
         case .music:        MusicPage(spectrum: .shared)
         case .focus:        FocusPage(focus: .shared)
