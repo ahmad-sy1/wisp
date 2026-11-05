@@ -13,6 +13,10 @@ What is planned, roughly in order. Every item becomes its own branch and pull re
 | **Own app icon and sounds** | The wisp mark from board 0; short, quiet system-like sounds. | |
 | **First signed release** | `./scripts/release.sh` once the main tabs are in. See [RELEASING.md](RELEASING.md). | |
 
+## Later
+
+- **Departure**: NDW open data for the road a jam is on; a choice of route for repeated trips; other countries' providers behind `TravelProvider`.
+
 ## Decided against
 
 - **Song lyrics** (LRCLIB): built and removed again. The spectrum is enough, and no song data needs to leave the Mac.
