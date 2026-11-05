@@ -23,7 +23,7 @@ final class GitHubStore: ObservableObject {
     @Published private(set) var repositories: [GitHubRepository] = []
     @Published private(set) var seen: RadarSeen {
         didSet {
-            if let data = try? JSONEncoder().encode(seen) { defaults.set(data, forKey: Key.seen) }
+            if !isDemo, let data = try? JSONEncoder().encode(seen) { defaults.set(data, forKey: Key.seen) }
             updateCompact()
         }
     }
@@ -54,6 +54,8 @@ final class GitHubStore: ObservableObject {
     }
 
     private let defaults = UserDefaults.standard
+    /// `-githubDemo`: made-up data must not end up in the real saved state.
+    private var isDemo = false
     private var service: (any GitHubService)?
     private var sync: RadarSync?
     private var wake: DispatchWorkItem?
@@ -198,7 +200,8 @@ final class GitHubStore: ObservableObject {
                 status = .connected(login: login)
                 refreshRepositories()
             }
-            let result = try await sync.refresh(excluded: excludedRepositories, lastActivity: seen.lastActivity)
+            let result = try await sync.refresh(excluded: excludedRepositories, lastActivity: seen.lastActivity,
+                                                found: { [weak self] partial in await self?.showList(partial) })
             guard !Task.isCancelled else { return }
             apply(result, login: login)
             failures = 0
@@ -209,15 +212,22 @@ final class GitHubStore: ObservableObject {
             status = .failed(Self.message(for: GitHubError.unauthorized))
             return
         } catch GitHubError.rateLimited(let until) {
+            NSLog("wisp: GitHub asks to wait until \(until)")
             blockedUntil = until
         } catch is CancellationError {
             return
         } catch {
             // Offline or GitHub is down: keep what is shown and try again later, quietly.
             guard !Task.isCancelled else { return }
+            NSLog("wisp: GitHub round failed: \(error)")
             failures += 1
         }
         await scheduleNext()
+    }
+
+    /// The first round takes a moment with many pull requests: the list comes first.
+    private func showList(_ partial: RadarSnapshot) {
+        if snapshot.mine.isEmpty && snapshot.reviews.isEmpty { snapshot = partial }
     }
 
     private func apply(_ result: RadarSync.Result, login: String) {
@@ -353,6 +363,7 @@ final class GitHubStore: ObservableObject {
 
     #if DEBUG
     private func startDemo() {
+        isDemo = true
         func pull(_ repo: String, _ number: Int, _ title: String, _ sha: String) -> PullRequest {
             var pull = PullRequest(repository: "demo/\(repo)", number: number, title: title,
                                    url: URL(string: "https://github.com/demo/\(repo)/pull/\(number)")!,

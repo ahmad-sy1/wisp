@@ -334,7 +334,7 @@ final class RadarSyncTests: XCTestCase {
         XCTAssertTrue(first.snapshot.anyRunning)
         _ = try await sync.refresh(excluded: [], lastActivity: [:])
         var calls = await mock.activityCalls
-        XCTAssertEqual(calls, 1, "unchanged updatedAt: no new activity requests")
+        XCTAssertEqual(calls, 0, "first look and unchanged updatedAt: no activity requests")
         var checks = await mock.checksCalls
         XCTAssertEqual(checks, 2, "checks don't move updatedAt: asked each round")
 
@@ -342,8 +342,36 @@ final class RadarSyncTests: XCTestCase {
         _ = try await sync.refresh(excluded: [], lastActivity: [:])
         calls = await mock.activityCalls
         checks = await mock.checksCalls
-        XCTAssertEqual(calls, 2)
+        XCTAssertEqual(calls, 1)
         XCTAssertEqual(checks, 3)
+    }
+
+    func testCommentsAfterAPullRequestMovedAreNewerThanTheFirstLook() async throws {
+        let first = Date(timeIntervalSince1970: 1000)
+        let mock = MockGitHubService(mine: [pull(1, updated: first)])
+        await mock.set(activity: ["me/wisp#1": [activity("old", 500), activity("new", 1500)]])
+        let sync = RadarSync(service: mock)
+        _ = try await sync.refresh(excluded: [], lastActivity: [:])
+        await mock.set(mine: [pull(1, updated: Date(timeIntervalSince1970: 2000))])
+        let result = try await sync.refresh(excluded: [], lastActivity: [:])
+        XCTAssertEqual(result.activity["me/wisp#1"]?.map(\.author), ["new"])
+    }
+
+    func testAfterARestartSavedActivityStillCatchesUp() async throws {
+        let mock = MockGitHubService(mine: [pull(1)])
+        await mock.set(activity: ["me/wisp#1": [activity("old", 500), activity("new", 1500)]])
+        let result = try await RadarSync(service: mock).refresh(excluded: [], lastActivity: ["me/wisp#1": Date(timeIntervalSince1970: 1000)])
+        XCTAssertEqual(result.activity["me/wisp#1"]?.map(\.author), ["new"])
+    }
+
+    func testTheListIsReportedBeforeTheChecks() async throws {
+        final class Box: @unchecked Sendable { var seen: RadarSnapshot? }
+        let box = Box()
+        let mock = MockGitHubService(mine: [pull(1)], checks: ["abc": CheckSummary(status: .passed, completed: 1, total: 1)])
+        let sync = RadarSync(service: mock)
+        let result = try await sync.refresh(excluded: [], lastActivity: [:], found: { box.seen = $0 })
+        XCTAssertEqual(box.seen?.mine.count, 1)
+        XCTAssertEqual(result.snapshot.mine.first?.checks.status, .passed)
     }
 
     func testExcludedRepositoriesDontCount() async throws {
