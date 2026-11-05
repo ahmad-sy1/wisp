@@ -132,7 +132,8 @@ final class DepartureStore: ObservableObject {
         guard started, !asleep else { return }
         let now = clock()
         let events = readEvents(now: now)
-        var plan = DepartureEngine.plan(now: now, events: events, settings: settings, calendar: .current)
+        let found = DepartureEngine.plan(now: now, events: events, settings: settings, calendar: .current)
+        var plan = found
         if plan?.eventID != currentPlan?.eventID || plan?.mode != currentPlan?.mode || plan?.kind != currentPlan?.kind {
             options = []
             later = nil
@@ -140,8 +141,8 @@ final class DepartureStore: ObservableObject {
             rain = nil
             fetched = nil
         }
-        plan?.origin = known(plan?.origin)
-        plan?.destination = known(plan?.destination)
+        plan?.origin = known(found?.origin)
+        plan?.destination = known(found?.destination)
         currentPlan = plan
 
         guard let plan else {

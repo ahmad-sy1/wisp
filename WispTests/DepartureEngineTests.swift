@@ -215,7 +215,9 @@ final class ResolveTests: XCTestCase {
     }
 
     func testPastOptionsAreSkipped() {
-        let options = [option(at(16, 1), 30), option(at(16, 20), 30)]
+        var options = [option(at(16, 1), 30), option(at(16, 20), 30)]
+        options[0].legs = [TravelLeg(kind: .rail, minutes: 30)]
+        options[1].legs = options[0].legs
         XCTAssertEqual(DepartureEngine.resolve(plan: home, options: options, now: at(16, 10)).chosen, options[1])
     }
 
