@@ -10,6 +10,7 @@ struct TabContent: View {
         case .home: HomeTab(sessions: .shared)
         case .mail: MailTab(store: .shared, openSettings: openSettings)
         case .agenda: AgendaTab(agenda: .shared, weather: .shared)
+        case .github: GitHubTab(store: .shared, openSettings: openSettings)
         case .focus: FocusTab(focus: .shared)
         case .clipboard: ClipboardTab(clipboard: .shared)
         case .notes: NotesTab(notes: .shared)
@@ -27,7 +28,7 @@ struct PlaceholderTab: View {
     var body: some View {
         Card {
             VStack(spacing: 8) {
-                Image(systemName: tab.symbol)
+                Image.wisp(tab.symbol)
                     .font(.system(size: 22, weight: .light))
                     .foregroundStyle(Theme.textSecondary)
                 Text(tab.title)

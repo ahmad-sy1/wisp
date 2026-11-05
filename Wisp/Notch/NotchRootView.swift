@@ -15,16 +15,32 @@ struct NotchRootView: View {
         ZStack(alignment: .top) {
             shape.fill(Theme.panel)
 
-            if model.isCollapsed && model.focusWings {
-                FocusWings(focus: focus, color: prefs.accent.color,
-                           height: model.notchSize.height, wing: model.wingWidth)
-                    .transition(.opacity)
-            } else if model.isCollapsed && model.musicWings, let track = player.track {
-                MusicWings(track: track, levels: spectrum.isRunning && prefs.miniSpectrum ? spectrum.levels : nil,
-                           height: model.notchSize.height, wing: model.wingWidth)
-                    .transition(.opacity)
-            } else if model.isCollapsed && model.mailWings {
-                MailWings(count: model.unreadCount, height: model.notchSize.height, wing: model.wingWidth)
+            if model.isCollapsed {
+                switch model.wings {
+                case .focus:
+                    FocusWings(focus: focus, color: prefs.accent.color,
+                               height: model.notchSize.height, wing: model.wingWidth)
+                        .transition(.opacity)
+                case .status(let status):
+                    StatusWingsView(status: status, height: model.notchSize.height)
+                        .transition(.opacity)
+                case .music:
+                    if let track = player.track {
+                        MusicWings(track: track, levels: spectrum.isRunning && prefs.miniSpectrum ? spectrum.levels : nil,
+                                   height: model.notchSize.height, wing: model.wingWidth)
+                            .transition(.opacity)
+                    }
+                case .mail:
+                    MailWings(count: model.unreadCount, height: model.notchSize.height, wing: model.wingWidth)
+                        .transition(.opacity)
+                case .none:
+                    EmptyView()
+                }
+            }
+
+            if let flash = model.flash {
+                shape.fill(flash.opacity(0.4))
+                    .allowsHitTesting(false)
                     .transition(.opacity)
             }
 

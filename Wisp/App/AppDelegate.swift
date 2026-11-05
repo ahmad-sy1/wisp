@@ -33,6 +33,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         startMail(notch: notch)
         startMusic(notch: notch)
         startFocus(notch: notch)
+        startGitHub(notch: notch)
         ClipboardStore.shared.start()
         startHotKey(notch: notch)
         #if DEBUG
@@ -50,7 +51,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             openSettings()
         }
         if let path = UserDefaults.standard.string(forKey: "snapshot") {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+            // `-snapshotDelay 8` for data that takes longer to arrive.
+            let delay = UserDefaults.standard.object(forKey: "snapshotDelay") as? Double ?? 3
+            DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
                 let url = URL(fileURLWithPath: path)
                 if settingsPage != nil { self.snapshotSettings(to: url) } else { notch.snapshot(to: url) }
                 NSApp.terminate(nil)
@@ -149,6 +152,42 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         // `-focusStart YES`: start a session at launch, for snapshots of the running timer.
         if UserDefaults.standard.bool(forKey: "focusStart") { focus.start() }
         #endif
+    }
+
+    // MARK: - GitHub
+
+    private func startGitHub(notch: NotchController) {
+        let github = GitHubStore.shared
+        // Blue count on the tab.
+        github.$snapshot
+            .combineLatest(github.$notifyReview)
+            .map { snapshot, on in on ? snapshot.reviews.count : 0 }
+            .removeDuplicates()
+            .sink { count in notch.model.badges[.github] = count }
+            .store(in: &subscriptions)
+        github.$compact
+            .removeDuplicates()
+            // @Published fires before the new value is stored.
+            .receive(on: RunLoop.main)
+            .sink { compact in notch.setStatus(StatusWings(compact)) }
+            .store(in: &subscriptions)
+        github.onEvent = { event in
+            let focus = FocusStore.shared
+            // Quiet while focusing with "Do not disturb", and never over a permission request.
+            guard !(focus.isActive && focus.doNotDisturb), ClaudeSessions.shared.approval == nil else { return }
+            switch event {
+            case .checksFailed where github.notifyFailed:
+                notch.flash(Theme.badge)
+                if github.tickAnimation { notch.tick() }
+            case .checksPassed where github.notifyPassed:
+                notch.flash(Theme.ok)
+            case .reviewRequested where github.notifyReview, .newActivity where github.notifyComments:
+                if github.tickAnimation { notch.tick() }
+            default:
+                break
+            }
+        }
+        github.start()
     }
 
     // MARK: - Music

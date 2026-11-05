@@ -2,7 +2,7 @@ import SwiftUI
 
 /// The pages in the Settings sidebar, in order (boards 10.1–10.6).
 enum SettingsPageID: String, CaseIterable, Identifiable {
-    case general, notch, integrations, agenda, music, focus
+    case general, notch, integrations, agenda, github, music, focus
 
     var id: String { rawValue }
 
@@ -12,6 +12,7 @@ enum SettingsPageID: String, CaseIterable, Identifiable {
         case .notch:        String(localized: "Notch")
         case .integrations: String(localized: "Integrations")
         case .agenda:       String(localized: "Calendar & weather")
+        case .github:       "GitHub"
         case .music:        String(localized: "Music")
         case .focus:        String(localized: "Focus")
         }
@@ -23,6 +24,7 @@ enum SettingsPageID: String, CaseIterable, Identifiable {
         case .notch:        "rectangle.topthird.inset.filled"
         case .integrations: "powerplug.portrait"
         case .agenda:       "calendar"
+        case .github:       WispGlyph.pullRequest
         case .music:        "music.note"
         case .focus:        "timer"
         }
@@ -87,6 +89,7 @@ struct SettingsView: View {
         case .notch:        NotchPage(prefs: prefs, mail: .shared, clipboard: .shared, stats: .shared)
         case .integrations: IntegrationsPage(mail: .shared, nowPlaying: .shared)
         case .agenda:       CalendarPage(agenda: .shared, weather: .shared)
+        case .github:       GitHubPage(store: .shared)
         case .music:        MusicPage(spectrum: .shared)
         case .focus:        FocusPage(focus: .shared)
         }
@@ -102,7 +105,7 @@ private struct SidebarItem: View {
     var body: some View {
         Button(action: action) {
             HStack(spacing: 10) {
-                Image(systemName: id.symbol)
+                Image.wisp(id.symbol)
                     .font(.system(size: 13))
                     .frame(width: 18)
                 Text(id.title)

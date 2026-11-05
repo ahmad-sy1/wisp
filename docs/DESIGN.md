@@ -27,6 +27,11 @@ The boards in [`design/boards/`](../design/boards) are the visual source of trut
 | [10.4](../design/boards/10.4-settings-calendar-weather.png) | Settings: Calendar & weather |
 | [10.5](../design/boards/10.5-settings-music.png) | Settings: Music |
 | [10.6](../design/boards/10.6-settings-focus.png) | Settings: Focus |
+| [11](../design/boards/11-compact-notch-states.png) | closed notch: departure and GitHub states |
+| [12](../design/boards/12-departure.png) | Departure |
+| [13](../design/boards/13-github.png) | GitHub |
+| [14](../design/boards/14-settings-departure.png) | Settings: Departure |
+| [15](../design/boards/15-settings-github.png) | Settings: GitHub |
 
 ## Principles
 
@@ -63,6 +68,7 @@ The boards in [`design/boards/`](../design/boards) are the visual source of trut
 | Badge | `badge` | `#FF453A` |
 | OK, music | `ok` | `#30D158` |
 | Warning, shifts | `warning` | `#FF9F0A` |
+| Review requests | `info` | `#0A84FF`, whatever the accent |
 | Accent (Settings) | `Accent` | `#0A84FF` (default), `#30D158`, `#FF9F0A`, `#BF5AF2` |
 
 ## Shapes and type
@@ -74,7 +80,7 @@ The boards in [`design/boards/`](../design/boards) are the visual source of trut
 
 ## Tab bar
 
-Left, in this order: **Home · Mail · Agenda · Focus · Muziek · Klembord · Notities · Systeem · Bestanden**. Right: **Settings** (sliders icon). A tab may put its own controls just left of Settings, as Mail does with *Alles / Ongelezen / ↗*, Agenda with today's date and Music with the output device.
+Left, in this order: **Home · Mail · Agenda · GitHub · Focus · Muziek · Klembord · Notities · Systeem · Bestanden**. Right: **Settings** (sliders icon). A tab may put its own controls just left of Settings, as Mail does with *Alles / Ongelezen / ↗*, Agenda with today's date and Music with the output device.
 
 Opened with the shortcut (⌥Space, Settings → General, board 10.2) the panel stays until the shortcut again, Esc or a click elsewhere; ← and → walk through the visible tabs when no text field has the keyboard.
 
@@ -159,9 +165,24 @@ Four equal cards in the fixed 150 pt area (board 7), each with a label (12 pt gr
 | Opslag | free space in whole GB, a bar for what is used (accent), *vrij van 512 GB* |
 | Tab bar | the Wi-Fi icon and network name; *Wi‑Fi* without Location access, *Wifi uit* when off |
 
+## GitHub tab
+
+Two cards in the fixed 150 pt area (board 13):
+
+| Part | Spec |
+|---|---|
+| Left card (306 pt) | a switch *Mijn PR's · 4 / Reviews · 2* (22 pt pills on `control`); rows of 25 pt: an indicator, the title (12.5 pt), *wisp #43* (11 pt grey), the status (11 pt medium). Scrolls inside the card. A click opens the pull request |
+| Indicator and status | spinner and *2/5*; red *gefaald*; green *klaar*; orange *3 reacties* until you've seen them |
+| Right card | *CONTRIBUTIONS*, *16 weken*; a grid of 16 × 7 in green levels; *dagen streak*, *commits/week* and *gemerged* (15 pt bold above 10.5 pt grey) |
+| Tab | the pull request glyph (`WispGlyph`, SF Symbols has no match) with a blue `info` count of requested reviews |
+
+Not on the board, in the same style: a failed row gets a second line with the failed job and ↗, which opens that run. Reviews have a blue dot and no check status. *Geen open pull requests*, *Niets te reviewen*, and a *Koppel GitHub* state like Mail's.
+
 ## Closed notch and mail peek
 
-On the closed notch the wings show one thing at a time, in this order: a running focus session (ring and time), music (artwork and mini spectrum, boards 9.6), unread mail (an envelope and the red count, board 8). Unread mail can be switched off in Settings → Gmail.
+On the closed notch the wings show one thing at a time, in this order: a running focus session (ring and time), an urgent status (CI failed, review requested, new comments; board 11), music (artwork and mini spectrum, boards 9.6), a calm status (a CI run going), unread mail (an envelope and the red count, board 8). Unread mail can be switched off in Settings → Gmail.
+
+A status (`StatusWings`, board 11) has an icon and short text left of the camera and short text right of it, 12 pt semibold. Both wings are as wide as the wider one, because the window is centred on the camera. The notch drops 2 pt and springs back on a new event (*Tik-animatie*); CI gets a short flash of red or green. A click opens the tab it comes from. Everything stays quiet during a focus session with *Niet storen* and under a permission request.
 
 New mail peeks out of the notch (board 8): 420 × 132 pt, corner radius 26.
 
@@ -218,6 +239,8 @@ Built in the same style, not on the boards (open to a design):
 - **Music**: macOS doesn't tell apps whether system audio is allowed, so the dot shows wisp's own switch (*On* / *Off*).
 - **Focus**: with no learned rules, one row *No rules yet*.
 - **General**: after a language change, the grey line says to restart and a *Restart* button appears next to the pop-up.
+
+Settings → GitHub (board 15) follows the board. Not connected, the account row offers *Gebruik GitHub CLI-login* (if `gh` is installed) and *Token toevoegen…*; *Alle (6)* opens a sheet with a checkbox per repository.
 
 Settings → Music (board 10.5): the system-audio row reads *Aan* / *Uit*, not *Toegestaan*, because macOS doesn't tell apps whether it granted access. *Mini spectrum* and *Battery saver* are dimmed while the live spectrum is off.
 
