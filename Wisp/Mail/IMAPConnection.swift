@@ -67,7 +67,8 @@ actor IMAPConnection {
         for line in try await command("LIST \"\" \"*\"") where line.text.contains("\\Trash") {
             // * LIST (\HasNoChildren \Trash) "/" "[Gmail]/Trash"
             guard line.text.hasSuffix("\""),
-                  let open = line.text.dropLast().lastIndex(of: "\"") else { continue }
+                let open = line.text.dropLast().lastIndex(of: "\"")
+            else { continue }
             return String(line.text[line.text.index(after: open)..<line.text.index(before: line.text.endIndex)])
         }
         return nil
@@ -101,7 +102,8 @@ actor IMAPConnection {
             "\(prefix) (UID FLAGS X-GM-THRID INTERNALDATE BODY.PEEK[HEADER.FIELDS (FROM SUBJECT)])")
         return lines.compactMap { line in
             guard line.text.hasPrefix("* "), line.text.contains("FETCH"),
-                  let uid = Self.number(after: "UID ", in: line.text).flatMap(UInt32.init) else { return nil }
+                let uid = Self.number(after: "UID ", in: line.text).flatMap(UInt32.init)
+            else { return nil }
             let headers = MailHeaders.parse(line.literals.first.map { String(decoding: $0, as: UTF8.self) } ?? "")
             let (name, address) = MailHeaders.splitAddress(headers["from"] ?? "")
             return MailMessage(
@@ -139,7 +141,8 @@ actor IMAPConnection {
                 return changed
             }
             if line.text.hasPrefix("* "),
-               line.text.contains("EXISTS") || line.text.contains("EXPUNGE") || line.text.contains("FETCH") {
+                line.text.contains("EXISTS") || line.text.contains("EXPUNGE") || line.text.contains("FETCH")
+            {
                 changed = true
                 endIdle()
             }
@@ -183,9 +186,11 @@ actor IMAPConnection {
     private func send(_ text: String) async throws {
         guard let conn else { throw IMAPError.closed }
         try await withCheckedThrowingContinuation { (cont: CheckedContinuation<Void, Error>) in
-            conn.send(content: Data(text.utf8), completion: .contentProcessed { err in
-                if let err { cont.resume(throwing: err) } else { cont.resume() }
-            })
+            conn.send(
+                content: Data(text.utf8),
+                completion: .contentProcessed { err in
+                    if let err { cont.resume(throwing: err) } else { cont.resume() }
+                })
         }
     }
 
@@ -195,7 +200,8 @@ actor IMAPConnection {
         while true {
             let line = try await readLine()
             if let open = line.lastIndex(of: "{"), line.hasSuffix("}"),
-               let n = Int(line[line.index(after: open)..<line.index(before: line.endIndex)]) {
+                let n = Int(line[line.index(after: open)..<line.index(before: line.endIndex)])
+            {
                 response.text += String(line[..<open])
                 response.literals.append(try await readBytes(n))
             } else {
@@ -227,10 +233,15 @@ actor IMAPConnection {
         guard let conn else { throw IMAPError.closed }
         let chunk: Data = try await withCheckedThrowingContinuation { cont in
             conn.receive(minimumIncompleteLength: 1, maximumLength: 65_536) { data, _, isComplete, err in
-                if let err { cont.resume(throwing: err) }
-                else if let data, !data.isEmpty { cont.resume(returning: data) }
-                else if isComplete { cont.resume(throwing: IMAPError.closed) }
-                else { cont.resume(returning: Data()) }
+                if let err {
+                    cont.resume(throwing: err)
+                } else if let data, !data.isEmpty {
+                    cont.resume(returning: data)
+                } else if isComplete {
+                    cont.resume(throwing: IMAPError.closed)
+                } else {
+                    cont.resume(returning: Data())
+                }
             }
         }
         buffer.append(chunk)
@@ -308,15 +319,18 @@ enum MailHeaders {
         let ns = value as NSString
         for m in regex.matches(in: value, range: NSRange(location: 0, length: ns.length)) {
             guard let whole = Range(m.range, in: value),
-                  let cs = Range(m.range(at: 1), in: value),
-                  let enc = Range(m.range(at: 2), in: value),
-                  let text = Range(m.range(at: 3), in: value) else { continue }
+                let cs = Range(m.range(at: 1), in: value),
+                let enc = Range(m.range(at: 2), in: value),
+                let text = Range(m.range(at: 3), in: value)
+            else { continue }
             result += value[cursor..<whole.lowerBound]
-            let bytes: Data? = value[enc].uppercased() == "B"
+            let bytes: Data? =
+                value[enc].uppercased() == "B"
                 ? Data(base64Encoded: padded(String(value[text])))
                 : quotedPrintable(String(value[text]))
             let cfEnc = CFStringConvertIANACharSetNameToEncoding(String(value[cs]) as CFString)
-            let encoding = cfEnc == kCFStringEncodingInvalidId
+            let encoding =
+                cfEnc == kCFStringEncodingInvalidId
                 ? String.Encoding.utf8
                 : String.Encoding(rawValue: CFStringConvertEncodingToNSStringEncoding(cfEnc))
             result += bytes.flatMap { String(data: $0, encoding: encoding) } ?? String(value[whole])
@@ -334,12 +348,16 @@ enum MailHeaders {
         var out = Data()
         var chars = Array(s.utf8)[...]
         while let c = chars.popFirst() {
-            if c == UInt8(ascii: "_") { out.append(0x20) }
-            else if c == UInt8(ascii: "="), chars.count >= 2,
-                    let byte = UInt8(String(decoding: chars.prefix(2), as: UTF8.self), radix: 16) {
+            if c == UInt8(ascii: "_") {
+                out.append(0x20)
+            } else if c == UInt8(ascii: "="), chars.count >= 2,
+                let byte = UInt8(String(decoding: chars.prefix(2), as: UTF8.self), radix: 16)
+            {
                 out.append(byte)
                 chars = chars.dropFirst(2)
-            } else { out.append(c) }
+            } else {
+                out.append(c)
+            }
         }
         return out
     }

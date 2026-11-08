@@ -14,8 +14,8 @@ struct DepartureTab: View {
                 Card {
                     switch output.plan.mode {
                     case .transit: AlternativesCard(output: output, hasKey: store.hasNSKey)
-                    case .car:     LaterCard(output: output, enabled: store.settings.nowOrLater)
-                    case .bike:    RainCard(output: output, enabled: store.settings.rainCheck)
+                    case .car: LaterCard(output: output, enabled: store.settings.nowOrLater)
+                    case .bike: RainCard(output: output, enabled: store.settings.rainCheck)
                     }
                 }
             }
@@ -107,7 +107,7 @@ private struct TripCard: View {
 
     private var header: String {
         switch output.plan.kind {
-        case .home:  String(localized: "HEADING HOME")
+        case .home: String(localized: "HEADING HOME")
         case .event: String(localized: "TO \(output.plan.title.uppercased())")
         }
     }
@@ -160,13 +160,17 @@ private struct ModeSwitch: View {
     var body: some View {
         HStack(spacing: 1) {
             ForEach(TravelMode.allCases) { item in
-                Button { choose(item) } label: {
+                Button {
+                    choose(item)
+                } label: {
                     Image(systemName: item.symbol)
                         .font(.system(size: 11.5))
                         .foregroundStyle(item == mode ? Theme.textPrimary : Theme.textSecondary)
                         .frame(width: 30, height: 22)
-                        .background(RoundedRectangle(cornerRadius: 7, style: .continuous)
-                            .fill(item == mode ? Theme.activeTab : .clear))
+                        .background(
+                            RoundedRectangle(cornerRadius: 7, style: .continuous)
+                                .fill(item == mode ? Theme.activeTab : .clear)
+                        )
                         .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
@@ -231,12 +235,12 @@ private struct LegChips: View {
 
     private func badgeStyle(_ leg: TravelLeg) -> (String, Color, Color) {
         switch leg.kind {
-        case .walk:  (String(localized: "walk"), Theme.activeTab, Theme.textSecondary)
+        case .walk: (String(localized: "walk"), Theme.activeTab, Theme.textSecondary)
         case .drive: (String(localized: "car"), Theme.activeTab, Theme.textSecondary)
-        case .bike:  (String(localized: "bike"), Theme.activeTab, Theme.textSecondary)
+        case .bike: (String(localized: "bike"), Theme.activeTab, Theme.textSecondary)
         case .rail where leg.line == "NS": ("NS", Theme.nsYellow, .black)
-        case .rail:  (leg.line ?? String(localized: "Train"), .white, .black)
-        default:     (leg.line ?? leg.name, .white, .black)
+        case .rail: (leg.line ?? String(localized: "Train"), .white, .black)
+        default: (leg.line ?? leg.name, .white, .black)
         }
     }
 

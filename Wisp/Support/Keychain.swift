@@ -12,7 +12,8 @@ enum Keychain {
         query[kSecMatchLimit as String] = kSecMatchLimitOne
         var result: AnyObject?
         guard SecItemCopyMatching(query as CFDictionary, &result) == errSecSuccess,
-              let data = result as? Data else { return nil }
+            let data = result as? Data
+        else { return nil }
         return String(data: data, encoding: .utf8)
     }
 
@@ -35,8 +36,10 @@ enum Keychain {
     }
 
     private static func baseQuery(_ account: String) -> [String: Any] {
-        [kSecClass as String: kSecClassGenericPassword,
-         kSecAttrService as String: service,
-         kSecAttrAccount as String: account]
+        [
+            kSecClass as String: kSecClassGenericPassword,
+            kSecAttrService as String: service,
+            kSecAttrAccount as String: account,
+        ]
     }
 }

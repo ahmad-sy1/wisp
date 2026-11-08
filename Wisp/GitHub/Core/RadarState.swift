@@ -53,8 +53,10 @@ enum Radar {
 
     /// Compares a fresh snapshot with what was seen: the events to report, and the updated seen state.
     /// `activity` holds, per pull request, what the store fetched for those whose `updatedAt` moved.
-    static func diff(snapshot: RadarSnapshot, activity: [String: [PullActivity]], login: String,
-                     seen old: RadarSeen) -> (events: [RadarEvent], seen: RadarSeen) {
+    static func diff(
+        snapshot: RadarSnapshot, activity: [String: [PullActivity]], login: String,
+        seen old: RadarSeen
+    ) -> (events: [RadarEvent], seen: RadarSeen) {
         var seen = old
         var events: [RadarEvent] = []
         let silent = !old.hasBaseline
@@ -127,9 +129,10 @@ enum Radar {
     /// What the closed notch shows, most urgent first: failed, review, comments, running.
     static func compact(snapshot: RadarSnapshot, seen: RadarSeen, notifications: RadarNotifications) -> RadarCompact {
         if notifications.failed,
-           let pull = snapshot.mine.first(where: {
-               $0.checks.status == .failed && !seen.acknowledgedFailures.contains(failureKey($0))
-           }) {
+            let pull = snapshot.mine.first(where: {
+                $0.checks.status == .failed && !seen.acknowledgedFailures.contains(failureKey($0))
+            })
+        {
             return .failed(pull, job: pull.checks.failedJobs.first?.name)
         }
         if notifications.review {
@@ -137,13 +140,15 @@ enum Radar {
             if let first = waiting.first { return .reviewRequested(first, count: waiting.count) }
         }
         if notifications.comments,
-           let pull = snapshot.mine.first(where: { (seen.unseenActivity[$0.id] ?? 0) > 0 }) {
+            let pull = snapshot.mine.first(where: { (seen.unseenActivity[$0.id] ?? 0) > 0 })
+        {
             return .newActivity(pull, count: seen.unseenActivity[pull.id] ?? 0)
         }
         let running = snapshot.mine.filter { $0.checks.status == .running }
         if !running.isEmpty {
-            return .running(completed: running.reduce(0) { $0 + $1.checks.completed },
-                            total: running.reduce(0) { $0 + $1.checks.total })
+            return .running(
+                completed: running.reduce(0) { $0 + $1.checks.completed },
+                total: running.reduce(0) { $0 + $1.checks.total })
         }
         return .none
     }

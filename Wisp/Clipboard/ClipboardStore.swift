@@ -131,11 +131,14 @@ final class ClipboardStore: ObservableObject {
 
     static func kind(of text: String, from bundle: String) -> ClipboardItem.Kind {
         if !text.contains(where: \.isWhitespace), let url = URL(string: text),
-           let scheme = url.scheme?.lowercased(), ["http", "https", "ftp", "file", "mailto"].contains(scheme) {
+            let scheme = url.scheme?.lowercased(), ["http", "https", "ftp", "file", "mailto"].contains(scheme)
+        {
             return .url
         }
-        let codeApps = ["com.jetbrains.", "com.microsoft.vscode", "com.apple.dt.xcode", "com.apple.terminal",
-                        "com.googlecode.iterm2", "dev.warp.", "com.mitchellh.ghostty", "dev.zed."]
+        let codeApps = [
+            "com.jetbrains.", "com.microsoft.vscode", "com.apple.dt.xcode", "com.apple.terminal",
+            "com.googlecode.iterm2", "dev.warp.", "com.mitchellh.ghostty", "dev.zed.",
+        ]
         if codeApps.contains(where: { bundle.lowercased().hasPrefix($0) }) { return .code }
         let marks = [";", "{", "}", "=>", "->", "()", "==", "</", "import ", "func ", "const ", "let ", "def ", "#include"]
         let hits = marks.filter { text.contains($0) }.count

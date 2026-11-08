@@ -89,7 +89,8 @@ private struct BatteryCard: View {
             if let battery = stats.battery {
                 VStack(alignment: .leading, spacing: 12) {
                     BigNumber(text: "\(battery.percent)%")
-                    Bar(fraction: Double(battery.percent) / 100,
+                    Bar(
+                        fraction: Double(battery.percent) / 100,
                         color: battery.percent <= 20 && !battery.onAC ? Theme.badge : Theme.ok)
                 }
             } else {
@@ -188,8 +189,9 @@ private struct Sparkline: View {
             let x0 = size.width - step * CGFloat(values.count - 1)
             var path = Path()
             for (i, value) in values.enumerated() {
-                let point = CGPoint(x: x0 + step * CGFloat(i),
-                                    y: size.height * (1 - CGFloat(min(100, max(0, value)) / 100)))
+                let point = CGPoint(
+                    x: x0 + step * CGFloat(i),
+                    y: size.height * (1 - CGFloat(min(100, max(0, value)) / 100)))
                 i == 0 ? path.move(to: point) : path.addLine(to: point)
             }
             context.stroke(path, with: .color(color), style: StrokeStyle(lineWidth: 2, lineCap: .round, lineJoin: .round))
@@ -246,8 +248,9 @@ struct SystemToolbar: View {
         }
         .font(.system(size: 13))
         .foregroundStyle(Theme.textSecondary)
-        .help(stats.wifiName == nil && stats.wifiOn
-              ? String(localized: "macOS shows the network name only with Location access: Settings → System")
-              : "")
+        .help(
+            stats.wifiName == nil && stats.wifiOn
+                ? String(localized: "macOS shows the network name only with Location access: Settings → System")
+                : "")
     }
 }

@@ -21,8 +21,10 @@ actor RadarSync {
     /// `lastActivity`: what is already reported, so only newer comments are fetched.
     /// `found`: called once on the first round, right after the searches, so the list shows
     /// before all the checks are in.
-    func refresh(excluded: Set<String>, lastActivity: [String: Date],
-                 found: (@Sendable (RadarSnapshot) async -> Void)? = nil) async throws -> Result {
+    func refresh(
+        excluded: Set<String>, lastActivity: [String: Date],
+        found: (@Sendable (RadarSnapshot) async -> Void)? = nil
+    ) async throws -> Result {
         async let mineSearch = service.search("is:pr is:open author:@me archived:false")
         async let reviewSearch = service.search("is:pr is:open review-requested:@me archived:false")
         let mine = try await mineSearch.filter { !excluded.contains($0.repository) }
@@ -61,8 +63,10 @@ actor RadarSync {
         return Result(snapshot: RadarSnapshot(mine: updated, reviews: reviews), activity: activity)
     }
 
-    private static func update(_ found: PullRequest, previous: PullRequest?, since: Date?,
-                               service: any GitHubService) async throws -> (PullRequest, [PullActivity]) {
+    private static func update(
+        _ found: PullRequest, previous: PullRequest?, since: Date?,
+        service: any GitHubService
+    ) async throws -> (PullRequest, [PullActivity]) {
         var pull = found
         var items: [PullActivity] = []
         pull.headSHA = previous?.headSHA

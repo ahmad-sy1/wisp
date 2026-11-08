@@ -54,11 +54,9 @@ enum CheckAggregator {
         }
 
         let total = runs.count + statuses.count
-        let status: CheckStatus = if total == 0 { .none }
-            else if !failed.isEmpty { .failed }
-            else if running { .running }
-            else { .passed }
-        return CheckSummary(status: status, completed: completed, total: total, failedJobs: failed,
-                            url: failed.first?.url ?? firstRunning)
+        let status: CheckStatus = if total == 0 { .none } else if !failed.isEmpty { .failed } else if running { .running } else { .passed }
+        return CheckSummary(
+            status: status, completed: completed, total: total, failedJobs: failed,
+            url: failed.first?.url ?? firstRunning)
     }
 }

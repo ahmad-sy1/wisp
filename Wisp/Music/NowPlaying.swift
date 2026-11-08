@@ -45,8 +45,8 @@ struct NowPlayingTrack: Equatable {
         if isVideo { return .browser }
         switch sourceBundleId {
         case "com.spotify.client": return .spotify
-        case "com.apple.Music":    return .appleMusic
-        default:                   return nil
+        case "com.apple.Music": return .appleMusic
+        default: return nil
         }
     }
 
@@ -99,21 +99,22 @@ final class NowPlaying: ObservableObject {
     private let emptyGrace: TimeInterval = 3
 
     private static let perlScript = """
-    use DynaLoader;
-    my $lib = DynaLoader::dl_load_file($ARGV[0], 0) or die DynaLoader::dl_error();
-    my $sym = DynaLoader::dl_find_symbol($lib, "wisp_now_playing_run") or die "symbol missing";
-    &{DynaLoader::dl_install_xsub("main::run", $sym)};
-    """
+        use DynaLoader;
+        my $lib = DynaLoader::dl_load_file($ARGV[0], 0) or die DynaLoader::dl_error();
+        my $sym = DynaLoader::dl_find_symbol($lib, "wisp_now_playing_run") or die "symbol missing";
+        &{DynaLoader::dl_install_xsub("main::run", $sym)};
+        """
 
     func start() {
         guard process == nil,
-              let dylib = Bundle.main.url(forResource: "libNowPlayingBridge", withExtension: "dylib")
+            let dylib = Bundle.main.url(forResource: "libNowPlayingBridge", withExtension: "dylib")
         else { return }
 
         let p = Process()
         p.executableURL = URL(fileURLWithPath: "/usr/bin/perl")
         p.arguments = ["-e", Self.perlScript, dylib.path]
-        let out = Pipe(), inPipe = Pipe()
+        let out = Pipe()
+        let inPipe = Pipe()
         p.standardOutput = out
         p.standardInput = inPipe
         p.standardError = FileHandle.nullDevice
@@ -149,8 +150,8 @@ final class NowPlaying: ObservableObject {
 
     // MARK: - Controls
 
-    func playPause()     { send("toggle") }
-    func nextTrack()     { send("next") }
+    func playPause() { send("toggle") }
+    func nextTrack() { send("next") }
     func previousTrack() { send("previous") }
 
     /// Brings the app that is playing (the browser for YouTube) to the front.
@@ -181,7 +182,10 @@ final class NowPlaying: ObservableObject {
     }
 
     private func handle(_ json: [String: Any]) {
-        guard let title = json["title"] as? String, !title.isEmpty else { apply(nil); return }
+        guard let title = json["title"] as? String, !title.isEmpty else {
+            apply(nil)
+            return
+        }
 
         // Artwork is only sent when it changes ("" = the new item has none).
         var artwork = reported?.artwork
@@ -190,19 +194,20 @@ final class NowPlaying: ObservableObject {
             artwork = Data(base64Encoded: b64).flatMap(NSImage.init(data:))
             tint = artwork.flatMap(Self.averageColor)
         }
-        apply(NowPlayingTrack(
-            title: title,
-            artist: json["artist"] as? String ?? "",
-            album: json["album"] as? String ?? "",
-            isPlaying: json["playing"] as? Bool ?? false,
-            sourceBundleId: (json["parent"] as? String) ?? (json["bundle"] as? String),
-            artwork: artwork,
-            tint: tint,
-            duration: json["duration"] as? Double ?? 0,
-            elapsed: json["elapsed"] as? Double ?? 0,
-            elapsedAt: (json["timestamp"] as? Double).map(Date.init(timeIntervalSince1970:)) ?? Date(),
-            rate: json["rate"] as? Double ?? 1
-        ))
+        apply(
+            NowPlayingTrack(
+                title: title,
+                artist: json["artist"] as? String ?? "",
+                album: json["album"] as? String ?? "",
+                isPlaying: json["playing"] as? Bool ?? false,
+                sourceBundleId: (json["parent"] as? String) ?? (json["bundle"] as? String),
+                artwork: artwork,
+                tint: tint,
+                duration: json["duration"] as? Double ?? 0,
+                elapsed: json["elapsed"] as? Double ?? 0,
+                elapsedAt: (json["timestamp"] as? Double).map(Date.init(timeIntervalSince1970:)) ?? Date(),
+                rate: json["rate"] as? Double ?? 1
+            ))
     }
 
     /// A player was switched on or off in Settings → Music.
@@ -238,20 +243,27 @@ final class NowPlaying: ObservableObject {
     /// Average artwork colour, lifted so it stays visible on black.
     private static func averageColor(_ image: NSImage) -> NSColor? {
         guard let tiff = image.tiffRepresentation, let ci = CIImage(data: tiff),
-              let filter = CIFilter(name: "CIAreaAverage",
-                                    parameters: [kCIInputImageKey: ci,
-                                                 kCIInputExtentKey: CIVector(cgRect: ci.extent)]),
-              let output = filter.outputImage else { return nil }
+            let filter = CIFilter(
+                name: "CIAreaAverage",
+                parameters: [
+                    kCIInputImageKey: ci,
+                    kCIInputExtentKey: CIVector(cgRect: ci.extent),
+                ]),
+            let output = filter.outputImage
+        else { return nil }
         var px = [UInt8](repeating: 0, count: 4)
         CIContext(options: [.workingColorSpace: NSNull()])
-            .render(output, toBitmap: &px, rowBytes: 4,
-                    bounds: CGRect(x: 0, y: 0, width: 1, height: 1),
-                    format: .RGBA8, colorSpace: nil)
-        let c = NSColor(red: CGFloat(px[0]) / 255, green: CGFloat(px[1]) / 255,
-                        blue: CGFloat(px[2]) / 255, alpha: 1)
+            .render(
+                output, toBitmap: &px, rowBytes: 4,
+                bounds: CGRect(x: 0, y: 0, width: 1, height: 1),
+                format: .RGBA8, colorSpace: nil)
+        let c = NSColor(
+            red: CGFloat(px[0]) / 255, green: CGFloat(px[1]) / 255,
+            blue: CGFloat(px[2]) / 255, alpha: 1)
         guard let hsb = c.usingColorSpace(.deviceRGB) else { return c }
-        return NSColor(hue: hsb.hueComponent,
-                       saturation: min(1, hsb.saturationComponent * 1.2),
-                       brightness: max(0.75, hsb.brightnessComponent), alpha: 1)
+        return NSColor(
+            hue: hsb.hueComponent,
+            saturation: min(1, hsb.saturationComponent * 1.2),
+            brightness: max(0.75, hsb.brightnessComponent), alpha: 1)
     }
 }

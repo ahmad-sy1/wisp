@@ -8,13 +8,13 @@ extension View {
     @ViewBuilder
     func glass<S: InsettableShape>(in shape: S, tint: Color? = nil) -> some View {
         #if compiler(>=6.2)
-        if #available(macOS 26.0, *) {
-            glassEffect(Glass.regular.tint(tint).interactive(), in: shape)
-        } else {
-            frostedGlass(in: shape, tint: tint)
-        }
+            if #available(macOS 26.0, *) {
+                glassEffect(Glass.regular.tint(tint).interactive(), in: shape)
+            } else {
+                frostedGlass(in: shape, tint: tint)
+            }
         #else
-        frostedGlass(in: shape, tint: tint)
+            frostedGlass(in: shape, tint: tint)
         #endif
     }
 
@@ -23,8 +23,9 @@ extension View {
             .background(shape.fill(tint ?? .clear))
             .overlay(
                 shape.strokeBorder(
-                    LinearGradient(colors: [.white.opacity(0.35), .white.opacity(0.05)],
-                                   startPoint: .top, endPoint: .bottom),
+                    LinearGradient(
+                        colors: [.white.opacity(0.35), .white.opacity(0.05)],
+                        startPoint: .top, endPoint: .bottom),
                     lineWidth: 0.75)
             )
     }

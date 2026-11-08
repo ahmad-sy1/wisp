@@ -8,33 +8,33 @@ enum WispTab: String, CaseIterable, Identifiable {
 
     var symbol: String {
         switch self {
-        case .home:      "house"
-        case .mail:      "envelope"
-        case .agenda:    "calendar"
+        case .home: "house"
+        case .mail: "envelope"
+        case .agenda: "calendar"
         case .departure: "tram"
-        case .github:    WispGlyph.pullRequest
-        case .focus:     "timer"
-        case .music:     "music.note"
+        case .github: WispGlyph.pullRequest
+        case .focus: "timer"
+        case .music: "music.note"
         case .clipboard: "clipboard"
-        case .notes:     "pencil.line"
-        case .system:    "display"
-        case .files:     "folder"
+        case .notes: "pencil.line"
+        case .system: "display"
+        case .files: "folder"
         }
     }
 
     var title: String {
         switch self {
-        case .home:      String(localized: "Home")
-        case .mail:      String(localized: "Mail")
-        case .agenda:    String(localized: "Calendar")
+        case .home: String(localized: "Home")
+        case .mail: String(localized: "Mail")
+        case .agenda: String(localized: "Calendar")
         case .departure: String(localized: "Departure")
-        case .github:    "GitHub"
-        case .focus:     String(localized: "Focus")
-        case .music:     String(localized: "Music")
+        case .github: "GitHub"
+        case .focus: String(localized: "Focus")
+        case .music: String(localized: "Music")
         case .clipboard: String(localized: "Clipboard")
-        case .notes:     String(localized: "Notes")
-        case .system:    String(localized: "System")
-        case .files:     String(localized: "Files")
+        case .notes: String(localized: "Notes")
+        case .system: String(localized: "System")
+        case .files: String(localized: "Files")
         }
     }
 }

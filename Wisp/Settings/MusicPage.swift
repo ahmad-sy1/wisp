@@ -7,21 +7,27 @@ struct MusicPage: View {
     @ObservedObject private var prefs = Preferences.shared
 
     var body: some View {
-        SettingsPage(title: String(localized: "Music"),
-                     note: String(localized: "The spectrum analyses the sound of what plays, live. Nothing is recorded, stored or sent.")) {
+        SettingsPage(
+            title: String(localized: "Music"),
+            note: String(localized: "The spectrum analyses the sound of what plays, live. Nothing is recorded, stored or sent.")
+        ) {
             SettingsGroup(header: String(localized: "Spectrum")) {
-                SettingsToggle(String(localized: "Live spectrum"),
-                               subtitle: String(localized: "Bars that move with the music in the Music tab"),
-                               isOn: Binding(get: { spectrum.consent == .allowed },
-                                             set: { $0 ? spectrum.allow() : spectrum.decline() }))
+                SettingsToggle(
+                    String(localized: "Live spectrum"),
+                    subtitle: String(localized: "Bars that move with the music in the Music tab"),
+                    isOn: Binding(
+                        get: { spectrum.consent == .allowed },
+                        set: { $0 ? spectrum.allow() : spectrum.decline() }))
                 // Both only matter while the live spectrum is on.
                 Group {
-                    SettingsToggle(String(localized: "Mini spectrum in the closed notch"),
-                                   subtitle: String(localized: "Replaces the fixed equalizer icon"),
-                                   isOn: $prefs.miniSpectrum)
-                    SettingsToggle(String(localized: "Battery saver"),
-                                   subtitle: String(localized: "Less smooth when your Mac isn't on power"),
-                                   isOn: $prefs.spectrumBatterySaver)
+                    SettingsToggle(
+                        String(localized: "Mini spectrum in the closed notch"),
+                        subtitle: String(localized: "Replaces the fixed equalizer icon"),
+                        isOn: $prefs.miniSpectrum)
+                    SettingsToggle(
+                        String(localized: "Battery saver"),
+                        subtitle: String(localized: "Less smooth when your Mac isn't on power"),
+                        isOn: $prefs.spectrumBatterySaver)
                 }
                 .disabled(spectrum.consent != .allowed)
             }
@@ -29,8 +35,9 @@ struct MusicPage: View {
             SettingsGroup(header: String(localized: "Show for")) {
                 sourceToggle(.spotify, title: "Spotify")
                 sourceToggle(.appleMusic, title: "Apple Music")
-                sourceToggle(.browser, title: String(localized: "Browser (YouTube etc.)"),
-                             subtitle: String(localized: "Videos and music in Safari or Chrome"))
+                sourceToggle(
+                    .browser, title: String(localized: "Browser (YouTube etc.)"),
+                    subtitle: String(localized: "Videos and music in Safari or Chrome"))
             }
 
             SettingsGroup(header: String(localized: "Permission")) {
@@ -52,9 +59,11 @@ struct MusicPage: View {
     }
 
     private func sourceToggle(_ source: MusicSource, title: String, subtitle: String? = nil) -> some View {
-        SettingsToggle(title, subtitle: subtitle,
-                       isOn: Binding(get: { !prefs.hiddenMusicSources.contains(source) },
-                                     set: { prefs.setMusicSource(source, shown: $0) }))
+        SettingsToggle(
+            title, subtitle: subtitle,
+            isOn: Binding(
+                get: { !prefs.hiddenMusicSources.contains(source) },
+                set: { prefs.setMusicSource(source, shown: $0) }))
     }
 
     private static func openPrivacySettings() {

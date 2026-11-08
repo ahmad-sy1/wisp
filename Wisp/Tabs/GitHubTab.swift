@@ -108,8 +108,10 @@ private struct PullList: View {
                 .foregroundStyle(showing == section ? Theme.textPrimary : Theme.textSecondary)
                 .padding(.horizontal, 9)
                 .frame(height: 22)
-                .background(RoundedRectangle(cornerRadius: 7, style: .continuous)
-                    .fill(showing == section ? Theme.activeTab : .clear))
+                .background(
+                    RoundedRectangle(cornerRadius: 7, style: .continuous)
+                        .fill(showing == section ? Theme.activeTab : .clear)
+                )
                 .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
@@ -186,9 +188,9 @@ private struct PullRow: View {
         } else {
             switch pull.checks.status {
             case .running: RunSpinner(size: 11)
-            case .failed:  Circle().fill(Theme.badge).frame(width: 7, height: 7)
-            case .passed:  Circle().fill(Theme.ok).frame(width: 7, height: 7)
-            case .none:    Circle().fill(Theme.textSecondary.opacity(0.5)).frame(width: 7, height: 7)
+            case .failed: Circle().fill(Theme.badge).frame(width: 7, height: 7)
+            case .passed: Circle().fill(Theme.ok).frame(width: 7, height: 7)
+            case .none: Circle().fill(Theme.textSecondary.opacity(0.5)).frame(width: 7, height: 7)
             }
         }
     }
@@ -197,9 +199,9 @@ private struct PullRow: View {
         if unseen > 0 { return unseen == 1 ? String(localized: "1 comment") : String(localized: "\(unseen) comments") }
         switch pull.checks.status {
         case .running: return "\(pull.checks.completed)/\(pull.checks.total)"
-        case .failed:  return String(localized: "failed")
-        case .passed:  return String(localized: "done")
-        case .none:    return pull.isDraft ? String(localized: "draft") : ""
+        case .failed: return String(localized: "failed")
+        case .passed: return String(localized: "done")
+        case .none: return pull.isDraft ? String(localized: "draft") : ""
         }
     }
 
@@ -265,8 +267,9 @@ private struct ContributionGrid: View {
     var body: some View {
         Canvas { context, size in
             let gap: CGFloat = 2.5
-            let side = min((size.width - gap * CGFloat(Self.columns - 1)) / CGFloat(Self.columns),
-                           (size.height - gap * 6) / 7)
+            let side = min(
+                (size.width - gap * CGFloat(Self.columns - 1)) / CGFloat(Self.columns),
+                (size.height - gap * 6) / 7)
             let across = (size.width - side) / CGFloat(Self.columns - 1)
             let shown = Array(weeks.suffix(Self.columns))
             for column in 0..<Self.columns {
@@ -300,13 +303,13 @@ struct PanelScroll<Content: View>: View {
 
     var body: some View {
         #if DEBUG
-        if UserDefaults.standard.string(forKey: "snapshot") != nil {
-            content.frame(minHeight: 0, maxHeight: .infinity, alignment: .top).clipped()
-        } else {
-            ScrollView { content }.scrollIndicators(.never)
-        }
+            if UserDefaults.standard.string(forKey: "snapshot") != nil {
+                content.frame(minHeight: 0, maxHeight: .infinity, alignment: .top).clipped()
+            } else {
+                ScrollView { content }.scrollIndicators(.never)
+            }
         #else
-        ScrollView { content }.scrollIndicators(.never)
+            ScrollView { content }.scrollIndicators(.never)
         #endif
     }
 }

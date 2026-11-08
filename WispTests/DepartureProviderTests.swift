@@ -10,20 +10,20 @@ private func at(_ hour: Int, _ minute: Int = 0, day: Int = 5) -> Date {
 
 /// Hand-written after the documented shape of the v3 API: there is no key to fetch a real one with.
 private let nsTrip = """
-{"trips":[{"status":"NORMAL","legs":[
- {"travelType":"WALK","cancelled":false,"product":{"type":"WALK"},
-  "origin":{"name":"Thuis","plannedDateTime":"2026-11-05T15:36:00+0100"},
-  "destination":{"name":"Nijmegen","plannedDateTime":"2026-11-05T15:42:00+0100"}},
- {"travelType":"PUBLIC_TRANSIT","cancelled":false,
-  "product":{"number":"3045","shortCategoryName":"SPR","operatorName":"NS","type":"TRAIN"},
-  "origin":{"name":"Nijmegen","plannedDateTime":"2026-11-05T15:42:00+0100","actualDateTime":"2026-11-05T15:46:00+0100","plannedTrack":"3","actualTrack":"4"},
-  "destination":{"name":"Arnhem","plannedDateTime":"2026-11-05T15:58:00+0100"}},
- {"travelType":"PUBLIC_TRANSIT","cancelled":false,
-  "product":{"number":"300","shortCategoryName":"Bus","operatorName":"Breng","type":"BUS"},
-  "origin":{"name":"Arnhem, Centraal","plannedDateTime":"2026-11-05T16:04:00+0100","plannedTrack":"B"},
-  "destination":{"name":"Thuis","plannedDateTime":"2026-11-05T16:21:00+0100"}}
-]}]}
-"""
+    {"trips":[{"status":"NORMAL","legs":[
+     {"travelType":"WALK","cancelled":false,"product":{"type":"WALK"},
+      "origin":{"name":"Thuis","plannedDateTime":"2026-11-05T15:36:00+0100"},
+      "destination":{"name":"Nijmegen","plannedDateTime":"2026-11-05T15:42:00+0100"}},
+     {"travelType":"PUBLIC_TRANSIT","cancelled":false,
+      "product":{"number":"3045","shortCategoryName":"SPR","operatorName":"NS","type":"TRAIN"},
+      "origin":{"name":"Nijmegen","plannedDateTime":"2026-11-05T15:42:00+0100","actualDateTime":"2026-11-05T15:46:00+0100","plannedTrack":"3","actualTrack":"4"},
+      "destination":{"name":"Arnhem","plannedDateTime":"2026-11-05T15:58:00+0100"}},
+     {"travelType":"PUBLIC_TRANSIT","cancelled":false,
+      "product":{"number":"300","shortCategoryName":"Bus","operatorName":"Breng","type":"BUS"},
+      "origin":{"name":"Arnhem, Centraal","plannedDateTime":"2026-11-05T16:04:00+0100","plannedTrack":"B"},
+      "destination":{"name":"Thuis","plannedDateTime":"2026-11-05T16:21:00+0100"}}
+    ]}]}
+    """
 
 final class NSTripsTests: XCTestCase {
     func testParsesLegsWithLinesAndPlatforms() throws {
@@ -48,10 +48,10 @@ final class NSTripsTests: XCTestCase {
 
     func testAddsTheWalkWhenTheAdviceStartsAtAStation() throws {
         let text = """
-        {"trips":[{"legs":[{"travelType":"PUBLIC_TRANSIT","product":{"type":"TRAIN"},
-         "origin":{"lat":51.843,"lng":5.853,"plannedDateTime":"2026-11-05T15:42:00+0100"},
-         "destination":{"plannedDateTime":"2026-11-05T15:58:00+0100"}}]}]}
-        """
+            {"trips":[{"legs":[{"travelType":"PUBLIC_TRANSIT","product":{"type":"TRAIN"},
+             "origin":{"lat":51.843,"lng":5.853,"plannedDateTime":"2026-11-05T15:42:00+0100"},
+             "destination":{"plannedDateTime":"2026-11-05T15:58:00+0100"}}]}]}
+            """
         let home = TravelPlace(name: "Thuis", latitude: 51.835, longitude: 5.853)
         let option = try XCTUnwrap(NSTripsParser.parse(Data(text.utf8), origin: home).first)
         XCTAssertEqual(option.legs.first?.kind, .walk)
@@ -67,7 +67,9 @@ final class NSTripsTests: XCTestCase {
     func testURLEncodesTheOffset() throws {
         let from = TravelPlace(name: "a", latitude: 51, longitude: 5)
         let url = try XCTUnwrap(NSTravelProvider.url(from: from, to: from, departAt: nil, arriveBy: at(10)))
-        XCTAssertTrue(url.absoluteString.contains("dateTime=2026-11-05T10:00:00%2B01:00") || url.absoluteString.contains("2026-11-05T10%3A00%3A00%2B01%3A00"), url.absoluteString)
+        XCTAssertTrue(
+            url.absoluteString.contains("dateTime=2026-11-05T10:00:00%2B01:00")
+                || url.absoluteString.contains("2026-11-05T10%3A00%3A00%2B01%3A00"), url.absoluteString)
         XCTAssertTrue(url.absoluteString.contains("searchForArrival=true"))
     }
 
@@ -92,19 +94,21 @@ final class NSTripsTests: XCTestCase {
 final class OVapiTests: XCTestCase {
     private let stops = #"{"nmgbus":{"TimingPointTown":"Nijmegen","TimingPointName":"Nijmegen, Centraal Station","StopAreaCode":"nmgbus"}}"#
     private let passes = """
-    {"nmgbus":{"60001005":{"Stop":{},"GeneralMessages":{},"Passes":{
-      "a":{"LinePublicNumber":"300","TargetDepartureTime":"2026-11-05T16:04:00","ExpectedDepartureTime":"2026-11-05T16:09:00","TripStopStatus":"DRIVING"},
-      "b":{"LinePublicNumber":"33","TargetDepartureTime":"2026-11-05T16:10:00","ExpectedDepartureTime":"2026-11-05T16:10:00","TripStopStatus":"CANCEL"}
-    }}}}
-    """
+        {"nmgbus":{"60001005":{"Stop":{},"GeneralMessages":{},"Passes":{
+          "a":{"LinePublicNumber":"300","TargetDepartureTime":"2026-11-05T16:04:00","ExpectedDepartureTime":"2026-11-05T16:09:00","TripStopStatus":"DRIVING"},
+          "b":{"LinePublicNumber":"33","TargetDepartureTime":"2026-11-05T16:10:00","ExpectedDepartureTime":"2026-11-05T16:10:00","TripStopStatus":"CANCEL"}
+        }}}}
+        """
 
     func testIndexAndPasses() throws {
         XCTAssertEqual(try OVapiParser.stopIndex(Data(stops.utf8))["nijmegen centraal station"], "nmgbus")
         let found = try OVapiParser.passes(Data(passes.utf8))
-        XCTAssertEqual(found, [
-            .init(line: "300", planned: at(16, 4), delayMinutes: 5, isCancelled: false),
-            .init(line: "33", planned: at(16, 10), delayMinutes: 0, isCancelled: true),
-        ])
+        XCTAssertEqual(
+            found,
+            [
+                .init(line: "300", planned: at(16, 4), delayMinutes: 5, isCancelled: false),
+                .init(line: "33", planned: at(16, 10), delayMinutes: 0, isCancelled: true),
+            ])
     }
 
     private struct Answers: HTTPTransport {
@@ -116,8 +120,9 @@ final class OVapiTests: XCTestCase {
     }
 
     private func option(line: String, departure: Date) -> TravelOption {
-        TravelOption(departure: departure, arrival: departure.addingTimeInterval(600),
-                     legs: [TravelLeg(kind: .bus, line: line, departure: departure, minutes: 10, fromStop: "Nijmegen, Centraal Station")])
+        TravelOption(
+            departure: departure, arrival: departure.addingTimeInterval(600),
+            legs: [TravelLeg(kind: .bus, line: line, departure: departure, minutes: 10, fromStop: "Nijmegen, Centraal Station")])
     }
 
     func testEnrichAddsTheDelay() async {

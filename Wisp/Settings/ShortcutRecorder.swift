@@ -23,10 +23,13 @@ struct ShortcutRow: View {
             Button {
                 recorder.toggle(prefs: prefs)
             } label: {
-                Text(recorder.isRecording ? String(localized: "Type shortcut…")
-                                          : prefs.hotKey?.label ?? String(localized: "Off"))
-                    .foregroundStyle(recorder.isRecording ? prefs.accent.color : Theme.textPrimary)
-                    .monospacedDigit()
+                Text(
+                    recorder.isRecording
+                        ? String(localized: "Type shortcut…")
+                        : prefs.hotKey?.label ?? String(localized: "Off")
+                )
+                .foregroundStyle(recorder.isRecording ? prefs.accent.color : Theme.textPrimary)
+                .monospacedDigit()
             }
             .buttonStyle(.settings)
         }

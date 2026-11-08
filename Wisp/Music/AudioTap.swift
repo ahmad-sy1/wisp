@@ -8,7 +8,12 @@ import Foundation
 ///
 /// The first tap triggers macOS's "System Audio Recording" permission prompt.
 final class AudioTap: @unchecked Sendable {
-    enum TapError: Error { case noProcess, tap(OSStatus), aggregate(OSStatus), start(OSStatus) }
+    enum TapError: Error {
+        case noProcess
+        case tap(OSStatus)
+        case aggregate(OSStatus)
+        case start(OSStatus)
+    }
 
     private let queue = DispatchQueue(label: "wisp.audio-tap", qos: .userInteractive)
     private let analyzer = SpectrumAnalyzer()
@@ -47,12 +52,19 @@ final class AudioTap: @unchecked Sendable {
             kAudioAggregateDeviceIsPrivateKey: true,
             kAudioAggregateDeviceIsStackedKey: false,
             kAudioAggregateDeviceTapAutoStartKey: true,
-            kAudioAggregateDeviceTapListKey: [[kAudioSubTapUIDKey: description.uuid.uuidString,
-                                               kAudioSubTapDriftCompensationKey: true]],
+            kAudioAggregateDeviceTapListKey: [
+                [
+                    kAudioSubTapUIDKey: description.uuid.uuidString,
+                    kAudioSubTapDriftCompensationKey: true,
+                ]
+            ],
         ]
         var device = AudioObjectID(kAudioObjectUnknown)
         status = AudioHardwareCreateAggregateDevice(aggregate as CFDictionary, &device)
-        guard status == noErr else { stop(); throw TapError.aggregate(status) }
+        guard status == noErr else {
+            stop()
+            throw TapError.aggregate(status)
+        }
         aggregateID = device
 
         let format = Self.tapFormat(tap)
@@ -82,11 +94,17 @@ final class AudioTap: @unchecked Sendable {
                 }
             }
         }
-        guard status == noErr, let proc else { stop(); throw TapError.start(status) }
+        guard status == noErr, let proc else {
+            stop()
+            throw TapError.start(status)
+        }
         procID = proc
 
         status = AudioDeviceStart(device, proc)
-        guard status == noErr else { stop(); throw TapError.start(status) }
+        guard status == noErr else {
+            stop()
+            throw TapError.start(status)
+        }
     }
 
     func stop() {
@@ -108,9 +126,10 @@ final class AudioTap: @unchecked Sendable {
     // MARK: - Core Audio lookups
 
     private static func audioProcesses(matching prefix: String) -> [AudioObjectID] {
-        var address = AudioObjectPropertyAddress(mSelector: kAudioHardwarePropertyProcessObjectList,
-                                                 mScope: kAudioObjectPropertyScopeGlobal,
-                                                 mElement: kAudioObjectPropertyElementMain)
+        var address = AudioObjectPropertyAddress(
+            mSelector: kAudioHardwarePropertyProcessObjectList,
+            mScope: kAudioObjectPropertyScopeGlobal,
+            mElement: kAudioObjectPropertyElementMain)
         var size: UInt32 = 0
         let system = AudioObjectID(kAudioObjectSystemObject)
         guard AudioObjectGetPropertyDataSize(system, &address, 0, nil, &size) == noErr else { return [] }
@@ -118,9 +137,10 @@ final class AudioTap: @unchecked Sendable {
         guard AudioObjectGetPropertyData(system, &address, 0, nil, &size, &ids) == noErr else { return [] }
 
         return ids.filter { id in
-            var bundleAddress = AudioObjectPropertyAddress(mSelector: kAudioProcessPropertyBundleID,
-                                                           mScope: kAudioObjectPropertyScopeGlobal,
-                                                           mElement: kAudioObjectPropertyElementMain)
+            var bundleAddress = AudioObjectPropertyAddress(
+                mSelector: kAudioProcessPropertyBundleID,
+                mScope: kAudioObjectPropertyScopeGlobal,
+                mElement: kAudioObjectPropertyElementMain)
             var bundle: CFString = "" as CFString
             var bundleSize = UInt32(MemoryLayout<CFString>.size)
             let ok = withUnsafeMutablePointer(to: &bundle) {
@@ -133,9 +153,10 @@ final class AudioTap: @unchecked Sendable {
     private static func tapFormat(_ tap: AudioObjectID) -> AudioStreamBasicDescription {
         var format = AudioStreamBasicDescription()
         var size = UInt32(MemoryLayout<AudioStreamBasicDescription>.size)
-        var address = AudioObjectPropertyAddress(mSelector: kAudioTapPropertyFormat,
-                                                 mScope: kAudioObjectPropertyScopeGlobal,
-                                                 mElement: kAudioObjectPropertyElementMain)
+        var address = AudioObjectPropertyAddress(
+            mSelector: kAudioTapPropertyFormat,
+            mScope: kAudioObjectPropertyScopeGlobal,
+            mElement: kAudioObjectPropertyElementMain)
         AudioObjectGetPropertyData(tap, &address, 0, nil, &size, &format)
         return format
     }

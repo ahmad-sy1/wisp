@@ -18,17 +18,21 @@ struct NotchRootView: View {
             if model.isCollapsed {
                 switch model.wings {
                 case .focus:
-                    FocusWings(focus: focus, color: prefs.accent.color,
-                               height: model.notchSize.height, wing: model.wingWidth)
-                        .transition(.opacity)
+                    FocusWings(
+                        focus: focus, color: prefs.accent.color,
+                        height: model.notchSize.height, wing: model.wingWidth
+                    )
+                    .transition(.opacity)
                 case .status(let status):
                     StatusWingsView(status: status, height: model.notchSize.height)
                         .transition(.opacity)
                 case .music:
                     if let track = player.track {
-                        MusicWings(track: track, levels: spectrum.isRunning && prefs.miniSpectrum ? spectrum.levels : nil,
-                                   height: model.notchSize.height, wing: model.wingWidth)
-                            .transition(.opacity)
+                        MusicWings(
+                            track: track, levels: spectrum.isRunning && prefs.miniSpectrum ? spectrum.levels : nil,
+                            height: model.notchSize.height, wing: model.wingWidth
+                        )
+                        .transition(.opacity)
                     }
                 case .mail:
                     MailWings(count: model.unreadCount, height: model.notchSize.height, wing: model.wingWidth)
@@ -117,10 +121,12 @@ private struct FocusWings: View {
         let running = focus.phase.isRunning
         let ring = max(12, height - 16)
         return HStack(spacing: 0) {
-            FocusRing(progress: focus.progress(at: now), color: running ? color : Theme.textSecondary,
-                      lineWidth: 2.5) { EmptyView() }
-                .frame(width: ring, height: ring)
-                .frame(width: wing)
+            FocusRing(
+                progress: focus.progress(at: now), color: running ? color : Theme.textSecondary,
+                lineWidth: 2.5
+            ) { EmptyView() }
+            .frame(width: ring, height: ring)
+            .frame(width: wing)
             Spacer(minLength: 0)
             Text(verbatim: FocusClock.text(focus.remaining(at: now)))
                 .font(.system(size: 10.5, weight: .semibold))
@@ -142,13 +148,15 @@ private struct MiniSpectrum: View {
     var body: some View {
         let bands = levels.miniBands
         Canvas { context, size in
-            let width: CGFloat = 2, gap: CGFloat = 1.5
+            let width: CGFloat = 2
+            let gap: CGFloat = 1.5
             let total = CGFloat(bands.count) * width + CGFloat(bands.count - 1) * gap
             let x0 = (size.width - total) / 2
             for (i, level) in bands.enumerated() {
                 let height = max(3, size.height * CGFloat(level))
-                let rect = CGRect(x: x0 + CGFloat(i) * (width + gap), y: (size.height - height) / 2,
-                                  width: width, height: height)
+                let rect = CGRect(
+                    x: x0 + CGFloat(i) * (width + gap), y: (size.height - height) / 2,
+                    width: width, height: height)
                 context.fill(Path(roundedRect: rect, cornerRadius: width / 2), with: .color(Theme.ok))
             }
         }
@@ -170,11 +178,13 @@ struct NotchShape: Shape {
         p.move(to: CGPoint(x: rect.minX, y: rect.minY))
         p.addLine(to: CGPoint(x: rect.maxX, y: rect.minY))
         p.addLine(to: CGPoint(x: rect.maxX, y: rect.maxY - r))
-        p.addQuadCurve(to: CGPoint(x: rect.maxX - r, y: rect.maxY),
-                       control: CGPoint(x: rect.maxX, y: rect.maxY))
+        p.addQuadCurve(
+            to: CGPoint(x: rect.maxX - r, y: rect.maxY),
+            control: CGPoint(x: rect.maxX, y: rect.maxY))
         p.addLine(to: CGPoint(x: rect.minX + r, y: rect.maxY))
-        p.addQuadCurve(to: CGPoint(x: rect.minX, y: rect.maxY - r),
-                       control: CGPoint(x: rect.minX, y: rect.maxY))
+        p.addQuadCurve(
+            to: CGPoint(x: rect.minX, y: rect.maxY - r),
+            control: CGPoint(x: rect.minX, y: rect.maxY))
         p.closeSubpath()
         return p
     }

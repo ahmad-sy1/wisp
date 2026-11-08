@@ -8,9 +8,10 @@ final class NotchPanel: NSPanel {
     var onEscape: () -> Void = {}
 
     init(frame: NSRect) {
-        super.init(contentRect: frame,
-                   styleMask: [.borderless, .nonactivatingPanel],
-                   backing: .buffered, defer: false)
+        super.init(
+            contentRect: frame,
+            styleMask: [.borderless, .nonactivatingPanel],
+            backing: .buffered, defer: false)
         isFloatingPanel = true
         level = NSWindow.Level(rawValue: NSWindow.Level.mainMenu.rawValue + 3)
         collectionBehavior = [.canJoinAllSpaces, .stationary, .fullScreenAuxiliary, .ignoresCycle]
@@ -46,9 +47,10 @@ final class NotchHostingView: NSHostingView<NotchRootView> {
     override func updateTrackingAreas() {
         super.updateTrackingAreas()
         if let tracking { removeTrackingArea(tracking) }
-        let area = NSTrackingArea(rect: .zero,
-                                  options: [.mouseEnteredAndExited, .activeAlways, .inVisibleRect],
-                                  owner: self, userInfo: nil)
+        let area = NSTrackingArea(
+            rect: .zero,
+            options: [.mouseEnteredAndExited, .activeAlways, .inVisibleRect],
+            owner: self, userInfo: nil)
         addTrackingArea(area)
         tracking = area
     }

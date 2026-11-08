@@ -290,17 +290,20 @@ final class FocusStore: ObservableObject {
     /// screen saver), which say nothing about the work.
     private static func frontApp() -> NSRunningApplication? {
         guard let app = NSWorkspace.shared.frontmostApplication,
-              let id = app.bundleIdentifier,
-              id != Bundle.main.bundleIdentifier,
-              !["com.apple.loginwindow", "com.apple.ScreenSaver.Engine"].contains(id),
-              app.activationPolicy == .regular else { return nil }
+            let id = app.bundleIdentifier,
+            id != Bundle.main.bundleIdentifier,
+            !["com.apple.loginwindow", "com.apple.ScreenSaver.Engine"].contains(id),
+            app.activationPolicy == .regular
+        else { return nil }
         return app
     }
 
     private static func defaultTask(for bundle: String, name: String) -> String {
         let id = bundle.lowercased()
-        let coding = ["com.jetbrains.", "com.microsoft.vscode", "com.apple.dt.xcode", "com.apple.terminal",
-                      "com.googlecode.iterm2", "dev.warp.", "com.mitchellh.ghostty", "dev.zed."]
+        let coding = [
+            "com.jetbrains.", "com.microsoft.vscode", "com.apple.dt.xcode", "com.apple.terminal",
+            "com.googlecode.iterm2", "dev.warp.", "com.mitchellh.ghostty", "dev.zed.",
+        ]
         if coding.contains(where: { id.hasPrefix($0) }) { return String(localized: "Coding") }
         return name
     }

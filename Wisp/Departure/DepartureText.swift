@@ -5,24 +5,24 @@ extension TravelMode {
     var symbol: String {
         switch self {
         case .transit: "tram"
-        case .car:     "car"
-        case .bike:    "bicycle"
+        case .car: "car"
+        case .bike: "bicycle"
         }
     }
 
     var title: String {
         switch self {
         case .transit: String(localized: "Public transport")
-        case .car:     String(localized: "Car")
-        case .bike:    String(localized: "Bike")
+        case .car: String(localized: "Car")
+        case .bike: String(localized: "Bike")
         }
     }
 
     /// "22 min cycling".
     func duration(_ minutes: Int) -> String {
         switch self {
-        case .bike:    String(localized: "\(minutes) min cycling")
-        case .car:     String(localized: "\(minutes) min driving")
+        case .bike: String(localized: "\(minutes) min cycling")
+        case .car: String(localized: "\(minutes) min driving")
         case .transit: String(localized: "\(minutes) min by transit")
         }
     }
@@ -32,8 +32,8 @@ extension DepartureOutput.Urgency {
     /// White normally, orange when tight, red when it goes wrong.
     var color: Color {
         switch self {
-        case .normal:  Theme.textPrimary
-        case .tight:   Theme.warning
+        case .normal: Theme.textPrimary
+        case .tight: Theme.warning
         case .serious: Theme.badge
         }
     }
@@ -45,14 +45,14 @@ extension TravelLeg {
     /// "Bus 300", "Train".
     var name: String {
         switch kind {
-        case .rail:  String(localized: "Train")
-        case .bus:   line.map { String(localized: "Bus \($0)") } ?? String(localized: "Bus")
-        case .tram:  line.map { String(localized: "Tram \($0)") } ?? String(localized: "Tram")
+        case .rail: String(localized: "Train")
+        case .bus: line.map { String(localized: "Bus \($0)") } ?? String(localized: "Bus")
+        case .tram: line.map { String(localized: "Tram \($0)") } ?? String(localized: "Tram")
         case .metro: line.map { String(localized: "Metro \($0)") } ?? String(localized: "Metro")
         case .ferry: String(localized: "Ferry")
-        case .walk:  String(localized: "Walk")
+        case .walk: String(localized: "Walk")
         case .drive: String(localized: "Drive")
-        case .bike:  String(localized: "Bike")
+        case .bike: String(localized: "Bike")
         }
     }
 }
@@ -111,8 +111,9 @@ extension StatusWings {
                 right = chosen.arrival.clockTime
             }
         }
-        self.init(icon: .symbol(output.plan.mode.symbol, output.timeUrgency == .normal ? Theme.textPrimary : output.timeUrgency.color),
-                  left: left, leftColor: output.timeUrgency.color,
-                  right: right, rightColor: rightColor, rightSymbol: rightSymbol, urgent: true, tab: .departure)
+        self.init(
+            icon: .symbol(output.plan.mode.symbol, output.timeUrgency == .normal ? Theme.textPrimary : output.timeUrgency.color),
+            left: left, leftColor: output.timeUrgency.color,
+            right: right, rightColor: rightColor, rightSymbol: rightSymbol, urgent: true, tab: .departure)
     }
 }

@@ -25,7 +25,10 @@ struct MailMessage: Identifiable, Equatable, Sendable {
 final class MailStore: ObservableObject {
     static let shared = MailStore()
 
-    enum Status: Equatable { case notConfigured, connecting, connected, failed(String) }
+    enum Status: Equatable {
+        case notConfigured, connecting, connected
+        case failed(String)
+    }
     enum Filter { case all, unread }
 
     @Published private(set) var status: Status = .notConfigured
@@ -147,7 +150,8 @@ final class MailStore: ObservableObject {
                 break
             } catch let IMAPError.rejected(message)
                 where message.localizedCaseInsensitiveContains("AUTHENTICATIONFAILED")
-                   || message.localizedCaseInsensitiveContains("credentials") {
+                || message.localizedCaseInsensitiveContains("credentials")
+            {
                 // Wrong address or app password: retrying won't help.
                 status = .failed(String(localized: "Sign-in failed: check the address and app password"))
                 await conn.close()

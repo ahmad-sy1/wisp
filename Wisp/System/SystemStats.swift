@@ -88,10 +88,10 @@ final class SystemStats: NSObject, ObservableObject {
 
     private func readBattery() {
         guard let info = IOPSCopyPowerSourcesInfo()?.takeRetainedValue(),
-              let list = IOPSCopyPowerSourcesList(info)?.takeRetainedValue() as? [CFTypeRef],
-              let source = list.lazy.compactMap({
-                  IOPSGetPowerSourceDescription(info, $0)?.takeUnretainedValue() as? [String: Any]
-              }).first(where: { ($0[kIOPSTypeKey] as? String) == kIOPSInternalBatteryType })
+            let list = IOPSCopyPowerSourcesList(info)?.takeRetainedValue() as? [CFTypeRef],
+            let source = list.lazy.compactMap({
+                IOPSGetPowerSourceDescription(info, $0)?.takeUnretainedValue() as? [String: Any]
+            }).first(where: { ($0[kIOPSTypeKey] as? String) == kIOPSInternalBatteryType })
         else {
             hasBattery = false
             battery = nil
@@ -102,9 +102,10 @@ final class SystemStats: NSObject, ObservableObject {
         let charging = source[kIOPSIsChargingKey] as? Bool ?? false
         let onAC = (source[kIOPSPowerSourceStateKey] as? String) == kIOPSACPowerValue
         let minutes = charging ? source[kIOPSTimeToFullChargeKey] as? Int : source[kIOPSTimeToEmptyKey] as? Int
-        battery = Battery(percent: max > 0 ? Int((Double(current) / Double(max) * 100).rounded()) : current,
-                          charging: charging, onAC: onAC,
-                          minutes: minutes.flatMap { $0 > 0 ? $0 : nil })
+        battery = Battery(
+            percent: max > 0 ? Int((Double(current) / Double(max) * 100).rounded()) : current,
+            charging: charging, onAC: onAC,
+            minutes: minutes.flatMap { $0 > 0 ? $0 : nil })
     }
 
     // MARK: - Storage
@@ -112,8 +113,9 @@ final class SystemStats: NSObject, ObservableObject {
     private func readStorage() {
         let keys: Set<URLResourceKey> = [.volumeAvailableCapacityForImportantUsageKey, .volumeTotalCapacityKey]
         guard let values = try? URL(fileURLWithPath: "/").resourceValues(forKeys: keys),
-              let free = values.volumeAvailableCapacityForImportantUsage,
-              let total = values.volumeTotalCapacity else { return }
+            let free = values.volumeAvailableCapacityForImportantUsage,
+            let total = values.volumeTotalCapacity
+        else { return }
         storage = Storage(free: free, total: Int64(total))
     }
 
@@ -162,7 +164,8 @@ final class SystemStats: NSObject, ObservableObject {
         let data = pipe.fileHandleForReading.readDataToEndOfFile()
         task.waitUntilExit()
         guard let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
-              let controllers = json["SPBluetoothDataType"] as? [[String: Any]] else { return nil }
+            let controllers = json["SPBluetoothDataType"] as? [[String: Any]]
+        else { return nil }
         for controller in controllers {
             for device in controller["device_connected"] as? [[String: Any]] ?? [] {
                 for (name, value) in device {
@@ -170,9 +173,10 @@ final class SystemStats: NSObject, ObservableObject {
                     func level(_ key: String) -> Int? {
                         (info[key] as? String).flatMap { Int($0.replacingOccurrences(of: "%", with: "")) }
                     }
-                    let buds = Buds(name: name, left: level("device_batteryLevelLeft"),
-                                    right: level("device_batteryLevelRight"),
-                                    caseLevel: level("device_batteryLevelCase"))
+                    let buds = Buds(
+                        name: name, left: level("device_batteryLevelLeft"),
+                        right: level("device_batteryLevelRight"),
+                        caseLevel: level("device_batteryLevelCase"))
                     if buds.left != nil || buds.right != nil { return buds }
                 }
             }

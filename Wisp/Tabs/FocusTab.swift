@@ -187,8 +187,9 @@ private struct DurationPill: View {
                 .foregroundStyle(selected ? Theme.textPrimary : Theme.textSecondary)
                 .frame(maxWidth: .infinity)
                 .frame(height: 30)
-                .background(RoundedRectangle(cornerRadius: Theme.buttonCorner, style: .continuous)
-                    .fill(selected ? Theme.activeTab : Theme.control))
+                .background(
+                    RoundedRectangle(cornerRadius: Theme.buttonCorner, style: .continuous)
+                        .fill(selected ? Theme.activeTab : Theme.control))
         }
         .buttonStyle(.plain)
     }
@@ -237,7 +238,8 @@ struct FocusToolbar: View {
 
     var body: some View {
         let minutes = Int(focus.todaySeconds / 60)
-        let time = minutes < 60
+        let time =
+            minutes < 60
             ? String(localized: "\(minutes)m")
             : String(localized: "\(minutes / 60)h \(minutes % 60)m")
         Text("Today \(focus.todaySessions) sessions · \(time)")

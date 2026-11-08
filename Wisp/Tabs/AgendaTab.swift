@@ -16,10 +16,13 @@ struct AgendaTab: View {
 
                 VStack(spacing: 10) {
                     Card { WeatherCard(weather: weather) }
-                    Card { DepartureCard(shift: agenda.nextShift(after: now),
-                                         travelMinutes: agenda.travelMinutes,
-                                         departure: departure,
-                                         report: weather.report, now: now) }
+                    Card {
+                        DepartureCard(
+                            shift: agenda.nextShift(after: now),
+                            travelMinutes: agenda.travelMinutes,
+                            departure: departure,
+                            report: weather.report, now: now)
+                    }
                 }
             }
         }
@@ -40,11 +43,13 @@ private struct Timeline: View {
     var body: some View {
         switch agenda.access {
         case .notAsked:
-            AgendaMessage(text: String(localized: "See what's on your calendar today."),
-                          action: (String(localized: "Give access"), { agenda.requestAccess() }))
+            AgendaMessage(
+                text: String(localized: "See what's on your calendar today."),
+                action: (String(localized: "Give access"), { agenda.requestAccess() }))
         case .denied:
-            AgendaMessage(text: String(localized: "wisp has no access to your calendar."),
-                          action: (String(localized: "Open System Settings"), { agenda.openPrivacySettings() }))
+            AgendaMessage(
+                text: String(localized: "wisp has no access to your calendar."),
+                action: (String(localized: "Open System Settings"), { agenda.openPrivacySettings() }))
         case .granted where agenda.events.isEmpty && agenda.tomorrow.isEmpty:
             AgendaMessage(text: String(localized: "Nothing planned today."))
         case .granted:
@@ -136,7 +141,8 @@ private struct EventRow: View {
     /// "25m", "2h", "2h 55m".
     static func duration(from: Date, to: Date) -> String {
         let minutes = max(1, Int((to.timeIntervalSince(from) / 60).rounded(.up)))
-        let h = minutes / 60, m = minutes % 60
+        let h = minutes / 60
+        let m = minutes % 60
         if h == 0 { return String(localized: "\(m)m") }
         return m == 0 ? String(localized: "\(h)h") : String(localized: "\(h)h \(m)m")
     }
@@ -392,13 +398,14 @@ struct AgendaToolbar: View {
 enum AgendaClock {
     static func now(_ date: Date = .now) -> Date {
         #if DEBUG
-        if let value = UserDefaults.standard.string(forKey: "agendaTime") {
-            let parts = value.split(separator: ":").compactMap { Int($0) }
-            if parts.count == 2,
-               let pretend = Calendar.current.date(bySettingHour: parts[0], minute: parts[1], second: 0, of: date) {
-                return pretend
+            if let value = UserDefaults.standard.string(forKey: "agendaTime") {
+                let parts = value.split(separator: ":").compactMap { Int($0) }
+                if parts.count == 2,
+                    let pretend = Calendar.current.date(bySettingHour: parts[0], minute: parts[1], second: 0, of: date)
+                {
+                    return pretend
+                }
             }
-        }
         #endif
         return date
     }

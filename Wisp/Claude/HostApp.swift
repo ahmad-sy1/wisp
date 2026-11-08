@@ -50,7 +50,8 @@ struct HostApp: Equatable {
 
     private static func appName(for bundleId: String) -> String? {
         guard !bundleId.isEmpty,
-              let url = NSWorkspace.shared.urlForApplication(withBundleIdentifier: bundleId) else { return nil }
+            let url = NSWorkspace.shared.urlForApplication(withBundleIdentifier: bundleId)
+        else { return nil }
         return FileManager.default.displayName(atPath: url.path)
             .replacingOccurrences(of: ".app", with: "")
     }
@@ -58,10 +59,10 @@ struct HostApp: Equatable {
     private static func terminalName(_ term: String) -> String? {
         switch term {
         case "apple_terminal": "Terminal"
-        case "iterm.app":      "iTerm"
-        case "warpterminal":   "Warp"
-        case "ghostty":        "Ghostty"
-        default:               nil
+        case "iterm.app": "iTerm"
+        case "warpterminal": "Warp"
+        case "ghostty": "Ghostty"
+        default: nil
         }
     }
 }

@@ -15,7 +15,9 @@ struct MailTab: View {
         Card {
             switch store.status {
             case .notConfigured:
-                message(String(localized: "Connect Gmail to see your mail here."), action: (String(localized: "Connect Gmail"), openIntegrations))
+                message(
+                    String(localized: "Connect Gmail to see your mail here."),
+                    action: (String(localized: "Connect Gmail"), openIntegrations))
             case .failed(let text) where store.messages.isEmpty:
                 message(text, action: (String(localized: "Settings"), openIntegrations))
             case .connecting where store.messages.isEmpty:
@@ -90,9 +92,11 @@ private struct MailRow: View {
             }
             .padding(.horizontal, 14)
             .frame(height: 44)
-            .background(RoundedRectangle(cornerRadius: 10, style: .continuous)
-                .fill(hovered ? Theme.controlHover : .clear)
-                .padding(.horizontal, 6))
+            .background(
+                RoundedRectangle(cornerRadius: 10, style: .continuous)
+                    .fill(hovered ? Theme.controlHover : .clear)
+                    .padding(.horizontal, 6)
+            )
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
@@ -133,13 +137,16 @@ struct MailToolbar: View {
         HStack(spacing: 6) {
             pill(String(localized: "All"), .all)
             pill(String(localized: "Unread"), .unread)
-            Button { store.open() } label: {
+            Button {
+                store.open()
+            } label: {
                 Image(systemName: "arrow.up.right")
                     .font(.system(size: 12, weight: .medium))
                     .foregroundStyle(Theme.textSecondary)
                     .frame(width: Theme.tabSize.width, height: Theme.tabSize.height)
-                    .background(RoundedRectangle(cornerRadius: Theme.buttonCorner, style: .continuous)
-                        .fill(Theme.control))
+                    .background(
+                        RoundedRectangle(cornerRadius: Theme.buttonCorner, style: .continuous)
+                            .fill(Theme.control))
             }
             .buttonStyle(.plain)
             .help("Open in Gmail")
@@ -148,15 +155,18 @@ struct MailToolbar: View {
 
     private func pill(_ title: String, _ filter: MailStore.Filter) -> some View {
         let active = store.filter == filter
-        return Button { store.filter = filter } label: {
+        return Button {
+            store.filter = filter
+        } label: {
             Text(title)
                 .font(.system(size: 12, weight: active ? .semibold : .regular))
                 .foregroundStyle(active ? Theme.textPrimary : Theme.textSecondary)
                 .fixedSize()
                 .padding(.horizontal, 8)
                 .frame(height: Theme.tabSize.height)
-                .background(RoundedRectangle(cornerRadius: Theme.buttonCorner, style: .continuous)
-                    .fill(active ? Theme.activeTab : Theme.control))
+                .background(
+                    RoundedRectangle(cornerRadius: Theme.buttonCorner, style: .continuous)
+                        .fill(active ? Theme.activeTab : Theme.control))
         }
         .buttonStyle(.plain)
     }

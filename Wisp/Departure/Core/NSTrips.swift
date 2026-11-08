@@ -19,8 +19,8 @@ struct NSTravelProvider: TravelProvider {
 
     static func url(from: TravelPlace, to: TravelPlace, departAt: Date?, arriveBy: Date?) -> URL? {
         guard let fromLat = from.latitude, let fromLon = from.longitude,
-              let toLat = to.latitude, let toLon = to.longitude,
-              var parts = URLComponents(string: "https://gateway.apiportal.ns.nl/reisinformatie-api/api/v3/trips")
+            let toLat = to.latitude, let toLon = to.longitude,
+            var parts = URLComponents(string: "https://gateway.apiportal.ns.nl/reisinformatie-api/api/v3/trips")
         else { return nil }
         let time = arriveBy ?? departAt ?? .now
         let formatter = ISO8601DateFormatter()
@@ -87,22 +87,24 @@ enum NSTripsParser {
 
     private static func option(_ trip: Answer.Trip, origin: TravelPlace?) -> TravelOption? {
         guard let first = trip.legs.first, let last = trip.legs.last,
-              var departure = date(first.origin.actualDateTime) ?? date(first.origin.plannedDateTime),
-              let arrival = date(last.destination.actualDateTime) ?? date(last.destination.plannedDateTime)
+            var departure = date(first.origin.actualDateTime) ?? date(first.origin.plannedDateTime),
+            let arrival = date(last.destination.actualDateTime) ?? date(last.destination.plannedDateTime)
         else { return nil }
 
         var legs = trip.legs.map(leg)
         // No walk in the advice: the way to the first stop is still part of leaving on time.
         if legs.first?.kind != .walk, let origin, let lat = first.origin.lat, let lng = first.origin.lng,
-           let walk = walkMinutes(from: origin, toLatitude: lat, longitude: lng), walk > 0 {
+            let walk = walkMinutes(from: origin, toLatitude: lat, longitude: lng), walk > 0
+        {
             departure = departure.addingTimeInterval(-Double(walk) * 60)
             legs.insert(TravelLeg(kind: .walk, departure: departure, minutes: walk), at: 0)
         }
 
         let delays = legs.map(\.delayMinutes)
         let cancelled = trip.status == "CANCELLED" || trip.status == "NOT_POSSIBLE" || legs.contains(where: \.isCancelled)
-        return TravelOption(departure: departure, arrival: arrival, legs: legs,
-                            delayMinutes: delays.max() ?? 0, isCancelled: cancelled)
+        return TravelOption(
+            departure: departure, arrival: arrival, legs: legs,
+            delayMinutes: delays.max() ?? 0, isCancelled: cancelled)
     }
 
     private static func leg(_ leg: Answer.Leg) -> TravelLeg {
@@ -116,22 +118,31 @@ enum NSTripsParser {
         let category = (leg.product?.shortCategoryName ?? "").uppercased()
 
         let kind: TravelLeg.Kind
-        if leg.travelType == "WALK" || leg.travelType == "TRANSFER" || type == "WALK" { kind = .walk }
-        else if type == "BUS" || category == "BUS" { kind = .bus }
-        else if type == "TRAM" || category == "TRAM" { kind = .tram }
-        else if type == "METRO" || category == "METRO" { kind = .metro }
-        else if type == "FERRY" || category == "VEER" { kind = .ferry }
-        else { kind = .rail }
-
-        let line: String? = switch kind {
-        case .walk: nil
-        // A train's number means nothing to you; its operator and track do.
-        case .rail: leg.product?.operatorName == "NS" || leg.product?.operatorName == nil ? "NS" : leg.product?.operatorName
-        default: leg.product?.number
+        if leg.travelType == "WALK" || leg.travelType == "TRANSFER" || type == "WALK" {
+            kind = .walk
+        } else if type == "BUS" || category == "BUS" {
+            kind = .bus
+        } else if type == "TRAM" || category == "TRAM" {
+            kind = .tram
+        } else if type == "METRO" || category == "METRO" {
+            kind = .metro
+        } else if type == "FERRY" || category == "VEER" {
+            kind = .ferry
+        } else {
+            kind = .rail
         }
-        return TravelLeg(kind: kind, line: line, platform: leg.origin.actualTrack ?? leg.origin.plannedTrack,
-                         departure: start, minutes: minutes, delayMinutes: max(0, delay),
-                         isCancelled: leg.cancelled ?? false, fromStop: leg.origin.name)
+
+        let line: String? =
+            switch kind {
+            case .walk: nil
+            // A train's number means nothing to you; its operator and track do.
+            case .rail: leg.product?.operatorName == "NS" || leg.product?.operatorName == nil ? "NS" : leg.product?.operatorName
+            default: leg.product?.number
+            }
+        return TravelLeg(
+            kind: kind, line: line, platform: leg.origin.actualTrack ?? leg.origin.plannedTrack,
+            departure: start, minutes: minutes, delayMinutes: max(0, delay),
+            isCancelled: leg.cancelled ?? false, fromStop: leg.origin.name)
     }
 
     /// As the crow flies times 1.3, at 5 km/h.

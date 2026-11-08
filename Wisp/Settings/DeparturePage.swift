@@ -8,8 +8,13 @@ struct DeparturePage: View {
     @State private var changingHome = false
 
     var body: some View {
-        SettingsPage(title: String(localized: "Departure"),
-                     note: String(localized: "Your calendar is only read. Travel times come from NS, OVapi and Apple Maps, rain from Buienradar and Open-Meteo. Your home address stays on this Mac and only goes to Apple for routes.")) {
+        SettingsPage(
+            title: String(localized: "Departure"),
+            note: String(
+                localized:
+                    "Your calendar is only read. Travel times come from NS, OVapi and Apple Maps, rain from Buienradar and Open-Meteo. Your home address stays on this Mac and only goes to Apple for routes."
+            )
+        ) {
             SettingsGroup(header: String(localized: "Basics")) {
                 SettingsRow(String(localized: "Home address"), subtitle: store.settings.home?.name ?? String(localized: "Not set")) {
                     Button(store.settings.home == nil ? "Add" : "Change") { changingHome = true }
@@ -25,7 +30,10 @@ struct DeparturePage: View {
                 SettingsRow(String(localized: "Show from"), subtitle: String(localized: "before the end of your last event")) {
                     stepper(value: store.settings.showBeforeEndMinutes, range: 5...60) { store.settings.showBeforeEndMinutes = $0 }
                 }
-                SettingsRow(String(localized: "Travel time to your shift"), subtitle: String(localized: "Without a home address, or when no route is known")) {
+                SettingsRow(
+                    String(localized: "Travel time to your shift"),
+                    subtitle: String(localized: "Without a home address, or when no route is known")
+                ) {
                     stepper(value: agenda.travelMinutes, range: 1...120) { agenda.travelMinutes = $0 }
                 }
                 if agenda.access != .granted {
@@ -40,11 +48,21 @@ struct DeparturePage: View {
             }
 
             SettingsGroup(header: String(localized: "Notifications in the notch")) {
-                SettingsToggle(String(localized: "Back home"), subtitle: String(localized: "After your last event with a location"), isOn: $store.settings.returnHome)
-                SettingsToggle(String(localized: "Going there"), subtitle: String(localized: "When you have to leave for an event"), isOn: $store.settings.outbound)
-                SettingsToggle(String(localized: "Recognise routine"), subtitle: String(localized: "Repeating locations count as trips automatically"), isOn: $store.settings.routine)
-                SettingsToggle(String(localized: "Now-or-later advice"), subtitle: String(localized: "Car: wait if that avoids traffic"), isOn: $store.settings.nowOrLater)
-                SettingsToggle(String(localized: "Rain check"), subtitle: String(localized: "Bike: warn about showers"), isOn: $store.settings.rainCheck)
+                SettingsToggle(
+                    String(localized: "Back home"), subtitle: String(localized: "After your last event with a location"),
+                    isOn: $store.settings.returnHome)
+                SettingsToggle(
+                    String(localized: "Going there"), subtitle: String(localized: "When you have to leave for an event"),
+                    isOn: $store.settings.outbound)
+                SettingsToggle(
+                    String(localized: "Recognise routine"), subtitle: String(localized: "Repeating locations count as trips automatically"),
+                    isOn: $store.settings.routine)
+                SettingsToggle(
+                    String(localized: "Now-or-later advice"), subtitle: String(localized: "Car: wait if that avoids traffic"),
+                    isOn: $store.settings.nowOrLater)
+                SettingsToggle(
+                    String(localized: "Rain check"), subtitle: String(localized: "Bike: warn about showers"),
+                    isOn: $store.settings.rainCheck)
             }
         }
         .onAppear { agenda.loadCalendars() }

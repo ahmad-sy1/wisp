@@ -63,10 +63,12 @@ final class ClaudeSessions: ObservableObject {
             return
         }
 
-        var session = sessions[event.sessionId] ?? ClaudeSession(
-            id: event.sessionId, cwd: event.cwd,
-            host: HostApp(termProgram: event.termProgram, bundleId: event.bundleId),
-            startedAt: now, lastEventAt: now)
+        var session =
+            sessions[event.sessionId]
+            ?? ClaudeSession(
+                id: event.sessionId, cwd: event.cwd,
+                host: HostApp(termProgram: event.termProgram, bundleId: event.bundleId),
+                startedAt: now, lastEventAt: now)
         if !event.cwd.isEmpty { session.cwd = event.cwd }
         session.branch = GitInfo.branch(at: session.cwd)
         session.lastEventAt = now
@@ -79,8 +81,7 @@ final class ClaudeSessions: ObservableObject {
             session.tool = event.toolName
         case "Notification":
             if let message = event.message?.lowercased() {
-                if message.contains("permission") { session.state = .waiting }
-                else if message.hasSuffix("?") { session.state = .question }
+                if message.contains("permission") { session.state = .waiting } else if message.hasSuffix("?") { session.state = .question }
             }
         case "Stop":
             session.state = .finished
@@ -118,9 +119,10 @@ final class ClaudeSessions: ObservableObject {
             reply.send("ask")
             return
         }
-        let pending = PendingApproval(sessionId: session.id, project: session.project,
-                                      tool: event.toolName ?? "Tool", summary: event.toolSummary,
-                                      reply: reply)
+        let pending = PendingApproval(
+            sessionId: session.id, project: session.project,
+            tool: event.toolName ?? "Tool", summary: event.toolSummary,
+            reply: reply)
         approval = pending
         onNeedsAttention()
 

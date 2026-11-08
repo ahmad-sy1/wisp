@@ -18,8 +18,10 @@ actor MockGitHubService: GitHubService {
         checksBySHA = checks
     }
 
-    func set(mine: [PullRequest]? = nil, reviews: [PullRequest]? = nil, checks: [String: CheckSummary]? = nil,
-             activity: [String: [PullActivity]]? = nil, failure: GitHubError? = nil) {
+    func set(
+        mine: [PullRequest]? = nil, reviews: [PullRequest]? = nil, checks: [String: CheckSummary]? = nil,
+        activity: [String: [PullActivity]]? = nil, failure: GitHubError? = nil
+    ) {
         if let mine { self.mine = mine }
         if let reviews { self.reviews = reviews }
         if let checks { checksBySHA = checks }

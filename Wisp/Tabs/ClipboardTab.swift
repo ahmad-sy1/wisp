@@ -129,7 +129,9 @@ struct ClipboardToolbar: View {
                 .textFieldStyle(.plain)
                 .font(.system(size: 13))
             if !clipboard.query.isEmpty {
-                Button { clipboard.query = "" } label: {
+                Button {
+                    clipboard.query = ""
+                } label: {
                     Image(systemName: "xmark.circle.fill").foregroundStyle(Theme.textSecondary)
                 }
                 .buttonStyle(.plain)

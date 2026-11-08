@@ -37,28 +37,28 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         ClipboardStore.shared.start()
         startHotKey(notch: notch)
         #if DEBUG
-        // `open wisp.app --args -openOnLaunch mail` opens the panel on that tab (for screenshots).
-        if let name = UserDefaults.standard.string(forKey: "openOnLaunch") {
-            notch.expand(to: WispTab(rawValue: name) ?? .home)
-        }
-        // `--args -openOnLaunch agenda -snapshot /tmp/agenda.png` draws the open panel to
-        // a PNG once it has settled (data loaded, animations done) and quits.
-        // `-settingsPage notch` opens Settings on that page; with `-snapshot` it draws
-        // that window instead of the panel.
-        let settingsPage = UserDefaults.standard.string(forKey: "settingsPage").flatMap(SettingsPageID.init(rawValue:))
-        if let settingsPage {
-            SettingsNavigation.shared.page = settingsPage
-            openSettings()
-        }
-        if let path = UserDefaults.standard.string(forKey: "snapshot") {
-            // `-snapshotDelay 8` for data that takes longer to arrive.
-            let delay = UserDefaults.standard.object(forKey: "snapshotDelay") as? Double ?? 3
-            DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
-                let url = URL(fileURLWithPath: path)
-                if settingsPage != nil { self.snapshotSettings(to: url) } else { notch.snapshot(to: url) }
-                NSApp.terminate(nil)
+            // `open wisp.app --args -openOnLaunch mail` opens the panel on that tab (for screenshots).
+            if let name = UserDefaults.standard.string(forKey: "openOnLaunch") {
+                notch.expand(to: WispTab(rawValue: name) ?? .home)
             }
-        }
+            // `--args -openOnLaunch agenda -snapshot /tmp/agenda.png` draws the open panel to
+            // a PNG once it has settled (data loaded, animations done) and quits.
+            // `-settingsPage notch` opens Settings on that page; with `-snapshot` it draws
+            // that window instead of the panel.
+            let settingsPage = UserDefaults.standard.string(forKey: "settingsPage").flatMap(SettingsPageID.init(rawValue:))
+            if let settingsPage {
+                SettingsNavigation.shared.page = settingsPage
+                openSettings()
+            }
+            if let path = UserDefaults.standard.string(forKey: "snapshot") {
+                // `-snapshotDelay 8` for data that takes longer to arrive.
+                let delay = UserDefaults.standard.object(forKey: "snapshotDelay") as? Double ?? 3
+                DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
+                    let url = URL(fileURLWithPath: path)
+                    if settingsPage != nil { self.snapshotSettings(to: url) } else { notch.snapshot(to: url) }
+                    NSApp.terminate(nil)
+                }
+            }
         #endif
     }
 
@@ -116,18 +116,21 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             let focus = FocusStore.shared
             // Quiet while focusing with "Do not disturb", and never over a permission request.
             guard mail.peekNewMail, !(focus.isActive && focus.doNotDisturb),
-                  ClaudeSessions.shared.approval == nil else { return }
+                ClaudeSessions.shared.approval == nil
+            else { return }
             notch.peek(message)
         }
         mail.start()
         #if DEBUG
-        // `-mailPeekDemo YES`: peek with a sample message, for snapshots.
-        if UserDefaults.standard.bool(forKey: "mailPeekDemo") {
-            notch.peek(MailMessage(uid: 0, threadId: nil, senderName: "Sanne de Vries",
-                                   senderAddress: "sanne@example.com",
-                                   subject: "Rooster week 45 · kun je dinsdag ruilen met donderdag?",
-                                   date: .now, isRead: false))
-        }
+            // `-mailPeekDemo YES`: peek with a sample message, for snapshots.
+            if UserDefaults.standard.bool(forKey: "mailPeekDemo") {
+                notch.peek(
+                    MailMessage(
+                        uid: 0, threadId: nil, senderName: "Sanne de Vries",
+                        senderAddress: "sanne@example.com",
+                        subject: "Rooster week 45 · kun je dinsdag ruilen met donderdag?",
+                        date: .now, isRead: false))
+            }
         #endif
     }
 
@@ -149,8 +152,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             .store(in: &subscriptions)
         focus.onFinished = { notch.expand(to: .focus) }
         #if DEBUG
-        // `-focusStart YES`: start a session at launch, for snapshots of the running timer.
-        if UserDefaults.standard.bool(forKey: "focusStart") { focus.start() }
+            // `-focusStart YES`: start a session at launch, for snapshots of the running timer.
+            if UserDefaults.standard.bool(forKey: "focusStart") { focus.start() }
         #endif
     }
 
@@ -278,13 +281,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     #if DEBUG
-    /// Draws the Settings window into a PNG (see `-settingsPage`), also on a locked screen:
-    /// while snapshotting the pages leave out their scroll view, which `cacheDisplay` can't draw.
-    private func snapshotSettings(to url: URL) {
-        guard let view = settingsWindow?.contentView,
-              let rep = view.bitmapImageRepForCachingDisplay(in: view.bounds) else { return }
-        view.cacheDisplay(in: view.bounds, to: rep)
-        try? rep.representation(using: .png, properties: [:])?.write(to: url)
-    }
+        /// Draws the Settings window into a PNG (see `-settingsPage`), also on a locked screen:
+        /// while snapshotting the pages leave out their scroll view, which `cacheDisplay` can't draw.
+        private func snapshotSettings(to url: URL) {
+            guard let view = settingsWindow?.contentView,
+                let rep = view.bitmapImageRepForCachingDisplay(in: view.bounds)
+            else { return }
+            view.cacheDisplay(in: view.bounds, to: rep)
+            try? rep.representation(using: .png, properties: [:])?.write(to: url)
+        }
     #endif
 }

@@ -7,8 +7,9 @@ struct WeatherPlace: Codable, Hashable, Sendable {
     var latitude: Double
     var longitude: Double
 
-    static let nijmegen = WeatherPlace(name: "Nijmegen", detail: "Gelderland, Nederland",
-                                       latitude: 51.8426, longitude: 5.8528)
+    static let nijmegen = WeatherPlace(
+        name: "Nijmegen", detail: "Gelderland, Nederland",
+        latitude: 51.8426, longitude: 5.8528)
 }
 
 /// Current weather and the rain forecast for the coming hours.
@@ -70,7 +71,8 @@ final class WeatherStore: ObservableObject {
     private enum Key { static let place = "weatherPlace" }
 
     private init() {
-        place = defaults.data(forKey: Key.place)
+        place =
+            defaults.data(forKey: Key.place)
             .flatMap { try? JSONDecoder().decode(WeatherPlace.self, from: $0) } ?? .nijmegen
     }
 
@@ -98,13 +100,14 @@ final class WeatherStore: ObservableObject {
             URLQueryItem(name: "language", value: "nl"),
         ]
         guard let request = url.url,
-              let result = try? await URLSession.shared.data(from: request),
-              let answer = try? JSONDecoder().decode(GeocodingAnswer.self, from: result.0)
+            let result = try? await URLSession.shared.data(from: request),
+            let answer = try? JSONDecoder().decode(GeocodingAnswer.self, from: result.0)
         else { return [] }
         return (answer.results ?? []).map {
-            WeatherPlace(name: $0.name,
-                         detail: [$0.admin1, $0.country].compactMap { $0 }.joined(separator: ", "),
-                         latitude: $0.latitude, longitude: $0.longitude)
+            WeatherPlace(
+                name: $0.name,
+                detail: [$0.admin1, $0.country].compactMap { $0 }.joined(separator: ", "),
+                latitude: $0.latitude, longitude: $0.longitude)
         }
     }
 
@@ -137,9 +140,9 @@ final class WeatherStore: ObservableObject {
             URLQueryItem(name: "forecast_days", value: "2"),
         ]
         guard let request = url.url,
-              let result = try? await URLSession.shared.data(from: request),
-              (result.1 as? HTTPURLResponse)?.statusCode == 200,
-              let answer = try? JSONDecoder().decode(ForecastAnswer.self, from: result.0)
+            let result = try? await URLSession.shared.data(from: request),
+            (result.1 as? HTTPURLResponse)?.statusCode == 200,
+            let answer = try? JSONDecoder().decode(ForecastAnswer.self, from: result.0)
         else { return nil }
 
         let now = Date.now
@@ -244,8 +247,8 @@ enum WeatherCode {
     }
 }
 
-private extension Array {
-    subscript(safe index: Int) -> Element? { indices.contains(index) ? self[index] : nil }
+extension Array {
+    fileprivate subscript(safe index: Int) -> Element? { indices.contains(index) ? self[index] : nil }
 }
 
 extension String {

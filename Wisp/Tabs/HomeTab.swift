@@ -8,10 +8,10 @@ enum HomeTile: String, CaseIterable, Identifiable {
 
     var title: String {
         switch self {
-        case .now:    String(localized: "In progress")
+        case .now: String(localized: "In progress")
         case .github: "GitHub"
-        case .whoop:  "WHOOP"
-        case .music:  String(localized: "Music")
+        case .whoop: "WHOOP"
+        case .music: String(localized: "Music")
         case .notion: "Notion"
         }
     }
@@ -108,21 +108,21 @@ private struct StatusLine: View {
 
     private var color: Color {
         switch session.state {
-        case .working:           Preferences.shared.accent.color
+        case .working: Preferences.shared.accent.color
         case .waiting, .question: Theme.warning
-        case .failed:            Theme.badge
-        case .idle, .finished:   Theme.ok
+        case .failed: Theme.badge
+        case .idle, .finished: Theme.ok
         }
     }
 
     private func text(now: Date) -> String {
         switch session.state {
-        case .working:  return session.tool.map { String(localized: "Working · \($0)") } ?? String(localized: "Working…")
-        case .waiting:  return String(localized: "Waiting for permission")
+        case .working: return session.tool.map { String(localized: "Working · \($0)") } ?? String(localized: "Working…")
+        case .waiting: return String(localized: "Waiting for permission")
         case .question: return String(localized: "Has a question for you")
-        case .failed:   return String(localized: "Stopped with an error")
+        case .failed: return String(localized: "Stopped with an error")
         case .finished: return String(localized: "Done · \(Self.duration(now.timeIntervalSince(session.startedAt))) focused")
-        case .idle:     return String(localized: "Connected · \(Self.duration(now.timeIntervalSince(session.startedAt))) focused")
+        case .idle: return String(localized: "Connected · \(Self.duration(now.timeIntervalSince(session.startedAt))) focused")
         }
     }
 
@@ -215,8 +215,9 @@ private struct IntegrationGrid: View {
         if tile == .music {
             musicTile
         } else if tile == .github, github.isConnected {
-            self.tile("GitHub", value: String(localized: "\(github.snapshot.mine.count) PRs · \(github.snapshot.reviews.count) reviews"),
-                      dot: githubDot, dim: false)
+            self.tile(
+                "GitHub", value: String(localized: "\(github.snapshot.mine.count) PRs · \(github.snapshot.reviews.count) reviews"),
+                dot: githubDot, dim: false)
         } else {
             self.tile(tile.title)
         }
@@ -232,13 +233,16 @@ private struct IntegrationGrid: View {
     private var musicTile: some View {
         let track = player.track
         let value = track.map { [$0.title, $0.artist].filter { !$0.isEmpty }.joined(separator: " · ") }
-        return tile(String(localized: "Music"), value: value ?? String(localized: "Not playing"),
-                    dot: track?.isPlaying == true ? Theme.ok : nil,
-                    dim: track == nil)
+        return tile(
+            String(localized: "Music"), value: value ?? String(localized: "Not playing"),
+            dot: track?.isPlaying == true ? Theme.ok : nil,
+            dim: track == nil)
     }
 
-    private func tile(_ name: String, value: String = String(localized: "Not connected"),
-                      dot: Color? = nil, dim: Bool = true) -> some View {
+    private func tile(
+        _ name: String, value: String = String(localized: "Not connected"),
+        dot: Color? = nil, dim: Bool = true
+    ) -> some View {
         Card {
             VStack(alignment: .leading, spacing: 4) {
                 HStack(spacing: 6) {
@@ -286,8 +290,10 @@ struct AccentButtonStyle: ButtonStyle {
                 .foregroundStyle(.white)
                 .padding(.horizontal, 12)
                 .frame(height: Theme.buttonHeight)
-                .background(RoundedRectangle(cornerRadius: Theme.buttonCorner, style: .continuous)
-                    .fill(prefs.accent.color))
+                .background(
+                    RoundedRectangle(cornerRadius: Theme.buttonCorner, style: .continuous)
+                        .fill(prefs.accent.color)
+                )
                 .opacity(!isEnabled ? 0.4 : configuration.isPressed ? 0.75 : 1)
         }
     }
@@ -308,8 +314,10 @@ struct SecondaryButtonStyle: ButtonStyle {
                 .foregroundStyle(Theme.textPrimary)
                 .padding(.horizontal, 12)
                 .frame(height: Theme.buttonHeight)
-                .background(RoundedRectangle(cornerRadius: Theme.buttonCorner, style: .continuous)
-                    .fill(configuration.isPressed ? Theme.activeTab : Theme.control))
+                .background(
+                    RoundedRectangle(cornerRadius: Theme.buttonCorner, style: .continuous)
+                        .fill(configuration.isPressed ? Theme.activeTab : Theme.control)
+                )
                 .opacity(isEnabled ? 1 : 0.4)
         }
     }

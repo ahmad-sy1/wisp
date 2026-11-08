@@ -47,7 +47,11 @@ final class NotchModel: ObservableObject {
 
     /// What the wings show now. One thing at a time, most urgent first: a focus session, an
     /// urgent status, music, a calm status (a run going), unread mail.
-    enum Wings: Equatable { case none, focus, status(StatusWings), music, mail }
+    enum Wings: Equatable {
+        case none, focus
+        case status(StatusWings)
+        case music, mail
+    }
 
     var wings: Wings {
         if focusWings { return .focus }
@@ -75,8 +79,9 @@ final class NotchModel: ObservableObject {
         guard hovering else {
             return CGSize(width: restingSize.width, height: restingSize.height + tickOffset)
         }
-        return CGSize(width: restingSize.width + Self.hoverGrow.width,
-                      height: restingSize.height + Self.hoverGrow.height)
+        return CGSize(
+            width: restingSize.width + Self.hoverGrow.width,
+            height: restingSize.height + Self.hoverGrow.height)
     }
 
     /// Bottom corner radius: the hardware notch is softly rounded, the panel more so.

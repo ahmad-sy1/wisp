@@ -7,30 +7,40 @@ struct FocusPage: View {
     @State private var adding = false
 
     var body: some View {
-        SettingsPage(title: String(localized: "Focus"),
-                     note: String(localized: "When you change a task in the notch, wisp remembers it here as “Learned”. You can always remove a rule.")) {
+        SettingsPage(
+            title: String(localized: "Focus"),
+            note: String(
+                localized: "When you change a task in the notch, wisp remembers it here as “Learned”. You can always remove a rule.")
+        ) {
             SettingsGroup(header: String(localized: "Timer")) {
-                SettingsRow(String(localized: "Default duration"),
-                            subtitle: focus.isActive ? String(localized: "Can't change while a session runs") : nil) {
+                SettingsRow(
+                    String(localized: "Default duration"),
+                    subtitle: focus.isActive ? String(localized: "Can't change while a session runs") : nil
+                ) {
                     DurationPicker(minutes: $focus.minutes)
                         .disabled(focus.isActive)
                         .opacity(focus.isActive ? 0.45 : 1)
                 }
-                SettingsToggle(String(localized: "Do not disturb during focus"),
-                               subtitle: String(localized: "Runs your Shortcuts “\(FocusStore.shortcutOn)” and “\(FocusStore.shortcutOff)”"),
-                               isOn: $focus.doNotDisturb)
+                SettingsToggle(
+                    String(localized: "Do not disturb during focus"),
+                    subtitle: String(localized: "Runs your Shortcuts “\(FocusStore.shortcutOn)” and “\(FocusStore.shortcutOff)”"),
+                    isOn: $focus.doNotDisturb)
                 SettingsToggle(String(localized: "Start music when a session begins"), isOn: $focus.startMusic)
             }
 
             SettingsGroup(header: String(localized: "Recognising the task · your calendar first, then the app you use")) {
                 if focus.rules.isEmpty && !adding {
-                    SettingsRow(String(localized: "No rules yet"),
-                                subtitle: String(localized: "Change a task the timer guessed and wisp remembers it for that app or project."))
-                        .padding(.vertical, 6)
+                    SettingsRow(
+                        String(localized: "No rules yet"),
+                        subtitle: String(localized: "Change a task the timer guessed and wisp remembers it for that app or project.")
+                    )
+                    .padding(.vertical, 6)
                 } else {
                     ForEach(focus.rules) { rule in
-                        RuleRow(source: Self.describe(rule.key), task: rule.task,
-                                origin: rule.isOwn ? String(localized: "Set by you") : String(localized: "Learned")) {
+                        RuleRow(
+                            source: Self.describe(rule.key), task: rule.task,
+                            origin: rule.isOwn ? String(localized: "Set by you") : String(localized: "Learned")
+                        ) {
                             focus.forget(rule.key)
                         }
                     }
@@ -51,7 +61,8 @@ struct FocusPage: View {
     private static func describe(_ key: String) -> String {
         let parts = key.split(separator: "|", maxSplits: 1).map(String.init)
         let bundle = parts.first ?? key
-        let app = NSWorkspace.shared.urlForApplication(withBundleIdentifier: bundle)
+        let app =
+            NSWorkspace.shared.urlForApplication(withBundleIdentifier: bundle)
             .map { FileManager.default.displayName(atPath: $0.path).replacingOccurrences(of: ".app", with: "") }
             ?? bundle
         return parts.count > 1 ? "\(app) · \(parts[1])" : app
@@ -66,7 +77,9 @@ private struct DurationPicker: View {
         HStack(spacing: 2) {
             ForEach(FocusStore.durations, id: \.self) { value in
                 let active = value == minutes
-                Button { minutes = value } label: {
+                Button {
+                    minutes = value
+                } label: {
                     Text("\(value) min")
                         .font(.system(size: 13, weight: active ? .semibold : .regular))
                         .foregroundStyle(active ? Theme.textPrimary : Theme.textSecondary)

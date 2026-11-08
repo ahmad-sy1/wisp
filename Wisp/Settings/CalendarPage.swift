@@ -10,8 +10,10 @@ struct CalendarPage: View {
     @State private var changingPlace = false
 
     var body: some View {
-        SettingsPage(title: String(localized: "Calendar & weather"),
-                     note: String(localized: "Your calendar is only read, never changed. For the weather only the place name goes to Open-Meteo.")) {
+        SettingsPage(
+            title: String(localized: "Calendar & weather"),
+            note: String(localized: "Your calendar is only read, never changed. For the weather only the place name goes to Open-Meteo.")
+        ) {
             SettingsGroup(header: String(localized: "Calendars in the notch")) {
                 calendars
             }
@@ -25,7 +27,8 @@ struct CalendarPage: View {
                         }
                         // The chosen calendar while the list isn't loaded (no access yet).
                         if case .calendar(let id) = agenda.shiftRule,
-                           !agenda.calendars.contains(where: { $0.calendarIdentifier == id }) {
+                            !agenda.calendars.contains(where: { $0.calendarIdentifier == id })
+                        {
                             Text("A calendar").tag(agenda.shiftRule)
                         }
                     }
@@ -54,22 +57,31 @@ struct CalendarPage: View {
                     .buttonStyle(.settings)
             }
         case .denied:
-            SettingsRow(String(localized: "Calendar"),
-                        subtitle: String(localized: "wisp has no access to your calendar. Turn wisp on under Privacy & Security → Calendars.")) {
+            SettingsRow(
+                String(localized: "Calendar"),
+                subtitle: String(localized: "wisp has no access to your calendar. Turn wisp on under Privacy & Security → Calendars.")
+            ) {
                 Button("Open System Settings") { agenda.openPrivacySettings() }
                     .buttonStyle(.settings)
             }
         case .granted:
             let hidden = agenda.calendars.filter { agenda.hiddenCalendars.contains($0.calendarIdentifier) }
-            ForEach(showAll ? agenda.calendars : agenda.calendars.filter { !hidden.contains($0) },
-                    id: \.calendarIdentifier) { calendar in
-                CalendarRow(calendar: calendar, isOn: Binding(
-                    get: { !agenda.hiddenCalendars.contains(calendar.calendarIdentifier) },
-                    set: { on in
-                        if on { agenda.hiddenCalendars.remove(calendar.calendarIdentifier) }
-                        else { agenda.hiddenCalendars.insert(calendar.calendarIdentifier) }
-                    }
-                ))
+            ForEach(
+                showAll ? agenda.calendars : agenda.calendars.filter { !hidden.contains($0) },
+                id: \.calendarIdentifier
+            ) { calendar in
+                CalendarRow(
+                    calendar: calendar,
+                    isOn: Binding(
+                        get: { !agenda.hiddenCalendars.contains(calendar.calendarIdentifier) },
+                        set: { on in
+                            if on {
+                                agenda.hiddenCalendars.remove(calendar.calendarIdentifier)
+                            } else {
+                                agenda.hiddenCalendars.insert(calendar.calendarIdentifier)
+                            }
+                        }
+                    ))
             }
             if showAll {
                 SettingsLinkRow(title: String(localized: "Show only the calendars in use")) { showAll = false }
