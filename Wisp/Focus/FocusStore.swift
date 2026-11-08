@@ -17,6 +17,17 @@ struct FocusTask: Equatable {
     var learnKey: String?
 }
 
+/// "This app (and project) means this task" (Settings → Focus, board 10.6).
+struct FocusRule: Identifiable {
+    /// "com.jetbrains.intellij|wisp", or only the app.
+    let key: String
+    let task: String
+    /// Added in Settings, rather than learned from a correction.
+    let isOwn: Bool
+
+    var id: String { key }
+}
+
 /// The focus timer (board 4): 25 / 50 / 90 minutes, today's sessions, and a guess of
 /// what you are working on.
 ///
@@ -42,6 +53,8 @@ final class FocusStore: ObservableObject {
     @Published private(set) var todaySeconds: TimeInterval = 0
     /// Learned corrections: app (and project) → task name.
     @Published private(set) var learned: [String: String]
+    /// Rules added in Settings: app (and project) → task name.
+    @Published private(set) var ownRules: [String: String]
 
     @Published var minutes: Int {
         didSet { defaults.set(minutes, forKey: Key.minutes) }
@@ -70,6 +83,7 @@ final class FocusStore: ObservableObject {
         static let dnd = "focusDoNotDisturb"
         static let music = "focusStartMusic"
         static let learned = "focusLearnedTasks"
+        static let ownRules = "focusOwnRules"
         static let day = "focusDay"
         static let sessions = "focusDaySessions"
         static let seconds = "focusDaySeconds"
@@ -81,6 +95,7 @@ final class FocusStore: ObservableObject {
         doNotDisturb = defaults.bool(forKey: Key.dnd)
         startMusic = defaults.bool(forKey: Key.music)
         learned = defaults.dictionary(forKey: Key.learned) as? [String: String] ?? [:]
+        ownRules = defaults.dictionary(forKey: Key.ownRules) as? [String: String] ?? [:]
         loadToday()
     }
 
@@ -223,7 +238,7 @@ final class FocusStore: ObservableObject {
             .filter { $0.host.bundleId == app.bundleIdentifier }
             .max { $0.lastEventAt < $1.lastEventAt }?.project
         let key = project.map { "\(bundle)|\($0)" } ?? bundle
-        let guess = learned[key] ?? learned[bundle] ?? Self.defaultTask(for: bundle, name: name)
+        let guess = rule(for: key) ?? rule(for: bundle) ?? Self.defaultTask(for: bundle, name: name)
         task = FocusTask(name: guess, source: .automatic(app: name, project: project), learnKey: key)
     }
 
@@ -232,6 +247,8 @@ final class FocusStore: ObservableObject {
         let trimmed = name.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { return }
         if let key = task?.learnKey, task?.name != trimmed {
+            // The correction replaces a rule of your own for the same app and project.
+            setOwnRule(key, nil)
             learned[key] = trimmed
             defaults.set(learned, forKey: Key.learned)
         }
@@ -239,8 +256,34 @@ final class FocusStore: ObservableObject {
     }
 
     func forget(_ key: String) {
+        setOwnRule(key, nil)
         learned[key] = nil
         defaults.set(learned, forKey: Key.learned)
+    }
+
+    /// All rules, with a rule of your own over a learned one, sorted by key.
+    var rules: [FocusRule] {
+        let own = ownRules.map { FocusRule(key: $0.key, task: $0.value, isOwn: true) }
+        let others = learned.filter { ownRules[$0.key] == nil }.map { FocusRule(key: $0.key, task: $0.value, isOwn: false) }
+        return (own + others).sorted { $0.key < $1.key }
+    }
+
+    /// Adds a rule from Settings, or replaces the one for the same app and project.
+    func addRule(bundle: String, project: String, task: String) {
+        let project = project.trimmingCharacters(in: .whitespacesAndNewlines)
+        let task = task.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !task.isEmpty else { return }
+        let key = project.isEmpty ? bundle : "\(bundle)|\(project)"
+        learned[key] = nil
+        defaults.set(learned, forKey: Key.learned)
+        setOwnRule(key, task)
+    }
+
+    private func rule(for key: String) -> String? { ownRules[key] ?? learned[key] }
+
+    private func setOwnRule(_ key: String, _ task: String?) {
+        ownRules[key] = task
+        defaults.set(ownRules, forKey: Key.ownRules)
     }
 
     /// The app in front, leaving out wisp itself and macOS's own screens (login window,

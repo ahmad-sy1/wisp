@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Settings → Focus: add your own rules (app, optional project → task), marked *Set by you* next to the *Learned* ones (#27)
 - Settings → Music: the mini spectrum on or off, a battery saver for the spectrum, and which players show: Spotify, Apple Music, the browser (#26)
 - Open the notch from the keyboard with ⌥Space, changeable in Settings → General (#25); opened that way it stays until you press the keys again, press Esc or click elsewhere, and ← → walk through the tabs
 - Closing the notch hands typing back to the app you were in, and Esc can't close the notch window itself

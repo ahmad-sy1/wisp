@@ -147,6 +147,7 @@ Open-Meteo (HTTPS, no key) ─► WeatherStore ┘
 
 - **`FocusStore`** keeps no ticking timer. A running session is an end date and one `DispatchWorkItem` for the moment it ends; the countdown is worked out when something draws it. When it ends: today's count goes up, the notch opens on the Focus tab and, with sounds on, *Glass* plays.
 - **The task** is guessed when the tab opens and when a session starts: the timed calendar event that is on now (`AgendaStore.eventNow()`, one small query), otherwise the app in front. For an IDE or terminal the guess is *Coding*, with the project from the newest Claude Code session in that app; for other apps, the app's name. Typing a different task remembers it for that app (and project) in `focusLearnedTasks`; Settings → Focus lists and forgets them.
+- **Rules**: `FocusStore.learned` (from corrections, saved as `focusLearnedTasks`) and `ownRules` (from Settings, `focusOwnRules`) map `bundle|project` or `bundle` to a task; your own rule wins, and a correction in the notch replaces it.
 - **Do not disturb** runs the user's Shortcuts *wisp Focus On* and *wisp Focus Off* (`/usr/bin/shortcuts run`), since macOS lets apps switch a Focus mode only through Shortcuts. **Start music** sends play to Now Playing if something is paused.
 - The tab and the closed-notch wings redraw once a second only while a session runs (`TimelineView(.periodic)`); before, after and while paused they are still. The wings come from `NotchModel.focusWings` and win over the music wings; the mini spectrum stops while they show.
 
