@@ -21,6 +21,7 @@ The boards in [`design/boards/`](../design/boards) are the visual source of trut
 | [9.4](../design/boards/9.4-music-nothing-playing.png) | Music: nothing playing |
 | [9.5](../design/boards/9.5-music-permission.png) | Music: one-time permission |
 | [9.6](../design/boards/9.6-closed-notch-mini-spectrum.png) | closed notch: mini spectrum, video, paused |
+| [9.7](../design/boards/9.7-closed-notch-focus-music.png) | closed notch: focus and music together (planned) |
 | [10.1](../design/boards/10.1-settings-notch.png) | Settings: Notch (tabs on/off and order, Home tiles) |
 | [10.2](../design/boards/10.2-settings-general.png) | Settings: General |
 | [10.3](../design/boards/10.3-settings-integrations.png) | Settings: Integrations |
