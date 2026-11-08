@@ -13,6 +13,18 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  format:
+    runs-on: xcode-27
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode_27.2.0.app
+
+      - name: Check formatting
+        run: ./scripts/format.sh check
+
   build:
     # The same Xcode as development: a different compiler has rejected code that builds locally.
     runs-on: xcode-27

@@ -38,6 +38,6 @@ The script stops with a clear message unless you are on a clean `main` that matc
 
 ## CI
 
-[`.github/workflows/build.yml`](../.github/workflows/build.yml) builds every push to `main` and every pull request on a clean `xcode-27` runner, without signing, with the same Xcode as development. Changes to documentation alone skip the build but still report a result, because `build` is a required check on `main`. A newer push to the same branch cancels the build that is still running.
+[`.github/workflows/build.yml`](../.github/workflows/build.yml) builds every push to `main` and every pull request on a clean `xcode-27` runner, without signing, with the same Xcode as development. Changes to documentation alone skip the build but still report a result, because `build` is a required check on `main`. A separate `format` job checks the formatting of the Swift code. A newer push to the same branch cancels the build that is still running.
 
 Before the first public release, go through the [launch checklist](LAUNCH.md).
