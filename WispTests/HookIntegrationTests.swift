@@ -169,6 +169,16 @@ final class HookIntegrationTests: XCTestCase {
         }
     }
 
+    func testExitsCleanlyWhenClaudeCodeIsGoneBeforeTheAnswer() throws {
+        let app = try FakeApp(path: socketPath)
+        defer { app.stop() }
+        app.serve(answer: #"{"decision":"allow"}"#, after: 0.2)
+
+        let hook = try run(permissionRequest, stdoutClosed: true)
+        XCTAssertEqual(hook.reason, .exit)
+        XCTAssertEqual(hook.status, 0)
+    }
+
     func testLeavesTheQuestionToTheTerminalWhenWispHangsUp() throws {
         let app = try FakeApp(path: socketPath)
         defer { app.stop() }
@@ -190,6 +200,7 @@ final class HookIntegrationTests: XCTestCase {
 
     private struct HookRun {
         let status: Int32
+        let reason: Process.TerminationReason
         let output: String
         let seconds: TimeInterval
     }
@@ -208,7 +219,7 @@ final class HookIntegrationTests: XCTestCase {
 
     /// Only the variables named here reach the hook: a test run from inside the Claude
     /// desktop app would otherwise pass on its bundle id, and the hook would do nothing.
-    private func run(_ stdin: String, term: String? = nil, bundleId: String? = nil) throws -> HookRun {
+    private func run(_ stdin: String, term: String? = nil, bundleId: String? = nil, stdoutClosed: Bool = false) throws -> HookRun {
         let process = Process()
         process.executableURL = Bundle(for: Self.self).bundleURL.deletingLastPathComponent().appendingPathComponent("wisp-hook")
         var environment = ["HOME": home, "CFFIXED_USER_HOME": home]
@@ -226,6 +237,7 @@ final class HookIntegrationTests: XCTestCase {
 
         let start = Date()
         try process.run()
+        if stdoutClosed { try output.fileHandleForReading.close() }
         // On its own queue: a big event doesn't fit in the pipe until the hook reads it.
         let writer = input.fileHandleForWriting
         let bytes = Data(stdin.utf8)
@@ -238,8 +250,10 @@ final class HookIntegrationTests: XCTestCase {
             throw TestError("wisp-hook was still running after 10 s")
         }
         let seconds = Date().timeIntervalSince(start)
-        let printed = output.fileHandleForReading.readDataToEndOfFile()
-        return HookRun(status: process.terminationStatus, output: String(decoding: printed, as: UTF8.self), seconds: seconds)
+        let printed = stdoutClosed ? Data() : output.fileHandleForReading.readDataToEndOfFile()
+        return HookRun(
+            status: process.terminationStatus, reason: process.terminationReason, output: String(decoding: printed, as: UTF8.self),
+            seconds: seconds)
     }
 }
 

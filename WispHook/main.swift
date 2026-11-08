@@ -89,7 +89,7 @@ let output: [String: Any] = [
     "hookSpecificOutput": ["hookEventName": "PermissionRequest", "decision": behaviour]
 ]
 if let data = try? JSONSerialization.data(withJSONObject: output) {
-    FileHandle.standardOutput.write(data)
-    FileHandle.standardOutput.write(Data([0x0A]))
+    // `try?`: Claude Code may be gone by now, and the non-throwing write would crash.
+    try? FileHandle.standardOutput.write(contentsOf: data + [0x0A])
 }
 exit(0)
