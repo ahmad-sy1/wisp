@@ -314,6 +314,7 @@ final class DepartureStore: ObservableObject {
     #if DEBUG
     private func startDemo(_ mode: String) {
         isDemo = true
+        hasNSKey = true
         let now = Date.now
         @Sendable func minutes(_ n: Double) -> Date { now.addingTimeInterval(n * 60) }
         settings.home = TravelPlace(name: "Thuis", latitude: 51.84, longitude: 5.85)
@@ -335,8 +336,11 @@ final class DepartureStore: ObservableObject {
         transit = MockTravelProvider { _, _ in [train(14, "300"), train(29, "33", delay: 4), train(44, "300", cancelled: true)] }
         car = MockTravelProvider { departAt, _ in
             let leave = departAt ?? minutes(10)
-            return [TravelOption(departure: leave, arrival: leave.addingTimeInterval(57 * 60),
-                                 legs: [TravelLeg(kind: .drive, minutes: 57)], normalMinutes: 42, routeName: "A15")]
+            // The jam thins out over the coming hour.
+            let later = leave.timeIntervalSince(now) / 60
+            let trip = later > 55 ? 42 : later > 25 ? 50 : 57
+            return [TravelOption(departure: leave, arrival: leave.addingTimeInterval(Double(trip) * 60),
+                                 legs: [TravelLeg(kind: .drive, minutes: trip)], normalMinutes: 42, routeName: "A15")]
         }
         bike = MockTravelProvider { departAt, _ in
             let leave = departAt ?? minutes(10)

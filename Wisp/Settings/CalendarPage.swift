@@ -2,7 +2,7 @@ import EventKit
 import SwiftUI
 
 /// Settings → Calendar & weather (board 10.4): which calendars show in the notch, how a
-/// shift is recognised, the ride to work and the place for the weather.
+/// shift is recognised and the place for the weather. The ride moved to Settings → Departure.
 struct CalendarPage: View {
     @ObservedObject var agenda: AgendaStore
     @ObservedObject var weather: WeatherStore
@@ -16,7 +16,7 @@ struct CalendarPage: View {
                 calendars
             }
 
-            SettingsGroup(header: String(localized: "Shifts & travel")) {
+            SettingsGroup(header: String(localized: "Shifts")) {
                 SettingsRow(String(localized: "Recognise shifts by")) {
                     Picker("Recognise shifts by", selection: $agenda.shiftRule) {
                         Text("‘\(AgendaStore.shiftWord)’ in the title").tag(AgendaStore.ShiftRule.titleWord)
@@ -31,25 +31,6 @@ struct CalendarPage: View {
                     }
                     .labelsHidden()
                     .fixedSize()
-                }
-                SettingsRow(String(localized: "Travel time to your shift")) {
-                    HStack(spacing: 8) {
-                        StepButton(symbol: "minus", help: String(localized: "Shorter")) {
-                            agenda.travelMinutes = max(1, agenda.travelMinutes - 5)
-                        }
-                        Text("\(agenda.travelMinutes) min")
-                            .font(.system(size: 13))
-                            .monospacedDigit()
-                            .frame(minWidth: 52)
-                        StepButton(symbol: "plus", help: String(localized: "Longer")) {
-                            agenda.travelMinutes = min(120, agenda.travelMinutes + 5)
-                        }
-                        Picker("Travel mode", selection: $agenda.travelMode) {
-                            ForEach(AgendaStore.TravelMode.allCases) { Text($0.title).tag($0) }
-                        }
-                        .labelsHidden()
-                        .fixedSize()
-                    }
                 }
             }
 
@@ -120,7 +101,7 @@ private struct CalendarRow: View {
 }
 
 /// The square − / + buttons for the travel time.
-private struct StepButton: View {
+struct StepButton: View {
     let symbol: String
     let help: String
     let action: () -> Void

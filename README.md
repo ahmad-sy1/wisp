@@ -32,13 +32,14 @@ The notch is the one bit of screen you never use. wisp turns it into a quiet das
 - **Music**: whatever your Mac is playing (Spotify, Music, YouTube in the browser), with artwork, progress and glass controls. Next to it, a **live spectrum** of what you hear: 24 bands from bass to treble, the bass/mid/treble mix and the loudness. While music plays, the closed notch grows a little wing on each side: artwork on the left, a mini spectrum on the right.
 - **Calendar & weather**: today's timeline from the macOS Calendar app (and so from Google Calendar too), with what's done struck through, what's on now in its own card with a bar that fills up, a red *now* line and a countdown to what's next; in the evening it already shows how tomorrow starts. Next to it the weather where you are and, on a work day, when to leave for your shift and whether it stays dry.
 - **Focus timer**: 25, 50 or 90 minutes with a ring that keeps counting in the closed notch. It guesses what you work on (the calendar event that's on, or the app and Claude Code project in front) and learns from your corrections; today's sessions sit in the tab bar.
+- **Departure**: when to leave, from your calendar: for an event with a location, or home after your last one. By public transport with line numbers and tracks, by car with traffic and whether waiting helps, by bike with the rain. A countdown on the closed notch, and nothing when there is no trip.
 - **GitHub**: your open pull requests with the state of their checks, requested reviews and your contribution graph. The closed notch stays empty until something matters: a run going, a failed job, a review request, a new comment.
 - **Clipboard**: the last 20 texts you copied, searchable, one click to copy again. Stored only on your Mac; passwords and one-time codes are never kept.
 - **Notes**: jot something down without leaving what you're doing; click a note to edit it. Stored only on your Mac.
 - **System**: battery and time left, your AirPods' batteries, CPU with the busiest app, free storage and the Wi-Fi network, read only while you look.
 - **Keyboard**: ⌥Space opens the notch from anywhere (change it in Settings); ← → walk through the tabs, Esc closes.
 - **English and Dutch**: wisp follows your Mac's language, or pick one in Settings.
-- **Calm by default**: the closed notch draws nothing extra and uses 0 % CPU. The exceptions are the ones you connect: checking GitHub, adaptively and never while the Mac sleeps.
+- **Calm by default**: the closed notch draws nothing extra and uses 0 % CPU. The exceptions are the ones you connect: checking GitHub and travel times, adaptively and never while the Mac sleeps.
 - **Any Mac**: on a screen without a notch, wisp sits in a small bar at the top centre.
 - **Private by design**: no telemetry, no account. Passwords live in your macOS Keychain. wisp only talks to the services you connect.
 
@@ -132,7 +133,8 @@ Open **Settings**: click the notch, then the sliders icon on the right. On a ful
 |---|---|---|
 | **Claude Code hooks** | live sessions and approvals | *General → Claude Code → Install…* shows exactly which lines it adds to `~/.claude/settings.json`. Nothing is written until you click *Install*, and a dated backup is made first. Restart running Claude Code sessions afterwards. |
 | **Gmail** | the Mail tab and unread badge | *Integrations → Add integration → Gmail*: your address and a Google [app password](https://myaccount.google.com/apppasswords). Both are stored in the Keychain only. |
-| **Calendar & weather** | the Agenda tab | Calendar access (macOS asks once), which calendars count, how a shift is recognised (the word *dienst* or a calendar), your ride to work in minutes and how you travel (bike, car, on foot, public transport), and the place for the weather (Nijmegen by default). |
+| **Calendar & weather** | the Agenda tab | Calendar access (macOS asks once), which calendars count, how a shift is recognised (the word *dienst* or a calendar), and the place for the weather (Nijmegen by default). |
+| **Departure** | the Departure tab and countdown | *Settings → Departure*: your home address (nothing runs without one) and how you travel. For lines, tracks and delays, add a free [NS key](https://apiportal.ns.nl) under *Integrations*. Your home address and event locations go to Apple for routes. |
 | **GitHub** | the GitHub tab and closed-notch states | *Settings → GitHub*: use your `gh` login with one click, or add a token. It is stored in the Keychain only. |
 | **Accent colour** | buttons, unread dots, highlights | Blue, green, orange or purple. |
 | **Open at login** | wisp is always there | One toggle. |

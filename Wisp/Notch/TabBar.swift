@@ -15,28 +15,32 @@ struct TabBar: View {
                 }
             }
             Spacer(minLength: 0)
-            if model.tab == .mail {
-                MailToolbar(store: .shared)
-                    .padding(.trailing, 4)
-            } else if model.tab == .agenda {
-                AgendaToolbar()
-                    .padding(.trailing, 10)
-            } else if model.tab == .focus {
-                FocusToolbar(focus: .shared)
-                    .padding(.trailing, 10)
-            } else if model.tab == .clipboard {
-                ClipboardToolbar(clipboard: .shared)
-                    .padding(.trailing, 4)
-            } else if model.tab == .notes {
-                NotesToolbar(notes: .shared)
-                    .padding(.trailing, 10)
-            } else if model.tab == .system {
-                SystemToolbar(stats: .shared)
-                    .padding(.trailing, 10)
-            } else if model.tab == .music {
-                MusicToolbar()
-                    .padding(.trailing, 10)
+            // Whatever a tab puts here gives way first: the tabs themselves never move.
+            Group {
+                if model.tab == .mail {
+                    MailToolbar(store: .shared)
+                        .padding(.trailing, 4)
+                } else if model.tab == .agenda {
+                    AgendaToolbar()
+                        .padding(.trailing, 10)
+                } else if model.tab == .focus {
+                    FocusToolbar(focus: .shared)
+                        .padding(.trailing, 10)
+                } else if model.tab == .clipboard {
+                    ClipboardToolbar(clipboard: .shared)
+                        .padding(.trailing, 4)
+                } else if model.tab == .notes {
+                    NotesToolbar(notes: .shared)
+                        .padding(.trailing, 10)
+                } else if model.tab == .system {
+                    SystemToolbar(stats: .shared)
+                        .padding(.trailing, 10)
+                } else if model.tab == .music {
+                    MusicToolbar()
+                        .padding(.trailing, 10)
+                }
             }
+            .layoutPriority(-1)
             TabIconButton(symbol: "slider.vertical.3", label: String(localized: "Settings"), isActive: false) {
                 model.onOpenSettings()
             }
