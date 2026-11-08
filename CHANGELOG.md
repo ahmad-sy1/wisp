@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Claude Code settings and a hook for this repository that keep AI attribution out of commits and pull requests
 - Settings → Notch: choose what Home shows, as chips under the Home tab; what's left takes the room of what is off (#24)
 - Settings → Focus: add your own rules (app, optional project → task), marked *Set by you* next to the *Learned* ones (#27)
 - Settings → Music: the mini spectrum on or off, a battery saver for the spectrum, and which players show: Spotify, Apple Music, the browser (#26)
