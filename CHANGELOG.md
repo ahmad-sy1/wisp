@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- `/review-pr`: a Claude Code skill that reviews a pull request against wisp's own rules and proves each finding
 - All Swift code is formatted with `swift-format`, and CI checks it on every pull request
 - CI runs on every pull request with the same Xcode as development, and skips the build for documentation alone
 - Departure assistant: when to leave for an event or to go home, from your calendar, by public transport, car or bike. Line numbers and tracks from NS and OVapi, traffic and *now or later* from Apple Maps, rain from Buienradar. A Departure tab (board 12), a countdown on the closed notch (board 11) and Settings → Departure (board 14), which now also holds the ride to your shift

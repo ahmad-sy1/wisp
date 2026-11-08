@@ -100,5 +100,6 @@ English is the source language. Every other language lives in `Wisp/Resources/Lo
 
 - Open the PR against `main`; the template asks for **What**, **Why**, **How to test** and **Screenshots**. Write PR descriptions and comments in English, and keep them short.
 - One topic per PR. Add a screenshot or short recording for anything visual.
+- For a PR with code, run `/review-pr <number>` in Claude Code (`--no-comment` keeps the findings off the PR). The findings are posted as review comments, and comments must be resolved before merging. Run it again after fixes; it then looks only at the new commits.
 - The *Build* check must pass. The PR is merged by the owner, not by its author.
 - Add a line to `CHANGELOG.md` under *Unreleased* for anything a user would notice.

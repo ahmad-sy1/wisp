@@ -4,6 +4,12 @@
     "pr": "",
     "sessionUrl": false
   },
+  "permissions": {
+    "deny": [
+      "Bash(gh pr merge *)",
+      "Bash(gh pr review *)"
+    ]
+  },
   "hooks": {
     "PreToolUse": [
       {
