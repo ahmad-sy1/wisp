@@ -21,6 +21,7 @@ The boards in [`design/boards/`](../design/boards) are the visual source of trut
 | [9.4](../design/boards/9.4-music-nothing-playing.png) | Music: nothing playing |
 | [9.5](../design/boards/9.5-music-permission.png) | Music: one-time permission |
 | [9.6](../design/boards/9.6-closed-notch-mini-spectrum.png) | closed notch: mini spectrum, video, paused |
+| [9.7](../design/boards/9.7-closed-notch-focus-music.png) | closed notch: focus and music together (planned) |
 | [10.1](../design/boards/10.1-settings-notch.png) | Settings: Notch (tabs on/off and order, Home tiles) |
 | [10.2](../design/boards/10.2-settings-general.png) | Settings: General |
 | [10.3](../design/boards/10.3-settings-integrations.png) | Settings: Integrations |
@@ -198,7 +199,7 @@ Not on the board, in the same style: a failed row gets a second line with the fa
 
 On the closed notch the wings show one thing at a time, in this order: a running focus session (ring and time), an urgent status (a trip, CI failed, review requested, new comments; board 11), music (artwork and mini spectrum, boards 9.6), a calm status (a CI run going), unread mail (an envelope and the red count, board 8). Unread mail can be switched off in Settings → Gmail.
 
-A status (`StatusWings`, board 11) has an icon and short text left of the camera and short text right of it, 12 pt semibold. Both wings are as wide as the wider one, because the window is centred on the camera. So every status is a word or a number, shorter than board 11, and the tab has the details: *CI* and *3/4* for a run, *CI* and *#47* in red for a failure, the icon with a blue dot and *Review* (or the count in blue and *Reviews*), the pull request and a comment count, and for a trip the countdown with one time or delay. A wing is at most 96 pt. The notch drops 2 pt and springs back on a new event (*Tik-animatie*); CI gets a short flash of red or green. A click opens the tab it comes from. Everything stays quiet during a focus session with *Niet storen* and under a permission request.
+A status (`StatusWings`, board 11) has an icon and short text left of the camera and short text right of it, 12 pt semibold. Both wings are as wide as the wider one, because the window is centred on the camera. So every status is a word or a number, shorter than board 11, and the tab has the details: *CI* and *3/4* for a run, *CI* and *#47* in red for a failure, the icon with a blue dot and *Review* (or the count in blue and *Reviews*), the pull request and a comment count, and for a trip the countdown with one time or delay. A wing is at most 96 pt, and digits are measured and drawn at equal width, so a countdown or *3/4* doesn't move the notch unless it gains a digit. The notch drops 2 pt and springs back on a new event (*Tik-animatie*); CI gets a short flash of red or green. A click opens the tab it comes from. Everything stays quiet during a focus session with *Niet storen* and under a permission request.
 
 New mail peeks out of the notch (board 8): 420 × 132 pt, corner radius 26.
 

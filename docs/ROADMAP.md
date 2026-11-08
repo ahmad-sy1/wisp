@@ -6,6 +6,7 @@ What is planned, roughly in order. Every item becomes its own branch and pull re
 
 | Item | Notes | Tracking |
 |---|---|---|
+| **Closed-notch priority** | One place decides what the closed notch shows (`NotchArbiter`), then GitHub, departure, mail, focus + music (board 9.7) move onto it, one pull request per step. | |
 | **Files tab** | The drop zone, restyled. | |
 | **Home tiles** | Pick the Home tiles as chips (board 10.1); GitHub is live, Notion and WHOOP don't exist yet. | [#24](https://github.com/ahmad-sy1/wisp/issues/24) |
 | **Focus task rules: sites and defaults** | Adding app/project rules is done; browser sites as a source (needs Automation) and *Default* rules are left. Board 10.6. | [#27](https://github.com/ahmad-sy1/wisp/issues/27) |
