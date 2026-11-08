@@ -169,11 +169,19 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             .sink { source, playing in spectrum.setPlayback(source: source, playing: playing) }
             .store(in: &subscriptions)
 
+        Preferences.shared.$hiddenMusicSources
+            .dropFirst()
+            .removeDuplicates()
+            // @Published fires before the new value is stored.
+            .receive(on: RunLoop.main)
+            .sink { _ in player.sourcesChanged() }
+            .store(in: &subscriptions)
+
         // The closed-notch wings show the mini-spectrum while they are visible
-        // (and not taken over by a focus session).
+        // (and not taken over by a focus session), if it isn't switched off.
         notch.model.$musicWings
-            .combineLatest(notch.model.$phase, notch.model.$focusWings)
-            .map { wings, phase, focus in wings && !focus && phase == .collapsed }
+            .combineLatest(notch.model.$phase, notch.model.$focusWings, Preferences.shared.$miniSpectrum)
+            .map { wings, phase, focus, mini in wings && !focus && phase == .collapsed && mini }
             .removeDuplicates()
             .sink { visible in spectrum.setVisible(visible, by: "wings") }
             .store(in: &subscriptions)

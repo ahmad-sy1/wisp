@@ -213,6 +213,8 @@ Built in the same style, not on the boards (open to a design):
 - **Focus**: with no learned rules, one row *No rules yet*.
 - **General**: after a language change, the grey line says to restart and a *Restart* button appears next to the pop-up.
 
+Settings → Music (board 10.5): the system-audio row reads *Aan* / *Uit*, not *Toegestaan*, because macOS doesn't tell apps whether it granted access. *Mini spectrum* and *Battery saver* are dimmed while the live spectrum is off.
+
 ## Buttons
 
 `AccentButtonStyle` (accent fill, white semibold) and `SecondaryButtonStyle` (`control` fill), 28 pt high, radius 9. Disabled, both drop to 40 % opacity.
