@@ -94,10 +94,15 @@ targets:
         PRODUCT_NAME: wisp
         GENERATE_INFOPLIST_FILE: NO
   # Logic only: compiles the pure Core folders itself, with no host app, so running the
-  # tests never starts wisp (which would claim the notch and the hook socket).
+  # tests never starts wisp (which would claim the notch and the hook socket). wisp-hook is
+  # built next to the bundle: the integration tests run it against a socket of their own.
   wispTests:
     type: bundle.unit-test
     platform: macOS
+    dependencies:
+      - target: wisp-hook
+        embed: false
+        link: false
     sources:
       - path: WispTests
       - path: Wisp/GitHub/Core
