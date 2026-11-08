@@ -16,6 +16,8 @@ xcodebuild -scheme wisp -configuration Debug -derivedDataPath build.noindex buil
 open build.noindex/Build/Products/Debug/wisp.app
 ```
 
+Spotlight skips `build.noindex`, so it only lists the installed wisp. A checkout from before this folder existed still has `build/`, and Spotlight keeps listing the copies in it: quit any wisp running from there, then remove it once with `rm -rf build`.
+
 Debug builds can open straight on a tab, which helps for screenshots:
 
 ```bash
