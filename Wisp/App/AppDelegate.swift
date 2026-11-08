@@ -150,7 +150,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             .receive(on: RunLoop.main)
             .sink { active in notch.setFocusWings(active) }
             .store(in: &subscriptions)
-        focus.onFinished = { notch.expand(to: .focus) }
+        // Never over a permission request: the panel stays on the question until it is answered.
+        focus.onFinished = {
+            guard ClaudeSessions.shared.approval == nil else { return }
+            notch.expand(to: .focus)
+        }
         #if DEBUG
             // `-focusStart YES`: start a session at launch, for snapshots of the running timer.
             if UserDefaults.standard.bool(forKey: "focusStart") { focus.start() }
