@@ -247,7 +247,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     private func setUpStatusItem() {
         let item = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
-        item.button?.image = NSImage(systemSymbolName: "circle.circle", accessibilityDescription: "wisp")
+        // A template in the asset catalog, so macOS colours it for the menu bar.
+        let icon = NSImage(named: "MenuBarIcon")
+        icon?.accessibilityDescription = "wisp"
+        item.button?.image = icon
 
         let menu = NSMenu()
         menu.addItem(withTitle: String(localized: "Open wisp"), action: #selector(openNotch), keyEquivalent: "")
