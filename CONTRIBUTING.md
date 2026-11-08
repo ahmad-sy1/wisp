@@ -93,6 +93,7 @@ English is the source language. Every other language lives in `Wisp/Resources/Lo
 - One branch per piece of work: `feat/…`, `fix/…`, `docs/…`, `ci/…`, `chore/…`.
 - Small, logical commits in [Conventional Commits](https://www.conventionalcommits.org) style, in English: `feat: …`, `fix: …`, `style: …`, `refactor: …`, `docs: …`, `build: …`, `ci: …`, `chore: …`.
 - No AI attribution in commits, pull requests or the README.
+  `.claude/settings.json` turns it off in Claude Code, and `.claude/hooks/block-ai-attribution.py` refuses commits, pushes and GitHub writes that still contain it or that use an AI as git identity.
 
 ## Pull requests
 
