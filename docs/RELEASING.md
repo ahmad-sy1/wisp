@@ -38,4 +38,6 @@ The script stops with a clear message unless you are on a clean `main` that matc
 
 ## CI
 
-[`.github/workflows/build.yml`](../.github/workflows/build.yml) builds every push and pull request to `main` on a clean macOS runner, without signing. A newer push to the same branch cancels the build that is still running, to save macOS minutes on the private repository.
+[`.github/workflows/build.yml`](../.github/workflows/build.yml) builds every push and pull request to `main` on a clean macOS runner, without signing. A newer push to the same branch cancels the build that is still running, to save macOS minutes.
+
+Before the first public release, go through the [launch checklist](LAUNCH.md).
