@@ -30,7 +30,7 @@ wisp.app
 | `Wisp/Design` | `Theme`: colours, sizes, the accent options |
 | `Wisp/Support` | small helpers: `Keychain`, `HTTPTransport` (the protocol all newer network code goes through) |
 | `Wisp/Resources` | `Info.plist`, entitlements, and the String Catalogs: `Localizable.xcstrings` (interface) and `InfoPlist.xcstrings` (permission texts), English source with Dutch |
-| `WispTests` | unit tests of the `Core` folders; they run without starting wisp (`scripts/test.sh`) |
+| `WispTests` | unit tests of the `Core` folders and integration tests of `wisp-hook`; they run without starting wisp (`scripts/test.sh`) |
 | `WispHook` | the `wisp-hook` command-line tool |
 | `Shared` | code used by both the app and `wisp-hook` (the socket path) |
 | `Helpers` | `NowPlayingBridge.m`, compiled into the dylib by a build phase |

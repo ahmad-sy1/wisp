@@ -50,6 +50,8 @@ Only one wisp can own the notch and the hook socket: quit the installed one (or 
 
 Logic lives in `Core` folders without UI, and network code behind a protocol with a mock, so it is tested without keys. The test target compiles those folders itself and doesn't start wisp. CI runs the tests too. Views aren't tested.
 
+`HookIntegrationTests` runs the real `wisp-hook` against a socket of its own. Each run gets a temporary home folder and first checks that the hook really uses it, so the tests can't reach the wisp running on your Mac. The 115 s wait for a permission answer is the one thing they leave out.
+
 ## Testing Claude Code without Claude Code
 
 Pipe a hook payload into the helper, as Claude Code would:
