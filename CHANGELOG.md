@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- wisp has its own app icon and menu bar icon (board 0.1); the menu bar icon is a template, so macOS colours it
 - `wisp-hook` exits cleanly when wisp hangs up during a long event, and integration tests run the real helper: never blocking Claude Code, what it passes on, and never approving without a clear answer
 - Builds go to `build.noindex`, so Spotlight only finds the installed wisp and not every build copy
 - Closed notch: a finished focus session no longer takes the panel away from a permission request, a second flash gets its full time and a pass can't wash out a failure, the audio tap only runs while the music wings really show, and a status keeps its width while its digits change

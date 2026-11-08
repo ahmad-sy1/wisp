@@ -4,7 +4,8 @@ The boards in [`design/boards/`](../design/boards) are the visual source of trut
 
 | Board | Screen |
 |---|---|
-| [0](../design/boards/0-brand.png) | brand: mark, app icon, name in the notch |
+| [0](../design/boards/0-brand.png) | brand: name in the notch (the mark and icon are replaced by 0.1) |
+| [0.1](../design/boards/0.1-brand-logo.png) | brand: logo and app icon, direction D |
 | [1](../design/boards/1-home.png) | Home |
 | [2](../design/boards/2-mail.png) | Mail |
 | [3](../design/boards/3-agenda-weather.png) | Agenda & weather |
@@ -33,6 +34,10 @@ The boards in [`design/boards/`](../design/boards) are the visual source of trut
 | [13](../design/boards/13-github.png) | GitHub |
 | [14](../design/boards/14-settings-departure.png) | Settings: Departure |
 | [15](../design/boards/15-settings-github.png) | Settings: GitHub |
+
+## App icon
+
+The icons live in `Wisp/Resources/Assets.xcassets`. `AppIcon` uses the 1024 × 1024 tile of board 0.1 from 128 pt up; 16 and 32 pt are rendered from [`docs/media/app-icon-small.svg`](media/app-icon-small.svg), which drops the outer ring and thickens the ring and dot. `MenuBarIcon` is a one-colour SVG marked as a template, so macOS colours it. The mark and wordmark are in `docs/media/`, each with a version for light backgrounds.
 
 ## Principles
 
