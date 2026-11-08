@@ -4,28 +4,58 @@ on:
   push:
     branches: [main]
   pull_request:
-    branches: [main]
+    # `edited` so a pull request gets a run when its base branch changes.
+    types: [opened, synchronize, reopened, edited]
 
-# A newer push to the same branch or PR cancels the build still running
-# (macOS minutes are expensive on private repos).
+# A newer push to the same branch or PR cancels the build still running.
 concurrency:
   group: build-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
   build:
-    runs-on: macos-15
+    # The same Xcode as development: a different compiler has rejected code that builds locally.
+    runs-on: xcode-27
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # This check is required on main, so it always has to report a result. That rules out
+      # `paths-ignore`, which never starts the run: docs-only changes skip the steps instead.
+      - name: Find out what changed
+        id: changes
+        env:
+          BASE: ${{ github.event.pull_request.base.sha }}
+          HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          code=true
+          if [ "$GITHUB_EVENT_NAME" = pull_request ] && files=$(git diff --name-only "$BASE...$HEAD") && [ -n "$files" ]; then
+            other=$(printf '%s\n' "$files" | grep -vE '^(docs/|design/|README\.md$|CHANGELOG\.md$|CONTRIBUTING\.md$|CLAUDE\.md$|LICENSE$)' || true)
+            if [ -z "$other" ]; then
+              code=false
+            fi
+          fi
+          echo "code=$code" >> "$GITHUB_OUTPUT"
+          echo "Build needed: $code"
+
+      - name: Select Xcode
+        if: steps.changes.outputs.code == 'true'
+        run: |
+          sudo xcode-select -s /Applications/Xcode_27.2.0.app
+          xcodebuild -version
 
       - name: Install XcodeGen
+        if: steps.changes.outputs.code == 'true'
         run: brew install xcodegen
 
       - name: Generate project
+        if: steps.changes.outputs.code == 'true'
         run: xcodegen
 
       - name: Build (Release, unsigned)
+        if: steps.changes.outputs.code == 'true'
         run: |
           xcodebuild \
             -project wisp.xcodeproj \
@@ -37,8 +67,10 @@ jobs:
             CODE_SIGNING_REQUIRED=NO
 
       - name: Unit tests
+        if: steps.changes.outputs.code == 'true'
         run: ./scripts/test.sh CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO
 
       - name: Check translations
+        if: steps.changes.outputs.code == 'true'
         # Every string the build found must have a Dutch translation in the String Catalog.
         run: python3 scripts/strings.py check build
