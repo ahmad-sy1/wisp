@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Every status on the closed notch is a word or a number now, so the notch stays narrow: *3/4* instead of *3/4 checks*; the tabs keep the details
 - `/review-pr`: a Claude Code skill that reviews a pull request against wisp's own rules and proves each finding
 - All Swift code is formatted with `swift-format`, and CI checks it on every pull request
 - CI runs on every pull request with the same Xcode as development, and skips the build for documentation alone

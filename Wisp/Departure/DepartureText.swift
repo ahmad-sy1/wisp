@@ -89,22 +89,21 @@ extension StatusWings {
             if let chosen, chosen.isCancelled || chosen.delayMinutes > 0 {
                 right = chosen.statusText
                 rightColor = output.delayUrgency.color
-            } else if let ride = chosen?.firstRide, let departure = ride.departure {
-                right = ride.platform.map { String(localized: "\(departure.clockTime) platform \($0)") } ?? departure.clockTime
+            } else if let departure = chosen?.firstRide?.departure {
+                right = departure.clockTime
             } else if let chosen {
                 right = chosen.arrival.clockTime
             }
         case .car:
             if let chosen, chosen.trafficMinutes >= DepartureEngine.tightDelay {
-                let road = chosen.routeName.map { " \($0)" } ?? ""
-                right = String(localized: "+\(chosen.trafficMinutes) traffic\(road)")
+                right = "+\(chosen.trafficMinutes) min"
                 rightColor = output.delayUrgency.color
             } else if let chosen {
                 right = chosen.arrival.clockTime
             }
         case .bike:
             if let starts = output.rain?.startsInMinutes {
-                right = String(localized: "rain \(starts) min")
+                right = String(localized: "\(starts) min")
                 rightColor = Theme.rain
                 rightSymbol = "cloud.rain"
             } else if let chosen {

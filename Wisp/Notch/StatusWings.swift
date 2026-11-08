@@ -23,17 +23,21 @@ struct StatusWings: Equatable {
     var urgent: Bool
     /// The tab a click on the notch opens.
     var tab: WispTab
-    /// Free room between the text and the camera.
-    var cameraGap: CGFloat = 18
 
-    /// Both wings get the same width because the window is centred on the camera.
+    /// Free room between the text and the camera.
+    private static let cameraGap: CGFloat = 8
+    /// The most a wing may take. Keep statuses to a word or a number; the tab has the details.
+    private static let maxWingWidth: CGFloat = 96
+
+    /// Both wings get the same width because the window is centred on the camera, so the
+    /// longest text sets both.
     var wingWidth: CGFloat {
         let font = NSFont.systemFont(ofSize: 12, weight: .semibold)
         let leftText = (left as NSString).size(withAttributes: [.font: font]).width
         let rightText = (right as NSString).size(withAttributes: [.font: font]).width
         let iconWidth: CGFloat = if case .symbolDot = icon { 30 } else { 20 }
         let rightIcon: CGFloat = rightSymbol == nil ? 0 : 18
-        return min(150, max(leftText + iconWidth, rightText + rightIcon) + cameraGap).rounded(.up)
+        return min(Self.maxWingWidth, max(leftText + iconWidth, rightText + rightIcon) + Self.cameraGap).rounded(.up)
     }
 }
 
@@ -120,32 +124,28 @@ extension StatusWings {
             return nil
         case .running(let completed, let total):
             self.init(
-                icon: .spinner, left: "CI", right: String(localized: "\(completed)/\(total) checks"),
+                icon: .spinner, left: "CI", right: "\(completed)/\(total)",
                 urgent: false, tab: .github)
-        case .failed(let pull, let job):
-            let where_ = job.map { "#\(pull.number) \($0)" } ?? "#\(pull.number)"
+        case .failed(let pull):
             self.init(
-                icon: .symbol("xmark.circle", Theme.badge), left: String(localized: "CI failed"), leftColor: Theme.badge,
-                right: where_, urgent: true, tab: .github)
+                icon: .symbol("xmark.circle", Theme.badge), left: "CI", leftColor: Theme.badge,
+                right: "#\(pull.number)", urgent: true, tab: .github)
         case .reviewRequested(_, let count):
-            // One word and a tight gap: the longest text sets both wings, so a sentence here
-            // would take up a third of the screen. The GitHub tab has the details.
             let symbol = WispTab.github.symbol
             if count == 1 {
                 self.init(
                     icon: .symbolDot(symbol, Theme.info), left: "", right: String(localized: "Review"),
-                    rightColor: Theme.textPrimary, urgent: true, tab: .github, cameraGap: 8)
+                    rightColor: Theme.textPrimary, urgent: true, tab: .github)
             } else {
                 self.init(
                     icon: .symbol(symbol, Theme.info), left: "\(count)", leftColor: Theme.info,
                     right: String(localized: "Reviews"), rightColor: Theme.textPrimary,
-                    urgent: true, tab: .github, cameraGap: 8)
+                    urgent: true, tab: .github)
             }
         case .newActivity(let pull, let count):
             self.init(
                 icon: .symbolDot(WispTab.github.symbol, Theme.warning), left: "#\(pull.number)",
-                right: count == 1 ? String(localized: "1 comment") : String(localized: "\(count) comments"),
-                rightColor: Theme.textPrimary, urgent: true, tab: .github)
+                right: "\(count)", rightColor: Theme.textPrimary, rightSymbol: "text.bubble", urgent: true, tab: .github)
         }
     }
 }

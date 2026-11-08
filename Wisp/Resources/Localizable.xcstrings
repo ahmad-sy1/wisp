@@ -11,16 +11,6 @@
         }
       }
     },
-    "%@ platform %@" : {
-      "localizations" : {
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$@ spoor %2$@"
-          }
-        }
-      }
-    },
     "%@ uses %lld%%" : {
       "localizations" : {
         "nl" : {
@@ -211,16 +201,6 @@
         }
       }
     },
-    "%lld/%lld checks" : {
-      "localizations" : {
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$lld/%2$lld checks"
-          }
-        }
-      }
-    },
     "%lldh" : {
       "localizations" : {
         "nl" : {
@@ -287,16 +267,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "+%1$lld min file%2$@"
-          }
-        }
-      }
-    },
-    "+%lld traffic%@" : {
-      "localizations" : {
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "+%1$lld file%2$@"
           }
         }
       }
@@ -4147,16 +4117,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "regen"
-          }
-        }
-      }
-    },
-    "rain %lld min" : {
-      "localizations" : {
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "regen %lld min"
           }
         }
       }
