@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Every status on the closed notch is a word or a number now, so the notch stays narrow: *3/4* instead of *3/4 checks*; the tabs keep the details
 - All Swift code is formatted with `swift-format`, and CI checks it on every pull request
 - CI runs on every pull request with the same Xcode as development, and skips the build for documentation alone
 - Departure assistant: when to leave for an event or to go home, from your calendar, by public transport, car or bike. Line numbers and tracks from NS and OVapi, traffic and *now or later* from Apple Maps, rain from Buienradar. A Departure tab (board 12), a countdown on the closed notch (board 11) and Settings → Departure (board 14), which now also holds the ride to your shift
