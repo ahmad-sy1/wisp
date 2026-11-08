@@ -126,7 +126,7 @@ extension StatusWings {
             self.init(
                 icon: .spinner, left: "CI", right: "\(completed)/\(total)",
                 urgent: false, tab: .github)
-        case .failed(let pull, _):
+        case .failed(let pull):
             self.init(
                 icon: .symbol("xmark.circle", Theme.badge), left: "CI", leftColor: Theme.badge,
                 right: "#\(pull.number)", urgent: true, tab: .github)

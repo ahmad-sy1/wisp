@@ -34,7 +34,7 @@ struct RadarSnapshot: Equatable, Codable, Sendable {
 enum RadarCompact: Equatable, Sendable {
     case none
     case running(completed: Int, total: Int)
-    case failed(PullRequest, job: String?)
+    case failed(PullRequest)
     case reviewRequested(PullRequest, count: Int)
     case newActivity(PullRequest, count: Int)
 }
@@ -133,7 +133,7 @@ enum Radar {
                 $0.checks.status == .failed && !seen.acknowledgedFailures.contains(failureKey($0))
             })
         {
-            return .failed(pull, job: pull.checks.failedJobs.first?.name)
+            return .failed(pull)
         }
         if notifications.review {
             let waiting = snapshot.reviews.filter { !seen.acknowledgedReviews.contains($0.id) }

@@ -192,7 +192,7 @@ final class RadarCompactTests: XCTestCase {
         var seen = baseline
         seen.unseenActivity = [running.id: 3]
         var snapshot = RadarSnapshot(mine: [running, failed], reviews: [review])
-        XCTAssertEqual(Radar.compact(snapshot: snapshot, seen: seen, notifications: all), .failed(failed, job: "build"))
+        XCTAssertEqual(Radar.compact(snapshot: snapshot, seen: seen, notifications: all), .failed(failed))
         snapshot.mine = [running]
         XCTAssertEqual(Radar.compact(snapshot: snapshot, seen: seen, notifications: all), .reviewRequested(review, count: 1))
         snapshot.reviews = []
@@ -209,7 +209,7 @@ final class RadarCompactTests: XCTestCase {
         let looked = Radar.acknowledge(snapshot: snapshot, seen: seen)
         XCTAssertEqual(Radar.compact(snapshot: snapshot, seen: looked, notifications: all), .none)
         let again = RadarSnapshot(mine: [pull(1, sha: "b", status: .failed)], reviews: [pull(2)])
-        XCTAssertEqual(Radar.compact(snapshot: again, seen: looked, notifications: all), .failed(again.mine[0], job: nil))
+        XCTAssertEqual(Radar.compact(snapshot: again, seen: looked, notifications: all), .failed(again.mine[0]))
     }
 
     func testSwitchedOffNotificationsDontShow() {
