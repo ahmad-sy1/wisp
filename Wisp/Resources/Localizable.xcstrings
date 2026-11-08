@@ -491,6 +491,16 @@
         }
       }
     },
+    "Can't reach GitHub." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "GitHub is niet bereikbaar."
+          }
+        }
+      }
+    },
     "Cancel" : {
       "localizations" : {
         "nl" : {
@@ -967,6 +977,36 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Algemeen"
+          }
+        }
+      }
+    },
+    "GitHub CLI isn't logged in. Run gh auth login, or use a token." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "GitHub CLI is niet ingelogd. Voer gh auth login uit, of gebruik een token."
+          }
+        }
+      }
+    },
+    "GitHub asks wisp to wait a moment." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "GitHub vraagt wisp even te wachten."
+          }
+        }
+      }
+    },
+    "GitHub didn't accept this key." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "GitHub accepteert deze sleutel niet."
           }
         }
       }

@@ -81,13 +81,22 @@ If wisp is shared with more people later, "Sign in with Google" (OAuth) is frien
 - Permission: macOS's *System Audio Recording* (Privacy & Security). wisp asks inside the Music tab first (board 9.5); *Niet nu*, or Settings → Music → *Live spectrum*, turns it off.
 - Nothing is recorded, written to disk or sent anywhere: each block of samples goes through the FFT and is dropped.
 
-## Planned: GitHub, Notion, WHOOP
+## GitHub (CI & PR radar)
+
+Docs: <https://docs.github.com/en/rest>
+
+- **Sign-in:** after a click wisp copies the login of the GitHub CLI (`gh auth token`) to its own Keychain item, or you paste a personal access token (classic with `repo` and `read:user`, or fine-grained with read access to pull requests, checks and commit statuses). Nothing is saved anywhere else. OAuth with PKCE (below) can replace this once wisp is registered as an OAuth app.
+- **Each round:** `GET /search/issues` twice (`is:pr is:open author:@me`, `is:pr is:open review-requested:@me`) and, per pull request of yours, `GET /repos/{repo}/commits/{sha}/check-runs` and `/status`. The head commit (`/pulls/{n}`) and comments (`/issues/{n}/comments`, `/pulls/{n}/comments`, `/pulls/{n}/reviews`) are only fetched when the search says `updated_at` moved.
+- **Rate limits:** every GET sends `If-None-Match`; a 304 doesn't count against the limit. wisp reads `x-ratelimit-remaining` and `-reset`, waits for the reset below 100 requests left, and obeys `Retry-After`.
+- **Polling:** 25 s while a run is going, 60 s for five minutes after a change, otherwise 3 min. Failures back off from 1 to 15 min. Nothing runs while disconnected, asleep or with the screen locked.
+- **Contribution graph:** one GraphQL `POST /graphql`, at most every 30 min and only while the tab is open.
+
+## Planned: Notion, WHOOP
 
 Plan: each is added under Settings → Integrations → *Add integration* that opens the service's own sign-in page (OAuth 2.0 with PKCE), so nobody has to paste tokens. The redirect comes back to wisp through a custom URL scheme; tokens are stored in the Keychain and refreshed automatically. Each service needs wisp registered once as an OAuth app (client ID only, no secret in the app where the service allows it).
 
 | Service | Home tile | Data |
 |---|---|---|
-| GitHub | *3 commits · 1 PR* | today's commits, open pull requests |
 | WHOOP | *68% herstel* | latest recovery, strain, sleep |
 | Notion | *2 bijgewerkt* | pages edited today |
 
