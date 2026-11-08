@@ -18,3 +18,4 @@ What is planned, roughly in order. Every item becomes its own branch and pull re
 - **Song lyrics** (LRCLIB): built and removed again. The spectrum is enough, and no song data needs to leave the Mac.
 - **"Up next" in the Music tab**: macOS doesn't expose the queue of Spotify or YouTube.
 - **Tab bar next to the camera**: would save about 38 pt of height, but the space under the camera stays as it is.
+- **System alerts in the notch** (AirPods connected, low battery, audio switching, volume): macOS doesn't let an app hide its own alerts or other apps' notifications, so they would show twice. To get mail only in the notch, switch off the Gmail or Mail notifications in System Settings; wisp's own peek stays.

@@ -6,7 +6,7 @@
 
 **A small light at the top of your screen.**
 
-wisp lives in your MacBook's notch and keeps your day within reach: your Claude Code sessions, your mail, your music, your agenda and the weather, and soon a focus timer, clipboard, notes and system stats. One click away, and out of sight the rest of the time.
+wisp lives in your MacBook's notch and keeps your day within reach: your Claude Code sessions, your mail, your music, your agenda and the weather, a focus timer, your clipboard, quick notes and system stats. One click away, and out of sight the rest of the time.
 
 ![macOS 15+](https://img.shields.io/badge/macOS-15%2B-black?logo=apple)
 ![Swift 6](https://img.shields.io/badge/Swift-6-F05138?logo=swift&logoColor=white)
@@ -102,7 +102,7 @@ The notch is the one bit of screen you never use. wisp turns it into a quiet das
 
 ### On the way
 
-A focus timer that knows what you are working on, clipboard history, quick notes, system stats, a restyled file drop, mail notifications in the notch, and GitHub, WHOOP and Notion on the Home tab. The designs for all of them are in [`design/boards/`](design/boards).
+A restyled file drop, and GitHub, WHOOP and Notion on the Home tab. What comes next is in [`docs/ROADMAP.md`](docs/ROADMAP.md); the designs are in [`design/boards/`](design/boards).
 
 ## Install
 
@@ -144,7 +144,7 @@ Music needs no setup. The live spectrum asks once for macOS's *System Audio Reco
 | Hover the notch | it swells a little |
 | Click it | the panel opens on the last tab you used |
 | Move the mouse away | it folds back after the delay you set |
-| Let Claude Code run a command that needs permission | the notch opens with *Toestaan / Weigeren / In terminal* |
+| Let Claude Code run a command that needs permission | the notch opens with *Allow / Deny / In terminal* |
 | Click a mail | it opens in Gmail and stays unread in your inbox |
 | Press play in Spotify | the closed notch gets artwork and a mini spectrum |
 | Open the Music tab during a song | the spectrum moves with what you hear, from bass to treble |
