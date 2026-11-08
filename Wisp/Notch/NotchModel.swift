@@ -21,6 +21,12 @@ final class NotchModel: ObservableObject {
     /// Unread mail: an envelope and the count (only when nothing else uses the wings).
     @Published var mailWings = false
     @Published var unreadCount = 0
+    /// CI, reviews, departure: a status that needs room on both sides of the camera.
+    @Published var statusWings: StatusWings?
+    /// How far the closed notch has dropped during a tick (2 pt and back).
+    @Published var tickOffset: CGFloat = 0
+    /// A short flash of colour over the closed notch (CI passed or failed).
+    @Published var flash: Color?
     /// The message the peek shows.
     @Published var peekMail: MailMessage?
 
@@ -37,17 +43,38 @@ final class NotchModel: ObservableObject {
     /// Width of one music wing: about square with the notch height.
     var wingWidth: CGFloat { notchSize.height + 2 }
 
-    var showsWings: Bool { musicWings || focusWings || mailWings }
+    var showsWings: Bool { musicWings || focusWings || mailWings || statusWings != nil }
+
+    /// What the wings show now. One thing at a time, most urgent first: a focus session, an
+    /// urgent status, music, a calm status (a run going), unread mail.
+    enum Wings: Equatable { case none, focus, status(StatusWings), music, mail }
+
+    var wings: Wings {
+        if focusWings { return .focus }
+        if let statusWings, statusWings.urgent { return .status(statusWings) }
+        if musicWings { return .music }
+        if let statusWings { return .status(statusWings) }
+        if mailWings { return .mail }
+        return .none
+    }
+
+    /// The width of one wing as things are now.
+    var currentWingWidth: CGFloat {
+        if case .status(let status) = wings { return status.wingWidth + 12 }
+        return wingWidth
+    }
 
     /// The closed notch, including the wings when they show.
     var restingSize: CGSize {
-        CGSize(width: notchSize.width + (showsWings ? 2 * wingWidth : 0), height: notchSize.height)
+        CGSize(width: notchSize.width + (showsWings ? 2 * currentWingWidth : 0), height: notchSize.height)
     }
 
     var shapeSize: CGSize {
         if isExpanded { return CGSize(width: Theme.panelWidth, height: Theme.panelHeight) }
         if phase == .peek { return CGSize(width: Theme.peekWidth, height: Theme.peekHeight) }
-        guard hovering else { return restingSize }
+        guard hovering else {
+            return CGSize(width: restingSize.width, height: restingSize.height + tickOffset)
+        }
         return CGSize(width: restingSize.width + Self.hoverGrow.width,
                       height: restingSize.height + Self.hoverGrow.height)
     }

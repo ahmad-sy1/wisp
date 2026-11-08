@@ -41,6 +41,26 @@
         }
       }
     },
+    "%lld PRs · %lld reviews" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld PR's · %lld reviews"
+          }
+        }
+      }
+    },
+    "%lld comments" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld reacties"
+          }
+        }
+      }
+    },
     "%lld d" : {
       "localizations" : {
         "nl" : {
@@ -151,12 +171,32 @@
         }
       }
     },
+    "%lld off" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld uit"
+          }
+        }
+      }
+    },
     "%lld options" : {
       "localizations" : {
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld opties"
+          }
+        }
+      }
+    },
+    "%lld/%lld checks" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld/%2$lld checks"
           }
         }
       }
@@ -211,6 +251,16 @@
         }
       }
     },
+    "1 comment" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 reactie"
+          }
+        }
+      }
+    },
     "1 option" : {
       "localizations" : {
         "nl" : {
@@ -231,6 +281,16 @@
         }
       }
     },
+    "16 weeks" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "16 weken"
+          }
+        }
+      }
+    },
     "A backup is made first: %@. Other settings stay as they are, but the file is reformatted (keys in alphabetical order)." : {
       "localizations" : {
         "nl" : {
@@ -241,12 +301,32 @@
         }
       }
     },
+    "A blue dot on the GitHub tab" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Blauwe stip op de GitHub-tab"
+          }
+        }
+      }
+    },
     "A calendar" : {
       "localizations" : {
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Een agenda"
+          }
+        }
+      }
+    },
+    "A red dot until you've looked at it" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rood bolletje tot je het bekeken hebt"
           }
         }
       }
@@ -271,6 +351,16 @@
         }
       }
     },
+    "Account" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Account"
+          }
+        }
+      }
+    },
     "Add" : {
       "localizations" : {
         "nl" : {
@@ -291,12 +381,32 @@
         }
       }
     },
+    "Add token…" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Token toevoegen…"
+          }
+        }
+      }
+    },
     "All" : {
       "localizations" : {
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Alles"
+            "value" : "Alle"
+          }
+        }
+      }
+    },
+    "All (%lld)" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alle (%lld)"
           }
         }
       }
@@ -437,6 +547,36 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Browser (YouTube e.d.)"
+          }
+        }
+      }
+    },
+    "CI failed" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CI faalde"
+          }
+        }
+      }
+    },
+    "CI passed" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CI geslaagd"
+          }
+        }
+      }
+    },
+    "CONTRIBUTIONS" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CONTRIBUTIONS"
           }
         }
       }
@@ -681,6 +821,16 @@
         }
       }
     },
+    "Connect GitHub" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Koppel GitHub"
+          }
+        }
+      }
+    },
     "Connect Gmail" : {
       "localizations" : {
         "nl" : {
@@ -711,6 +861,16 @@
         }
       }
     },
+    "Connected" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verbonden"
+          }
+        }
+      }
+    },
     "Connected · %@" : {
       "localizations" : {
         "nl" : {
@@ -727,6 +887,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Verbonden · %@ gefocust"
+          }
+        }
+      }
+    },
+    "Connected · @%@" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verbonden · @%@"
           }
         }
       }
@@ -781,6 +951,16 @@
         }
       }
     },
+    "Create a token…" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Maak een token…"
+          }
+        }
+      }
+    },
     "Create an app password…" : {
       "localizations" : {
         "nl" : {
@@ -821,12 +1001,32 @@
         }
       }
     },
+    "Disconnect" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ontkoppel"
+          }
+        }
+      }
+    },
     "Do not disturb during focus" : {
       "localizations" : {
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Niet storen tijdens focus"
+          }
+        }
+      }
+    },
+    "Done" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Klaar"
           }
         }
       }
@@ -977,6 +1177,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Algemeen"
+          }
+        }
+      }
+    },
+    "GitHub" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "GitHub"
           }
         }
       }
@@ -1301,6 +1511,16 @@
         }
       }
     },
+    "Looking for your repositories…" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Je repo's zoeken…"
+          }
+        }
+      }
+    },
     "Loudness" : {
       "localizations" : {
         "nl" : {
@@ -1371,6 +1591,16 @@
         }
       }
     },
+    "My PRs · %lld" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mijn PR's · %lld"
+          }
+        }
+      }
+    },
     "NOTHING PLAYING" : {
       "localizations" : {
         "nl" : {
@@ -1387,6 +1617,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "NU"
+          }
+        }
+      }
+    },
+    "New comments" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nieuwe reacties"
           }
         }
       }
@@ -1417,6 +1657,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Geen diensten meer vandaag"
+          }
+        }
+      }
+    },
+    "No open pull requests" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geen open pull requests"
           }
         }
       }
@@ -1561,6 +1811,26 @@
         }
       }
     },
+    "Nothing to review" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Niets te reviewen"
+          }
+        }
+      }
+    },
+    "Notifications in the notch" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Meldingen in de notch"
+          }
+        }
+      }
+    },
     "Now" : {
       "localizations" : {
         "nl" : {
@@ -1627,6 +1897,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Aan de lader"
+          }
+        }
+      }
+    },
+    "On your own PRs" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Op je eigen PR's"
+          }
+        }
+      }
+    },
+    "Only a short green flash" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alleen een korte groene flits"
           }
         }
       }
@@ -1821,6 +2111,16 @@
         }
       }
     },
+    "Personal access token" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Persoonlijk toegangstoken"
+          }
+        }
+      }
+    },
     "Place" : {
       "localizations" : {
         "nl" : {
@@ -1971,6 +2271,16 @@
         }
       }
     },
+    "Repositories" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Repo's"
+          }
+        }
+      }
+    },
     "Reset" : {
       "localizations" : {
         "nl" : {
@@ -2001,12 +2311,62 @@
         }
       }
     },
+    "Review" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Review"
+          }
+        }
+      }
+    },
+    "Review requested" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Review gevraagd"
+          }
+        }
+      }
+    },
+    "Reviews" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reviews"
+          }
+        }
+      }
+    },
+    "Reviews · %lld" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reviews · %lld"
+          }
+        }
+      }
+    },
     "Right" : {
       "localizations" : {
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Rechts"
+          }
+        }
+      }
+    },
+    "Running" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bezig"
           }
         }
       }
@@ -2087,6 +2447,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Zie hier wat er vandaag in je agenda staat."
+          }
+        }
+      }
+    },
+    "See your pull requests and their checks here." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zie hier je pull requests en hun checks."
           }
         }
       }
@@ -2411,6 +2781,16 @@
         }
       }
     },
+    "The notch bounces briefly on a new event" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notch veert kort bij een nieuw event"
+          }
+        }
+      }
+    },
     "The project is the one Claude Code works in." : {
       "localizations" : {
         "nl" : {
@@ -2437,6 +2817,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Spectrum start zodra er iets speelt"
+          }
+        }
+      }
+    },
+    "Tick animation" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tik-animatie"
           }
         }
       }
@@ -2507,6 +2897,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Vandaag · %@"
+          }
+        }
+      }
+    },
+    "Token" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Token"
           }
         }
       }
@@ -2601,6 +3001,16 @@
         }
       }
     },
+    "Use GitHub CLI login" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gebruik GitHub CLI-login"
+          }
+        }
+      }
+    },
     "Videos and music in Safari or Chrome" : {
       "localizations" : {
         "nl" : {
@@ -2667,6 +3077,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Pas je in de notch een taak aan, dan onthoudt wisp dat hier als \"Geleerd\". Je kunt koppelingen altijd verwijderen."
+          }
+        }
+      }
+    },
+    "Which repositories count" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Welke repo's meetellen"
           }
         }
       }
@@ -2801,6 +3221,26 @@
         }
       }
     },
+    "commits/week" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "commits/week"
+          }
+        }
+      }
+    },
+    "day streak" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "dagen streak"
+          }
+        }
+      }
+    },
     "done" : {
       "localizations" : {
         "nl" : {
@@ -2811,12 +3251,32 @@
         }
       }
     },
+    "draft" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "concept"
+          }
+        }
+      }
+    },
     "drizzle" : {
       "localizations" : {
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "motregen"
+          }
+        }
+      }
+    },
+    "failed" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "gefaald"
           }
         }
       }
@@ -2917,6 +3377,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "macOS toont de netwerknaam alleen met toegang tot je locatie: Instellingen → Systeem"
+          }
+        }
+      }
+    },
+    "merged" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "gemerged"
           }
         }
       }
@@ -3082,6 +3552,16 @@
         }
       }
     },
+    "wisp checks more often while a run is going and calmly after that, to save your GitHub limit and battery." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "wisp checkt vaker zolang er een run loopt en daarna weer rustig, zodat je GitHub-limiet en batterij gespaard blijven."
+          }
+        }
+      }
+    },
     "wisp disconnects and deletes the app password from your Keychain." : {
       "localizations" : {
         "nl" : {
@@ -3118,6 +3598,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "wisp markeert niets als gelezen en verandert je mailbox alleen als je bij nieuwe mail op Verwijderen klikt (hij gaat naar de Gmail-prullenbak). Adres en wachtwoord staan alleen in je Keychain."
+          }
+        }
+      }
+    },
+    "wisp only reads: your pull requests, their checks and your contributions. The token is kept only in your Keychain." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "wisp leest alleen: je pull requests, hun checks en je contributions. Het token staat alleen in je Sleutelhanger."
           }
         }
       }

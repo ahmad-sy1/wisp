@@ -192,6 +192,7 @@ private struct IntegrationGrid: View {
     /// Next to the Now card: two tiles go below each other rather than side by side.
     let narrow: Bool
     @ObservedObject var player: NowPlaying = .shared
+    @ObservedObject var github: GitHubStore = .shared
 
     private var rows: [[HomeTile]] {
         let perRow = narrow && tiles.count == 2 ? 1 : 2
@@ -208,14 +209,24 @@ private struct IntegrationGrid: View {
         }
     }
 
-    // GitHub, WHOOP and Notion get live data once those integrations move over.
+    // WHOOP and Notion get live data once those integrations exist.
     @ViewBuilder
     private func view(for tile: HomeTile) -> some View {
         if tile == .music {
             musicTile
+        } else if tile == .github, github.isConnected {
+            self.tile("GitHub", value: String(localized: "\(github.snapshot.mine.count) PRs · \(github.snapshot.reviews.count) reviews"),
+                      dot: githubDot, dim: false)
         } else {
             self.tile(tile.title)
         }
+    }
+
+    private var githubDot: Color {
+        let checks = github.snapshot.mine.map(\.checks.status)
+        if checks.contains(.failed) { return Theme.badge }
+        if checks.contains(.running) { return Theme.warning }
+        return Theme.ok
     }
 
     private var musicTile: some View {

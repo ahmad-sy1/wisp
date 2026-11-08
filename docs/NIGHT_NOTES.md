@@ -21,6 +21,17 @@ Log of the overnight work on **CI & PR Radar** and the **departure assistant** (
 | Your own comments and `[bot]` comments aren't news | Otherwise CI bots would tick the notch all day. |
 | First answer after connecting is silent | Existing state isn't an event. Failed runs do show their dot. |
 
+| New tabs land at the end of your own tab order | That is what `Preferences` does for a saved order. Drag GitHub and Departure next to Calendar in Settings → Notch to match the design. |
+| Wing order: focus, urgent status, music, calm status, mail | A failure beats music; a run that merely goes doesn't take the spectrum away. |
+| Own pull request glyph | SF Symbols has nothing like the design's icon; `arrow.triangle.pull` read as a fork. |
+| First look skips old comments | With 21 open PRs a first round was 130 requests. Now about 65, and the list shows right after the search. |
+
+## Checked and not checked
+
+- Live against your account with `gh` login: 21 PRs, checks, the graph. Screenshots in the PR use `-githubDemo`.
+- **Not checked, needs you:** the tick and flash (they move, and snapshots are still), clicks, the sign-in buttons, the Keychain path.
+- The Mac kept sleeping at night: my keep-awake request was refused and I didn't work around it, so timings measured tonight mean little.
+
 ## To do for you
 
 - Connect GitHub in Settings → Integrations (one click if `gh` is logged in).

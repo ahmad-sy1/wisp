@@ -134,6 +134,7 @@ GitHub REST/GraphQL ◄─ GitHubClient (ETags, rate limit) ◄─ RadarSync ◄
 
 - `Wisp/GitHub/Core` is free of UI and is what the tests compile: `CheckAggregator` (jobs → one status), `PollSchedule` (the next delay), `Radar` (`diff`: what is new; `compact`: what the closed notch shows; `acknowledge`: you looked; `streak`), `RadarSync` (one round, asking only what may have changed).
 - **`GitHubStore`** has one pending `DispatchWorkItem` at a time, with a delay from `PollSchedule`. Sleep and screen lock cancel it; waking schedules a round after 3 s. Errors keep the last data on screen. A rejected key stops polling until you reconnect.
+- **The closed notch**: `Radar.compact` picks one indicator; `StatusWings` turns it into text and `NotchController.setStatus` gives it room (grow the window, then spring the shape; shrink the shape, then the window). `NotchModel.wings` decides what shows when several want the wings. The spinner steps ten times a second through a `TimelineView` and only exists while a run is going. Looking at the tab acknowledges failures, reviews and comments.
 - **`RadarSeen`** (UserDefaults, `githubSeen`) remembers what was reported, per commit and per pull request, so an animation goes off once and not again after a restart. It holds no secrets, only repository names and numbers.
 
 ## Clipboard
@@ -174,7 +175,7 @@ GitHub REST/GraphQL ◄─ GitHubClient (ETags, rate limit) ◄─ RadarSync ◄
 
 ## Performance rules
 
-- Closed: no timers, no animations, nothing redrawn, with one exception: the clipboard history checks the pasteboard's change count once a second (see [Clipboard](#clipboard)); it can be switched off. The only background work is event-driven (the hook socket, the IMAP IDLE connection, the Now Playing bridge).
+- Closed: no timers, no animations, nothing redrawn, with two exceptions: the clipboard history checks the pasteboard's change count once a second (see [Clipboard](#clipboard)), and a connected GitHub account has one pending wake-up (see [CI & PR radar](#ci--pr-radar)); both can be switched off. The only other background work is event-driven (the hook socket, the IMAP IDLE connection, the Now Playing bridge).
 - Open: views that tick (the session timer, the music progress) use `TimelineView(.periodic)` at one update per second or once a minute, and only exist while their tab is visible.
 - A running focus session redraws its ring and time once a second, in the tab and on the closed notch. Nothing runs before or after a session.
 - The live spectrum and the music wings are the exception: they move while music plays, because that is what they are for. The audio tap only runs while one of them is on screen and music plays: about 3–4 % CPU for the Release build (the FFT itself is a fraction of that; the rest is drawing). Bars are drawn in a single `Canvas`, and only the views that draw them observe `SpectrumLevels`, so nothing else redraws 30 times a second. Measure in Release: a Debug build is several times slower.
