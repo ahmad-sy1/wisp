@@ -15,7 +15,7 @@ Rechts: **Instellingen** (open het Settings-venster).
 - Links groot vak **"Nu bezig"**: actieve IntelliJ-project (naam + branch), status "Verbonden · Xu Xm gefocust", knop "Open project".
 - Rechts 2×2 compacte vakjes: **GitHub** (commits vandaag · open PR's), **WHOOP** (herstel %), **Muziek** (nummer · tijd), **Notion** (pagina's bijgewerkt). Welke vier, instelbaar in Settings.
 
-> **Stand van zaken:** gebouwd (#4). "Nu bezig" werkt voor IntelliJ, Rider, VS Code en terminals. Het Muziek-vakje is live; GitHub, WHOOP en Notion staan nog op "Niet gekoppeld" (zie ROADMAP).
+> **Stand van zaken:** gebouwd (#4). "Nu bezig" werkt voor IntelliJ, Rider, VS Code en terminals. Het Muziek-vakje is live; GitHub, WHOOP en Notion staan nog op "Niet gekoppeld" (zie ROADMAP). Welke vakjes je ziet kies je in Settings → Notch; het getal vier is geen grens: alles aan is *Nu bezig* plus vier vakjes.
 
 ### Mail
 - Bestaande Gmail-integratie, nieuw design.
@@ -100,7 +100,7 @@ Rechts: **Instellingen** (open het Settings-venster).
 
 ## Settings-aanpassingen
 
-> **Stand van zaken:** een venster met zijbalk (boards 10.1–10.6): Algemeen (taal, accentkleur, sluitvertraging, geluiden, opstarten bij inloggen, sneltoets, Claude Code-hooks), Notch (de opties per tab), Integraties (Gmail, Muziek), Agenda & weer (agenda's, diensten, reistijd en reiswijze, plaats), Muziek (spectrum, mini-spectrum, zuinig op batterij, welke spelers) en Focus (standaardduur, Niet storen, muziek, koppelingen: geleerd of zelf toegevoegd). Tabs aan/uit en slepen naar je eigen volgorde zijn er ook. Home-tegels, koppelingen met websites en standaardkoppelingen nog niet (#24, #27).
+> **Stand van zaken:** een venster met zijbalk (boards 10.1–10.6): Algemeen (taal, accentkleur, sluitvertraging, geluiden, opstarten bij inloggen, sneltoets, Claude Code-hooks), Notch (de opties per tab), Integraties (Gmail, Muziek), Agenda & weer (agenda's, diensten, reistijd en reiswijze, plaats), Muziek (spectrum, mini-spectrum, zuinig op batterij, welke spelers) en Focus (standaardduur, Niet storen, muziek, koppelingen: geleerd of zelf toegevoegd). Tabs aan/uit en slepen naar je eigen volgorde zijn er ook. Koppelingen met websites en standaardkoppelingen nog niet (#27).
 
 - Bovenaan: accentkleur kiezen (4 opties).
 - Sectie **Tabs**: tabs aan/uit en volgorde.

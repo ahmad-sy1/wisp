@@ -1,18 +1,43 @@
 import SwiftUI
 
-/// Home: "Nu bezig" (the current Claude Code session) on the left, four compact
-/// integration tiles on the right. A permission request takes the whole width.
+/// What Home can show; chosen in Settings → Notch (board 10.1).
+enum HomeTile: String, CaseIterable, Identifiable {
+    case now, github, whoop, music, notion
+
+    var id: String { rawValue }
+
+    var title: String {
+        switch self {
+        case .now:    String(localized: "In progress")
+        case .github: "GitHub"
+        case .whoop:  "WHOOP"
+        case .music:  String(localized: "Music")
+        case .notion: "Notion"
+        }
+    }
+}
+
+/// Home: "Nu bezig" (the current Claude Code session) on the left, compact integration
+/// tiles on the right; what's left takes the room of what is switched off. A permission
+/// request takes the whole width.
 struct HomeTab: View {
     @ObservedObject var sessions: ClaudeSessions
+    @ObservedObject private var prefs = Preferences.shared
 
     var body: some View {
         if let approval = sessions.approval {
             ApprovalCard(approval: approval) { sessions.answer($0) }
         } else {
+            let tiles = HomeTile.allCases.filter { $0 != .now && !prefs.hiddenHomeTiles.contains($0) }
+            let showsNow = !prefs.hiddenHomeTiles.contains(.now)
             HStack(spacing: 10) {
-                NowCard(session: sessions.primary)
-                    .frame(width: 296)
-                IntegrationGrid()
+                if showsNow {
+                    NowCard(session: sessions.primary)
+                        .frame(minWidth: tiles.isEmpty ? nil : 296, maxWidth: tiles.isEmpty ? .infinity : 296)
+                }
+                if !tiles.isEmpty {
+                    IntegrationGrid(tiles: tiles, narrow: showsNow)
+                }
             }
         }
     }
@@ -163,20 +188,40 @@ private struct ApprovalCard: View {
 // MARK: - Integration tiles
 
 private struct IntegrationGrid: View {
+    let tiles: [HomeTile]
+    /// Next to the Now card: two tiles go below each other rather than side by side.
+    let narrow: Bool
     @ObservedObject var player: NowPlaying = .shared
 
+    private var rows: [[HomeTile]] {
+        let perRow = narrow && tiles.count == 2 ? 1 : 2
+        return stride(from: 0, to: tiles.count, by: perRow).map { Array(tiles[$0..<min($0 + perRow, tiles.count)]) }
+    }
+
     var body: some View {
-        Grid(horizontalSpacing: 8, verticalSpacing: 8) {
-            // GitHub, WHOOP and Notion get live data once those integrations move over.
-            GridRow { tile("GitHub"); tile("WHOOP") }
-            GridRow { musicTile; tile("Notion") }
+        VStack(spacing: 8) {
+            ForEach(rows, id: \.self) { row in
+                HStack(spacing: 8) {
+                    ForEach(row) { tile in view(for: tile) }
+                }
+            }
+        }
+    }
+
+    // GitHub, WHOOP and Notion get live data once those integrations move over.
+    @ViewBuilder
+    private func view(for tile: HomeTile) -> some View {
+        if tile == .music {
+            musicTile
+        } else {
+            self.tile(tile.title)
         }
     }
 
     private var musicTile: some View {
         let track = player.track
         let value = track.map { [$0.title, $0.artist].filter { !$0.isEmpty }.joined(separator: " · ") }
-        return tile(String(localized: "Music"), value: value ?? String(localized: "Nothing is playing"),
+        return tile(String(localized: "Music"), value: value ?? String(localized: "Not playing"),
                     dot: track?.isPlaying == true ? Theme.ok : nil,
                     dim: track == nil)
     }

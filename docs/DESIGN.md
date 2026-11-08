@@ -78,6 +78,10 @@ Left, in this order: **Home · Mail · Agenda · Focus · Muziek · Klembord · 
 
 Opened with the shortcut (⌥Space, Settings → General, board 10.2) the panel stays until the shortcut again, Esc or a click elsewhere; ← and → walk through the visible tabs when no text field has the keyboard.
 
+## Home tab
+
+Settings → Notch (board 10.1) has a chip per tile: *Nu bezig*, GitHub, WHOOP, Muziek, Notion. The board switches Notion off to show the *+* chip; by default all five are on. At least one stays on. What is left fills the room, in the fixed 150 pt area: with *Nu bezig* on, one tile fills the column, two go below each other, three are two above one; with it off the tiles take the full width, and *Nu bezig* alone does too.
+
 ## Agenda tab
 
 Three cards in the fixed 150 pt area (boards 3 and 3.1):
