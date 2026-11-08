@@ -4,7 +4,8 @@ import Foundation
 enum GitInfo {
     static func branch(at path: String) -> String? {
         guard !path.isEmpty, let head = headFile(from: URL(fileURLWithPath: path)),
-              let text = try? String(contentsOf: head, encoding: .utf8) else { return nil }
+            let text = try? String(contentsOf: head, encoding: .utf8)
+        else { return nil }
         let line = text.trimmingCharacters(in: .whitespacesAndNewlines)
         if line.hasPrefix("ref: refs/heads/") {
             return String(line.dropFirst("ref: refs/heads/".count))
@@ -23,7 +24,8 @@ enum GitInfo {
             if fm.fileExists(atPath: git.path, isDirectory: &isDir) {
                 if isDir.boolValue { return git.appendingPathComponent("HEAD") }
                 guard let pointer = try? String(contentsOf: git, encoding: .utf8),
-                      pointer.hasPrefix("gitdir: ") else { return nil }
+                    pointer.hasPrefix("gitdir: ")
+                else { return nil }
                 let target = pointer.dropFirst("gitdir: ".count)
                     .trimmingCharacters(in: .whitespacesAndNewlines)
                 return URL(fileURLWithPath: target, relativeTo: current).appendingPathComponent("HEAD")

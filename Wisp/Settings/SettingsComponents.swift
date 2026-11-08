@@ -13,15 +13,15 @@ struct SettingsPage<Content: View, Action: View>: View {
 
     var body: some View {
         #if DEBUG
-        // `cacheDisplay` leaves scroll views empty, and it is all that works on a locked screen.
-        if UserDefaults.standard.string(forKey: "snapshot") != nil {
-            page
-                .frame(maxHeight: .infinity, alignment: .top)
-        } else {
-            scrolling
-        }
+            // `cacheDisplay` leaves scroll views empty, and it is all that works on a locked screen.
+            if UserDefaults.standard.string(forKey: "snapshot") != nil {
+                page
+                    .frame(maxHeight: .infinity, alignment: .top)
+            } else {
+                scrolling
+            }
         #else
-        scrolling
+            scrolling
         #endif
     }
 
@@ -31,34 +31,34 @@ struct SettingsPage<Content: View, Action: View>: View {
     }
 
     private var page: some View {
-            VStack(alignment: .leading, spacing: 22) {
-                HStack(alignment: .top, spacing: 16) {
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text(title)
-                            .font(.system(size: 26, weight: .bold))
-                        if let subtitle {
-                            Text(subtitle)
-                                .font(.system(size: 13))
-                                .foregroundStyle(Theme.textSecondary)
-                                .fixedSize(horizontal: false, vertical: true)
-                        }
+        VStack(alignment: .leading, spacing: 22) {
+            HStack(alignment: .top, spacing: 16) {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(title)
+                        .font(.system(size: 26, weight: .bold))
+                    if let subtitle {
+                        Text(subtitle)
+                            .font(.system(size: 13))
+                            .foregroundStyle(Theme.textSecondary)
+                            .fixedSize(horizontal: false, vertical: true)
                     }
-                    Spacer(minLength: 0)
-                    action
                 }
-                content
-                if let note {
-                    Text(note)
-                        .font(.system(size: 11.5))
-                        .foregroundStyle(Theme.textSecondary.opacity(0.8))
-                        .lineSpacing(3)
-                        .fixedSize(horizontal: false, vertical: true)
-                }
+                Spacer(minLength: 0)
+                action
             }
-            .padding(.horizontal, 31)
-            .padding(.top, 22)
-            .padding(.bottom, 28)
-            .frame(maxWidth: .infinity, alignment: .leading)
+            content
+            if let note {
+                Text(note)
+                    .font(.system(size: 11.5))
+                    .foregroundStyle(Theme.textSecondary.opacity(0.8))
+                    .lineSpacing(3)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+        }
+        .padding(.horizontal, 31)
+        .padding(.top, 22)
+        .padding(.bottom, 28)
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 }
 
@@ -173,8 +173,10 @@ struct SettingsButtonStyle: ButtonStyle {
             .font(.system(size: 13))
             .padding(.horizontal, 12)
             .frame(height: 28)
-            .background(RoundedRectangle(cornerRadius: 7)
-                .fill(configuration.isPressed ? Theme.activeTab : Theme.control))
+            .background(
+                RoundedRectangle(cornerRadius: 7)
+                    .fill(configuration.isPressed ? Theme.activeTab : Theme.control)
+            )
             .overlay(RoundedRectangle(cornerRadius: 7).strokeBorder(Theme.cardBorder, lineWidth: 1))
             .opacity(isEnabled ? 1 : 0.45)
             .contentShape(Rectangle())

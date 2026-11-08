@@ -67,8 +67,11 @@ final class Preferences: ObservableObject {
         didSet {
             // AppleLanguages in wisp's own domain is what System Settings → Language & Region
             // → Apps writes too, so both places stay in step.
-            if let code = language.code { defaults.set([code], forKey: Key.languages) }
-            else { defaults.removeObject(forKey: Key.languages) }
+            if let code = language.code {
+                defaults.set([code], forKey: Key.languages)
+            } else {
+                defaults.removeObject(forKey: Key.languages)
+            }
         }
     }
 
@@ -117,7 +120,8 @@ final class Preferences: ObservableObject {
     /// Moves a tab to where another one is now (drag and drop in Settings → Notch).
     func moveTab(_ tab: WispTab, to target: WispTab) {
         guard tab != target, let from = tabOrder.firstIndex(of: tab),
-              let to = tabOrder.firstIndex(of: target) else { return }
+            let to = tabOrder.firstIndex(of: target)
+        else { return }
         var order = tabOrder
         order.remove(at: from)
         order.insert(tab, at: to)
@@ -168,15 +172,13 @@ enum AppLanguage: String, CaseIterable, Identifiable {
 
     var code: String? {
         switch self {
-        case .system:  nil
+        case .system: nil
         case .english: "en"
-        case .dutch:   "nl"
+        case .dutch: "nl"
         }
     }
 
     init?(code: String) {
-        if code.hasPrefix("nl") { self = .dutch }
-        else if code.hasPrefix("en") { self = .english }
-        else { return nil }
+        if code.hasPrefix("nl") { self = .dutch } else if code.hasPrefix("en") { self = .english } else { return nil }
     }
 }

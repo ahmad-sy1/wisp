@@ -76,9 +76,10 @@ private struct NothingPlayingCard: View {
             RoundedRectangle(cornerRadius: 14, style: .continuous)
                 .fill(Theme.control)
                 .frame(width: 120, height: 120)
-                .overlay(Image(systemName: "music.note")
-                    .font(.system(size: 44, weight: .light))
-                    .foregroundStyle(Theme.textSecondary.opacity(0.6)))
+                .overlay(
+                    Image(systemName: "music.note")
+                        .font(.system(size: 44, weight: .light))
+                        .foregroundStyle(Theme.textSecondary.opacity(0.6)))
 
             VStack(alignment: .leading, spacing: 4) {
                 Text("NOTHING PLAYING")
@@ -152,8 +153,9 @@ private struct Progress: View {
 
     static func time(_ seconds: Double) -> String {
         let s = max(0, Int(seconds.rounded()))
-        return s >= 3600 ? String(format: "%d:%02d:%02d", s / 3600, s / 60 % 60, s % 60)
-                         : String(format: "%d:%02d", s / 60, s % 60)
+        return s >= 3600
+            ? String(format: "%d:%02d:%02d", s / 3600, s / 60 % 60, s % 60)
+            : String(format: "%d:%02d", s / 60, s % 60)
     }
 }
 
@@ -197,8 +199,10 @@ private struct PlayPauseButton: View {
                 .foregroundStyle(.white)
                 .contentTransition(.symbolEffect(.replace))
                 .frame(width: 40, height: 34)
-                .glass(in: RoundedRectangle(cornerRadius: 12, style: .continuous),
-                       tint: .white.opacity(hovered ? 0.22 : 0.14))
+                .glass(
+                    in: RoundedRectangle(cornerRadius: 12, style: .continuous),
+                    tint: .white.opacity(hovered ? 0.22 : 0.14)
+                )
                 .scaleEffect(hovered ? 1.06 : 1)
         }
         .buttonStyle(PressableStyle())
@@ -284,10 +288,13 @@ struct Equalizer: View {
                     Capsule()
                         .fill(playing ? Theme.ok : Theme.textSecondary.opacity(0.5))
                         .frame(width: barWidth)
-                        .scaleEffect(y: playing ? (up ? 1 : 0.3 + 0.15 * Double(i % 2)) : barWidth / 16,
-                                     anchor: .bottom)
-                        .animation(.easeInOut(duration: durations[i]).repeatForever(autoreverses: true),
-                                   value: up)
+                        .scaleEffect(
+                            y: playing ? (up ? 1 : 0.3 + 0.15 * Double(i % 2)) : barWidth / 16,
+                            anchor: .bottom
+                        )
+                        .animation(
+                            .easeInOut(duration: durations[i]).repeatForever(autoreverses: true),
+                            value: up)
                 }
             }
             .onAppear { if playing { up = true } }

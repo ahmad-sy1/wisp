@@ -92,6 +92,7 @@ English is the source language. Every other language lives in `Wisp/Resources/Lo
 - `main` always builds and works. Never commit to it directly.
 - One branch per piece of work: `feat/…`, `fix/…`, `docs/…`, `ci/…`, `chore/…`.
 - Small, logical commits in [Conventional Commits](https://www.conventionalcommits.org) style, in English: `feat: …`, `fix: …`, `style: …`, `refactor: …`, `docs: …`, `build: …`, `ci: …`, `chore: …`.
+- Run `./scripts/format.sh` before you commit Swift. It uses `swift-format` from Xcode with the settings in `.swift-format`; `AlwaysUseLowerCamelCase` is off because some names follow the fields of outside APIs.
 - No AI attribution in commits, pull requests or the README.
   `.claude/settings.json` turns it off in Claude Code, and `.claude/hooks/block-ai-attribution.py` refuses commits, pushes and GitHub writes that still contain it or that use an AI as git identity.
 

@@ -14,9 +14,10 @@ enum AudioOutput {
         guard let id = defaultDeviceID() else { return nil }
         var name: CFString = "" as CFString
         var size = UInt32(MemoryLayout<CFString>.size)
-        var address = AudioObjectPropertyAddress(mSelector: kAudioObjectPropertyName,
-                                                 mScope: kAudioObjectPropertyScopeGlobal,
-                                                 mElement: kAudioObjectPropertyElementMain)
+        var address = AudioObjectPropertyAddress(
+            mSelector: kAudioObjectPropertyName,
+            mScope: kAudioObjectPropertyScopeGlobal,
+            mElement: kAudioObjectPropertyElementMain)
         _ = withUnsafeMutablePointer(to: &name) {
             AudioObjectGetPropertyData(id, &address, 0, nil, &size, $0)
         }
@@ -24,7 +25,8 @@ enum AudioOutput {
         size = UInt32(MemoryLayout<UInt32>.size)
         address.mSelector = kAudioDevicePropertyTransportType
         AudioObjectGetPropertyData(id, &address, 0, nil, &size, &transport)
-        let bluetooth = transport == kAudioDeviceTransportTypeBluetooth
+        let bluetooth =
+            transport == kAudioDeviceTransportTypeBluetooth
             || transport == kAudioDeviceTransportTypeBluetoothLE
         return Device(id: id, name: name as String, isBluetooth: bluetooth)
     }
@@ -34,29 +36,35 @@ enum AudioOutput {
         guard let id = defaultDeviceID() else { return nil }
         var rate: Float64 = 0
         var size = UInt32(MemoryLayout<Float64>.size)
-        var address = AudioObjectPropertyAddress(mSelector: kAudioDevicePropertyNominalSampleRate,
-                                                 mScope: kAudioObjectPropertyScopeGlobal,
-                                                 mElement: kAudioObjectPropertyElementMain)
+        var address = AudioObjectPropertyAddress(
+            mSelector: kAudioDevicePropertyNominalSampleRate,
+            mScope: kAudioObjectPropertyScopeGlobal,
+            mElement: kAudioObjectPropertyElementMain)
         guard AudioObjectGetPropertyData(id, &address, 0, nil, &size, &rate) == noErr, rate > 0 else { return nil }
-        let khz = rate.truncatingRemainder(dividingBy: 1000) == 0
+        let khz =
+            rate.truncatingRemainder(dividingBy: 1000) == 0
             ? "\(Int(rate / 1000)) kHz" : String(format: "%.1f kHz", rate / 1000)
 
         // Bit depth from the physical format of the first output stream.
-        address = AudioObjectPropertyAddress(mSelector: kAudioDevicePropertyStreams,
-                                             mScope: kAudioDevicePropertyScopeOutput,
-                                             mElement: kAudioObjectPropertyElementMain)
+        address = AudioObjectPropertyAddress(
+            mSelector: kAudioDevicePropertyStreams,
+            mScope: kAudioDevicePropertyScopeOutput,
+            mElement: kAudioObjectPropertyElementMain)
         size = 0
         guard AudioObjectGetPropertyDataSize(id, &address, 0, nil, &size) == noErr, size > 0 else { return khz }
         var streams = [AudioStreamID](repeating: 0, count: Int(size) / MemoryLayout<AudioStreamID>.size)
         guard AudioObjectGetPropertyData(id, &address, 0, nil, &size, &streams) == noErr,
-              let stream = streams.first else { return khz }
+            let stream = streams.first
+        else { return khz }
         var format = AudioStreamBasicDescription()
         size = UInt32(MemoryLayout<AudioStreamBasicDescription>.size)
-        address = AudioObjectPropertyAddress(mSelector: kAudioStreamPropertyPhysicalFormat,
-                                             mScope: kAudioObjectPropertyScopeGlobal,
-                                             mElement: kAudioObjectPropertyElementMain)
+        address = AudioObjectPropertyAddress(
+            mSelector: kAudioStreamPropertyPhysicalFormat,
+            mScope: kAudioObjectPropertyScopeGlobal,
+            mElement: kAudioObjectPropertyElementMain)
         guard AudioObjectGetPropertyData(stream, &address, 0, nil, &size, &format) == noErr,
-              format.mBitsPerChannel > 0 else { return khz }
+            format.mBitsPerChannel > 0
+        else { return khz }
         return "\(khz) · \(format.mBitsPerChannel)-bit"
     }
 
@@ -67,7 +75,8 @@ enum AudioOutput {
         var size = UInt32(MemoryLayout<Float32>.size)
         var address = volumeAddress
         guard AudioObjectHasProperty(id, &address),
-              AudioObjectGetPropertyData(id, &address, 0, nil, &size, &value) == noErr else { return nil }
+            AudioObjectGetPropertyData(id, &address, 0, nil, &size, &value) == noErr
+        else { return nil }
         return value
     }
 
@@ -79,19 +88,22 @@ enum AudioOutput {
     }
 
     private static var volumeAddress: AudioObjectPropertyAddress {
-        AudioObjectPropertyAddress(mSelector: kAudioHardwareServiceDeviceProperty_VirtualMainVolume,
-                                   mScope: kAudioDevicePropertyScopeOutput,
-                                   mElement: kAudioObjectPropertyElementMain)
+        AudioObjectPropertyAddress(
+            mSelector: kAudioHardwareServiceDeviceProperty_VirtualMainVolume,
+            mScope: kAudioDevicePropertyScopeOutput,
+            mElement: kAudioObjectPropertyElementMain)
     }
 
     private static func defaultDeviceID() -> AudioDeviceID? {
         var id = AudioDeviceID(0)
         var size = UInt32(MemoryLayout<AudioDeviceID>.size)
-        var address = AudioObjectPropertyAddress(mSelector: kAudioHardwarePropertyDefaultOutputDevice,
-                                                 mScope: kAudioObjectPropertyScopeGlobal,
-                                                 mElement: kAudioObjectPropertyElementMain)
-        let status = AudioObjectGetPropertyData(AudioObjectID(kAudioObjectSystemObject),
-                                                &address, 0, nil, &size, &id)
+        var address = AudioObjectPropertyAddress(
+            mSelector: kAudioHardwarePropertyDefaultOutputDevice,
+            mScope: kAudioObjectPropertyScopeGlobal,
+            mElement: kAudioObjectPropertyElementMain)
+        let status = AudioObjectGetPropertyData(
+            AudioObjectID(kAudioObjectSystemObject),
+            &address, 0, nil, &size, &id)
         return status == noErr && id != 0 ? id : nil
     }
 }

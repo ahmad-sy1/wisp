@@ -140,11 +140,12 @@ final class AgendaStore: ObservableObject {
         let predicate = store.predicateForEvents(withStart: start, end: end, calendars: shown)
         return store.events(matching: predicate).map { event in
             let pin = event.structuredLocation?.geoLocation?.coordinate
-            return TravelEvent(id: "\(event.eventIdentifier ?? UUID().uuidString)@\(event.startDate.timeIntervalSince1970)",
-                               title: event.title ?? "", start: event.startDate, end: event.endDate,
-                               isAllDay: event.isAllDay, location: event.location,
-                               latitude: pin?.latitude, longitude: pin?.longitude,
-                               isRecurring: event.hasRecurrenceRules)
+            return TravelEvent(
+                id: "\(event.eventIdentifier ?? UUID().uuidString)@\(event.startDate.timeIntervalSince1970)",
+                title: event.title ?? "", start: event.startDate, end: event.endDate,
+                isAllDay: event.isAllDay, location: event.location,
+                latitude: pin?.latitude, longitude: pin?.longitude,
+                isRecurring: event.hasRecurrenceRules)
         }
     }
 

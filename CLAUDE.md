@@ -21,6 +21,7 @@ xcodegen && xcodebuild -scheme wisp -configuration Debug -derivedDataPath build 
 ## Rules
 
 - Swift 6, SwiftUI + AppKit, no third-party dependencies.
+- Run `./scripts/format.sh` before committing Swift; CI fails on unformatted code.
 - Secrets live in the Keychain (`Wisp/Support/Keychain.swift`), never on disk or in git.
 - No telemetry. Network calls only to services the user configured.
 - Never block Claude Code: `wisp-hook` exits immediately when the app doesn't answer.

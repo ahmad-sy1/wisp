@@ -29,10 +29,10 @@ struct ClaudeHooksGroup: View {
 
     private var statusText: String {
         switch status {
-        case .installed:    String(localized: "Installed")
+        case .installed: String(localized: "Installed")
         case .notInstalled: String(localized: "Not installed")
-        case .otherPath:    String(localized: "Points to another wisp")
-        case .noHelper:     String(localized: "wisp-hook is missing")
+        case .otherPath: String(localized: "Points to another wisp")
+        case .noHelper: String(localized: "wisp-hook is missing")
         }
     }
 
@@ -71,10 +71,12 @@ struct ClaudeHooksGroup: View {
             .frame(height: 220)
             .background(RoundedRectangle(cornerRadius: 6).fill(Color.black.opacity(0.25)))
 
-            Text("A backup is made first: \(plan.backupURL.lastPathComponent). Other settings stay as they are, but the file is reformatted (keys in alphabetical order).")
-                .font(.caption)
-                .foregroundStyle(.secondary)
-                .fixedSize(horizontal: false, vertical: true)
+            Text(
+                "A backup is made first: \(plan.backupURL.lastPathComponent). Other settings stay as they are, but the file is reformatted (keys in alphabetical order)."
+            )
+            .font(.caption)
+            .foregroundStyle(.secondary)
+            .fixedSize(horizontal: false, vertical: true)
 
             HStack {
                 Spacer()

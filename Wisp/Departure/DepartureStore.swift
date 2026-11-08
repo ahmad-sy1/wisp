@@ -54,7 +54,8 @@ final class DepartureStore: ObservableObject {
     private enum Key { static let settings = "departureSettings" }
 
     private init() {
-        settings = UserDefaults.standard.data(forKey: Key.settings)
+        settings =
+            UserDefaults.standard.data(forKey: Key.settings)
             .flatMap { try? JSONDecoder().decode(DepartureSettings.self, from: $0) } ?? DepartureSettings()
         let key = Keychain.get(Self.keyAccount)
         hasNSKey = key != nil
@@ -67,9 +68,9 @@ final class DepartureStore: ObservableObject {
         let defaults = UserDefaults.standard
         guard defaults.data(forKey: Key.settings) == nil, let old = defaults.string(forKey: "agendaTravelMode") else { return }
         switch old {
-        case "car":     settings.defaultMode = .car
+        case "car": settings.defaultMode = .car
         case "transit": settings.defaultMode = .transit
-        default:        settings.defaultMode = .bike
+        default: settings.defaultMode = .bike
         }
     }
 
@@ -85,8 +86,8 @@ final class DepartureStore: ObservableObject {
         started = true
         observeSystem()
         #if DEBUG
-        // `-departureDemo car` (or transit, bike) shows made-up trips, for snapshots and without keys.
-        if let demo = UserDefaults.standard.string(forKey: "departureDemo") { return startDemo(demo) }
+            // `-departureDemo car` (or transit, bike) shows made-up trips, for snapshots and without keys.
+            if let demo = UserDefaults.standard.string(forKey: "departureDemo") { return startDemo(demo) }
         #endif
         evaluate()
     }
@@ -174,11 +175,13 @@ final class DepartureStore: ObservableObject {
         let today = calendar.startOfDay(for: now)
         let agenda = AgendaStore.shared
         guard let from = calendar.date(byAdding: .day, value: -1, to: today),
-              let to = calendar.date(byAdding: .day, value: 2, to: today) else { return [] }
+            let to = calendar.date(byAdding: .day, value: 2, to: today)
+        else { return [] }
         let events = agenda.travelEvents(from: from, to: to)
         guard settings.routine else { return events }
         if routinesRead.map({ !calendar.isDate($0, inSameDayAs: now) }) ?? true,
-           let start = calendar.date(byAdding: .day, value: -28, to: today) {
+            let start = calendar.date(byAdding: .day, value: -28, to: today)
+        {
             routines = RoutineDetector.routines(history: agenda.travelEvents(from: start, to: today), calendar: calendar)
             routinesRead = now
         }
@@ -188,8 +191,8 @@ final class DepartureStore: ObservableObject {
     private func provider(for mode: TravelMode) -> any TravelProvider {
         switch mode {
         case .transit: transit
-        case .car:     car
-        case .bike:    bike
+        case .car: car
+        case .bike: bike
         }
     }
 
@@ -220,7 +223,8 @@ final class DepartureStore: ObservableObject {
         guard !Task.isCancelled else { return }
 
         if plan.mode == .car, settings.nowOrLater,
-           laterFetched.map({ now.timeIntervalSince($0) > Self.laterMaxAge }) ?? true {
+            laterFetched.map({ now.timeIntervalSince($0) > Self.laterMaxAge }) ?? true
+        {
             later = await fetchLater(plan: plan, now: now)
             laterFetched = now
         }
@@ -293,9 +297,10 @@ final class DepartureStore: ObservableObject {
         let distributed = DistributedNotificationCenter.default()
         observers.append(distributed.addObserver(forName: .init("com.apple.screenIsLocked"), object: nil, queue: .main, using: sleep))
         observers.append(distributed.addObserver(forName: .init("com.apple.screenIsUnlocked"), object: nil, queue: .main, using: wake))
-        observers.append(NotificationCenter.default.addObserver(forName: .EKEventStoreChanged, object: nil, queue: .main) { _ in
-            MainActor.assumeIsolated { DepartureStore.shared.evaluate() }
-        })
+        observers.append(
+            NotificationCenter.default.addObserver(forName: .EKEventStoreChanged, object: nil, queue: .main) { _ in
+                MainActor.assumeIsolated { DepartureStore.shared.evaluate() }
+            })
     }
 
     private func setAsleep(_ on: Bool) {
@@ -312,43 +317,55 @@ final class DepartureStore: ObservableObject {
     }
 
     #if DEBUG
-    private func startDemo(_ mode: String) {
-        isDemo = true
-        hasNSKey = true
-        let now = Date.now
-        @Sendable func minutes(_ n: Double) -> Date { now.addingTimeInterval(n * 60) }
-        settings.home = TravelPlace(name: "Thuis", latitude: 51.84, longitude: 5.85)
-        settings.nowOrLater = true
-        settings.rainCheck = true
-        var event = TravelEvent(id: "demo", title: "Wiskunde", start: minutes(-40), end: minutes(10), location: "School", latitude: 51.9, longitude: 5.9)
-        event.isRecurring = true
-        demoEvents = [event]
-        let chosen = TravelMode(rawValue: mode) ?? .transit
-        settings.defaultMode = chosen
-        lookup = MockPlaceLookup()
-        @Sendable func train(_ leave: Double, _ line: String, delay: Int = 0, cancelled: Bool = false) -> TravelOption {
-            TravelOption(departure: minutes(leave), arrival: minutes(leave + 39), legs: [
-                TravelLeg(kind: .walk, departure: minutes(leave), minutes: 6),
-                TravelLeg(kind: .rail, line: "NS", platform: "3", departure: minutes(leave + 6), minutes: 16, delayMinutes: delay, isCancelled: cancelled),
-                TravelLeg(kind: .bus, line: line, platform: "B", departure: minutes(leave + 22), minutes: 17),
-            ], delayMinutes: delay, isCancelled: cancelled)
+        private func startDemo(_ mode: String) {
+            isDemo = true
+            hasNSKey = true
+            let now = Date.now
+            @Sendable func minutes(_ n: Double) -> Date { now.addingTimeInterval(n * 60) }
+            settings.home = TravelPlace(name: "Thuis", latitude: 51.84, longitude: 5.85)
+            settings.nowOrLater = true
+            settings.rainCheck = true
+            var event = TravelEvent(
+                id: "demo", title: "Wiskunde", start: minutes(-40), end: minutes(10), location: "School", latitude: 51.9, longitude: 5.9)
+            event.isRecurring = true
+            demoEvents = [event]
+            let chosen = TravelMode(rawValue: mode) ?? .transit
+            settings.defaultMode = chosen
+            lookup = MockPlaceLookup()
+            @Sendable func train(_ leave: Double, _ line: String, delay: Int = 0, cancelled: Bool = false) -> TravelOption {
+                TravelOption(
+                    departure: minutes(leave), arrival: minutes(leave + 39),
+                    legs: [
+                        TravelLeg(kind: .walk, departure: minutes(leave), minutes: 6),
+                        TravelLeg(
+                            kind: .rail, line: "NS", platform: "3", departure: minutes(leave + 6), minutes: 16, delayMinutes: delay,
+                            isCancelled: cancelled),
+                        TravelLeg(kind: .bus, line: line, platform: "B", departure: minutes(leave + 22), minutes: 17),
+                    ], delayMinutes: delay, isCancelled: cancelled)
+            }
+            transit = MockTravelProvider { _, _ in [train(14, "300"), train(29, "33", delay: 4), train(44, "300", cancelled: true)] }
+            car = MockTravelProvider { departAt, _ in
+                let leave = departAt ?? minutes(10)
+                // The jam thins out over the coming hour.
+                let later = leave.timeIntervalSince(now) / 60
+                let trip = later > 55 ? 42 : later > 25 ? 50 : 57
+                return [
+                    TravelOption(
+                        departure: leave, arrival: leave.addingTimeInterval(Double(trip) * 60),
+                        legs: [TravelLeg(kind: .drive, minutes: trip)], normalMinutes: 42, routeName: "A15")
+                ]
+            }
+            bike = MockTravelProvider { departAt, _ in
+                let leave = departAt ?? minutes(10)
+                return [
+                    TravelOption(departure: leave, arrival: leave.addingTimeInterval(22 * 60), legs: [TravelLeg(kind: .bike, minutes: 22)])
+                ]
+            }
+            let points = (0..<24).map {
+                RainForecast.Point(time: minutes(Double($0) * 5), millimetresPerHour: (3...7).contains($0) ? 1.2 : 0)
+            }
+            rainProvider = MockRainProvider(answer: RainForecast(points: points))
+            evaluate()
         }
-        transit = MockTravelProvider { _, _ in [train(14, "300"), train(29, "33", delay: 4), train(44, "300", cancelled: true)] }
-        car = MockTravelProvider { departAt, _ in
-            let leave = departAt ?? minutes(10)
-            // The jam thins out over the coming hour.
-            let later = leave.timeIntervalSince(now) / 60
-            let trip = later > 55 ? 42 : later > 25 ? 50 : 57
-            return [TravelOption(departure: leave, arrival: leave.addingTimeInterval(Double(trip) * 60),
-                                 legs: [TravelLeg(kind: .drive, minutes: trip)], normalMinutes: 42, routeName: "A15")]
-        }
-        bike = MockTravelProvider { departAt, _ in
-            let leave = departAt ?? minutes(10)
-            return [TravelOption(departure: leave, arrival: leave.addingTimeInterval(22 * 60), legs: [TravelLeg(kind: .bike, minutes: 22)])]
-        }
-        let points = (0..<24).map { RainForecast.Point(time: minutes(Double($0) * 5), millimetresPerHour: (3...7).contains($0) ? 1.2 : 0) }
-        rainProvider = MockRainProvider(answer: RainForecast(points: points))
-        evaluate()
-    }
     #endif
 }

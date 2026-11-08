@@ -38,23 +38,29 @@ struct GeneralPage: View {
                 SettingsRow(String(localized: "Close after leaving")) {
                     HStack(spacing: 14) {
                         // Rounded by hand: a stepped slider draws a tick per step.
-                        Slider(value: Binding(get: { prefs.closeDelay },
-                                              set: { prefs.closeDelay = ($0 * 10).rounded() / 10 }),
-                               in: 0.2...5)
-                            .frame(width: 260)
+                        Slider(
+                            value: Binding(
+                                get: { prefs.closeDelay },
+                                set: { prefs.closeDelay = ($0 * 10).rounded() / 10 }),
+                            in: 0.2...5
+                        )
+                        .frame(width: 260)
                         Text(String(format: "%.1f s", prefs.closeDelay))
                             .monospacedDigit()
                             .foregroundStyle(Theme.textSecondary)
                             .frame(width: 40, alignment: .trailing)
                     }
                 }
-                SettingsToggle(String(localized: "Sounds"),
-                               subtitle: String(localized: "A soft sound with notifications"),
-                               isOn: $prefs.soundsEnabled)
-                SettingsToggle(String(localized: "Open at login"),
-                               subtitle: String(localized: "wisp starts with your Mac"),
-                               isOn: Binding(get: { prefs.launchAtLogin },
-                                             set: { prefs.setLaunchAtLogin($0) }))
+                SettingsToggle(
+                    String(localized: "Sounds"),
+                    subtitle: String(localized: "A soft sound with notifications"),
+                    isOn: $prefs.soundsEnabled)
+                SettingsToggle(
+                    String(localized: "Open at login"),
+                    subtitle: String(localized: "wisp starts with your Mac"),
+                    isOn: Binding(
+                        get: { prefs.launchAtLogin },
+                        set: { prefs.setLaunchAtLogin($0) }))
                 ShortcutRow(prefs: prefs)
             }
 

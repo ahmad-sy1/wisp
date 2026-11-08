@@ -81,7 +81,8 @@ enum DepartureEngine {
 
     static func plan(now: Date, events: [TravelEvent], settings: DepartureSettings, calendar: Calendar) -> TripPlan? {
         guard let home = settings.home else { return nil }
-        let located = events
+        let located =
+            events
             .filter { !$0.isAllDay && EventLocation.isPhysical($0.location) }
             .sorted { $0.start < $1.start }
 
@@ -116,14 +117,18 @@ enum DepartureEngine {
         let destination = place(of: next)
         // The next lesson in the same building isn't a trip.
         guard !samePlace(origin, destination) else { return nil }
-        return TripPlan(kind: .event, eventID: next.id, title: next.title, origin: origin, destination: destination,
-                        mode: settings.mode(for: next.location), arriveBy: next.start, earliestLeave: nil)
+        return TripPlan(
+            kind: .event, eventID: next.id, title: next.title, origin: origin, destination: destination,
+            mode: settings.mode(for: next.location), arriveBy: next.start, earliestLeave: nil)
     }
 
-    private static func homeward(now: Date, located: [TravelEvent], home: TravelPlace, settings: DepartureSettings,
-                                 calendar: Calendar) -> TripPlan? {
+    private static func homeward(
+        now: Date, located: [TravelEvent], home: TravelPlace, settings: DepartureSettings,
+        calendar: Calendar
+    ) -> TripPlan? {
         // Overlapping events: the one that ends last is the one you leave from.
-        let current = located
+        let current =
+            located
             .filter { event in
                 let opens = event.end.addingTimeInterval(-Double(settings.showBeforeEndMinutes) * 60)
                 return opens <= now && now < event.end.addingTimeInterval(homeGrace)
@@ -136,8 +141,9 @@ enum DepartureEngine {
         guard !moreToday else { return nil }
         let origin = place(of: last)
         guard !samePlace(origin, home) else { return nil }
-        return TripPlan(kind: .home, eventID: last.id, title: last.title, origin: origin, destination: home,
-                        mode: settings.mode(for: last.location), arriveBy: nil, earliestLeave: last.end)
+        return TripPlan(
+            kind: .home, eventID: last.id, title: last.title, origin: origin, destination: home,
+            mode: settings.mode(for: last.location), arriveBy: nil, earliestLeave: last.end)
     }
 
     /// The next moment `plan` can give another answer, so nothing has to run until then.
@@ -167,8 +173,10 @@ enum DepartureEngine {
     // MARK: - Which option
 
     /// Puts the providers' answers together. `later` and `rain` are nil when not asked for.
-    static func resolve(plan: TripPlan, options: [TravelOption], later: LaterAdvice? = nil, rainForecast: RainForecast? = nil,
-                        now: Date) -> DepartureOutput {
+    static func resolve(
+        plan: TripPlan, options: [TravelOption], later: LaterAdvice? = nil, rainForecast: RainForecast? = nil,
+        now: Date
+    ) -> DepartureOutput {
         let options = options.map { rolledForward($0, now: now) }
         let chosen = choose(plan: plan, options: options, now: now)
         var output = DepartureOutput(plan: plan, chosen: chosen)
@@ -206,7 +214,8 @@ enum DepartureEngine {
     }
 
     private static func choose(plan: TripPlan, options: [TravelOption], now: Date) -> TravelOption? {
-        let reachable = options
+        let reachable =
+            options
             .filter { !$0.isCancelled && $0.departure >= now.addingTimeInterval(-60) }
             .filter { option in plan.earliestLeave.map { option.departure >= $0.addingTimeInterval(-60) } ?? true }
             .sorted { $0.departure < $1.departure }
@@ -221,7 +230,8 @@ enum DepartureEngine {
 
     private static func alternatives(chosen: TravelOption, options: [TravelOption], now: Date) -> [TravelOption] {
         // Cancelled ones stay: you want to know that train isn't coming.
-        let others = options
+        let others =
+            options
             .filter { $0 != chosen && $0.departure >= chosen.departure.addingTimeInterval(-60) && $0.departure >= now }
             .sorted { $0.departure < $1.departure }
         return Array(([chosen] + others).prefix(3))

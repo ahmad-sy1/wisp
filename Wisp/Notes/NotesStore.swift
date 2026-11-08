@@ -28,7 +28,8 @@ final class NotesStore: ObservableObject {
     }
 
     private init() {
-        notes = (try? Data(contentsOf: Self.file))
+        notes =
+            (try? Data(contentsOf: Self.file))
             .flatMap { try? JSONDecoder().decode([Note].self, from: $0) } ?? []
     }
 

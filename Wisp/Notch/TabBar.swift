@@ -7,10 +7,12 @@ struct TabBar: View {
     var body: some View {
         HStack(spacing: 2) {
             ForEach(prefs.visibleTabs) { tab in
-                TabIconButton(symbol: tab.symbol, label: tab.title,
-                              isActive: model.tab == tab,
-                              badge: model.badges[tab] ?? 0,
-                              badgeColor: tab == .github ? Theme.info : Theme.badge) {
+                TabIconButton(
+                    symbol: tab.symbol, label: tab.title,
+                    isActive: model.tab == tab,
+                    badge: model.badges[tab] ?? 0,
+                    badgeColor: tab == .github ? Theme.info : Theme.badge
+                ) {
                     withAnimation(.easeInOut(duration: 0.18)) { model.tab = tab }
                 }
             }

@@ -14,16 +14,33 @@ struct IntegrationsPage: View {
     @State private var confirmRemoveGmail = false
 
     var body: some View {
-        SettingsPage(title: String(localized: "Integrations"),
-                     subtitle: String(localized: "Only what you use is listed here. Add what you need."),
-                     note: String(localized: "Keys and passwords are kept safely in your Mac's Keychain. Removing an integration disconnects it and deletes its key.")) {
+        SettingsPage(
+            title: String(localized: "Integrations"),
+            subtitle: String(localized: "Only what you use is listed here. Add what you need."),
+            note: String(
+                localized:
+                    "Keys and passwords are kept safely in your Mac's Keychain. Removing an integration disconnects it and deletes its key."
+            )
+        ) {
             Menu {
-                Button { managingGmail = true } label: { Text(verbatim: "Gmail") }
-                    .disabled(mail.isConfigured)
-                Button { SettingsNavigation.shared.page = .github } label: { Text(verbatim: "GitHub") }
-                    .disabled(github.status != .disconnected)
-                Button { managingNS = true } label: { Text(verbatim: "NS") }
-                    .disabled(departure.hasNSKey)
+                Button {
+                    managingGmail = true
+                } label: {
+                    Text(verbatim: "Gmail")
+                }
+                .disabled(mail.isConfigured)
+                Button {
+                    SettingsNavigation.shared.page = .github
+                } label: {
+                    Text(verbatim: "GitHub")
+                }
+                .disabled(github.status != .disconnected)
+                Button {
+                    managingNS = true
+                } label: {
+                    Text(verbatim: "NS")
+                }
+                .disabled(departure.hasNSKey)
             } label: {
                 Label("Add integration", systemImage: "plus")
                     .font(.system(size: 13, weight: .semibold))
@@ -40,23 +57,27 @@ struct IntegrationsPage: View {
         } content: {
             SettingsGroup(header: String(localized: "In use")) {
                 if mail.isConfigured {
-                    IntegrationRow(name: "Gmail", color: Color(hex: 0xEA4335), status: gmailStatus,
-                                   manage: { managingGmail = true },
-                                   remove: { confirmRemoveGmail = true })
+                    IntegrationRow(
+                        name: "Gmail", color: Color(hex: 0xEA4335), status: gmailStatus,
+                        manage: { managingGmail = true },
+                        remove: { confirmRemoveGmail = true })
                 }
                 if github.status != .disconnected {
-                    IntegrationRow(name: "GitHub", color: Color(hex: 0xF0F6FC), status: githubStatus,
-                                   manage: { SettingsNavigation.shared.page = .github },
-                                   remove: { github.disconnect() })
+                    IntegrationRow(
+                        name: "GitHub", color: Color(hex: 0xF0F6FC), status: githubStatus,
+                        manage: { SettingsNavigation.shared.page = .github },
+                        remove: { github.disconnect() })
                 }
                 if departure.hasNSKey {
-                    IntegrationRow(name: "NS", color: Theme.nsYellow, status: String(localized: "Key in your Keychain"),
-                                   manage: { managingNS = true },
-                                   remove: { departure.setNSKey(nil) })
+                    IntegrationRow(
+                        name: "NS", color: Theme.nsYellow, status: String(localized: "Key in your Keychain"),
+                        manage: { managingNS = true },
+                        remove: { departure.setNSKey(nil) })
                 }
-                IntegrationRow(name: String(localized: "Music"), color: Theme.ok, status: musicStatus,
-                               manage: { SettingsNavigation.shared.page = .music },
-                               remove: nil)
+                IntegrationRow(
+                    name: String(localized: "Music"), color: Theme.ok, status: musicStatus,
+                    manage: { SettingsNavigation.shared.page = .music },
+                    remove: nil)
             }
         }
         .sheet(isPresented: $managingGmail) { GmailSheet(store: mail) }
@@ -70,17 +91,17 @@ struct IntegrationsPage: View {
 
     private var gmailStatus: String {
         switch mail.status {
-        case .notConfigured:     String(localized: "Not connected")
-        case .connecting:        String(localized: "Connecting…")
-        case .connected:         String(localized: "Connected · \(mail.address ?? "")")
+        case .notConfigured: String(localized: "Not connected")
+        case .connecting: String(localized: "Connecting…")
+        case .connected: String(localized: "Connected · \(mail.address ?? "")")
         case .failed(let error): error
         }
     }
 
     private var githubStatus: String {
         switch github.status {
-        case .disconnected:        String(localized: "Not connected")
-        case .connecting:          String(localized: "Connecting…")
+        case .disconnected: String(localized: "Not connected")
+        case .connecting: String(localized: "Connecting…")
         case .connected(let login): String(localized: "Connected · @\(login)")
         case .failed(let message): message
         }
@@ -146,10 +167,12 @@ private struct GmailSheet: View {
             .formStyle(.columns)
             Link("Create an app password…", destination: URL(string: "https://myaccount.google.com/apppasswords")!)
                 .font(.caption)
-            Text("wisp marks nothing as read and only changes your mailbox when you click Delete on new mail (it goes to the Gmail trash). Address and password are kept only in your Keychain.")
-                .font(.caption)
-                .foregroundStyle(.secondary)
-                .fixedSize(horizontal: false, vertical: true)
+            Text(
+                "wisp marks nothing as read and only changes your mailbox when you click Delete on new mail (it goes to the Gmail trash). Address and password are kept only in your Keychain."
+            )
+            .font(.caption)
+            .foregroundStyle(.secondary)
+            .fixedSize(horizontal: false, vertical: true)
             HStack {
                 Spacer()
                 Button("Cancel", role: .cancel) { dismiss() }
@@ -181,10 +204,12 @@ private struct NSKeySheet: View {
                 .textFieldStyle(.roundedBorder)
             Link("Get a free key…", destination: URL(string: "https://apiportal.ns.nl")!)
                 .font(.caption)
-            Text("For lines, platforms and delays in the Departure tab. Without it, wisp shows a total time from Apple Maps. The key is kept only in your Keychain.")
-                .font(.caption)
-                .foregroundStyle(.secondary)
-                .fixedSize(horizontal: false, vertical: true)
+            Text(
+                "For lines, platforms and delays in the Departure tab. Without it, wisp shows a total time from Apple Maps. The key is kept only in your Keychain."
+            )
+            .font(.caption)
+            .foregroundStyle(.secondary)
+            .fixedSize(horizontal: false, vertical: true)
             HStack {
                 Spacer()
                 Button("Cancel", role: .cancel) { dismiss() }

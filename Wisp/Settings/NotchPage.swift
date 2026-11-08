@@ -12,8 +12,10 @@ struct NotchPage: View {
     @State private var dragging: WispTab?
 
     var body: some View {
-        SettingsPage(title: String(localized: "Notch"),
-                     subtitle: String(localized: "Choose which tabs you see and drag them into your own order.")) {
+        SettingsPage(
+            title: String(localized: "Notch"),
+            subtitle: String(localized: "Choose which tabs you see and drag them into your own order.")
+        ) {
             VStack(alignment: .leading, spacing: 8) {
                 Text("Preview")
                     .font(.system(size: 12))
@@ -23,9 +25,12 @@ struct NotchPage: View {
 
             SettingsGroup(header: String(localized: "Tabs · click a tab for its options")) {
                 ForEach(prefs.tabOrder) { tab in
-                    TabRow(tab: tab, optionCount: optionCount(tab), expanded: expanded == tab,
-                           shown: Binding(get: { !prefs.hiddenTabs.contains(tab) },
-                                          set: { prefs.setTab(tab, shown: $0) })) {
+                    TabRow(
+                        tab: tab, optionCount: optionCount(tab), expanded: expanded == tab,
+                        shown: Binding(
+                            get: { !prefs.hiddenTabs.contains(tab) },
+                            set: { prefs.setTab(tab, shown: $0) })
+                    ) {
                         withAnimation(.easeInOut(duration: 0.15)) { expanded = expanded == tab ? nil : tab }
                     } options: {
                         options(for: tab)
@@ -45,11 +50,11 @@ struct NotchPage: View {
 
     private func optionCount(_ tab: WispTab) -> Int {
         switch tab {
-        case .home:      HomeTile.allCases.count
-        case .mail:      2
+        case .home: HomeTile.allCases.count
+        case .mail: 2
         case .clipboard: 2
-        case .system:    1
-        default:         0
+        case .system: 1
+        default: 0
         }
     }
 
@@ -79,7 +84,11 @@ struct NotchPage: View {
                     .buttonStyle(.settings)
                     .disabled(clipboard.items.isEmpty)
             }
-            OptionNote(String(localized: "The last \(ClipboardStore.limit) texts you copied, stored only on this Mac. Passwords and one-time codes that apps mark as such are never kept."))
+            OptionNote(
+                String(
+                    localized:
+                        "The last \(ClipboardStore.limit) texts you copied, stored only on this Mac. Passwords and one-time codes that apps mark as such are never kept."
+                ))
         case .system:
             OptionRow(String(localized: "Wi‑Fi name")) {
                 if stats.locationAllowed {
@@ -89,7 +98,11 @@ struct NotchPage: View {
                         .buttonStyle(.settings)
                 }
             }
-            OptionNote(String(localized: "macOS gives apps the name of your Wi‑Fi network only with Location access. wisp uses it for nothing else and never reads where you are."))
+            OptionNote(
+                String(
+                    localized:
+                        "macOS gives apps the name of your Wi‑Fi network only with Location access. wisp uses it for nothing else and never reads where you are."
+                ))
         default:
             EmptyView()
         }
@@ -126,8 +139,9 @@ private struct TabBarPreview: View {
                     .font(.system(size: 13))
                     .foregroundStyle(tab == .home ? Theme.textPrimary : Theme.textSecondary)
                     .frame(width: Theme.tabSize.width, height: Theme.tabSize.height)
-                    .background(RoundedRectangle(cornerRadius: Theme.buttonCorner)
-                        .fill(tab == .home ? Theme.activeTab : .clear))
+                    .background(
+                        RoundedRectangle(cornerRadius: Theme.buttonCorner)
+                            .fill(tab == .home ? Theme.activeTab : .clear))
             }
             Spacer()
             Image(systemName: "slider.vertical.3")
@@ -138,8 +152,10 @@ private struct TabBarPreview: View {
         .padding(.horizontal, 12)
         .padding(.vertical, 10)
         .background(UnevenRoundedRectangle(bottomLeadingRadius: 16, bottomTrailingRadius: 16).fill(Theme.panel))
-        .overlay(UnevenRoundedRectangle(bottomLeadingRadius: 16, bottomTrailingRadius: 16)
-            .strokeBorder(Theme.cardBorder, lineWidth: 1))
+        .overlay(
+            UnevenRoundedRectangle(bottomLeadingRadius: 16, bottomTrailingRadius: 16)
+                .strokeBorder(Theme.cardBorder, lineWidth: 1)
+        )
         .accessibilityHidden(true)
     }
 }
@@ -217,8 +233,10 @@ private struct HomeTileChip: View {
             .foregroundStyle(shown ? Theme.textPrimary : Theme.textSecondary)
             .padding(.horizontal, 8)
             .frame(height: 26)
-            .overlay(RoundedRectangle(cornerRadius: 8)
-                .strokeBorder(shown ? color : Theme.cardBorder, lineWidth: 1))
+            .overlay(
+                RoundedRectangle(cornerRadius: 8)
+                    .strokeBorder(shown ? color : Theme.cardBorder, lineWidth: 1)
+            )
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)

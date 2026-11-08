@@ -1,5 +1,5 @@
-import Foundation
 import Darwin
+import Foundation
 
 /// One Claude Code hook event, already trimmed by `wisp-hook`.
 struct HookEvent: Sendable {
@@ -15,7 +15,8 @@ struct HookEvent: Sendable {
 
     init?(json: [String: Any]) {
         guard let name = json["hook_event_name"] as? String,
-              let sessionId = json["session_id"] as? String else { return nil }
+            let sessionId = json["session_id"] as? String
+        else { return nil }
         self.name = name
         self.sessionId = sessionId
         cwd = json["cwd"] as? String ?? ""
@@ -24,7 +25,8 @@ struct HookEvent: Sendable {
         toolName = json["tool_name"] as? String
         message = json["message"] as? String
         let input = json["tool_input"] as? [String: Any] ?? [:]
-        toolSummary = ["command", "file_path", "path", "url", "pattern", "description"]
+        toolSummary =
+            ["command", "file_path", "path", "url", "pattern", "description"]
             .lazy.compactMap { input[$0] as? String }.first
     }
 }
@@ -69,8 +71,9 @@ final class HookServer: @unchecked Sendable {
 
     func start() {
         let fm = FileManager.default
-        try? fm.createDirectory(at: HookSocket.directory, withIntermediateDirectories: true,
-                                attributes: [.posixPermissions: 0o700])
+        try? fm.createDirectory(
+            at: HookSocket.directory, withIntermediateDirectories: true,
+            attributes: [.posixPermissions: 0o700])
         unlink(HookSocket.path)
 
         guard var address = HookSocket.address() else { return log("socket path too long") }
@@ -106,8 +109,9 @@ final class HookServer: @unchecked Sendable {
 
     private func serve(_ fd: Int32) {
         guard let line = readLine(fd),
-              let json = (try? JSONSerialization.jsonObject(with: line)) as? [String: Any],
-              let event = HookEvent(json: json) else {
+            let json = (try? JSONSerialization.jsonObject(with: line)) as? [String: Any],
+            let event = HookEvent(json: json)
+        else {
             close(fd)
             return
         }

@@ -2,8 +2,8 @@ import CoreLocation
 // The answers of MKDirections and MKLocalSearch aren't marked Sendable in every SDK.
 @preconcurrency import MapKit
 
-private extension TravelPlace {
-    var mapItem: MKMapItem? {
+extension TravelPlace {
+    fileprivate var mapItem: MKMapItem? {
         guard let latitude, let longitude else { return nil }
         return MKMapItem(placemark: MKPlacemark(coordinate: CLLocationCoordinate2D(latitude: latitude, longitude: longitude)))
     }
@@ -39,9 +39,12 @@ actor MapKitCarProvider: TravelProvider {
         let seconds = answer.seconds
         let leave = departAt ?? arriveBy.map { $0.addingTimeInterval(-seconds - DepartureEngine.arrivalMargin) } ?? moment
         let quiet = await normalMinutes(from: from, to: to)
-        return [TravelOption(departure: leave, arrival: leave.addingTimeInterval(seconds),
-                             legs: [TravelLeg(kind: .drive, departure: leave, minutes: Int((seconds / 60).rounded()))],
-                             normalMinutes: quiet, routeName: Self.roadName(answer.name))]
+        return [
+            TravelOption(
+                departure: leave, arrival: leave.addingTimeInterval(seconds),
+                legs: [TravelLeg(kind: .drive, departure: leave, minutes: Int((seconds / 60).rounded()))],
+                normalMinutes: quiet, routeName: Self.roadName(answer.name))
+        ]
     }
 
     /// The trip at three at night stands in for no traffic. Asked once a day per route.
@@ -51,8 +54,8 @@ actor MapKitCarProvider: TravelProvider {
         let key = "\(from.name)→\(to.name)"
         if let known = normal[key], known.day == today { return known.minutes }
         guard let tomorrow = calendar.date(byAdding: .day, value: 1, to: today),
-              let night = calendar.date(bySettingHour: 3, minute: 0, second: 0, of: tomorrow),
-              let answer = try? await route(from: from, to: to, type: .automobile, leaving: night)
+            let night = calendar.date(bySettingHour: 3, minute: 0, second: 0, of: tomorrow),
+            let answer = try? await route(from: from, to: to, type: .automobile, leaving: night)
         else { return nil }
         let minutes = Int((answer.seconds / 60).rounded())
         normal[key] = (minutes, today)
@@ -73,8 +76,11 @@ struct MapKitBikeProvider: TravelProvider {
         let minutes = DepartureEngine.bikeMinutes(metres: answer.metres)
         let seconds = Double(minutes) * 60
         let leave = departAt ?? arriveBy.map { $0.addingTimeInterval(-seconds - DepartureEngine.arrivalMargin) } ?? .now
-        return [TravelOption(departure: leave, arrival: leave.addingTimeInterval(seconds),
-                             legs: [TravelLeg(kind: .bike, departure: leave, minutes: minutes)])]
+        return [
+            TravelOption(
+                departure: leave, arrival: leave.addingTimeInterval(seconds),
+                legs: [TravelLeg(kind: .bike, departure: leave, minutes: minutes)])
+        ]
     }
 }
 

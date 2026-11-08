@@ -99,9 +99,10 @@ final class Spectrum: ObservableObject {
     private func watchPower() {
         guard powerSource == nil else { return }
         readPower()
-        let source = IOPSNotificationCreateRunLoopSource({ _ in
-            Task { @MainActor in Spectrum.shared.readPower() }
-        }, nil)?.takeRetainedValue()
+        let source = IOPSNotificationCreateRunLoopSource(
+            { _ in
+                Task { @MainActor in Spectrum.shared.readPower() }
+            }, nil)?.takeRetainedValue()
         if let source { CFRunLoopAddSource(CFRunLoopGetMain(), source, .defaultMode) }
         powerSource = source
     }

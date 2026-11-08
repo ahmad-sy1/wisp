@@ -147,8 +147,9 @@ struct SpectrumBars: View {
             let width = max(1, (size.width - gap * CGFloat(count - 1)) / CGFloat(count))
             for i in 0..<count {
                 let height = live ? max(3, size.height * CGFloat(bands[i])) : 3
-                let rect = CGRect(x: CGFloat(i) * (width + gap), y: size.height - height,
-                                  width: width, height: height)
+                let rect = CGRect(
+                    x: CGFloat(i) * (width + gap), y: size.height - height,
+                    width: width, height: height)
                 context.fill(Path(roundedRect: rect, cornerRadius: min(2, width / 2)), with: .color(color))
             }
         }
@@ -166,9 +167,10 @@ private struct ConsentView: View {
                 RoundedRectangle(cornerRadius: 10, style: .continuous)
                     .fill(Theme.control)
                     .frame(width: 34, height: 34)
-                    .overlay(Image(systemName: "chart.bar.fill")
-                        .font(.system(size: 14))
-                        .foregroundStyle(Theme.ok))
+                    .overlay(
+                        Image(systemName: "chart.bar.fill")
+                            .font(.system(size: 14))
+                            .foregroundStyle(Theme.ok))
                 VStack(alignment: .leading, spacing: 4) {
                     Text("Let wisp listen along?")
                         .font(.system(size: 13, weight: .semibold))
@@ -182,10 +184,18 @@ private struct ConsentView: View {
             }
             Spacer(minLength: 0)
             HStack(spacing: 8) {
-                Button { spectrum.allow() } label: { Text("Allow").frame(maxWidth: .infinity) }
-                    .buttonStyle(AccentButtonStyle())
-                Button { spectrum.decline() } label: { Text("Not now").frame(maxWidth: .infinity) }
-                    .buttonStyle(SecondaryButtonStyle())
+                Button {
+                    spectrum.allow()
+                } label: {
+                    Text("Allow").frame(maxWidth: .infinity)
+                }
+                .buttonStyle(AccentButtonStyle())
+                Button {
+                    spectrum.decline()
+                } label: {
+                    Text("Not now").frame(maxWidth: .infinity)
+                }
+                .buttonStyle(SecondaryButtonStyle())
             }
         }
         .padding(12)

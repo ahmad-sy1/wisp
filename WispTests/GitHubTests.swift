@@ -1,9 +1,12 @@
 import XCTest
 
-private func pull(_ number: Int, sha: String? = "abc", status: CheckStatus = .none, jobs: [FailedJob] = [],
-                  updated: Date = Date(timeIntervalSince1970: 1000)) -> PullRequest {
-    var pr = PullRequest(repository: "me/wisp", number: number, title: "PR \(number)",
-                         url: URL(string: "https://github.com/me/wisp/pull/\(number)")!, isDraft: false, updatedAt: updated)
+private func pull(
+    _ number: Int, sha: String? = "abc", status: CheckStatus = .none, jobs: [FailedJob] = [],
+    updated: Date = Date(timeIntervalSince1970: 1000)
+) -> PullRequest {
+    var pr = PullRequest(
+        repository: "me/wisp", number: number, title: "PR \(number)",
+        url: URL(string: "https://github.com/me/wisp/pull/\(number)")!, isDraft: false, updatedAt: updated)
     pr.headSHA = sha
     pr.checks = CheckSummary(status: status, completed: 0, total: status == .none ? 0 : 1, failedJobs: jobs)
     return pr
@@ -29,7 +32,8 @@ final class CheckAggregatorTests: XCTestCase {
     }
 
     func testRunningCountsCompleted() {
-        let sum = CheckAggregator.summarize(runs: [run("a", "completed", "success"), run("b", "in_progress"), run("c", "queued")], statuses: [])
+        let sum = CheckAggregator.summarize(
+            runs: [run("a", "completed", "success"), run("b", "in_progress"), run("c", "queued")], statuses: [])
         XCTAssertEqual(sum.status, .running)
         XCTAssertEqual(sum.completed, 1)
         XCTAssertEqual(sum.total, 3)
@@ -43,7 +47,8 @@ final class CheckAggregatorTests: XCTestCase {
     }
 
     func testCancelledAndSkippedAreNotFailures() {
-        let sum = CheckAggregator.summarize(runs: [run("a", "completed", "cancelled"), run("b", "completed", "skipped"), run("c", "completed", "neutral")], statuses: [])
+        let sum = CheckAggregator.summarize(
+            runs: [run("a", "completed", "cancelled"), run("b", "completed", "skipped"), run("c", "completed", "neutral")], statuses: [])
         XCTAssertEqual(sum.status, .passed)
     }
 
@@ -55,7 +60,8 @@ final class CheckAggregatorTests: XCTestCase {
         let pending = CommitStatus(context: "ci/old", state: "pending", url: nil)
         XCTAssertEqual(CheckAggregator.summarize(runs: [], statuses: [pending]).status, .running)
         let failed = CommitStatus(context: "ci/old", state: "error", url: nil)
-        XCTAssertEqual(CheckAggregator.summarize(runs: [run("a", "completed", "success")], statuses: [failed]).failedJobs.first?.name, "ci/old")
+        XCTAssertEqual(
+            CheckAggregator.summarize(runs: [run("a", "completed", "success")], statuses: [failed]).failedJobs.first?.name, "ci/old")
     }
 }
 
@@ -89,15 +95,18 @@ final class PollScheduleTests: XCTestCase {
 }
 
 final class RadarDiffTests: XCTestCase {
-    private func diff(_ mine: [PullRequest] = [], reviews: [PullRequest] = [], activity: [String: [PullActivity]] = [:],
-                      seen: RadarSeen = baseline) -> ([RadarEvent], RadarSeen) {
+    private func diff(
+        _ mine: [PullRequest] = [], reviews: [PullRequest] = [], activity: [String: [PullActivity]] = [:],
+        seen: RadarSeen = baseline
+    ) -> ([RadarEvent], RadarSeen) {
         let result = Radar.diff(snapshot: RadarSnapshot(mine: mine, reviews: reviews), activity: activity, login: "me", seen: seen)
         return (result.events, result.seen)
     }
 
     func testFirstAnswerIsSilent() {
-        let (events, seen) = diff([pull(1, status: .failed)], reviews: [pull(2)],
-                                  activity: ["me/wisp#1": [activity("sam", 5)]], seen: RadarSeen())
+        let (events, seen) = diff(
+            [pull(1, status: .failed)], reviews: [pull(2)],
+            activity: ["me/wisp#1": [activity("sam", 5)]], seen: RadarSeen())
         XCTAssertEqual(events, [])
         XCTAssertTrue(seen.hasBaseline)
         XCTAssertEqual(seen.unseenActivity, [:])
@@ -173,7 +182,12 @@ final class RadarCompactTests: XCTestCase {
 
     func testPriorityFailedThenReviewThenCommentsThenRunning() {
         let failed = pull(1, status: .failed, jobs: [FailedJob(name: "build", url: nil)])
-        let running = { () -> PullRequest in var p = pull(2, status: .running); p.checks.completed = 2; p.checks.total = 5; return p }()
+        let running = { () -> PullRequest in
+            var p = pull(2, status: .running)
+            p.checks.completed = 2
+            p.checks.total = 5
+            return p
+        }()
         let review = pull(3)
         var seen = baseline
         seen.unseenActivity = [running.id: 3]
@@ -262,8 +276,10 @@ final class GitHubClientTests: XCTestCase {
         for (answer, expected) in [
             (json("", status: 401), GitHubError.unauthorized),
             (json("", status: 500), GitHubError.http(500)),
-            (json("", status: 403, headers: ["x-ratelimit-remaining": "0", "x-ratelimit-reset": "2000"]),
-             GitHubError.rateLimited(until: Date(timeIntervalSince1970: 2000))),
+            (
+                json("", status: 403, headers: ["x-ratelimit-remaining": "0", "x-ratelimit-reset": "2000"]),
+                GitHubError.rateLimited(until: Date(timeIntervalSince1970: 2000))
+            ),
             (json("not json"), GitHubError.decoding),
         ] {
             let client = GitHubClient(token: "t", transport: ScriptedTransport([answer]))
@@ -290,9 +306,9 @@ final class GitHubClientTests: XCTestCase {
 
     func testSearchParsesRepositoryAndDates() async throws {
         let body = """
-        {"items":[{"number":43,"title":"feat: x","html_url":"https://github.com/me/wisp/pull/43",
-        "repository_url":"https://api.github.com/repos/me/wisp","updated_at":"2026-11-05T01:28:42Z","draft":false,"user":{"login":"me"}}]}
-        """
+            {"items":[{"number":43,"title":"feat: x","html_url":"https://github.com/me/wisp/pull/43",
+            "repository_url":"https://api.github.com/repos/me/wisp","updated_at":"2026-11-05T01:28:42Z","draft":false,"user":{"login":"me"}}]}
+            """
         let client = GitHubClient(token: "t", transport: ScriptedTransport([json(body)]))
         let pulls = try await client.search("is:pr")
         XCTAssertEqual(pulls.first?.id, "me/wisp#43")
@@ -301,10 +317,12 @@ final class GitHubClientTests: XCTestCase {
     }
 
     func testChecksCombineRunsAndStatuses() async throws {
-        let client = GitHubClient(token: "t", transport: ScriptedTransport([
-            json(#"{"check_runs":[{"name":"build","status":"completed","conclusion":"failure","html_url":"https://x/1"}]}"#),
-            json(#"{"statuses":[{"context":"old","state":"success","target_url":null}]}"#),
-        ]))
+        let client = GitHubClient(
+            token: "t",
+            transport: ScriptedTransport([
+                json(#"{"check_runs":[{"name":"build","status":"completed","conclusion":"failure","html_url":"https://x/1"}]}"#),
+                json(#"{"statuses":[{"context":"old","state":"success","target_url":null}]}"#),
+            ]))
         let checks = try await client.checks(repository: "me/wisp", sha: "abc")
         XCTAssertEqual(checks.status, .failed)
         XCTAssertEqual(checks.total, 2)
@@ -313,11 +331,11 @@ final class GitHubClientTests: XCTestCase {
 
     func testContributionsParse() throws {
         let body = """
-        {"data":{"viewer":{"year":{"contributionCalendar":{"weeks":[{"contributionDays":[
-          {"contributionCount":0,"contributionLevel":"NONE"},{"contributionCount":3,"contributionLevel":"SECOND_QUARTILE"},
-          {"contributionCount":9,"contributionLevel":"FOURTH_QUARTILE"}]}]}},"week":{"totalCommitContributions":34}},
-          "search":{"issueCount":5}}}
-        """
+            {"data":{"viewer":{"year":{"contributionCalendar":{"weeks":[{"contributionDays":[
+              {"contributionCount":0,"contributionLevel":"NONE"},{"contributionCount":3,"contributionLevel":"SECOND_QUARTILE"},
+              {"contributionCount":9,"contributionLevel":"FOURTH_QUARTILE"}]}]}},"week":{"totalCommitContributions":34}},
+              "search":{"issueCount":5}}}
+            """
         let stats = try GitHubClient.parseContributions(Data(body.utf8))
         XCTAssertEqual(stats, ContributionStats(weeks: [[0, 2, 4]], streak: 2, commitsThisWeek: 34, mergedThisWeek: 5))
     }
@@ -360,7 +378,8 @@ final class RadarSyncTests: XCTestCase {
     func testAfterARestartSavedActivityStillCatchesUp() async throws {
         let mock = MockGitHubService(mine: [pull(1)])
         await mock.set(activity: ["me/wisp#1": [activity("old", 500), activity("new", 1500)]])
-        let result = try await RadarSync(service: mock).refresh(excluded: [], lastActivity: ["me/wisp#1": Date(timeIntervalSince1970: 1000)])
+        let result = try await RadarSync(service: mock).refresh(
+            excluded: [], lastActivity: ["me/wisp#1": Date(timeIntervalSince1970: 1000)])
         XCTAssertEqual(result.activity["me/wisp#1"]?.map(\.author), ["new"])
     }
 

@@ -1,5 +1,5 @@
-import Foundation
 import Darwin
+import Foundation
 
 // wisp-hook: Claude Code runs this for each hook event and passes the event as JSON
 // on stdin. It forwards a trimmed copy to wisp over a Unix socket.
@@ -50,11 +50,17 @@ line.append(0x0A)
 var sent = 0
 while sent < line.count {
     let n = line.withUnsafeBytes { send(fd, $0.baseAddress! + sent, $0.count - sent, 0) }
-    guard n > 0 else { close(fd); exit(0) }
+    guard n > 0 else {
+        close(fd)
+        exit(0)
+    }
     sent += n
 }
 
-guard waitsForAnswer else { close(fd); exit(0) }
+guard waitsForAnswer else {
+    close(fd)
+    exit(0)
+}
 
 var reply = Data()
 var buffer = [UInt8](repeating: 0, count: 1024)
@@ -66,13 +72,14 @@ while !reply.contains(0x0A) {
 close(fd)
 
 guard let answer = (try? JSONSerialization.jsonObject(with: reply.prefix { $0 != 0x0A })) as? [String: Any],
-      let decision = answer["decision"] as? String else { exit(0) }
+    let decision = answer["decision"] as? String
+else { exit(0) }
 
 let behaviour: [String: Any]
 switch decision {
 case "allow": behaviour = ["behavior": "allow"]
-case "deny":  behaviour = ["behavior": "deny", "message": "Denied in wisp"]
-default:      exit(0)  // "ask": Claude Code asks in the terminal
+case "deny": behaviour = ["behavior": "deny", "message": "Denied in wisp"]
+default: exit(0)  // "ask": Claude Code asks in the terminal
 }
 
 let output: [String: Any] = [

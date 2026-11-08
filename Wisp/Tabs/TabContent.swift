@@ -18,7 +18,7 @@ struct TabContent: View {
         case .system: SystemTab(stats: .shared)
         case .music: MusicTab(player: .shared)
         // The other tabs get their real view in a later step; until then a calm placeholder.
-        default:    PlaceholderTab(tab: tab)
+        default: PlaceholderTab(tab: tab)
         }
     }
 }

@@ -16,8 +16,9 @@ actor OVapiLiveTimes {
         var result = option
         for (index, leg) in option.legs.enumerated() where [.bus, .tram, .metro].contains(leg.kind) {
             guard let stop = leg.fromStop, let line = leg.line, let planned = leg.departure,
-                  planned.timeIntervalSince(now) < 90 * 60,
-                  let pass = await pass(stop: stop, line: line, near: planned) else { continue }
+                planned.timeIntervalSince(now) < 90 * 60,
+                let pass = await pass(stop: stop, line: line, near: planned)
+            else { continue }
             result.legs[index].delayMinutes = max(0, pass.delayMinutes)
             result.legs[index].isCancelled = pass.isCancelled
         }
@@ -97,9 +98,11 @@ enum OVapiParser {
                 guard let line = item.LinePublicNumber, let target = item.TargetDepartureTime.flatMap(dates.date(from:))
                 else { continue }
                 let expected = item.ExpectedDepartureTime.flatMap(dates.date(from:)) ?? target
-                result.append(Pass(line: line, planned: target,
-                                   delayMinutes: Int((expected.timeIntervalSince(target) / 60).rounded()),
-                                   isCancelled: item.TripStopStatus == "CANCEL"))
+                result.append(
+                    Pass(
+                        line: line, planned: target,
+                        delayMinutes: Int((expected.timeIntervalSince(target) / 60).rounded()),
+                        isCancelled: item.TripStopStatus == "CANCEL"))
             }
         }
         return result.sorted { $0.planned < $1.planned }

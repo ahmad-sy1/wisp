@@ -8,27 +8,27 @@ enum SettingsPageID: String, CaseIterable, Identifiable {
 
     var title: String {
         switch self {
-        case .general:      String(localized: "General")
-        case .notch:        String(localized: "Notch")
+        case .general: String(localized: "General")
+        case .notch: String(localized: "Notch")
         case .integrations: String(localized: "Integrations")
-        case .agenda:       String(localized: "Calendar & weather")
-        case .departure:    String(localized: "Departure")
-        case .github:       "GitHub"
-        case .music:        String(localized: "Music")
-        case .focus:        String(localized: "Focus")
+        case .agenda: String(localized: "Calendar & weather")
+        case .departure: String(localized: "Departure")
+        case .github: "GitHub"
+        case .music: String(localized: "Music")
+        case .focus: String(localized: "Focus")
         }
     }
 
     var symbol: String {
         switch self {
-        case .general:      "gearshape"
-        case .notch:        "rectangle.topthird.inset.filled"
+        case .general: "gearshape"
+        case .notch: "rectangle.topthird.inset.filled"
         case .integrations: "powerplug.portrait"
-        case .agenda:       "calendar"
-        case .departure:    "tram"
-        case .github:       WispGlyph.pullRequest
-        case .music:        "music.note"
-        case .focus:        "timer"
+        case .agenda: "calendar"
+        case .departure: "tram"
+        case .github: WispGlyph.pullRequest
+        case .music: "music.note"
+        case .focus: "timer"
         }
     }
 }
@@ -87,14 +87,14 @@ struct SettingsView: View {
     @ViewBuilder
     private var page: some View {
         switch navigation.page {
-        case .general:      GeneralPage(prefs: prefs)
-        case .notch:        NotchPage(prefs: prefs, mail: .shared, clipboard: .shared, stats: .shared)
+        case .general: GeneralPage(prefs: prefs)
+        case .notch: NotchPage(prefs: prefs, mail: .shared, clipboard: .shared, stats: .shared)
         case .integrations: IntegrationsPage(mail: .shared, nowPlaying: .shared)
-        case .agenda:       CalendarPage(agenda: .shared, weather: .shared)
-        case .departure:    DeparturePage(store: .shared, agenda: .shared)
-        case .github:       GitHubPage(store: .shared)
-        case .music:        MusicPage(spectrum: .shared)
-        case .focus:        FocusPage(focus: .shared)
+        case .agenda: CalendarPage(agenda: .shared, weather: .shared)
+        case .departure: DeparturePage(store: .shared, agenda: .shared)
+        case .github: GitHubPage(store: .shared)
+        case .music: MusicPage(spectrum: .shared)
+        case .focus: FocusPage(focus: .shared)
         }
     }
 }
@@ -119,8 +119,10 @@ private struct SidebarItem: View {
             .foregroundStyle(selected ? Theme.textPrimary : Theme.textSecondary)
             .padding(.horizontal, 10)
             .frame(height: 30)
-            .background(RoundedRectangle(cornerRadius: 8)
-                .fill(selected ? Theme.activeTab : hovering ? Theme.control : .clear))
+            .background(
+                RoundedRectangle(cornerRadius: 8)
+                    .fill(selected ? Theme.activeTab : hovering ? Theme.control : .clear)
+            )
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)

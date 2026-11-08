@@ -30,8 +30,10 @@ actor GitHubClient: GitHubService {
     private var remaining: Int?
     private var reset: Date?
 
-    init(token: String, transport: any HTTPTransport = URLSessionTransport(),
-         base: URL = URL(string: "https://api.github.com")!) {
+    init(
+        token: String, transport: any HTTPTransport = URLSessionTransport(),
+        base: URL = URL(string: "https://api.github.com")!
+    ) {
         self.token = token
         self.transport = transport
         self.base = base
@@ -42,10 +44,12 @@ actor GitHubClient: GitHubService {
     // MARK: - Requests
 
     private func headers() -> [String: String] {
-        ["Authorization": "Bearer \(token)",
-         "Accept": "application/vnd.github+json",
-         "X-GitHub-Api-Version": "2022-11-28",
-         "User-Agent": "wisp"]
+        [
+            "Authorization": "Bearer \(token)",
+            "Accept": "application/vnd.github+json",
+            "X-GitHub-Api-Version": "2022-11-28",
+            "User-Agent": "wisp",
+        ]
     }
 
     private func url(_ path: String, _ query: [String: String] = [:]) throws -> URL {
@@ -130,9 +134,10 @@ actor GitHubClient: GitHubService {
         let answer = try await get(Answer.self, "search/issues", ["q": query, "per_page": "30", "sort": "updated"])
         return answer.items.map { item in
             let parts = item.repository_url.pathComponents.suffix(2)
-            return PullRequest(repository: parts.joined(separator: "/"), number: item.number, title: item.title,
-                               url: item.html_url, isDraft: item.draft ?? false, updatedAt: item.updated_at,
-                               author: item.user?.login)
+            return PullRequest(
+                repository: parts.joined(separator: "/"), number: item.number, title: item.title,
+                url: item.html_url, isDraft: item.draft ?? false, updatedAt: item.updated_at,
+                author: item.user?.login)
         }
     }
 
@@ -166,7 +171,9 @@ actor GitHubClient: GitHubService {
         let statuses = try await get(Statuses.self, "repos/\(repository)/commits/\(sha)/status", ["per_page": "100"])
         return CheckAggregator.summarize(
             runs: runs.check_runs.map { CheckRun(name: $0.name, status: $0.status, conclusion: $0.conclusion, url: $0.html_url) },
-            statuses: statuses.statuses.map { CommitStatus(context: $0.context, state: $0.state, url: $0.target_url.flatMap(URL.init(string:))) }
+            statuses: statuses.statuses.map {
+                CommitStatus(context: $0.context, state: $0.state, url: $0.target_url.flatMap(URL.init(string:)))
+            }
         )
     }
 
@@ -197,14 +204,18 @@ actor GitHubClient: GitHubService {
         }
         result += reviews.compactMap { review in
             guard let user = review.user, let date = review.submitted_at, review.state != "PENDING",
-                  since == nil || date > since! else { return nil }
+                since == nil || date > since!
+            else { return nil }
             return PullActivity(kind: .review, author: user.login, date: date, url: review.html_url)
         }
         return result
     }
 
     func repositories() async throws -> [GitHubRepository] {
-        struct Repo: Decodable, Sendable { let full_name: String; let archived: Bool? }
+        struct Repo: Decodable, Sendable {
+            let full_name: String
+            let archived: Bool?
+        }
         let repos = try await get([Repo].self, "user/repos", ["per_page": "100", "sort": "pushed"])
         return repos.filter { $0.archived != true }.map { GitHubRepository(fullName: $0.full_name) }
     }
@@ -257,7 +268,10 @@ actor GitHubClient: GitHubService {
                     struct Year: Decodable {
                         struct Calendar: Decodable {
                             struct Week: Decodable {
-                                struct Day: Decodable { let contributionCount: Int; let contributionLevel: String }
+                                struct Day: Decodable {
+                                    let contributionCount: Int
+                                    let contributionLevel: String
+                                }
                                 let contributionDays: [Day]
                             }
                             let weeks: [Week]
@@ -288,8 +302,9 @@ actor GitHubClient: GitHubService {
                 }
             }
         }
-        return ContributionStats(weeks: Array(levels), streak: Radar.streak(days: days),
-                                 commitsThisWeek: part.viewer.week.totalCommitContributions,
-                                 mergedThisWeek: part.search.issueCount)
+        return ContributionStats(
+            weeks: Array(levels), streak: Radar.streak(days: days),
+            commitsThisWeek: part.viewer.week.totalCommitContributions,
+            mergedThisWeek: part.search.issueCount)
     }
 }

@@ -81,8 +81,9 @@ final class NotchController {
             if !keyboardOpen { scheduleCollapse(after: 4) }
             return
         }
-        panel.setFrame(geometry.frame(for: CGSize(width: Theme.panelWidth, height: Theme.panelHeight)),
-                       display: true)
+        panel.setFrame(
+            geometry.frame(for: CGSize(width: Theme.panelWidth, height: Theme.panelHeight)),
+            display: true)
         withAnimation(openSpring) {
             model.phase = .expanded
             model.hovering = false
@@ -179,16 +180,17 @@ final class NotchController {
     }
 
     #if DEBUG
-    /// Draws the panel into a PNG. Unlike `screencapture` this also works while the
-    /// screen is locked or asleep, so a coding agent can check its work at night.
-    @discardableResult
-    func snapshot(to url: URL) -> Bool {
-        guard let view = panel.contentView,
-              let rep = view.bitmapImageRepForCachingDisplay(in: view.bounds) else { return false }
-        view.cacheDisplay(in: view.bounds, to: rep)
-        guard let png = rep.representation(using: .png, properties: [:]) else { return false }
-        return (try? png.write(to: url)) != nil
-    }
+        /// Draws the panel into a PNG. Unlike `screencapture` this also works while the
+        /// screen is locked or asleep, so a coding agent can check its work at night.
+        @discardableResult
+        func snapshot(to url: URL) -> Bool {
+            guard let view = panel.contentView,
+                let rep = view.bitmapImageRepForCachingDisplay(in: view.bounds)
+            else { return false }
+            view.cacheDisplay(in: view.bounds, to: rep)
+            guard let png = rep.representation(using: .png, properties: [:]) else { return false }
+            return (try? png.write(to: url)) != nil
+        }
     #endif
 
     /// Shows or hides the music wings on the closed notch.

@@ -110,9 +110,11 @@ final class HotKeyCenter: ObservableObject {
         guard !handlerInstalled else { return }
         handlerInstalled = true
         var type = EventTypeSpec(eventClass: OSType(kEventClassKeyboard), eventKind: UInt32(kEventHotKeyPressed))
-        InstallEventHandler(GetApplicationEventTarget(), { _, _, _ in
-            Task { @MainActor in HotKeyCenter.shared.onPress() }
-            return noErr
-        }, 1, &type, nil, nil)
+        InstallEventHandler(
+            GetApplicationEventTarget(),
+            { _, _, _ in
+                Task { @MainActor in HotKeyCenter.shared.onPress() }
+                return noErr
+            }, 1, &type, nil, nil)
     }
 }

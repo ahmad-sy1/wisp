@@ -98,13 +98,13 @@ final class GitHubStore: ObservableObject {
     func start() {
         observeSleep()
         #if DEBUG
-        // `-githubDemo YES` shows made-up data, for snapshots and without an account.
-        if UserDefaults.standard.bool(forKey: "githubDemo") { return startDemo() }
-        // `-githubFromCLI YES` borrows the `gh` login for this run only; nothing is saved.
-        if UserDefaults.standard.bool(forKey: "githubFromCLI") {
-            if let token = Self.tokenFromCLI() { begin(with: GitHubClient(token: token)) }
-            return
-        }
+            // `-githubDemo YES` shows made-up data, for snapshots and without an account.
+            if UserDefaults.standard.bool(forKey: "githubDemo") { return startDemo() }
+            // `-githubFromCLI YES` borrows the `gh` login for this run only; nothing is saved.
+            if UserDefaults.standard.bool(forKey: "githubFromCLI") {
+                if let token = Self.tokenFromCLI() { begin(with: GitHubClient(token: token)) }
+                return
+            }
         #endif
         guard let token = Keychain.get(Self.tokenAccount) else { return }
         begin(with: GitHubClient(token: token))
@@ -200,8 +200,9 @@ final class GitHubStore: ObservableObject {
                 status = .connected(login: login)
                 refreshRepositories()
             }
-            let result = try await sync.refresh(excluded: excludedRepositories, lastActivity: seen.lastActivity,
-                                                found: { [weak self] partial in await self?.showList(partial) })
+            let result = try await sync.refresh(
+                excluded: excludedRepositories, lastActivity: seen.lastActivity,
+                found: { [weak self] partial in await self?.showList(partial) })
             guard !Task.isCancelled else { return }
             apply(result, login: login)
             failures = 0
@@ -342,8 +343,9 @@ final class GitHubStore: ObservableObject {
     }
 
     private func updateCompact() {
-        let notifications = RadarNotifications(failed: notifyFailed, passed: notifyPassed, review: notifyReview,
-                                               comments: notifyComments, tick: tickAnimation)
+        let notifications = RadarNotifications(
+            failed: notifyFailed, passed: notifyPassed, review: notifyReview,
+            comments: notifyComments, tick: tickAnimation)
         let new = Radar.compact(snapshot: snapshot, seen: seen, notifications: notifications)
         if new != compact { compact = new }
     }
@@ -362,34 +364,37 @@ final class GitHubStore: ObservableObject {
     }
 
     #if DEBUG
-    private func startDemo() {
-        isDemo = true
-        func pull(_ repo: String, _ number: Int, _ title: String, _ sha: String) -> PullRequest {
-            var pull = PullRequest(repository: "demo/\(repo)", number: number, title: title,
-                                   url: URL(string: "https://github.com/demo/\(repo)/pull/\(number)")!,
-                                   isDraft: false, updatedAt: .now)
-            pull.headSHA = sha
-            return pull
+        private func startDemo() {
+            isDemo = true
+            func pull(_ repo: String, _ number: Int, _ title: String, _ sha: String) -> PullRequest {
+                var pull = PullRequest(
+                    repository: "demo/\(repo)", number: number, title: title,
+                    url: URL(string: "https://github.com/demo/\(repo)/pull/\(number)")!,
+                    isDraft: false, updatedAt: .now)
+                pull.headSHA = sha
+                return pull
+            }
+            let mine = [
+                pull("wisp", 43, "feat: departure engine", "a"), pull("wisp", 42, "feat: PR radar UI", "b"),
+                pull("wisp", 41, "feat: PR radar data layer", "c"), pull("soulroll", 12, "Race-roll balans", "d"),
+            ]
+            let reviews = [pull("wisp", 40, "fix: close the panel on sleep", "e"), pull("soulroll", 11, "Add level select", "f")]
+            let checks = [
+                "a": CheckSummary(status: .running, completed: 2, total: 5),
+                "b": CheckSummary(status: .failed, completed: 5, total: 5, failedJobs: [FailedJob(name: "build", url: nil)]),
+                "c": CheckSummary(status: .passed, completed: 5, total: 5),
+                "d": CheckSummary(status: .passed, completed: 1, total: 1),
+            ]
+            var seed = RadarSeen()
+            seed.hasBaseline = true
+            seed.unseenActivity = ["demo/soulroll#12": 3]
+            seen = seed
+            let mock = MockGitHubService(mine: mine, reviews: reviews, checks: checks)
+            let levels = (0..<16).map { week in (0..<7).map { day in (week * 7 + day * 3) % 5 } }
+            Task {
+                await mock.setStats(ContributionStats(weeks: levels, streak: 12, commitsThisWeek: 34, mergedThisWeek: 5))
+                begin(with: mock)
+            }
         }
-        let mine = [pull("wisp", 43, "feat: departure engine", "a"), pull("wisp", 42, "feat: PR radar UI", "b"),
-                    pull("wisp", 41, "feat: PR radar data layer", "c"), pull("soulroll", 12, "Race-roll balans", "d")]
-        let reviews = [pull("wisp", 40, "fix: close the panel on sleep", "e"), pull("soulroll", 11, "Add level select", "f")]
-        let checks = [
-            "a": CheckSummary(status: .running, completed: 2, total: 5),
-            "b": CheckSummary(status: .failed, completed: 5, total: 5, failedJobs: [FailedJob(name: "build", url: nil)]),
-            "c": CheckSummary(status: .passed, completed: 5, total: 5),
-            "d": CheckSummary(status: .passed, completed: 1, total: 1),
-        ]
-        var seed = RadarSeen()
-        seed.hasBaseline = true
-        seed.unseenActivity = ["demo/soulroll#12": 3]
-        seen = seed
-        let mock = MockGitHubService(mine: mine, reviews: reviews, checks: checks)
-        let levels = (0..<16).map { week in (0..<7).map { day in (week * 7 + day * 3) % 5 } }
-        Task {
-            await mock.setStats(ContributionStats(weeks: levels, streak: 12, commitsThisWeek: 34, mergedThisWeek: 5))
-            begin(with: mock)
-        }
-    }
     #endif
 }

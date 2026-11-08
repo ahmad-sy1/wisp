@@ -2,15 +2,19 @@ import Foundation
 
 /// What the location field of an event means.
 enum EventLocation {
-    private static let online = ["zoom", "teams", "google meet", "meet.google", "webex", "skype", "facetime",
-                                 "discord", "online", "microsoft teams", "whereby", "slack"]
+    private static let online = [
+        "zoom", "teams", "google meet", "meet.google", "webex", "skype", "facetime",
+        "discord", "online", "microsoft teams", "whereby", "slack",
+    ]
 
     /// A place you can travel to: not empty, not a link, not a video call.
     static func isPhysical(_ text: String?) -> Bool {
         guard let text else { return false }
         let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
         guard !trimmed.isEmpty, !trimmed.contains("://"), !trimmed.hasPrefix("www.") else { return false }
-        return !online.contains { trimmed == $0 || trimmed.hasPrefix($0 + " ") || trimmed.hasPrefix($0 + ":") || trimmed.hasSuffix(" " + $0) }
+        return !online.contains {
+            trimmed == $0 || trimmed.hasPrefix($0 + " ") || trimmed.hasPrefix($0 + ":") || trimmed.hasSuffix(" " + $0)
+        }
     }
 
     /// The same place written the same way, to compare and to remember choices by.
@@ -31,7 +35,11 @@ enum RoutineDetector {
 
     /// Normalised title → the location that goes with it.
     static func routines(history: [TravelEvent], calendar: Calendar) -> [String: String] {
-        struct Seen { var days: Set<Date> = []; var recurring = false; var location = "" }
+        struct Seen {
+            var days: Set<Date> = []
+            var recurring = false
+            var location = ""
+        }
         var seen: [String: Seen] = [:]
         for event in history where !event.isAllDay && EventLocation.isPhysical(event.location) {
             let key = EventLocation.key(event.title)
@@ -57,7 +65,8 @@ enum RoutineDetector {
     static func apply(_ routines: [String: String], to events: [TravelEvent]) -> [TravelEvent] {
         events.map { event in
             guard !EventLocation.isPhysical(event.location), event.location?.isEmpty != false,
-                  let location = routines[EventLocation.key(event.title)] else { return event }
+                let location = routines[EventLocation.key(event.title)]
+            else { return event }
             var copy = event
             copy.location = location
             return copy

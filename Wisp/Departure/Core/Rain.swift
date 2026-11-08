@@ -7,7 +7,7 @@ struct BuienradarProvider: RainProvider {
 
     func forecast(at place: TravelPlace, now: Date) async throws -> RainForecast {
         guard let lat = place.latitude, let lon = place.longitude,
-              let url = URL(string: String(format: "https://gpsgadget.buienradar.nl/data/raintext?lat=%.2f&lon=%.2f", lat, lon))
+            let url = URL(string: String(format: "https://gpsgadget.buienradar.nl/data/raintext?lat=%.2f&lon=%.2f", lat, lon))
         else { throw TravelError.unavailable }
         let response = try await transport.send(HTTPRequest(url: url))
         guard response.status == 200, let text = String(data: response.body, encoding: .utf8) else { throw TravelError.unavailable }
@@ -23,7 +23,11 @@ struct OpenMeteoRainProvider: RainProvider {
 
     func forecast(at place: TravelPlace, now: Date) async throws -> RainForecast {
         guard let lat = place.latitude, let lon = place.longitude,
-              let url = URL(string: String(format: "https://api.open-meteo.com/v1/forecast?latitude=%.2f&longitude=%.2f&minutely_15=precipitation&forecast_minutely_15=12&timeformat=unixtime", lat, lon))
+            let url = URL(
+                string: String(
+                    format:
+                        "https://api.open-meteo.com/v1/forecast?latitude=%.2f&longitude=%.2f&minutely_15=precipitation&forecast_minutely_15=12&timeformat=unixtime",
+                    lat, lon))
         else { throw TravelError.unavailable }
         let response = try await transport.send(HTTPRequest(url: url))
         guard response.status == 200 else { throw TravelError.unavailable }
@@ -55,7 +59,8 @@ enum RainParser {
             guard parts.count == 2, let value = Int(parts[0].trimmingCharacters(in: .whitespaces)) else { continue }
             let clock = parts[1].trimmingCharacters(in: .whitespaces).split(separator: ":").compactMap { Int($0) }
             guard clock.count == 2,
-                  var time = calendar.date(bySettingHour: clock[0], minute: clock[1], second: 0, of: now) else { continue }
+                var time = calendar.date(bySettingHour: clock[0], minute: clock[1], second: 0, of: now)
+            else { continue }
             // Half a day behind: that is tomorrow's early morning.
             if time.timeIntervalSince(now) < -12 * 3600 { time = time.addingTimeInterval(24 * 3600) }
             let rain = value == 0 ? 0 : pow(10, (Double(value) - 109) / 32)

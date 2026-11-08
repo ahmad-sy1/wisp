@@ -70,8 +70,10 @@ private struct NoteRow: View {
             }
             .padding(.horizontal, 12)
             .frame(maxWidth: .infinity, minHeight: 44, alignment: .leading)
-            .background(RoundedRectangle(cornerRadius: 10, style: .continuous)
-                .fill(selected ? Theme.activeTab : hovered ? Theme.controlHover : .clear))
+            .background(
+                RoundedRectangle(cornerRadius: 10, style: .continuous)
+                    .fill(selected ? Theme.activeTab : hovered ? Theme.controlHover : .clear)
+            )
             .padding(.horizontal, 6)
             .contentShape(Rectangle())
         }
@@ -108,7 +110,9 @@ private struct NoteEditor: View {
                 }
             HStack(spacing: 8) {
                 if notes.editing != nil {
-                    Button { notes.cancelEditing() } label: {
+                    Button {
+                        notes.cancelEditing()
+                    } label: {
                         Label("Editing a note", systemImage: "xmark.circle.fill")
                     }
                     .buttonStyle(.plain)

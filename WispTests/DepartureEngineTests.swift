@@ -10,7 +10,9 @@ private func at(_ hour: Int, _ minute: Int = 0, day: Int = 5) -> Date {
     calendar.date(from: DateComponents(year: 2026, month: 11, day: day, hour: hour, minute: minute))!
 }
 
-private func event(_ id: String, _ start: Date, _ end: Date, _ location: String? = "Station 1", allDay: Bool = false, recurring: Bool = false) -> TravelEvent {
+private func event(
+    _ id: String, _ start: Date, _ end: Date, _ location: String? = "Station 1", allDay: Bool = false, recurring: Bool = false
+) -> TravelEvent {
     TravelEvent(id: id, title: "Les \(id)", start: start, end: end, isAllDay: allDay, location: location, isRecurring: recurring)
 }
 
@@ -25,7 +27,9 @@ private func plan(_ now: Date, _ events: [TravelEvent], _ s: DepartureSettings =
 }
 
 private func option(_ leave: Date, _ minutes: Int, delay: Int = 0, cancelled: Bool = false, normal: Int? = nil) -> TravelOption {
-    TravelOption(departure: leave, arrival: leave.addingTimeInterval(Double(minutes) * 60), delayMinutes: delay, isCancelled: cancelled, normalMinutes: normal)
+    TravelOption(
+        departure: leave, arrival: leave.addingTimeInterval(Double(minutes) * 60), delayMinutes: delay, isCancelled: cancelled,
+        normalMinutes: normal)
 }
 
 final class TripPlanTests: XCTestCase {
@@ -80,9 +84,11 @@ final class TripPlanTests: XCTestCase {
 
     func testSameCoordinateIsNoTrip() {
         var a = event("a", at(10), at(11), "Gebouw A")
-        a.latitude = 51.84; a.longitude = 5.85
+        a.latitude = 51.84
+        a.longitude = 5.85
         var b = event("b", at(11, 15), at(12), "Gebouw B")
-        b.latitude = 51.8405; b.longitude = 5.8505
+        b.latitude = 51.8405
+        b.longitude = 5.8505
         XCTAssertNil(plan(at(10, 30), [a, b]))
     }
 
@@ -176,10 +182,12 @@ final class NextWakeTests: XCTestCase {
 }
 
 final class ResolveTests: XCTestCase {
-    private let outbound = TripPlan(kind: .event, eventID: "a", title: "Les", origin: TravelPlace(name: "Thuis"),
-                                    destination: TravelPlace(name: "School"), mode: .transit, arriveBy: at(10))
-    private let home = TripPlan(kind: .home, eventID: "a", title: "Les", origin: TravelPlace(name: "School"),
-                                destination: TravelPlace(name: "Thuis"), mode: .transit, earliestLeave: at(16))
+    private let outbound = TripPlan(
+        kind: .event, eventID: "a", title: "Les", origin: TravelPlace(name: "Thuis"),
+        destination: TravelPlace(name: "School"), mode: .transit, arriveBy: at(10))
+    private let home = TripPlan(
+        kind: .home, eventID: "a", title: "Les", origin: TravelPlace(name: "School"),
+        destination: TravelPlace(name: "Thuis"), mode: .transit, earliestLeave: at(16))
 
     func testOutboundTakesTheLatestThatMakesIt() {
         let options = [option(at(9, 0), 30), option(at(9, 20), 30), option(at(9, 40), 30)]
@@ -274,8 +282,9 @@ final class ResolveTests: XCTestCase {
 }
 
 final class AdviceTests: XCTestCase {
-    private let home = TripPlan(kind: .home, eventID: "a", title: "Les", origin: TravelPlace(name: "School"),
-                                destination: TravelPlace(name: "Thuis"), mode: .car, earliestLeave: at(16))
+    private let home = TripPlan(
+        kind: .home, eventID: "a", title: "Les", origin: TravelPlace(name: "School"),
+        destination: TravelPlace(name: "Thuis"), mode: .car, earliestLeave: at(16))
 
     func testWaitWhenItClearlySaves() {
         let advice = DepartureEngine.laterAdvice(minutes: [0: 57, 30: 50, 60: 42], plan: home, now: at(16))

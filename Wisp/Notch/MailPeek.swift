@@ -58,8 +58,10 @@ private struct PeekButtonStyle: ButtonStyle {
             .foregroundStyle(primary ? Color.black : Theme.textPrimary)
             .frame(maxWidth: .infinity)
             .frame(height: 30)
-            .background(RoundedRectangle(cornerRadius: Theme.buttonCorner, style: .continuous)
-                .fill(primary ? Color.white : configuration.isPressed ? Theme.activeTab : Theme.control))
+            .background(
+                RoundedRectangle(cornerRadius: Theme.buttonCorner, style: .continuous)
+                    .fill(primary ? Color.white : configuration.isPressed ? Theme.activeTab : Theme.control)
+            )
             .opacity(configuration.isPressed && primary ? 0.8 : 1)
             .contentShape(Rectangle())
     }

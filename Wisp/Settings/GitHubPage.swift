@@ -8,8 +8,11 @@ struct GitHubPage: View {
     @State private var choosingRepositories = false
 
     var body: some View {
-        SettingsPage(title: "GitHub",
-                     note: String(localized: "wisp checks more often while a run is going and calmly after that, to save your GitHub limit and battery.")) {
+        SettingsPage(
+            title: "GitHub",
+            note: String(
+                localized: "wisp checks more often while a run is going and calmly after that, to save your GitHub limit and battery.")
+        ) {
             SettingsGroup(header: String(localized: "Account")) {
                 account
                 if store.isConnected {
@@ -24,11 +27,19 @@ struct GitHubPage: View {
             }
 
             SettingsGroup(header: String(localized: "Notifications in the notch")) {
-                SettingsToggle(String(localized: "CI failed"), subtitle: String(localized: "A red dot until you've looked at it"), isOn: $store.notifyFailed)
-                SettingsToggle(String(localized: "CI passed"), subtitle: String(localized: "Only a short green flash"), isOn: $store.notifyPassed)
-                SettingsToggle(String(localized: "Review requested"), subtitle: String(localized: "A blue dot on the GitHub tab"), isOn: $store.notifyReview)
-                SettingsToggle(String(localized: "New comments"), subtitle: String(localized: "On your own PRs"), isOn: $store.notifyComments)
-                SettingsToggle(String(localized: "Tick animation"), subtitle: String(localized: "The notch bounces briefly on a new event"), isOn: $store.tickAnimation)
+                SettingsToggle(
+                    String(localized: "CI failed"), subtitle: String(localized: "A red dot until you've looked at it"),
+                    isOn: $store.notifyFailed)
+                SettingsToggle(
+                    String(localized: "CI passed"), subtitle: String(localized: "Only a short green flash"), isOn: $store.notifyPassed)
+                SettingsToggle(
+                    String(localized: "Review requested"), subtitle: String(localized: "A blue dot on the GitHub tab"),
+                    isOn: $store.notifyReview)
+                SettingsToggle(
+                    String(localized: "New comments"), subtitle: String(localized: "On your own PRs"), isOn: $store.notifyComments)
+                SettingsToggle(
+                    String(localized: "Tick animation"), subtitle: String(localized: "The notch bounces briefly on a new event"),
+                    isOn: $store.tickAnimation)
             }
         }
         .sheet(isPresented: $addingToken) { TokenSheet(store: store) }
@@ -39,12 +50,15 @@ struct GitHubPage: View {
     private var account: some View {
         switch store.status {
         case .connected(let login):
-            SettingsRow(title: "@\(login)", subtitle: {
-                SettingsStatus(text: String(localized: "Connected"), color: Theme.ok)
-            }, trailing: {
-                Button("Disconnect") { store.disconnect() }
-                    .buttonStyle(.settings)
-            })
+            SettingsRow(
+                title: "@\(login)",
+                subtitle: {
+                    SettingsStatus(text: String(localized: "Connected"), color: Theme.ok)
+                },
+                trailing: {
+                    Button("Disconnect") { store.disconnect() }
+                        .buttonStyle(.settings)
+                })
         case .connecting:
             SettingsRow(String(localized: "GitHub"), subtitle: String(localized: "Connecting…"))
         case .failed(let message):
@@ -125,13 +139,19 @@ private struct RepositorySheet: View {
                 ScrollView {
                     VStack(alignment: .leading, spacing: 6) {
                         ForEach(store.repositories) { repository in
-                            Toggle(repository.fullName, isOn: Binding(
-                                get: { !store.excludedRepositories.contains(repository.fullName) },
-                                set: { on in
-                                    if on { store.excludedRepositories.remove(repository.fullName) }
-                                    else { store.excludedRepositories.insert(repository.fullName) }
-                                }
-                            ))
+                            Toggle(
+                                repository.fullName,
+                                isOn: Binding(
+                                    get: { !store.excludedRepositories.contains(repository.fullName) },
+                                    set: { on in
+                                        if on {
+                                            store.excludedRepositories.remove(repository.fullName)
+                                        } else {
+                                            store.excludedRepositories.insert(repository.fullName)
+                                        }
+                                    }
+                                )
+                            )
                             .toggleStyle(.checkbox)
                         }
                     }

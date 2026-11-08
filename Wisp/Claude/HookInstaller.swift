@@ -82,8 +82,9 @@ enum HookInstaller {
 
         let after = existingCommands(in: settings)
         let changes = diff(before: before, after: after)
-        let data = try JSONSerialization.data(withJSONObject: settings,
-                                              options: [.prettyPrinted, .sortedKeys, .withoutEscapingSlashes])
+        let data = try JSONSerialization.data(
+            withJSONObject: settings,
+            options: [.prettyPrinted, .sortedKeys, .withoutEscapingSlashes])
 
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyyMMdd-HHmmss"
@@ -108,7 +109,7 @@ enum HookInstaller {
 
         var errorDescription: String? {
             switch self {
-            case .noHelper:   String(localized: "wisp-hook is missing from the app.")
+            case .noHelper: String(localized: "wisp-hook is missing from the app.")
             case .unreadable: String(localized: "~/.claude/settings.json is not valid JSON; nothing was changed.")
             }
         }
@@ -126,7 +127,10 @@ enum HookInstaller {
         return json
     }
 
-    private struct Entry: Hashable { let event: String; let command: String }
+    private struct Entry: Hashable {
+        let event: String
+        let command: String
+    }
 
     private static func existingCommands(in settings: [String: Any]) -> [Entry] {
         let hooks = settings["hooks"] as? [String: Any] ?? [:]
@@ -140,7 +144,8 @@ enum HookInstaller {
     }
 
     private static func diff(before: [Entry], after: [Entry]) -> [Change] {
-        let b = Set(before), a = Set(after)
+        let b = Set(before)
+        let a = Set(after)
         let removed = b.subtracting(a).map { Change(kind: .remove, event: $0.event, command: $0.command) }
         let added = a.subtracting(b).map { Change(kind: .add, event: $0.event, command: $0.command) }
         return (removed + added).sorted { ($0.event, $0.kind == .add ? 1 : 0) < ($1.event, $1.kind == .add ? 1 : 0) }

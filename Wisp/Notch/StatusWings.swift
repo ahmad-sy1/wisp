@@ -119,28 +119,33 @@ extension StatusWings {
         case .none:
             return nil
         case .running(let completed, let total):
-            self.init(icon: .spinner, left: "CI", right: String(localized: "\(completed)/\(total) checks"),
-                      urgent: false, tab: .github)
+            self.init(
+                icon: .spinner, left: "CI", right: String(localized: "\(completed)/\(total) checks"),
+                urgent: false, tab: .github)
         case .failed(let pull, let job):
             let where_ = job.map { "#\(pull.number) \($0)" } ?? "#\(pull.number)"
-            self.init(icon: .symbol("xmark.circle", Theme.badge), left: String(localized: "CI failed"), leftColor: Theme.badge,
-                      right: where_, urgent: true, tab: .github)
+            self.init(
+                icon: .symbol("xmark.circle", Theme.badge), left: String(localized: "CI failed"), leftColor: Theme.badge,
+                right: where_, urgent: true, tab: .github)
         case .reviewRequested(_, let count):
             // One word and a tight gap: the longest text sets both wings, so a sentence here
             // would take up a third of the screen. The GitHub tab has the details.
             let symbol = WispTab.github.symbol
             if count == 1 {
-                self.init(icon: .symbolDot(symbol, Theme.info), left: "", right: String(localized: "Review"),
-                          rightColor: Theme.textPrimary, urgent: true, tab: .github, cameraGap: 8)
+                self.init(
+                    icon: .symbolDot(symbol, Theme.info), left: "", right: String(localized: "Review"),
+                    rightColor: Theme.textPrimary, urgent: true, tab: .github, cameraGap: 8)
             } else {
-                self.init(icon: .symbol(symbol, Theme.info), left: "\(count)", leftColor: Theme.info,
-                          right: String(localized: "Reviews"), rightColor: Theme.textPrimary,
-                          urgent: true, tab: .github, cameraGap: 8)
+                self.init(
+                    icon: .symbol(symbol, Theme.info), left: "\(count)", leftColor: Theme.info,
+                    right: String(localized: "Reviews"), rightColor: Theme.textPrimary,
+                    urgent: true, tab: .github, cameraGap: 8)
             }
         case .newActivity(let pull, let count):
-            self.init(icon: .symbolDot(WispTab.github.symbol, Theme.warning), left: "#\(pull.number)",
-                      right: count == 1 ? String(localized: "1 comment") : String(localized: "\(count) comments"),
-                      rightColor: Theme.textPrimary, urgent: true, tab: .github)
+            self.init(
+                icon: .symbolDot(WispTab.github.symbol, Theme.warning), left: "#\(pull.number)",
+                right: count == 1 ? String(localized: "1 comment") : String(localized: "\(count) comments"),
+                rightColor: Theme.textPrimary, urgent: true, tab: .github)
         }
     }
 }

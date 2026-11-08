@@ -10,8 +10,9 @@ struct SpectrumFrame: Sendable, Equatable {
     /// RMS level in dBFS (0 is full scale, silence is about −90).
     var loudness: Float
 
-    static let silent = SpectrumFrame(bands: Array(repeating: 0, count: Spectrum.bandCount),
-                                      bass: 0, mid: 0, high: 0, loudness: -90)
+    static let silent = SpectrumFrame(
+        bands: Array(repeating: 0, count: Spectrum.bandCount),
+        bass: 0, mid: 0, high: 0, loudness: -90)
 }
 
 /// FFT of the incoming samples, grouped into log-spaced bands.
@@ -70,7 +71,8 @@ final class SpectrumAnalyzer: @unchecked Sendable {
         func bin(_ hz: Double) -> Int { min(size / 2 - 1, max(1, Int(hz / binHz))) }
 
         // Log-spaced bands from 40 Hz to 16 kHz; every band gets at least one bin.
-        let low = 40.0, high = min(16_000.0, rate / 2)
+        let low = 40.0
+        let high = min(16_000.0, rate / 2)
         var ranges: [Range<Int>] = []
         var start = bin(low)
         for i in 1...Spectrum.bandCount {
@@ -127,10 +129,13 @@ final class SpectrumAnalyzer: @unchecked Sendable {
         func energy(_ r: Range<Int>) -> Float {
             r.isEmpty ? 0 : magnitudes[r].reduce(0, +)
         }
-        let b = energy(bassBins), m = energy(midBins), h = energy(highBins)
+        let b = energy(bassBins)
+        let m = energy(midBins)
+        let h = energy(highBins)
         let total = max(b + m + h, 1e-12)
 
-        return SpectrumFrame(bands: bands, bass: b / total, mid: m / total, high: h / total,
-                             loudness: max(-90, 20 * log10(rms + 1e-9)))
+        return SpectrumFrame(
+            bands: bands, bass: b / total, mid: m / total, high: h / total,
+            loudness: max(-90, 20 * log10(rms + 1e-9)))
     }
 }
