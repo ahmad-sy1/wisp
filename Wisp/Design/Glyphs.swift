@@ -3,7 +3,7 @@ import SwiftUI
 
 extension Image {
     /// An SF Symbol, or one of wisp's own glyphs where SF Symbols has no match.
-    static func wisp(_ name: String) -> Image {
+    @MainActor static func wisp(_ name: String) -> Image {
         name == WispGlyph.pullRequest ? Image(nsImage: WispGlyph.pullRequestImage) : Image(systemName: name)
     }
 }
@@ -12,7 +12,7 @@ enum WispGlyph {
     /// The pull request mark of design page 3: two nodes joined by a branch.
     static let pullRequest = "wisp.pullrequest"
 
-    static let pullRequestImage: NSImage = {
+    @MainActor static let pullRequestImage: NSImage = {
         let image = NSImage(size: NSSize(width: 16, height: 16), flipped: true) { _ in
             NSColor.black.set()
             let line = NSBezierPath()
