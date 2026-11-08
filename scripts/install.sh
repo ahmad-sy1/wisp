@@ -4,7 +4,7 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-BUILD="$ROOT/build"
+BUILD="$ROOT/build.noindex"
 APP="$BUILD/Build/Products/Release/wisp.app"
 DEST="/Applications/wisp.app"
 

@@ -73,7 +73,7 @@ jobs:
             -project wisp.xcodeproj \
             -scheme wisp \
             -configuration Release \
-            -derivedDataPath build \
+            -derivedDataPath build.noindex \
             build \
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGNING_REQUIRED=NO
@@ -85,4 +85,4 @@ jobs:
       - name: Check translations
         if: steps.changes.outputs.code == 'true'
         # Every string the build found must have a Dutch translation in the String Catalog.
-        run: python3 scripts/strings.py check build
+        run: python3 scripts/strings.py check build.noindex
