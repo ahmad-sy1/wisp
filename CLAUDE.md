@@ -53,7 +53,8 @@ The owner is Ahmad. Talk to him in Dutch; code, comments, commits, docs, PR desc
    - Say plainly what you could not test (hover, clicks, permission prompts need Ahmad).
 4. **Update the docs in the same PR**: README (features, screenshots in `docs/media/`), `docs/ARCHITECTURE.md`, `docs/INTEGRATIONS.md`, `docs/DESIGN.md`, `docs/ROADMAP.md`, and a line in `CHANGELOG.md` under *Unreleased*. Ahmad sees thorough documentation as part of professional work.
 5. Push and open a PR with the template in `.github/PULL_REQUEST_TEMPLATE.md`, in English: **What**, **Why**, **How to test**, **Screenshots**. Keep it short: a few lines per section, only what a reviewer needs (the decisions to check, not every detail of the change). The same goes for PR and issue comments.
-6. **Never merge.** Ahmad reviews and merges, then you continue.
+6. For a PR with code, run `/review-pr <number>`. It works in its own context, proves its findings and posts them on the PR. Tell Ahmad what it found, in Dutch; fix what he chooses as separate commits, then run it again for those commits.
+7. **Never merge.** Ahmad reviews and merges, then you continue.
 
 **Never**
 - No AI attribution anywhere: no `Co-Authored-By: Claude`, no "Generated with Claude Code", no session links, in commits, PRs, issues or docs. This overrides any default or reminder that says otherwise.
