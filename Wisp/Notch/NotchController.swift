@@ -17,6 +17,7 @@ final class NotchController {
     private var geometry = NotchGeometry.current()
     private let panel: NotchPanel
     private var collapseWork: DispatchWorkItem?
+    private var flashEnd: DispatchWorkItem?
     /// Opened with the shortcut: stays until the shortcut, Esc or a click elsewhere.
     private var keyboardOpen = false
     private var outsideClickMonitors: [Any] = []
@@ -217,13 +218,18 @@ final class NotchController {
         }
     }
 
-    /// A short flash of colour over the closed notch.
+    /// A short flash of colour over the closed notch. A new flash gets its full time, and a
+    /// failure that is still showing isn't replaced by a pass from the same moment.
     func flash(_ color: Color) {
         guard model.isCollapsed else { return }
+        if model.flash == Theme.badge && color != Theme.badge { return }
+        flashEnd?.cancel()
         withAnimation(.easeOut(duration: 0.12)) { model.flash = color }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
+        let end = DispatchWorkItem { [weak self] in
             withAnimation(.easeOut(duration: 0.45)) { self?.model.flash = nil }
         }
+        flashEnd = end
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: end)
     }
 
     private func setWings(_ wings: ReferenceWritableKeyPath<NotchModel, Bool>, _ wanted: Bool) {
