@@ -1,6 +1,9 @@
 <div align="center">
 
-<img src="docs/media/mark.svg" width="88" alt="wisp">
+<picture>
+  <source media="(prefers-color-scheme: light)" srcset="docs/media/mark-on-light.svg">
+  <img src="docs/media/mark.svg" width="88" alt="wisp">
+</picture>
 
 # wisp
 

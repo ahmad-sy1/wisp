@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- wisp has its own app icon and menu bar icon (board 0.1); the menu bar icon is a template, so macOS colours it
 - Closed notch: a finished focus session no longer takes the panel away from a permission request, a second flash gets its full time and a pass can't wash out a failure, the audio tap only runs while the music wings really show, and a status keeps its width while its digits change
 - Every status on the closed notch is a word or a number now, so the notch stays narrow: *3/4* instead of *3/4 checks*; the tabs keep the details
 - `/review-pr`: a Claude Code skill that reviews a pull request against wisp's own rules and proves each finding
