@@ -14,6 +14,8 @@ enum Theme {
     static let badge         = Color(hex: 0xFF453A)
     static let ok            = Color(hex: 0x30D158)
     static let warning       = Color(hex: 0xFF9F0A)
+    /// Review requests: the blue badge and dot, whatever the accent colour.
+    static let info          = Color(hex: 0x0A84FF)
 
     // Panel geometry (expanded)
     static let panelWidth: CGFloat     = 600

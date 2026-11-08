@@ -2,7 +2,7 @@ import Foundation
 
 /// The tabs in the expanded panel, in tab-bar order.
 enum WispTab: String, CaseIterable, Identifiable {
-    case home, mail, agenda, focus, music, clipboard, notes, system, files
+    case home, mail, agenda, github, focus, music, clipboard, notes, system, files
 
     var id: String { rawValue }
 
@@ -11,6 +11,7 @@ enum WispTab: String, CaseIterable, Identifiable {
         case .home:      "house"
         case .mail:      "envelope"
         case .agenda:    "calendar"
+        case .github:    WispGlyph.pullRequest
         case .focus:     "timer"
         case .music:     "music.note"
         case .clipboard: "clipboard"
@@ -25,6 +26,7 @@ enum WispTab: String, CaseIterable, Identifiable {
         case .home:      String(localized: "Home")
         case .mail:      String(localized: "Mail")
         case .agenda:    String(localized: "Calendar")
+        case .github:    "GitHub"
         case .focus:     String(localized: "Focus")
         case .music:     String(localized: "Music")
         case .clipboard: String(localized: "Clipboard")

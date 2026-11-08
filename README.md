@@ -6,7 +6,7 @@
 
 **A small light at the top of your screen.**
 
-wisp lives in your MacBook's notch and keeps your day within reach: your Claude Code sessions, your mail, your music, your agenda and the weather, and soon a focus timer, clipboard, notes and system stats. One click away, and out of sight the rest of the time.
+wisp lives in your MacBook's notch and keeps your day within reach: your Claude Code sessions, your mail, your music, your agenda and the weather, a focus timer, your clipboard, quick notes and system stats. One click away, and out of sight the rest of the time.
 
 ![macOS 15+](https://img.shields.io/badge/macOS-15%2B-black?logo=apple)
 ![Swift 6](https://img.shields.io/badge/Swift-6-F05138?logo=swift&logoColor=white)
@@ -32,12 +32,13 @@ The notch is the one bit of screen you never use. wisp turns it into a quiet das
 - **Music**: whatever your Mac is playing (Spotify, Music, YouTube in the browser), with artwork, progress and glass controls. Next to it, a **live spectrum** of what you hear: 24 bands from bass to treble, the bass/mid/treble mix and the loudness. While music plays, the closed notch grows a little wing on each side: artwork on the left, a mini spectrum on the right.
 - **Calendar & weather**: today's timeline from the macOS Calendar app (and so from Google Calendar too), with what's done struck through, what's on now in its own card with a bar that fills up, a red *now* line and a countdown to what's next; in the evening it already shows how tomorrow starts. Next to it the weather where you are and, on a work day, when to leave for your shift and whether it stays dry.
 - **Focus timer**: 25, 50 or 90 minutes with a ring that keeps counting in the closed notch. It guesses what you work on (the calendar event that's on, or the app and Claude Code project in front) and learns from your corrections; today's sessions sit in the tab bar.
+- **GitHub**: your open pull requests with the state of their checks, requested reviews and your contribution graph. The closed notch stays empty until something matters: a run going, a failed job, a review request, a new comment.
 - **Clipboard**: the last 20 texts you copied, searchable, one click to copy again. Stored only on your Mac; passwords and one-time codes are never kept.
 - **Notes**: jot something down without leaving what you're doing; click a note to edit it. Stored only on your Mac.
 - **System**: battery and time left, your AirPods' batteries, CPU with the busiest app, free storage and the Wi-Fi network, read only while you look.
 - **Keyboard**: ⌥Space opens the notch from anywhere (change it in Settings); ← → walk through the tabs, Esc closes.
 - **English and Dutch**: wisp follows your Mac's language, or pick one in Settings.
-- **Calm by default**: the closed notch draws nothing extra and uses 0 % CPU. No timers run while it is closed.
+- **Calm by default**: the closed notch draws nothing extra and uses 0 % CPU. The exceptions are the ones you connect: checking GitHub, adaptively and never while the Mac sleeps.
 - **Any Mac**: on a screen without a notch, wisp sits in a small bar at the top centre.
 - **Private by design**: no telemetry, no account. Passwords live in your macOS Keychain. wisp only talks to the services you connect.
 
@@ -102,7 +103,7 @@ The notch is the one bit of screen you never use. wisp turns it into a quiet das
 
 ### On the way
 
-A focus timer that knows what you are working on, clipboard history, quick notes, system stats, a restyled file drop, mail notifications in the notch, and GitHub, WHOOP and Notion on the Home tab. The designs for all of them are in [`design/boards/`](design/boards).
+A restyled file drop, and WHOOP and Notion on the Home tab. What comes next is in [`docs/ROADMAP.md`](docs/ROADMAP.md); the designs are in [`design/boards/`](design/boards).
 
 ## Install
 
@@ -132,6 +133,7 @@ Open **Settings**: click the notch, then the sliders icon on the right. On a ful
 | **Claude Code hooks** | live sessions and approvals | *General → Claude Code → Install…* shows exactly which lines it adds to `~/.claude/settings.json`. Nothing is written until you click *Install*, and a dated backup is made first. Restart running Claude Code sessions afterwards. |
 | **Gmail** | the Mail tab and unread badge | *Integrations → Add integration → Gmail*: your address and a Google [app password](https://myaccount.google.com/apppasswords). Both are stored in the Keychain only. |
 | **Calendar & weather** | the Agenda tab | Calendar access (macOS asks once), which calendars count, how a shift is recognised (the word *dienst* or a calendar), your ride to work in minutes and how you travel (bike, car, on foot, public transport), and the place for the weather (Nijmegen by default). |
+| **GitHub** | the GitHub tab and closed-notch states | *Settings → GitHub*: use your `gh` login with one click, or add a token. It is stored in the Keychain only. |
 | **Accent colour** | buttons, unread dots, highlights | Blue, green, orange or purple. |
 | **Open at login** | wisp is always there | One toggle. |
 
@@ -144,7 +146,7 @@ Music needs no setup. The live spectrum asks once for macOS's *System Audio Reco
 | Hover the notch | it swells a little |
 | Click it | the panel opens on the last tab you used |
 | Move the mouse away | it folds back after the delay you set |
-| Let Claude Code run a command that needs permission | the notch opens with *Toestaan / Weigeren / In terminal* |
+| Let Claude Code run a command that needs permission | the notch opens with *Allow / Deny / In terminal* |
 | Click a mail | it opens in Gmail and stays unread in your inbox |
 | Press play in Spotify | the closed notch gets artwork and a mini spectrum |
 | Open the Music tab during a song | the spectrum moves with what you hear, from bass to treble |

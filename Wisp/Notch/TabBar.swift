@@ -9,7 +9,8 @@ struct TabBar: View {
             ForEach(prefs.visibleTabs) { tab in
                 TabIconButton(symbol: tab.symbol, label: tab.title,
                               isActive: model.tab == tab,
-                              badge: model.badges[tab] ?? 0) {
+                              badge: model.badges[tab] ?? 0,
+                              badgeColor: tab == .github ? Theme.info : Theme.badge) {
                     withAnimation(.easeInOut(duration: 0.18)) { model.tab = tab }
                 }
             }
@@ -52,13 +53,14 @@ struct TabIconButton: View {
     let label: String
     let isActive: Bool
     var badge: Int = 0
+    var badgeColor: Color = Theme.badge
     let action: () -> Void
 
     @State private var hovered = false
 
     var body: some View {
         Button(action: action) {
-            Image(systemName: symbol)
+            Image.wisp(symbol)
                 .font(.system(size: 14, weight: .regular))
                 .foregroundStyle(isActive || hovered ? Theme.textPrimary : Theme.textSecondary)
                 .frame(width: Theme.tabSize.width, height: Theme.tabSize.height)
@@ -67,7 +69,7 @@ struct TabIconButton: View {
                         .fill(isActive ? Theme.activeTab : hovered ? Theme.controlHover : .clear)
                 )
                 .overlay(alignment: .topTrailing) {
-                    if badge > 0 { CountBadge(count: badge).offset(x: 6, y: -6) }
+                    if badge > 0 { CountBadge(count: badge, color: badgeColor).offset(x: 6, y: -6) }
                 }
                 .contentShape(Rectangle())
         }
@@ -80,6 +82,7 @@ struct TabIconButton: View {
 
 struct CountBadge: View {
     let count: Int
+    var color: Color = Theme.badge
 
     var body: some View {
         Text(verbatim: count > 99 ? "99+" : "\(count)")
@@ -88,6 +91,6 @@ struct CountBadge: View {
             .foregroundStyle(.white)
             .padding(.horizontal, 4)
             .frame(minWidth: 16, minHeight: 16)
-            .background(Capsule().fill(Theme.badge))
+            .background(Capsule().fill(color))
     }
 }

@@ -24,6 +24,17 @@
 	<string>public.app-category.productivity</string>
 	<key>LSUIElement</key>
 	<true/>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSExceptionDomains</key>
+		<dict>
+			<key>v0.ovapi.nl</key>
+			<dict>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+			</dict>
+		</dict>
+	</dict>
 	<key>NSAudioCaptureUsageDescription</key>
 	<string>wisp analyses the sound of what plays, live, for the spectrum in the Music tab. Nothing is recorded, stored or sent.</string>
 	<key>NSCalendarsFullAccessUsageDescription</key>

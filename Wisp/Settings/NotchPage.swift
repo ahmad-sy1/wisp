@@ -122,7 +122,7 @@ private struct TabBarPreview: View {
     var body: some View {
         HStack(spacing: 0) {
             ForEach(tabs) { tab in
-                Image(systemName: tab.symbol)
+                Image.wisp(tab.symbol)
                     .font(.system(size: 13))
                     .foregroundStyle(tab == .home ? Theme.textPrimary : Theme.textSecondary)
                     .frame(width: Theme.tabSize.width, height: Theme.tabSize.height)
@@ -158,7 +158,7 @@ private struct TabRow<Options: View>: View {
             HStack(spacing: 12) {
                 Grip()
                 Group {
-                    Image(systemName: tab.symbol)
+                    Image.wisp(tab.symbol)
                         .font(.system(size: 14))
                         .frame(width: 20)
                     Text(tab.title)

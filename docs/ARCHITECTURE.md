@@ -19,6 +19,8 @@ wisp.app
 | `Wisp/Claude` | hook server, Claude Code sessions, approvals, hooks installer, IDE detection, git branch |
 | `Wisp/Mail` | IMAP client and `MailStore` |
 | `Wisp/Music` | `NowPlaying` (bridge process), `AudioOutput` (device, quality, volume), `Spectrum`, `AudioTap` and `SpectrumAnalyzer` (live spectrum) |
+| `Wisp/Departure` | `Core`: the departure engine, models and provider protocols (no UI, unit tested) |
+| `Wisp/GitHub` | `GitHubStore`; `Core`: the API client, models and radar logic (no UI, unit tested) |
 | `Wisp/Agenda` | `AgendaStore` (EventKit, today's events, shifts) and `WeatherStore` (Open-Meteo) |
 | `Wisp/Clipboard` | `ClipboardStore`: the last 20 copied texts, stored in `clipboard.json` |
 | `Wisp/Notes` | `NotesStore`: quick notes, stored in `notes.json` |
@@ -26,8 +28,9 @@ wisp.app
 | `Wisp/Focus` | `FocusStore`: the focus timer, today's sessions, the task guess and what it learned |
 | `Wisp/Settings` | `Preferences` (UserDefaults), the Settings window (`SettingsView`: sidebar + one page per topic) and its building blocks (`SettingsComponents`) |
 | `Wisp/Design` | `Theme`: colours, sizes, the accent options |
-| `Wisp/Support` | small helpers, such as `Keychain` |
+| `Wisp/Support` | small helpers: `Keychain`, `HTTPTransport` (the protocol all newer network code goes through) |
 | `Wisp/Resources` | `Info.plist`, entitlements, and the String Catalogs: `Localizable.xcstrings` (interface) and `InfoPlist.xcstrings` (permission texts), English source with Dutch |
+| `WispTests` | unit tests of the `Core` folders; they run without starting wisp (`scripts/test.sh`) |
 | `WispHook` | the `wisp-hook` command-line tool |
 | `Shared` | code used by both the app and `wisp-hook` (the socket path) |
 | `Helpers` | `NowPlayingBridge.m`, compiled into the dylib by a build phase |
@@ -123,6 +126,24 @@ Open-Meteo (HTTPS, no key) ─► WeatherStore ┘
 - **`WeatherStore`** fetches the current temperature and WMO weather code, the hourly chance and amount of rain, and today's low and high from `api.open-meteo.com` for the place in Settings, at most once every 15 minutes and only when the tab opens. An hour counts as wet from a 50 % chance or 0.2 mm; that gives *Droog tot 22:00* or *Regen tot 15:00*. Settings looks up places with Open-Meteo's geocoding API.
 - The tab redraws once a minute (`TimelineView(.everyMinute)`) for the *nu* line, the countdowns and the bar of the event on now, and only exists while it is open. All of it reads the time through `AgendaClock.now`, which in Debug builds can be set with `-agendaTime HH:mm`.
 
+## CI & PR radar
+
+```
+GitHub REST/GraphQL ◄─ GitHubClient (ETags, rate limit) ◄─ RadarSync ◄─ GitHubStore ─► notch, GitHub tab
+                       └── GitHubService protocol; MockGitHubService for tests and -githubDemo
+```
+
+- `Wisp/GitHub/Core` is free of UI and is what the tests compile: `CheckAggregator` (jobs → one status), `PollSchedule` (the next delay), `Radar` (`diff`: what is new; `compact`: what the closed notch shows; `acknowledge`: you looked; `streak`), `RadarSync` (one round, asking only what may have changed).
+- **`GitHubStore`** has one pending `DispatchWorkItem` at a time, with a delay from `PollSchedule`. Sleep and screen lock cancel it; waking schedules a round after 3 s. Errors keep the last data on screen. A rejected key stops polling until you reconnect.
+- **The closed notch**: `Radar.compact` picks one indicator; `StatusWings` turns it into text and `NotchController.setStatus` gives it room (grow the window, then spring the shape; shrink the shape, then the window). `NotchModel.wings` decides what shows when several want the wings. The spinner steps ten times a second through a `TimelineView` and only exists while a run is going. Looking at the tab acknowledges failures, reviews and comments.
+- **`RadarSeen`** (UserDefaults, `githubSeen`) remembers what was reported, per commit and per pull request, so an animation goes off once and not again after a restart. It holds no secrets, only repository names and numbers.
+
+## Departure assistant
+
+`Wisp/Departure/Core` holds the logic, free of clock, network and UI. `DepartureEngine.plan` turns calendar events and settings into the one trip that matters (or none), `nextWake` says when that can next change, and `resolve` turns the providers' answers into one `DepartureOutput`: what to show, in which colour, how many minutes, which alternatives. `RoutineDetector` fills in the location of repeating events that have none, and `EventLocation` tells a place from a video call. Providers sit behind `TravelProvider`, `RainProvider` and `PlaceLookup`, with mocks.
+
+- **`DepartureStore`** holds one pending wake-up: at `nextWake` with no trip on, on each new minute during one. The providers are only asked when `refreshInterval` says so (15, 5 or 2 minutes as leaving comes closer); in between the countdown comes from the last answer. A car or bike moves along with the clock. A new event, a change in Settings or waking re-evaluates. Errors keep the last answer; with none, nothing shows. Settings are saved as `departureSettings`, the NS key in the Keychain.
+
 ## Clipboard
 
 - macOS has no notification for the pasteboard, so **`ClipboardStore`** reads `NSPasteboard.general.changeCount` once a second (timer tolerance 0.5 s, so the system can bundle the wake-ups) and only looks further when it changed. Measured on the Release build: 0.0 % CPU and 2–3 extra wake-ups a second (about 90 instead of 40 per 20 s, closed notch). Switched off in Settings, the timer doesn't exist.
@@ -161,7 +182,7 @@ Open-Meteo (HTTPS, no key) ─► WeatherStore ┘
 
 ## Performance rules
 
-- Closed: no timers, no animations, nothing redrawn, with one exception: the clipboard history checks the pasteboard's change count once a second (see [Clipboard](#clipboard)); it can be switched off. The only background work is event-driven (the hook socket, the IMAP IDLE connection, the Now Playing bridge).
+- Closed: no timers, no animations, nothing redrawn, with two exceptions: the clipboard history checks the pasteboard's change count once a second (see [Clipboard](#clipboard)), and a connected GitHub account has one pending wake-up (see [CI & PR radar](#ci--pr-radar)); both can be switched off. The only other background work is event-driven (the hook socket, the IMAP IDLE connection, the Now Playing bridge).
 - Open: views that tick (the session timer, the music progress) use `TimelineView(.periodic)` at one update per second or once a minute, and only exist while their tab is visible.
 - A running focus session redraws its ring and time once a second, in the tab and on the closed notch. Nothing runs before or after a session.
 - The live spectrum and the music wings are the exception: they move while music plays, because that is what they are for. The audio tap only runs while one of them is on screen and music plays: about 3–4 % CPU for the Release build (the FFT itself is a fraction of that; the rest is drawing). Bars are drawn in a single `Canvas`, and only the views that draw them observe `SpectrumLevels`, so nothing else redraws 30 times a second. Measure in Release: a Debug build is several times slower.
