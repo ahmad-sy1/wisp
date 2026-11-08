@@ -8,6 +8,9 @@ import Foundation
 // and it exits at once. Only permission requests wait for an answer, and no
 // answer (or "ask") means Claude Code asks in the terminal as usual.
 
+// wisp can hang up while a long event is on its way: send then fails, and we exit normally.
+signal(SIGPIPE, SIG_IGN)
+
 let env = ProcessInfo.processInfo.environment
 
 // Sessions inside the Claude desktop app are not shown in the notch. Match on the
