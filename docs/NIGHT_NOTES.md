@@ -40,6 +40,20 @@ Log of the overnight work on **CI & PR Radar** and the **departure assistant** (
 | Rain check default off | As on design page 4. |
 | A bike route is a walking route's length at 16 km/h | The SDK's MapKit has no cycling directions (`automobile`, `walking`, `transit` only). |
 
+### Providers
+
+| Decision | Why |
+|---|---|
+| **No fake data in a real build.** Without an NS key wisp uses Apple Maps' total transit time, not the mock | Your brief says to use the mock, but made-up train times could make you miss a real train. The mock is there for tests and Debug (`-departureDemo`). |
+| NS for the route, OVapi only for how late a bus is | NS's advice includes buses with line numbers. OVapi has no route planner. |
+| OVapi over plain HTTP | It has no HTTPS (tested). A single exception in `Info.plist`; only stop codes go there. |
+| Buienradar first, then Open-Meteo | Radar is better for "rain in 10 minutes", but only covers NL/BE; this has to work for any user. |
+| Not NDW for the road number | Stretch goal; left out. The route name from MapKit gives *A15* when it can. |
+
+Tested live: place lookup, car (33 min, 23 without traffic), bike, transit ETA, Buienradar, Open-Meteo, OVapi's stop list. **Not tested: NS**, I have no key. Its parser is tested on a response I wrote by hand from public examples of the v3 API; `originLat`-style parameters come from memory of the docs. Check it first.
+
+The search also turned up a public repository with an NS key in its source. I didn't use it.
+
 ## Checked and not checked
 
 - Live against your account with `gh` login: 21 PRs, checks, the graph. Screenshots in the PR use `-githubDemo`.
@@ -48,4 +62,5 @@ Log of the overnight work on **CI & PR Radar** and the **departure assistant** (
 
 ## To do for you
 
-- Connect GitHub in Settings → Integrations (one click if `gh` is logged in).
+- Connect GitHub in Settings → GitHub (one click if `gh` is logged in).
+- Get an NS key: <https://apiportal.ns.nl>, subscribe to *Ns-App*/*Reisinformatie*, add it under Settings → Integrations.

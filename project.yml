@@ -75,6 +75,11 @@ targets:
         NSLocationUsageDescription: "macOS gives apps the name of your Wi‑Fi network only with Location access. wisp uses it for the System tab and never reads where you are."
         NSLocationWhenInUseUsageDescription: "macOS gives apps the name of your Wi‑Fi network only with Location access. wisp uses it for the System tab and never reads where you are."
         LSApplicationCategoryType: public.app-category.productivity
+        # OVapi only answers over HTTP. Only stop codes go there (Wisp/Departure/Core/OVapi.swift).
+        NSAppTransportSecurity:
+          NSExceptionDomains:
+            v0.ovapi.nl:
+              NSExceptionAllowsInsecureHTTPLoads: true
         NSHumanReadableCopyright: "Copyright © 2026 Ahmad Alasmi. All rights reserved."
     entitlements:
       # The hardened runtime blocks Calendar access without this (Agenda tab).
