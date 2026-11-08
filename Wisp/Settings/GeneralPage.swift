@@ -55,6 +55,7 @@ struct GeneralPage: View {
                                subtitle: String(localized: "wisp starts with your Mac"),
                                isOn: Binding(get: { prefs.launchAtLogin },
                                              set: { prefs.setLaunchAtLogin($0) }))
+                ShortcutRow(prefs: prefs)
             }
 
             ClaudeHooksGroup()

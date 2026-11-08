@@ -35,6 +35,7 @@ The notch is the one bit of screen you never use. wisp turns it into a quiet das
 - **Clipboard**: the last 20 texts you copied, searchable, one click to copy again. Stored only on your Mac; passwords and one-time codes are never kept.
 - **Notes**: jot something down without leaving what you're doing; click a note to edit it. Stored only on your Mac.
 - **System**: battery and time left, your AirPods' batteries, CPU with the busiest app, free storage and the Wi-Fi network, read only while you look.
+- **Keyboard**: ⌥Space opens the notch from anywhere (change it in Settings); ← → walk through the tabs, Esc closes.
 - **English and Dutch**: wisp follows your Mac's language, or pick one in Settings.
 - **Calm by default**: the closed notch draws nothing extra and uses 0 % CPU. No timers run while it is closed.
 - **Any Mac**: on a screen without a notch, wisp sits in a small bar at the top centre.

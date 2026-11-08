@@ -34,6 +34,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         startMusic(notch: notch)
         startFocus(notch: notch)
         ClipboardStore.shared.start()
+        startHotKey(notch: notch)
         #if DEBUG
         // `open wisp.app --args -openOnLaunch mail` opens the panel on that tab (for screenshots).
         if let name = UserDefaults.standard.string(forKey: "openOnLaunch") {
@@ -63,6 +64,17 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
         openSettings()
         return false
+    }
+
+    // MARK: - Shortcut
+
+    private func startHotKey(notch: NotchController) {
+        let hotKey = HotKeyCenter.shared
+        hotKey.onPress = { notch.toggleFromKeyboard() }
+        Preferences.shared.$hotKey
+            .removeDuplicates()
+            .sink { hotKey.set($0) }
+            .store(in: &subscriptions)
     }
 
     // MARK: - Claude Code

@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Open the notch from the keyboard with ⌥Space, changeable in Settings → General (#25); opened that way it stays until you press the keys again, press Esc or click elsewhere, and ← → walk through the tabs
+- Closing the notch hands typing back to the app you were in, and Esc can't close the notch window itself
 - The notch no longer stays open by accident: when something reopens it while it is open, or when it grew under a mouse that stood still
 - A focus session ends on time after the Mac has slept; its duration can't change in Settings while it runs
 - The closed notch follows the lid: wings come back when the notch screen does, and empty music wings go after 3 s; a paused player can't keep them for longer than the minute
