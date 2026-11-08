@@ -19,6 +19,7 @@ wisp.app
 | `Wisp/Claude` | hook server, Claude Code sessions, approvals, hooks installer, IDE detection, git branch |
 | `Wisp/Mail` | IMAP client and `MailStore` |
 | `Wisp/Music` | `NowPlaying` (bridge process), `AudioOutput` (device, quality, volume), `Spectrum`, `AudioTap` and `SpectrumAnalyzer` (live spectrum) |
+| `Wisp/Departure` | `Core`: the departure engine, models and provider protocols (no UI, unit tested) |
 | `Wisp/GitHub` | `GitHubStore`; `Core`: the API client, models and radar logic (no UI, unit tested) |
 | `Wisp/Agenda` | `AgendaStore` (EventKit, today's events, shifts) and `WeatherStore` (Open-Meteo) |
 | `Wisp/Clipboard` | `ClipboardStore`: the last 20 copied texts, stored in `clipboard.json` |
@@ -136,6 +137,10 @@ GitHub REST/GraphQL ◄─ GitHubClient (ETags, rate limit) ◄─ RadarSync ◄
 - **`GitHubStore`** has one pending `DispatchWorkItem` at a time, with a delay from `PollSchedule`. Sleep and screen lock cancel it; waking schedules a round after 3 s. Errors keep the last data on screen. A rejected key stops polling until you reconnect.
 - **The closed notch**: `Radar.compact` picks one indicator; `StatusWings` turns it into text and `NotchController.setStatus` gives it room (grow the window, then spring the shape; shrink the shape, then the window). `NotchModel.wings` decides what shows when several want the wings. The spinner steps ten times a second through a `TimelineView` and only exists while a run is going. Looking at the tab acknowledges failures, reviews and comments.
 - **`RadarSeen`** (UserDefaults, `githubSeen`) remembers what was reported, per commit and per pull request, so an animation goes off once and not again after a restart. It holds no secrets, only repository names and numbers.
+
+## Departure assistant
+
+`Wisp/Departure/Core` holds the logic, free of clock, network and UI. `DepartureEngine.plan` turns calendar events and settings into the one trip that matters (or none), `nextWake` says when that can next change, and `resolve` turns the providers' answers into one `DepartureOutput`: what to show, in which colour, how many minutes, which alternatives. `RoutineDetector` fills in the location of repeating events that have none, and `EventLocation` tells a place from a video call. Providers sit behind `TravelProvider`, `RainProvider` and `PlaceLookup`, with mocks.
 
 ## Clipboard
 

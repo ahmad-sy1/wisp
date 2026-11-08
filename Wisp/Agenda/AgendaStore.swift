@@ -1,4 +1,5 @@
 import AppKit
+import CoreLocation
 import EventKit
 import SwiftUI
 
@@ -160,6 +161,23 @@ final class AgendaStore: ObservableObject {
             .filter { !$0.isAllDay && $0.startDate <= now && now < $0.endDate }
             .min { $0.startDate > $1.startDate }?
             .title.flatMap { $0.isEmpty ? nil : $0 }
+    }
+
+    /// Events for the departure assistant, also while the tab is closed. One query, nothing is
+    /// kept here; the calendars switched off in Settings don't count.
+    func travelEvents(from start: Date, to end: Date) -> [TravelEvent] {
+        guard Self.currentAccess() == .granted else { return [] }
+        let shown = store.calendars(for: .event).filter { !hiddenCalendars.contains($0.calendarIdentifier) }
+        guard !shown.isEmpty else { return [] }
+        let predicate = store.predicateForEvents(withStart: start, end: end, calendars: shown)
+        return store.events(matching: predicate).map { event in
+            let pin = event.structuredLocation?.geoLocation?.coordinate
+            return TravelEvent(id: "\(event.eventIdentifier ?? UUID().uuidString)@\(event.startDate.timeIntervalSince1970)",
+                               title: event.title ?? "", start: event.startDate, end: event.endDate,
+                               isAllDay: event.isAllDay, location: event.location,
+                               latitude: pin?.latitude, longitude: pin?.longitude,
+                               isRecurring: event.hasRecurrenceRules)
+        }
     }
 
     /// Settings shows the calendars too, also while the tab is closed.

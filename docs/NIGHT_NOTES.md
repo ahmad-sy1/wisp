@@ -26,6 +26,20 @@ Log of the overnight work on **CI & PR Radar** and the **departure assistant** (
 | Own pull request glyph | SF Symbols has nothing like the design's icon; `arrow.triangle.pull` read as a fork. |
 | First look skips old comments | With 21 open PRs a first round was 130 requests. Now about 65, and the list shows right after the search. |
 
+### Departure engine
+
+| Decision | Why |
+|---|---|
+| wisp doesn't know where you are | It never reads your location (a promise in the README). The trip starts at the event you're at or just left, otherwise at home. |
+| Three hours ahead it starts asking, 45 minutes before leaving it shows | Asking earlier wastes requests; the 45 is the point where it is useful to see. |
+| "Routine" means an event without a location gets it from the same title elsewhere | From three different days at one place, or at once for a repeating event. Any event with a location already counts as a trip, as the brief says. |
+| The way home ends 45 minutes after your last event | wisp can't see that you've left. |
+| Same building is no trip | Two lessons in a row at the same place, by name or within about 150 m. |
+| Red from a delay or jam of 10 min, orange from 3 min (or within 5 min of leaving) | My choice; constants at the top of `DepartureEngine`. |
+| Waiting is only advised from 10 min saved, and never if it makes you late | Below that the advice is noise. |
+| Rain check default off | As on design page 4. |
+| A bike route is a walking route's length at 16 km/h | The SDK's MapKit has no cycling directions (`automobile`, `walking`, `transit` only). |
+
 ## Checked and not checked
 
 - Live against your account with `gh` login: 21 PRs, checks, the graph. Screenshots in the PR use `-githubDemo`.
