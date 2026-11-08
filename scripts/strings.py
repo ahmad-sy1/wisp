@@ -8,7 +8,7 @@ Wisp/Resources. A build with SWIFT_EMIT_LOC_STRINGS writes the strings it found
   scripts/strings.py sync  [build-dir]   add new strings to Localizable.xcstrings, drop unused ones
   scripts/strings.py check [build-dir]   fail when a string has no translation or is out of date
 
-build-dir defaults to ./build (the -derivedDataPath used by the README and CI).
+build-dir defaults to ./build.noindex (the -derivedDataPath used by the README and CI).
 """
 import json
 import plistlib
@@ -111,5 +111,5 @@ def check(build: Path) -> None:
 if __name__ == "__main__":
     if len(sys.argv) < 2 or sys.argv[1] not in ("sync", "check"):
         sys.exit(__doc__)
-    build_dir = Path(sys.argv[2]) if len(sys.argv) > 2 else ROOT / "build"
+    build_dir = Path(sys.argv[2]) if len(sys.argv) > 2 else ROOT / "build.noindex"
     {"sync": sync, "check": check}[sys.argv[1]](build_dir)

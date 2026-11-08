@@ -1,5 +1,7 @@
 # Xcode / Swift
 build/
+# Spotlight skips *.noindex, so build copies of wisp stay out of its results.
+build.noindex/
 DerivedData/
 xcuserdata/
 *.xcuserstate

@@ -36,14 +36,14 @@ xcrun notarytool history --keychain-profile wisp-notary >/dev/null 2>&1 \
 echo "Releasing wisp $VERSION, signed by: $IDENTITY"
 
 # ── 2. Build + sign ───────────────────────────────────────────────────────────
-OUT="$ROOT/build/release-$VERSION"
+OUT="$ROOT/build.noindex/release-$VERSION"
 APP="$OUT/wisp.app"
 ZIP="$OUT/wisp-$VERSION.zip"
 rm -rf "$OUT" && mkdir -p "$OUT"
 
 xcodegen --quiet
 xcodebuild -scheme wisp -configuration Release -destination "generic/platform=macOS" \
-  -derivedDataPath "$ROOT/build" build -quiet \
+  -derivedDataPath "$ROOT/build.noindex" build -quiet \
   CODE_SIGN_STYLE=Manual \
   CODE_SIGN_IDENTITY="$IDENTITY" \
   OTHER_CODE_SIGN_FLAGS="--timestamp" \
