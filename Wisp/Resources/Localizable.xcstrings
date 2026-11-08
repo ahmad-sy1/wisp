@@ -191,16 +191,6 @@
         }
       }
     },
-    "%lld reviews requested" : {
-      "localizations" : {
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld reviews gevraagd"
-          }
-        }
-      }
-    },
     "%lld/%lld checks" : {
       "localizations" : {
         "nl" : {
@@ -2321,12 +2311,32 @@
         }
       }
     },
+    "Review" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Review"
+          }
+        }
+      }
+    },
     "Review requested" : {
       "localizations" : {
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Review gevraagd"
+          }
+        }
+      }
+    },
+    "Reviews" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reviews"
           }
         }
       }

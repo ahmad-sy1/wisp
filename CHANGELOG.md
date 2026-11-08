@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-- CI & PR radar: a GitHub tab with your pull requests and their checks, requested reviews and the contribution graph (board 13); the closed notch shows a run going, a failure or a review request, with a short tick or flash once per event (board 11); Settings → GitHub for the account, repositories and notifications (board 15)
+- CI & PR radar: a GitHub tab with your pull requests and their checks, requested reviews and the contribution graph (board 13); the closed notch shows a run going, a failure or a review request, with a short tick or flash once per event (board 11, with a review request kept to one word so the notch stays narrow); Settings → GitHub for the account, repositories and notifications (board 15)
 - Settings → Notch: choose what Home shows, as chips under the Home tab; what's left takes the room of what is off (#24)
 - Settings → Focus: add your own rules (app, optional project → task), marked *Set by you* next to the *Learned* ones (#27)
 - Settings → Music: the mini spectrum on or off, a battery saver for the spectrum, and which players show: Spotify, Apple Music, the browser (#26)
