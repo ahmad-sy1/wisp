@@ -13,7 +13,7 @@ wisp is a native macOS app that lives in the MacBook notch: Claude Code sessions
 ## Build
 
 ```
-xcodegen && xcodebuild -scheme wisp -configuration Debug -derivedDataPath build build
+xcodegen && xcodebuild -scheme wisp -configuration Debug -derivedDataPath build.noindex build
 ```
 
 `./scripts/install.sh` installs a Release build in `/Applications`.

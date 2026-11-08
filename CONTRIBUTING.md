@@ -12,20 +12,20 @@ Never edit `wisp.xcodeproj` by hand (it isn't even in git): change [`project.yml
 Build and run from the terminal:
 
 ```bash
-xcodebuild -scheme wisp -configuration Debug -derivedDataPath build build
-open build/Build/Products/Debug/wisp.app
+xcodebuild -scheme wisp -configuration Debug -derivedDataPath build.noindex build
+open build.noindex/Build/Products/Debug/wisp.app
 ```
 
 Debug builds can open straight on a tab, which helps for screenshots:
 
 ```bash
-open build/Build/Products/Debug/wisp.app --args -openOnLaunch music
+open build.noindex/Build/Products/Debug/wisp.app --args -openOnLaunch music
 ```
 
 Add `-snapshot </absolute/path.png>` (an app started with `open` doesn't share your working directory) and the debug build draws the open panel into that PNG (1200 × 484, the size of the screenshots in `docs/media/`) after three seconds, then quits. It doesn't need the screen, so it also works while the Mac is locked. `-snapshotDelay 8` waits longer than three seconds. `-departureDemo transit` (or `car`, `bike`) shows a made-up trip. `-githubDemo YES` shows made-up pull requests, `-githubFromCLI YES` borrows the `gh` login for that run without saving it. `-focusStart YES` starts a focus session and `-mailPeekDemo YES` shows a sample mail peek, for snapshots of those states:
 
 ```bash
-open -W build/Build/Products/Debug/wisp.app --args -openOnLaunch music -snapshot /tmp/music.png
+open -W build.noindex/Build/Products/Debug/wisp.app --args -openOnLaunch music -snapshot /tmp/music.png
 ```
 
 `-settingsPage notch` (or `general`, `integrations`, `agenda`, `music`, `focus`) opens Settings on that page; with `-snapshot` the PNG is that window instead of the panel. While snapshotting, the pages leave out their scroll view (the offscreen drawing can't draw one), so this also works on a locked screen; a page taller than the window is cut off, and switches look inactive. With wisp already running from `/Applications`, add `-n` to `open`, or macOS brings the running one forward instead.
@@ -35,7 +35,7 @@ Start it with `open`: run straight from a shell, macOS checks the shell's permis
 The Agenda tab can pretend it is another time of today, to check the morning, a running event or the evening without waiting:
 
 ```bash
-open build/Build/Products/Debug/wisp.app --args -openOnLaunch agenda -agendaTime 21:30
+open build.noindex/Build/Products/Debug/wisp.app --args -openOnLaunch agenda -agendaTime 21:30
 ```
 
 To install your build in `/Applications`, use `./scripts/install.sh`.
@@ -57,7 +57,7 @@ Logic lives in `Core` folders without UI, and network code behind a protocol wit
 Pipe a hook payload into the helper, as Claude Code would:
 
 ```bash
-H=build/Build/Products/Debug/wisp.app/Contents/MacOS/wisp-hook
+H=build.noindex/Build/Products/Debug/wisp.app/Contents/MacOS/wisp-hook
 echo '{"hook_event_name":"SessionStart","session_id":"t1","cwd":"'"$PWD"'"}' \
   | __CFBundleIdentifier=com.jetbrains.intellij $H
 echo '{"hook_event_name":"PreToolUse","session_id":"t1","cwd":"'"$PWD"'","tool_name":"Edit"}' \
@@ -86,8 +86,8 @@ English is the source language. Every other language lives in `Wisp/Resources/Lo
 - `Text("…")`, `Button("…")`, `Toggle`, `Section`, `.help("…")` and friends are translated automatically. Text that ends up in a `String` first (a status line, a computed label, a menu item) needs `String(localized: "…")`; a plain `String` shown with `Text(_:)` is never translated.
 - Text that shouldn't be translated (a number, a symbol, a name) goes through `Text(verbatim:)`.
 - Dates and times use `formatted()` without a fixed locale, so they follow the language too.
-- After a build, `scripts/strings.py sync` adds new strings to the catalog and drops unused ones. After switching branches, run `xcodegen` and build clean first (`rm -rf build/Build/Intermediates.noindex/wisp.build`): the build only re-reads the files it recompiles. Fill in the Dutch in Xcode's catalog editor or in the JSON. `scripts/strings.py check` fails while a string has no Dutch; CI runs it after every build.
-- To see the app in one language: `open build/Build/Products/Debug/wisp.app --args -AppleLanguages '(nl)'`.
+- After a build, `scripts/strings.py sync` adds new strings to the catalog and drops unused ones. After switching branches, run `xcodegen` and build clean first (`rm -rf build.noindex/Build/Intermediates.noindex/wisp.build`): the build only re-reads the files it recompiles. Fill in the Dutch in Xcode's catalog editor or in the JSON. `scripts/strings.py check` fails while a string has no Dutch; CI runs it after every build.
+- To see the app in one language: `open build.noindex/Build/Products/Debug/wisp.app --args -AppleLanguages '(nl)'`.
 
 ## Branches and commits
 
