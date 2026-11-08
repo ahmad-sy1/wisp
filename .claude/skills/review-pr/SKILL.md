@@ -8,7 +8,7 @@ disallowed-tools: Edit Write NotebookEdit
 
 Review pull request: $ARGUMENTS
 
-You are a senior macOS engineer reviewing someone else's change to wisp, a Swift 6 notch app. Judge the code as it is, not the intent in the description. You do not change code, approve or merge.
+You are a senior macOS engineer reviewing someone else's change to wisp, a Swift 6 notch app. Judge the code as it is, not the intent in the description. You do not change code, approve or merge. Use Bash only to read, apart from posting the review in step 4.
 
 ## 1. Decide what to review
 
@@ -21,7 +21,7 @@ gh api repos/ahmad-sy1/wisp/pulls/<n>/reviews --jq '[.[] | select(.body | contai
 ```
 
 - Stop with a one-line message if only `docs/`, `design/`, `README.md`, `CHANGELOG.md`, `CONTRIBUTING.md`, `CLAUDE.md` or `LICENSE` changed.
-- A previous review ends with `<!-- review-pr:<sha> -->`. If that commit is an ancestor of the head, review only `git diff <sha>..<head>`. Otherwise review the whole pull request.
+- A previous review ends with `<!-- review-pr:<sha> -->`. If that commit is not an ancestor of the head, review the whole pull request. If it is, take `git diff <sha>..<head>` and keep only changes that are also in `gh pr diff <n>`, because a merge of `main` brings in code from other pull requests. If nothing is left, say so and stop.
 - Leave out `Localizable.xcstrings`, images and diffs that only move whitespace, unless the question is about them.
 - More than about 800 changed lines of code: review it, and say which parts could have been separate pull requests.
 
@@ -56,12 +56,12 @@ Rank what is left and keep at most 10:
 
 ## 4. Post, unless `--no-comment` was given
 
-Post one review with the `COMMENT` event, never `APPROVE` or `REQUEST_CHANGES`. It appears under the account `gh` is logged in to. Write in English, briefly, with no mention of who or what wrote it.
+Post one review with the `COMMENT` event, never `APPROVE` or `REQUEST_CHANGES`. It appears under the account `gh` is logged in to. Write in English, with no mention of who or what wrote it. Keep it easy to scan: the summary is one line with the number of findings per level, and each comment is three short sentences at most, in the format below.
 
 ```
 gh api repos/ahmad-sy1/wisp/pulls/<n>/reviews --method POST --input - <<'JSON'
-{"commit_id": "<head>", "event": "COMMENT", "body": "<summary>\n\n<!-- review-pr:<head> -->",
- "comments": [{"path": "<file>", "line": <line>, "side": "RIGHT", "body": "**Must fix:** <problem, scenario, suggested fix>"}]}
+{"commit_id": "<head>", "event": "COMMENT", "body": "<one-line summary>\n\n<!-- review-pr:<head> -->",
+ "comments": [{"path": "<file>", "line": <line>, "side": "RIGHT", "body": "**Must fix:** <the problem>\n\nExample: <input and wrong result>\nFix: <the change>"}]}
 JSON
 ```
 
@@ -69,4 +69,4 @@ JSON
 
 ## 5. Report back
 
-Answer in Dutch, for the owner: how many findings per level, one line each with `file:line`, what you did not review, and whether the checks are passing. Don't fix anything.
+Answer in Dutch, for the owner, and keep it short: how many findings per level, one short line each with `file:line`, what you did not review, and whether the checks are passing. Don't fix anything.
