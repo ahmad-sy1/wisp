@@ -32,9 +32,8 @@ struct StatusWings: Equatable {
     /// Both wings get the same width because the window is centred on the camera, so the
     /// longest text sets both.
     var wingWidth: CGFloat {
-        let font = NSFont.systemFont(ofSize: 12, weight: .semibold)
-        let leftText = (left as NSString).size(withAttributes: [.font: font]).width
-        let rightText = (right as NSString).size(withAttributes: [.font: font]).width
+        let leftText = WingText.width(left)
+        let rightText = WingText.width(right)
         let iconWidth: CGFloat = if case .symbolDot = icon { 30 } else { 20 }
         let rightIcon: CGFloat = rightSymbol == nil ? 0 : 18
         return min(Self.maxWingWidth, max(leftText + iconWidth, rightText + rightIcon) + Self.cameraGap).rounded(.up)

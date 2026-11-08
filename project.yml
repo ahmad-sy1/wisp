@@ -102,6 +102,7 @@ targets:
       - path: WispTests
       - path: Wisp/GitHub/Core
       - path: Wisp/Departure/Core
+      - path: Wisp/Notch/Core
       - path: Wisp/Support/HTTPTransport.swift
     settings:
       base:
