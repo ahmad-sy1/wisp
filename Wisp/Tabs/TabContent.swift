@@ -10,6 +10,7 @@ struct TabContent: View {
         case .home: HomeTab(sessions: .shared)
         case .mail: MailTab(store: .shared, openSettings: openSettings)
         case .agenda: AgendaTab(agenda: .shared, weather: .shared)
+        case .departure: DepartureTab(store: .shared, openSettings: openSettings)
         case .github: GitHubTab(store: .shared, openSettings: openSettings)
         case .focus: FocusTab(focus: .shared)
         case .clipboard: ClipboardTab(clipboard: .shared)

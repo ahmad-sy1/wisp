@@ -1,5 +1,6 @@
 import CoreLocation
-import MapKit
+// The answers of MKDirections and MKLocalSearch aren't marked Sendable in every SDK.
+@preconcurrency import MapKit
 
 private extension TravelPlace {
     var mapItem: MKMapItem? {

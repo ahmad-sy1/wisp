@@ -136,7 +136,7 @@ struct ClipboardToolbar: View {
             }
         }
         .padding(.horizontal, 10)
-        .frame(width: 190, height: Theme.tabSize.height)
+        .frame(minWidth: 110, maxWidth: 190, minHeight: Theme.tabSize.height, maxHeight: Theme.tabSize.height)
         .background(RoundedRectangle(cornerRadius: Theme.buttonCorner, style: .continuous).fill(Theme.control))
         .onDisappear { clipboard.query = "" }
     }

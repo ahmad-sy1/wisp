@@ -5,6 +5,7 @@ import SwiftUI
 struct AgendaTab: View {
     @ObservedObject var agenda: AgendaStore
     @ObservedObject var weather: WeatherStore
+    @ObservedObject private var departure = DepartureStore.shared
 
     var body: some View {
         TimelineView(.everyMinute) { context in
@@ -17,7 +18,7 @@ struct AgendaTab: View {
                     Card { WeatherCard(weather: weather) }
                     Card { DepartureCard(shift: agenda.nextShift(after: now),
                                          travelMinutes: agenda.travelMinutes,
-                                         travelMode: agenda.travelMode,
+                                         departure: departure,
                                          report: weather.report, now: now) }
                 }
             }
@@ -312,7 +313,7 @@ private struct WeatherCard: View {
 private struct DepartureCard: View {
     let shift: AgendaEvent?
     let travelMinutes: Int
-    let travelMode: AgendaStore.TravelMode
+    @ObservedObject var departure: DepartureStore
     let report: WeatherReport?
     let now: Date
 
@@ -336,8 +337,14 @@ private struct DepartureCard: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
     }
 
+    /// The real trip, when the departure assistant is on this shift.
+    private var trip: TravelOption? {
+        guard let shift, let output = departure.output, output.plan.eventID == shift.id else { return nil }
+        return output.chosen
+    }
+
     private var leave: Date? {
-        shift.map { $0.start.addingTimeInterval(-Double(travelMinutes) * 60) }
+        trip?.departure ?? shift.map { $0.start.addingTimeInterval(-Double(travelMinutes) * 60) }
     }
 
     private var label: String {
@@ -347,7 +354,7 @@ private struct DepartureCard: View {
     private var headline: String {
         guard let leave else { return report?.rainSummary(at: now) ?? "—" }
         let when = leave <= now ? String(localized: "Now") : leave.clockTime
-        return "\(when) · \(travelMode.duration(travelMinutes))"
+        return "\(when) · \(departure.settings.defaultMode.duration(trip?.minutes ?? travelMinutes))"
     }
 
     private var detail: String? {
@@ -367,10 +374,15 @@ private struct DepartureCard: View {
 struct AgendaToolbar: View {
     var body: some View {
         TimelineView(.everyMinute) { context in
-            Text("Today · \(context.date.formatted(.dateTime.weekday(.wide).day().month(.wide)))")
-                .font(.system(size: 13))
-                .foregroundStyle(Theme.textSecondary)
-                .lineLimit(1)
+            // With every tab on there is less room: the date alone, then shorter.
+            ViewThatFits(in: .horizontal) {
+                Text("Today · \(context.date.formatted(.dateTime.weekday(.wide).day().month(.wide)))")
+                Text(verbatim: context.date.formatted(.dateTime.weekday(.wide).day().month(.wide)))
+                Text(verbatim: context.date.formatted(.dateTime.weekday(.abbreviated).day().month(.abbreviated)))
+            }
+            .font(.system(size: 13))
+            .foregroundStyle(Theme.textSecondary)
+            .lineLimit(1)
         }
     }
 }

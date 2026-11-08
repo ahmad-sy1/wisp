@@ -69,6 +69,8 @@ The boards in [`design/boards/`](../design/boards) are the visual source of trut
 | OK, music | `ok` | `#30D158` |
 | Warning, shifts | `warning` | `#FF9F0A` |
 | Review requests | `info` | `#0A84FF`, whatever the accent |
+| Rain | `rain` | `#64D2FF` |
+| NS badge | `nsYellow` | `#FFC917` |
 | Accent (Settings) | `Accent` | `#0A84FF` (default), `#30D158`, `#FF9F0A`, `#BF5AF2` |
 
 ## Shapes and type
@@ -80,7 +82,7 @@ The boards in [`design/boards/`](../design/boards) are the visual source of trut
 
 ## Tab bar
 
-Left, in this order: **Home · Mail · Agenda · GitHub · Focus · Muziek · Klembord · Notities · Systeem · Bestanden**. Right: **Settings** (sliders icon). A tab may put its own controls just left of Settings, as Mail does with *Alles / Ongelezen / ↗*, Agenda with today's date and Music with the output device.
+Left, in this order: **Home · Mail · Agenda · Vertrek · GitHub · Focus · Muziek · Klembord · Notities · Systeem · Bestanden**. Right: **Settings** (sliders icon). A tab may put its own controls just left of Settings, as Mail does with *Alles / Ongelezen / ↗*, Agenda with today's date and Music with the output device.
 
 Opened with the shortcut (⌥Space, Settings → General, board 10.2) the panel stays until the shortcut again, Esc or a click elsewhere; ← and → walk through the visible tabs when no text field has the keyboard.
 
@@ -165,6 +167,20 @@ Four equal cards in the fixed 150 pt area (board 7), each with a label (12 pt gr
 | Opslag | free space in whole GB, a bar for what is used (accent), *vrij van 512 GB* |
 | Tab bar | the Wi-Fi icon and network name; *Wi‑Fi* without Location access, *Wifi uit* when off |
 
+## Departure tab
+
+Two cards in the fixed 150 pt area (board 12):
+
+| Part | Spec |
+|---|---|
+| Left card (332 pt) | *NAAR HUIS* or *NAAR {AFSPRAAK}* (10.5 pt) with a switch for public transport, car and bike; *Vertrek over* with the minutes (34 pt bold, white, `warning` when tight, `badge` when late); right *Thuis 16:21* (13 pt semibold) and the status (`ok` *Op tijd*, otherwise the delay or jam in `warning` or `badge`) |
+| Route | chips (22 pt, `control`) split by chevrons, at most three plus *+1*: a grey *loop*, a yellow `nsYellow` *NS* with the track, a white badge with the line number with time and stop |
+| Right card, public transport | *ALTERNATIEVEN*: up to three rows of time, *Trein → Bus 300*, *op tijd* / *+4 min* / *uitval*. A cancelled time is grey |
+| Right card, car | *NU OF STRAKS*: now, +30 and +60 with their minutes, and the advice (*Wacht 60 min, scheelt 15 min* in `warning`, *Ga nu, wachten helpt niet* in `ok`). The board doesn't draw this card; built in the same style |
+| Right card, bike | *BUIEN*: *Regen over 10 min* and *Ga nu of wacht 25 min*, or *Droog onderweg*. Also built without a board |
+
+Not on the board: *Geen reis in zicht*, the prompt for a home address, the prompt for calendar access, and without an NS key the card says so instead of listing alternatives. Closed notch (board 11): the mode icon and minutes left of the camera, right of it *15:42 spoor 3*, *+15 file A15* or *regen 10 min* (`rain`). A trip goes before a GitHub status.
+
 ## GitHub tab
 
 Two cards in the fixed 150 pt area (board 13):
@@ -180,7 +196,7 @@ Not on the board, in the same style: a failed row gets a second line with the fa
 
 ## Closed notch and mail peek
 
-On the closed notch the wings show one thing at a time, in this order: a running focus session (ring and time), an urgent status (CI failed, review requested, new comments; board 11), music (artwork and mini spectrum, boards 9.6), a calm status (a CI run going), unread mail (an envelope and the red count, board 8). Unread mail can be switched off in Settings → Gmail.
+On the closed notch the wings show one thing at a time, in this order: a running focus session (ring and time), an urgent status (a trip, CI failed, review requested, new comments; board 11), music (artwork and mini spectrum, boards 9.6), a calm status (a CI run going), unread mail (an envelope and the red count, board 8). Unread mail can be switched off in Settings → Gmail.
 
 A status (`StatusWings`, board 11) has an icon and short text left of the camera and short text right of it, 12 pt semibold. Both wings are as wide as the wider one, because the window is centred on the camera. So a review request stays short, unlike board 11: the icon with a blue dot and *Review*, or the icon, the count in blue and *Reviews* when there are more, about 310–325 pt wide in all. The notch drops 2 pt and springs back on a new event (*Tik-animatie*); CI gets a short flash of red or green. A click opens the tab it comes from. Everything stays quiet during a focus session with *Niet storen* and under a permission request.
 
@@ -239,6 +255,8 @@ Built in the same style, not on the boards (open to a design):
 - **Music**: macOS doesn't tell apps whether system audio is allowed, so the dot shows wisp's own switch (*On* / *Off*).
 - **Focus**: with no learned rules, one row *No rules yet*.
 - **General**: after a language change, the grey line says to restart and a *Restart* button appears next to the pop-up.
+
+Settings → Departure (board 14) follows the board, plus *Reistijd naar je dienst*, moved here from Calendar & weather, and a row for calendar access when it is missing. The bike-or-car choice moved too: there is one *Standaard vervoer*. *On foot* is gone from it, as on the board. An NS key is added under Integrations, like Gmail's password.
 
 Settings → GitHub (board 15) follows the board. Not connected, the account row offers *Gebruik GitHub CLI-login* (if `gh` is installed) and *Token toevoegen…*; *Alle (6)* opens a sheet with a checkbox per repository.
 
