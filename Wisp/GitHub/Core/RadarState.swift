@@ -28,6 +28,11 @@ struct RadarSnapshot: Equatable, Codable, Sendable {
     var reviews: [PullRequest] = []
 
     var anyRunning: Bool { mine.contains { $0.checks.status == .running } }
+
+    /// What Home shows first: a failure, then a requested review, then your newest.
+    var mostImportant: PullRequest? {
+        mine.first { $0.checks.status == .failed } ?? reviews.first ?? mine.first
+    }
 }
 
 /// One small indicator on the closed notch (design page 1). Nothing wrong shows nothing.
