@@ -1,44 +1,66 @@
 import SwiftUI
 
-/// What Home can show; chosen in Settings → Notch (board 10.1).
-enum HomeTile: String, CaseIterable, Identifiable {
-    case now, github, whoop, music, notion
-
-    var id: String { rawValue }
-
-    var title: String {
-        switch self {
-        case .now: String(localized: "In progress")
-        case .github: "GitHub"
-        case .whoop: "WHOOP"
-        case .music: String(localized: "Music")
-        case .notion: "Notion"
-        }
-    }
-}
-
-/// Home: "Nu bezig" (the current Claude Code session) on the left, compact integration
-/// tiles on the right; what's left takes the room of what is switched off. A permission
+/// Home: one to four things, chosen in Settings → Notch (boards 10.1.3, 11.1). A permission
 /// request takes the whole width.
 struct HomeTab: View {
     @ObservedObject var sessions: ClaudeSessions
     @ObservedObject private var prefs = Preferences.shared
 
+    private static let gap: CGFloat = 10
+
     var body: some View {
         if let approval = sessions.approval {
             ApprovalCard(approval: approval) { sessions.answer($0) }
         } else {
-            let tiles = HomeTile.allCases.filter { $0 != .now && !prefs.hiddenHomeTiles.contains($0) }
-            let showsNow = !prefs.hiddenHomeTiles.contains(.now)
-            HStack(spacing: 10) {
-                if showsNow {
-                    NowCard(session: sessions.primary)
-                        .frame(minWidth: tiles.isEmpty ? nil : 296, maxWidth: tiles.isEmpty ? .infinity : 296)
-                }
-                if !tiles.isEmpty {
-                    IntegrationGrid(tiles: tiles, narrow: showsNow)
+            grid(prefs.homeLayout ?? .standard)
+        }
+    }
+
+    @ViewBuilder
+    private func grid(_ layout: HomeLayout) -> some View {
+        let items = layout.items
+        switch items.count {
+        case 1:
+            cell(items[0], .large)
+        case 2:
+            HStack(spacing: Self.gap) {
+                cell(items[0], .medium)
+                cell(items[1], .medium)
+            }
+        case 3:
+            HStack(spacing: Self.gap) {
+                cell(items[0], .medium)
+                VStack(spacing: Self.gap) {
+                    cell(items[1], .small)
+                    cell(items[2], .small)
                 }
             }
+        default:
+            VStack(spacing: Self.gap) {
+                HStack(spacing: Self.gap) {
+                    cell(items[0], .small)
+                    cell(items[1], .small)
+                }
+                HStack(spacing: Self.gap) {
+                    cell(items[2], .small)
+                    cell(items[3], .small)
+                }
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func cell(_ item: HomeItem, _ place: HomePlace) -> some View {
+        switch item {
+        case .inProgress:
+            if place == .small {
+                NowSmallCard(session: sessions.primary)
+            } else {
+                NowCard(session: sessions.primary)
+            }
+        case .nextEvent: NextEventItem(place: place)
+        case .github: GitHubItem(place: place)
+        case .music: HomeMusicItem(place: place)
         }
     }
 }
@@ -86,6 +108,45 @@ private struct NowCard: View {
             }
             .padding(14)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+        }
+    }
+}
+
+/// The small version: the app and how it's going, with a way to open the project.
+private struct NowSmallCard: View {
+    let session: ClaudeSession?
+
+    var body: some View {
+        Card {
+            HStack(spacing: 12) {
+                IconTile(symbol: "chevron.left.forwardslash.chevron.right")
+                VStack(alignment: .leading, spacing: 3) {
+                    Text(session?.host.name ?? String(localized: "No session"))
+                        .font(.system(size: 13.5, weight: .semibold))
+                        .lineLimit(1)
+                    if let session {
+                        StatusLine(session: session)
+                    } else {
+                        Text("Start Claude Code to see it here.")
+                            .font(.system(size: 12))
+                            .foregroundStyle(Theme.textSecondary)
+                            .lineLimit(1)
+                    }
+                }
+                Spacer(minLength: 4)
+                if let session {
+                    Button {
+                        session.host.open(project: session.cwd)
+                    } label: {
+                        Image(systemName: "arrow.up.right").font(.system(size: 12, weight: .medium))
+                    }
+                    .buttonStyle(IconButtonStyle())
+                    .focusable(false)
+                    .accessibilityLabel("Open project")
+                }
+            }
+            .padding(.horizontal, 12)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
         }
     }
 }
@@ -181,81 +242,6 @@ private struct ApprovalCard: View {
             }
             .padding(14)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-        }
-    }
-}
-
-// MARK: - Integration tiles
-
-private struct IntegrationGrid: View {
-    let tiles: [HomeTile]
-    /// Next to the Now card: two tiles go below each other rather than side by side.
-    let narrow: Bool
-    @ObservedObject var player: NowPlaying = .shared
-    @ObservedObject var github: GitHubStore = .shared
-
-    private var rows: [[HomeTile]] {
-        let perRow = narrow && tiles.count == 2 ? 1 : 2
-        return stride(from: 0, to: tiles.count, by: perRow).map { Array(tiles[$0..<min($0 + perRow, tiles.count)]) }
-    }
-
-    var body: some View {
-        VStack(spacing: 8) {
-            ForEach(rows, id: \.self) { row in
-                HStack(spacing: 8) {
-                    ForEach(row) { tile in view(for: tile) }
-                }
-            }
-        }
-    }
-
-    // WHOOP and Notion get live data once those integrations exist.
-    @ViewBuilder
-    private func view(for tile: HomeTile) -> some View {
-        if tile == .music {
-            musicTile
-        } else if tile == .github, github.isConnected {
-            self.tile(
-                "GitHub", value: String(localized: "\(github.snapshot.mine.count) PRs · \(github.snapshot.reviews.count) reviews"),
-                dot: githubDot, dim: false)
-        } else {
-            self.tile(tile.title)
-        }
-    }
-
-    private var githubDot: Color {
-        let checks = github.snapshot.mine.map(\.checks.status)
-        if checks.contains(.failed) { return Theme.badge }
-        if checks.contains(.running) { return Theme.warning }
-        return Theme.ok
-    }
-
-    private var musicTile: some View {
-        let track = player.track
-        let value = track.map { [$0.title, $0.artist].filter { !$0.isEmpty }.joined(separator: " · ") }
-        return tile(
-            String(localized: "Music"), value: value ?? String(localized: "Not playing"),
-            dot: track?.isPlaying == true ? Theme.ok : nil,
-            dim: track == nil)
-    }
-
-    private func tile(
-        _ name: String, value: String = String(localized: "Not connected"),
-        dot: Color? = nil, dim: Bool = true
-    ) -> some View {
-        Card {
-            VStack(alignment: .leading, spacing: 4) {
-                HStack(spacing: 6) {
-                    Circle().fill(dot ?? Theme.textSecondary.opacity(0.5)).frame(width: 7, height: 7)
-                    Text(name).font(.system(size: 12)).foregroundStyle(Theme.textSecondary)
-                }
-                Text(value)
-                    .font(.system(size: 13, weight: .semibold))
-                    .foregroundStyle(dim ? Theme.textSecondary : Theme.textPrimary)
-                    .lineLimit(1)
-            }
-            .padding(.horizontal, 12)
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
         }
     }
 }
