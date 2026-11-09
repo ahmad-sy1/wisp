@@ -21,7 +21,7 @@ struct TabBar: View {
                 MoreTabsButton(
                     count: layout.more.count,
                     isActive: model.moreOpen || layout.more.contains(model.tab),
-                    hasBadge: layout.more.contains { (model.badges[$0] ?? 0) > 0 }
+                    badgeColor: moreBadgeColor(layout.more)
                 ) {
                     model.moreOpen.toggle()
                 }
@@ -61,7 +61,15 @@ struct TabBar: View {
             if hidden.contains(model.tab) { model.tab = .home }
         }
         .onChange(of: model.tab) { _, _ in model.moreOpen = false }
-        .onChange(of: model.phase) { _, _ in model.moreOpen = false }
+    }
+}
+
+extension TabBar {
+    /// Red when anything but GitHub's reviews waits in *More*: red is the louder of the two.
+    fileprivate func moreBadgeColor(_ tabs: [WispTab]) -> Color? {
+        let waiting = tabs.filter { (model.badges[$0] ?? 0) > 0 }
+        if waiting.isEmpty { return nil }
+        return waiting == [.github] ? Theme.info : Theme.badge
     }
 }
 
@@ -100,7 +108,7 @@ struct TabIconButton: View {
 
     @ViewBuilder private var glyph: some View {
         if let letters {
-            ServiceIcon(letters: letters, color: foreground, size: .small)
+            ServiceIcon(letters: letters, color: Theme.textPrimary, size: .small)
         } else {
             Image.wisp(symbol)
                 .font(.system(size: 14, weight: .regular))
@@ -113,7 +121,8 @@ struct TabIconButton: View {
 private struct MoreTabsButton: View {
     let count: Int
     let isActive: Bool
-    let hasBadge: Bool
+    /// `nil` when no tab in *More* has a badge.
+    let badgeColor: Color?
     let action: () -> Void
 
     @State private var hovered = false
@@ -133,7 +142,7 @@ private struct MoreTabsButton: View {
                     .fill(isActive ? Theme.activeTab : hovered ? Theme.controlHover : .clear)
             )
             .overlay(alignment: .topTrailing) {
-                if hasBadge { Circle().fill(Theme.badge).frame(width: 7, height: 7).offset(x: 2, y: -2) }
+                if let badgeColor { Circle().fill(badgeColor).frame(width: 7, height: 7).offset(x: 2, y: -2) }
             }
             .contentShape(Rectangle())
         }
@@ -160,6 +169,7 @@ struct MoreTabsMenu: View {
                     ForEach(tabs) { tab in
                         MoreTabsRow(tab: tab, badge: model.badges[tab] ?? 0, isActive: model.tab == tab) {
                             withAnimation(.easeInOut(duration: 0.18)) { model.tab = tab }
+                            model.moreOpen = false
                         }
                     }
                 }
@@ -204,7 +214,7 @@ private struct MoreTabsRow: View {
                 }
                 Text(tab.title).font(.system(size: 13)).lineLimit(1)
                 Spacer(minLength: 6)
-                if badge > 0 { CountBadge(count: badge) }
+                if badge > 0 { CountBadge(count: badge, color: tab == .github ? Theme.info : Theme.badge) }
             }
             .padding(.horizontal, 8)
             .frame(height: 26)
