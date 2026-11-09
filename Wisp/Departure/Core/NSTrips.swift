@@ -1,8 +1,11 @@
 import Foundation
+import OSLog
 
 /// Door-to-door travel advice from the NS Reisinformatie API (`/api/v3/trips`), which covers
 /// buses and trams too. Needs a key from apiportal.ns.nl, kept in the Keychain.
 struct NSTravelProvider: TravelProvider {
+    private static let log = Logger(subsystem: "com.ahmadalasmi.wisp", category: "ns")
+
     let key: String
     var transport: any HTTPTransport = URLSessionTransport()
 
@@ -14,6 +17,26 @@ struct NSTravelProvider: TravelProvider {
         case 200: return try NSTripsParser.parse(response.body, origin: from)
         case 401, 403: throw TravelError.missingKey
         default: throw TravelError.unavailable
+        }
+    }
+
+    /// Asks for one fixed route, only to see whether NS accepts this key. The gateway answers
+    /// 401 or 403 to a wrong key; a client error other than that means the key passed. A server
+    /// error says nothing about the key, so it isn't stored on that.
+    func checkKey() async -> CredentialCheck {
+        let utrecht = TravelPlace(name: "Utrecht Centraal", latitude: 52.0894, longitude: 5.1101)
+        let amsterdam = TravelPlace(name: "Amsterdam Centraal", latitude: 52.3791, longitude: 4.9003)
+        guard let url = Self.url(from: utrecht, to: amsterdam, departAt: nil, arriveBy: nil) else { return .unreachable }
+        let request = HTTPRequest(url: url, headers: ["Ocp-Apim-Subscription-Key": key, "Accept": "application/json"])
+        guard let response = try? await transport.send(request) else { return .unreachable }
+        if response.status != 200 {
+            let answer = String(decoding: response.body.prefix(300), as: UTF8.self)
+            Self.log.notice("NS key check: status \(response.status, privacy: .public), \(answer, privacy: .public)")
+        }
+        switch response.status {
+        case 401, 403: return .rejected
+        case 500...599: return .unreachable
+        default: return .accepted
         }
     }
 

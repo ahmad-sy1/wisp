@@ -9,6 +9,7 @@ private enum ButtonPhase {
 private struct PhasedLabel: View {
     let configuration: ButtonStyleConfiguration
     let weight: Font.Weight
+    let height: CGFloat
     let text: (ButtonPhase) -> Color
     let fill: (ButtonPhase) -> Color
 
@@ -26,7 +27,7 @@ private struct PhasedLabel: View {
             .font(.system(size: 13, weight: weight))
             .foregroundStyle(text(phase))
             .padding(.horizontal, 12)
-            .frame(height: Theme.buttonHeight)
+            .frame(height: height)
             .background(
                 RoundedRectangle(cornerRadius: Theme.buttonCorner, style: .continuous)
                     .fill(fill(phase))
@@ -38,18 +39,22 @@ private struct PhasedLabel: View {
 
 /// Primary: the one next step in a view (*Open project*, *Connect*).
 struct AccentButtonStyle: ButtonStyle {
+    var height = Theme.buttonHeight
+
     func makeBody(configuration: Configuration) -> some View {
-        AccentLabel(configuration: configuration)
+        AccentLabel(configuration: configuration, height: height)
     }
 
     private struct AccentLabel: View {
         let configuration: ButtonStyleConfiguration
+        let height: CGFloat
         @ObservedObject private var prefs = Preferences.shared
 
         var body: some View {
             PhasedLabel(
                 configuration: configuration,
                 weight: .semibold,
+                height: height,
                 text: { $0 == .disabled ? Theme.textDisabled : .white },
                 fill: { phase in
                     switch phase {
@@ -65,10 +70,13 @@ struct AccentButtonStyle: ButtonStyle {
 
 /// Secondary: every other action (*Manage*, *Cancel*).
 struct SecondaryButtonStyle: ButtonStyle {
+    var height = Theme.buttonHeight
+
     func makeBody(configuration: Configuration) -> some View {
         PhasedLabel(
             configuration: configuration,
             weight: .medium,
+            height: height,
             text: { $0 == .disabled ? Theme.textDisabled : Theme.textPrimary },
             fill: { phase in
                 switch phase {
@@ -82,10 +90,13 @@ struct SecondaryButtonStyle: ButtonStyle {
 
 /// Danger: red text, never a red fill (*Disconnect*).
 struct DangerButtonStyle: ButtonStyle {
+    var height = Theme.buttonHeight
+
     func makeBody(configuration: Configuration) -> some View {
         PhasedLabel(
             configuration: configuration,
             weight: .medium,
+            height: height,
             text: { $0 == .disabled ? Theme.textDisabled : Theme.redText },
             fill: { phase in
                 switch phase {

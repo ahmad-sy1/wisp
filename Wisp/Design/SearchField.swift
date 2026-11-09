@@ -7,8 +7,6 @@ struct SearchField: View {
     var shortcut: String = "⌘K"
     var isFocused: FocusState<Bool>.Binding
 
-    @ObservedObject private var prefs = Preferences.shared
-
     var body: some View {
         HStack(spacing: 8) {
             Image(systemName: "magnifyingglass")
@@ -40,20 +38,6 @@ struct SearchField: View {
                         .strokeBorder(Theme.lineStrong, lineWidth: 1)
                 )
         }
-        .padding(.horizontal, 12)
-        .frame(height: 34)
-        .background(
-            RoundedRectangle(cornerRadius: Theme.buttonCorner, style: .continuous)
-                .fill(Theme.control)
-        )
-        .overlay(
-            RoundedRectangle(cornerRadius: Theme.buttonCorner, style: .continuous)
-                .strokeBorder(isFocused.wrappedValue ? prefs.accent.color : Theme.lineStrong, lineWidth: 1)
-        )
-        .background(
-            RoundedRectangle(cornerRadius: Theme.buttonCorner + 2, style: .continuous)
-                .stroke(prefs.accent.color.opacity(isFocused.wrappedValue ? 0.3 : 0), lineWidth: 3)
-                .padding(-1)
-        )
+        .fieldChrome(focused: isFocused.wrappedValue)
     }
 }

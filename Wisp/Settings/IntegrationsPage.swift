@@ -10,8 +10,6 @@ struct IntegrationsPage: View {
     @ObservedObject private var github = GitHubStore.shared
     @ObservedObject private var departure = DepartureStore.shared
     @ObservedObject private var navigation = SettingsNavigation.shared
-    @State private var managingNS = false
-    @State private var managingGmail = false
     @State private var confirmRemoveGmail = false
 
     var body: some View {
@@ -40,7 +38,7 @@ struct IntegrationsPage: View {
                 if mail.isConfigured {
                     IntegrationRow(
                         name: "Gmail", color: Color(hex: 0xEA4335), status: gmailStatus,
-                        manage: { managingGmail = true },
+                        manage: { navigation.managingIntegration = .gmail },
                         remove: { confirmRemoveGmail = true })
                 }
                 if github.status != .disconnected {
@@ -52,7 +50,7 @@ struct IntegrationsPage: View {
                 if departure.hasNSKey {
                     IntegrationRow(
                         name: "NS", color: Theme.nsYellow, status: String(localized: "Key in your Keychain"),
-                        manage: { managingNS = true },
+                        manage: { navigation.managingIntegration = .ns },
                         remove: { departure.setNSKey(nil) })
                 }
                 IntegrationRow(
@@ -61,17 +59,6 @@ struct IntegrationsPage: View {
                     remove: nil)
             }
         }
-        .onChange(of: navigation.chosenIntegration) { _, id in
-            guard let id else { return }
-            navigation.chosenIntegration = nil
-            switch id {
-            case .gmail: managingGmail = true
-            case .ns: managingNS = true
-            case .github: navigation.page = .github
-            }
-        }
-        .sheet(isPresented: $managingGmail) { GmailSheet(store: mail) }
-        .sheet(isPresented: $managingNS) { NSKeySheet(store: departure) }
         .confirmationDialog(String(localized: "Remove Gmail?"), isPresented: $confirmRemoveGmail) {
             Button("Remove", role: .destructive) { mail.disconnect() }
         } message: {
@@ -135,85 +122,5 @@ private struct IntegrationRow: View {
         .padding(.leading, 15)
         .padding(.trailing, 12)
         .frame(height: 52)
-    }
-}
-
-/// Connect Gmail, or change its app password: address + app password, kept in the
-/// Keychain only.
-private struct GmailSheet: View {
-    @ObservedObject var store: MailStore
-    @Environment(\.dismiss) private var dismiss
-    @State private var address = MailStore.shared.address ?? ""
-    @State private var password = ""
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 14) {
-            Text(verbatim: "Gmail").font(.headline)
-            Form {
-                TextField("Gmail address", text: $address, prompt: Text("name@gmail.com"))
-                    .textContentType(.username)
-                SecureField("App password", text: $password, prompt: Text("16 characters"))
-            }
-            .formStyle(.columns)
-            Link("Create an app password…", destination: URL(string: "https://myaccount.google.com/apppasswords")!)
-                .font(.caption)
-            Text(
-                "wisp marks nothing as read and only changes your mailbox when you click Delete on new mail (it goes to the Gmail trash). Address and password are kept only in your Keychain."
-            )
-            .font(.caption)
-            .foregroundStyle(.secondary)
-            .fixedSize(horizontal: false, vertical: true)
-            HStack {
-                Spacer()
-                Button("Cancel", role: .cancel) { dismiss() }
-                    .keyboardShortcut(.cancelAction)
-                Button("Connect") {
-                    store.connect(address: address, appPassword: password)
-                    password = ""
-                    dismiss()
-                }
-                .keyboardShortcut(.defaultAction)
-                .disabled(!address.contains("@") || password.replacingOccurrences(of: " ", with: "").count < 16)
-            }
-        }
-        .padding(20)
-        .frame(width: 420)
-    }
-}
-
-/// The key for NS's travel information: departures, tracks and delays. Keychain only.
-private struct NSKeySheet: View {
-    @ObservedObject var store: DepartureStore
-    @Environment(\.dismiss) private var dismiss
-    @State private var key = ""
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 14) {
-            Text(verbatim: "NS").font(.headline)
-            SecureField("API key", text: $key, prompt: Text("Primary key"))
-                .textFieldStyle(.roundedBorder)
-            Link("Get a free key…", destination: URL(string: "https://apiportal.ns.nl")!)
-                .font(.caption)
-            Text(
-                "For lines, platforms and delays in the Departure tab. Without it, wisp shows a total time from Apple Maps. The key is kept only in your Keychain."
-            )
-            .font(.caption)
-            .foregroundStyle(.secondary)
-            .fixedSize(horizontal: false, vertical: true)
-            HStack {
-                Spacer()
-                Button("Cancel", role: .cancel) { dismiss() }
-                    .keyboardShortcut(.cancelAction)
-                Button("Save") {
-                    store.setNSKey(key.trimmingCharacters(in: .whitespacesAndNewlines))
-                    key = ""
-                    dismiss()
-                }
-                .keyboardShortcut(.defaultAction)
-                .disabled(key.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
-            }
-        }
-        .padding(20)
-        .frame(width: 420)
     }
 }
