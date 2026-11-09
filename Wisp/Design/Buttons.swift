@@ -97,6 +97,33 @@ struct DangerButtonStyle: ButtonStyle {
     }
 }
 
+/// Icon-only, 28 × 28 (*close*). Give the button an accessibility label.
+struct IconButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        IconLabel(configuration: configuration)
+    }
+
+    private struct IconLabel: View {
+        let configuration: ButtonStyleConfiguration
+        @Environment(\.isEnabled) private var isEnabled
+        @State private var hovered = false
+
+        private var fill: Color {
+            if configuration.isPressed { return Theme.activeTab }
+            return hovered && isEnabled ? Theme.controlHover : Theme.control
+        }
+
+        var body: some View {
+            configuration.label
+                .foregroundStyle(isEnabled ? (hovered ? Theme.textPrimary : Theme.textSecondary) : Theme.textDisabled)
+                .frame(width: Theme.buttonHeight, height: Theme.buttonHeight)
+                .background(RoundedRectangle(cornerRadius: Theme.buttonCorner, style: .continuous).fill(fill))
+                .contentShape(Rectangle())
+                .onHover { hovered = $0 }
+        }
+    }
+}
+
 extension ButtonStyle where Self == SecondaryButtonStyle {
     /// The buttons in Settings' cards are plain secondary buttons.
     static var settings: SecondaryButtonStyle { SecondaryButtonStyle() }
