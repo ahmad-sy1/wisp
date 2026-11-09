@@ -109,6 +109,7 @@ targets:
       - path: Wisp/GitHub/Core
       - path: Wisp/Departure/Core
       - path: Wisp/Notch/Core
+      - path: Wisp/Integrations/Core
       - path: Wisp/Support/HTTPTransport.swift
     settings:
       base:

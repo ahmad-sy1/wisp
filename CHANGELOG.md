@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- *Add integration* is a window now (board 10.3.1): search, categories, what each service does and how it connects, all from the keyboard if you like
 - A shared design system (board 0.2): one set of colours, corners and buttons across the app, with hover and pressed states, and red text for *Disconnect*; Mail's filter is a segmented control
 - wisp has its own app icon and menu bar icon (board 0.1); the menu bar icon is a template, so macOS colours it
 - `wisp-hook` exits cleanly when wisp hangs up during a long event, and integration tests run the real helper: never blocking Claude Code, what it passes on, and never approving without a clear answer

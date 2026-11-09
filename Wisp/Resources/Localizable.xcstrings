@@ -91,6 +91,16 @@
         }
       }
     },
+    "%lld integrations · %lld added" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld integraties · %2$lld toegevoegd"
+          }
+        }
+      }
+    },
     "%lld min" : {
       "localizations" : {
         "nl" : {
@@ -421,6 +431,16 @@
         }
       }
     },
+    "Add %@" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ toevoegen"
+          }
+        }
+      }
+    },
     "Add integration" : {
       "localizations" : {
         "nl" : {
@@ -447,6 +467,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Vul je thuisadres in om te zien wanneer je weg moet."
+          }
+        }
+      }
+    },
+    "Added" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toegevoegd"
+          }
+        }
+      }
+    },
+    "Added · %lld" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toegevoegd · %lld"
           }
         }
       }
@@ -557,6 +597,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Automatisch · %1$@ · %2$@"
+          }
+        }
+      }
+    },
+    "Available · %lld" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Beschikbaar · %lld"
           }
         }
       }
@@ -677,6 +727,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bus %@"
+          }
+        }
+      }
+    },
+    "Business" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zakelijk"
+          }
+        }
+      }
+    },
+    "CI 3/4 · review requested" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CI 3/4 · review gevraagd"
           }
         }
       }
@@ -911,12 +981,32 @@
         }
       }
     },
+    "Clear search" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zoekopdracht wissen"
+          }
+        }
+      }
+    },
     "Clipboard" : {
       "localizations" : {
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Klembord"
+          }
+        }
+      }
+    },
+    "Close" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sluiten"
           }
         }
       }
@@ -997,6 +1087,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Verbind Gmail onder Integraties om je mail te zien."
+          }
+        }
+      }
+    },
+    "Connect with" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Koppelen met"
           }
         }
       }
@@ -1161,6 +1261,16 @@
         }
       }
     },
+    "Developer" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ontwikkelaar"
+          }
+        }
+      }
+    },
     "Disconnect" : {
       "localizations" : {
         "nl" : {
@@ -1291,6 +1401,16 @@
         }
       }
     },
+    "Feeds the departure assistant: your next train, platform and delays, timed to your next shift or lecture." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Voedt de vertrekassistent: je volgende trein, spoor en vertraging, afgestemd op je volgende dienst of college."
+          }
+        }
+      }
+    },
     "Ferry" : {
       "localizations" : {
         "nl" : {
@@ -1407,6 +1527,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "GitHub CLI is niet ingelogd. Voer gh auth login uit, of gebruik een token."
+          }
+        }
+      }
+    },
+    "GitHub CLI or token" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "GitHub CLI of token"
           }
         }
       }
@@ -1601,6 +1731,26 @@
         }
       }
     },
+    "In your notch" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In je notch"
+          }
+        }
+      }
+    },
+    "Inbox and new-mail alerts" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inbox en meldingen van nieuwe mail"
+          }
+        }
+      }
+    },
     "Install" : {
       "localizations" : {
         "nl" : {
@@ -1687,6 +1837,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sleutels en wachtwoorden worden veilig in de Sleutelhanger van je Mac bewaard. Verwijderen koppelt de integratie los en wist de sleutel."
+          }
+        }
+      }
+    },
+    "Keys stay in your Mac's Keychain. Nothing is sent anywhere except to %@ itself." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sleutels blijven in de Sleutelhanger van je Mac. Er wordt niets verstuurd behalve naar %@ zelf."
           }
         }
       }
@@ -1797,6 +1957,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Laat wisp meeluisteren?"
+          }
+        }
+      }
+    },
+    "Lifestyle" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lifestyle"
           }
         }
       }
@@ -1921,6 +2091,16 @@
         }
       }
     },
+    "Missing one? Request an integration" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mist er een? Vraag een integratie aan"
+          }
+        }
+      }
+    },
     "Moves it to the Gmail trash" : {
       "localizations" : {
         "nl" : {
@@ -1981,12 +2161,42 @@
         }
       }
     },
+    "NS API key" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "NS API-sleutel"
+          }
+        }
+      }
+    },
     "New comments" : {
       "localizations" : {
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Nieuwe reacties"
+          }
+        }
+      }
+    },
+    "New mail · 2 unread" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nieuwe mail · 2 ongelezen"
+          }
+        }
+      }
+    },
+    "Next train 16:42 · platform 3 · on time" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Volgende trein 16:42 · spoor 3 · op tijd"
           }
         }
       }
@@ -2007,6 +2217,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Geen wijzigingen nodig."
+          }
+        }
+      }
+    },
+    "No integration for “%@”" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geen integratie voor “%@”"
           }
         }
       }
@@ -2167,6 +2387,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Niets gevonden voor “%@”."
+          }
+        }
+      }
+    },
+    "Nothing here yet" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hier staat nog niets"
           }
         }
       }
@@ -2571,6 +2801,16 @@
         }
       }
     },
+    "Productivity" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Productiviteit"
+          }
+        }
+      }
+    },
     "Project (optional)" : {
       "localizations" : {
         "nl" : {
@@ -2587,6 +2827,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "OV"
+          }
+        }
+      }
+    },
+    "Pull requests, checks and reviews" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pull requests, checks en reviews"
           }
         }
       }
@@ -2741,6 +2991,16 @@
         }
       }
     },
+    "Request this integration" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vraag deze integratie aan"
+          }
+        }
+      }
+    },
     "Reset" : {
       "localizations" : {
         "nl" : {
@@ -2891,6 +3151,16 @@
         }
       }
     },
+    "Search by name or what it does…" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zoek op naam of wat het doet…"
+          }
+        }
+      }
+    },
     "Search clipboard" : {
       "localizations" : {
         "nl" : {
@@ -2967,6 +3237,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Instellingen…"
+          }
+        }
+      }
+    },
+    "Setup" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Instellen"
           }
         }
       }
@@ -3451,6 +3731,16 @@
         }
       }
     },
+    "Train departures and delays" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Treinvertrek en vertragingen"
+          }
+        }
+      }
+    },
     "Tram" : {
       "localizations" : {
         "nl" : {
@@ -3477,6 +3767,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Reistijd naar je dienst"
+          }
+        }
+      }
+    },
+    "Try another word, like “mail” or “train”." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Probeer een ander woord, zoals “mail” of “trein”."
           }
         }
       }
@@ -3771,12 +4071,42 @@
         }
       }
     },
+    "Your inbox, the unread count and new-mail alerts in your notch." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Je inbox, het aantal ongelezen mails en meldingen van nieuwe mail in je notch."
+          }
+        }
+      }
+    },
     "Your notes show up here." : {
       "localizations" : {
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Je notities verschijnen hier."
+          }
+        }
+      }
+    },
+    "Your pull requests, their checks and review requests, with a quiet signal in your notch." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Je pull requests, hun checks en reviewverzoeken, met een rustig signaal in je notch."
+          }
+        }
+      }
+    },
+    "add" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "toevoegen"
           }
         }
       }
@@ -3837,6 +4167,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "helder"
+          }
+        }
+      }
+    },
+    "close" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "sluiten"
           }
         }
       }
@@ -4047,6 +4387,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "naam@gmail.com"
+          }
+        }
+      }
+    },
+    "navigate" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "navigeren"
           }
         }
       }

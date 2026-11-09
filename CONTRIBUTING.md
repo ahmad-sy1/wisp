@@ -30,7 +30,7 @@ Add `-snapshot </absolute/path.png>` (an app started with `open` doesn't share y
 open -W build.noindex/Build/Products/Debug/wisp.app --args -openOnLaunch music -snapshot /tmp/music.png
 ```
 
-`-settingsPage notch` (or `general`, `integrations`, `agenda`, `music`, `focus`) opens Settings on that page; with `-snapshot` the PNG is that window instead of the panel. While snapshotting, the pages leave out their scroll view (the offscreen drawing can't draw one), so this also works on a locked screen; a page taller than the window is cut off, and switches look inactive. With wisp already running from `/Applications`, add `-n` to `open`, or macOS brings the running one forward instead.
+`-settingsPage notch` (or `general`, `integrations`, `agenda`, `music`, `focus`) opens Settings on that page; with `-snapshot` the PNG is that window instead of the panel. Add `-addIntegration YES` on `integrations` to open the *Add integration* window. While snapshotting, the pages leave out their scroll view (the offscreen drawing can't draw one), so this also works on a locked screen; a page taller than the window is cut off, and switches look inactive. With wisp already running from `/Applications`, add `-n` to `open`, or macOS brings the running one forward instead.
 
 Start it with `open`: run straight from a shell, macOS checks the shell's permissions (Calendar and the like) instead of wisp's.
 
