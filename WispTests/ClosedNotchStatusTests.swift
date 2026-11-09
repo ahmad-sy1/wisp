@@ -15,7 +15,7 @@ final class ClosedNotchStatusTests: XCTestCase {
 
     func testASwitchedOffDepartureTabStaysQuiet() {
         XCTAssertEqual(pick(tripOn: false), "ci")
-        XCTAssertNil(pick(github: nil, tripOn: false))
+        XCTAssertNil(pick(tripOn: false, github: nil))
     }
 
     func testASwitchedOffGitHubTabStaysQuiet() {
