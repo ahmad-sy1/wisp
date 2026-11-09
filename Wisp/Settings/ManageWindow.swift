@@ -260,6 +260,8 @@ private struct ManageWindow: View {
     }
 
     private func disconnect() {
+        // Stays in the list as not connected; ✕ takes it out.
+        Preferences.shared.addedIntegrations.insert(spec.info.id)
         switch spec.info.id {
         case .gmail: mail.disconnect()
         case .ns: departure.setNSKey(nil)

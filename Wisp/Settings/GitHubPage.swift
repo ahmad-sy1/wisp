@@ -56,8 +56,12 @@ struct GitHubPage: View {
                     SettingsStatus(text: String(localized: "Connected"), color: Theme.ok)
                 },
                 trailing: {
-                    Button("Disconnect") { store.disconnect() }
-                        .buttonStyle(.danger)
+                    Button("Disconnect") {
+                        // Stays in Integrations as not connected; ✕ takes it out.
+                        Preferences.shared.addedIntegrations.insert(.github)
+                        store.disconnect()
+                    }
+                    .buttonStyle(.danger)
                 })
         case .connecting:
             SettingsRow(String(localized: "GitHub"), subtitle: String(localized: "Connecting…"))

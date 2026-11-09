@@ -21,7 +21,7 @@ wisp.app
 | `Wisp/Music` | `NowPlaying` (bridge process), `AudioOutput` (device, quality, volume), `Spectrum`, `AudioTap` and `SpectrumAnalyzer` (live spectrum) |
 | `Wisp/Departure` | `Core`: the departure engine, models and provider protocols (no UI, unit tested) |
 | `Wisp/GitHub` | `GitHubStore`; `Core`: the API client, models and radar logic (no UI, unit tested) |
-| `Wisp/Integrations` | `Core`: the catalog behind *Add integration*: services, filters and search (no UI, unit tested) |
+| `Wisp/Integrations` | `Core`: the catalog behind *Add integration*, what the Manage window and the Integrations list show (no UI, unit tested) |
 | `Wisp/Agenda` | `AgendaStore` (EventKit, today's events, shifts) and `WeatherStore` (Open-Meteo) |
 | `Wisp/Clipboard` | `ClipboardStore`: the last 20 copied texts, stored in `clipboard.json` |
 | `Wisp/Notes` | `NotesStore`: quick notes, stored in `notes.json` |
