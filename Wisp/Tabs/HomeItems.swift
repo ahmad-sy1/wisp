@@ -7,7 +7,8 @@ struct NextEventItem: View {
     @ObservedObject private var agenda = AgendaStore.shared
 
     private func upcoming(at now: Date) -> [AgendaEvent] {
-        agenda.events.filter { !$0.isAllDay && $0.end > now }
+        // What is on right now isn't next, and a long shift mustn't hide a meeting during it.
+        agenda.events.filter { !$0.isAllDay && $0.start > now }
     }
 
     private func color(_ event: AgendaEvent) -> Color { event.isShift ? Theme.warning : event.color }
@@ -22,6 +23,8 @@ struct NextEventItem: View {
             .padding(.vertical, 10)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
         }
+        .onAppear { agenda.setVisible(true, by: "home") }
+        .onDisappear { agenda.setVisible(false, by: "home") }
     }
 
     @ViewBuilder private func content(_ events: [AgendaEvent]) -> some View {
@@ -65,7 +68,7 @@ struct NextEventItem: View {
         } else {
             VStack(alignment: .leading, spacing: 4) {
                 label(Theme.textSecondary.opacity(0.5))
-                Text("Nothing planned")
+                Text(agenda.access == .granted ? String(localized: "Nothing planned") : String(localized: "No calendar access"))
                     .font(.system(size: 13.5, weight: .semibold))
                     .foregroundStyle(Theme.textSecondary)
             }
@@ -179,7 +182,7 @@ struct GitHubItem: View {
         HStack(spacing: 8) {
             ServiceIcon(letters: "GH", color: Theme.textPrimary, size: .small)
             Text(verbatim: "GitHub").font(.system(size: 13, weight: .semibold))
-            Text("\(snapshot.mine.count) open").font(.system(size: 12)).foregroundStyle(Theme.textSecondary)
+            Text("\(snapshot.ordered.count) open").font(.system(size: 12)).foregroundStyle(Theme.textSecondary)
         }
     }
 
@@ -208,7 +211,7 @@ struct GitHubItem: View {
     private var large: some View {
         VStack(alignment: .leading, spacing: 8) {
             header
-            ForEach(Array((snapshot.reviews + snapshot.mine).prefix(3))) { pull in
+            ForEach(Array(snapshot.ordered.prefix(3))) { pull in
                 HStack(spacing: 8) {
                     checkIcon(pull.checks.status)
                     Text("#\(pull.number) \(pull.title)").font(.system(size: 13)).lineLimit(1)

@@ -52,5 +52,13 @@ final class HomeLayoutTests: XCTestCase {
         XCTAssertEqual(snapshot.mostImportant?.number, 2)
         snapshot.mine.append(pull(3, .failed))
         XCTAssertEqual(snapshot.mostImportant?.number, 3)
+        XCTAssertEqual(snapshot.ordered.map(\.number), [3, 2, 1])
+    }
+
+    func testAPullInBothListsIsListedOnce() {
+        var snapshot = RadarSnapshot()
+        snapshot.mine = [pull(1, .failed)]
+        snapshot.reviews = [pull(1, .failed)]
+        XCTAssertEqual(snapshot.ordered.count, 1)
     }
 }

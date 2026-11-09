@@ -411,7 +411,15 @@ struct HomeMusicItem: View {
                     .font(.system(size: 10.5, weight: .medium))
                     .tracking(0.6)
                     .foregroundStyle(Theme.textSecondary)
-                SpectrumBars(levels: spectrum.levels, live: spectrum.isRunning && track.isPlaying)
+                if spectrum.consent == .allowed {
+                    SpectrumBars(levels: spectrum.levels, live: spectrum.isRunning && track.isPlaying)
+                } else {
+                    Text("Allow the live spectrum in the Music tab.")
+                        .font(.system(size: 12))
+                        .foregroundStyle(Theme.textSecondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                    Spacer(minLength: 0)
+                }
             }
             .frame(width: 170)
             // Only runs while it is on screen.

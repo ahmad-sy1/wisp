@@ -27,10 +27,10 @@ struct AgendaTab: View {
             }
         }
         .onAppear {
-            agenda.setVisible(true)
+            agenda.setVisible(true, by: "agenda")
             weather.refreshIfStale()
         }
-        .onDisappear { agenda.setVisible(false) }
+        .onDisappear { agenda.setVisible(false, by: "agenda") }
     }
 }
 
