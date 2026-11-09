@@ -309,12 +309,14 @@ private struct AddIntegrationWindow: View {
 
     /// Returns true when the key was used here.
     private func handle(_ event: NSEvent) -> Bool {
+        // Caps Lock doesn't change a shortcut; arrows and the keypad carry flags of their own.
         let flags = event.modifierFlags.intersection(.deviceIndependentFlagsMask)
+            .subtracting([.capsLock, .numericPad, .function])
         if flags == .command, event.charactersIgnoringModifiers?.lowercased() == "k" {
             searchFocused = true
             return true
         }
-        guard flags.subtracting([.numericPad, .function]).isEmpty else { return false }
+        guard flags.isEmpty else { return false }
         switch event.keyCode {
         case 53:
             close()
