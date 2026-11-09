@@ -19,6 +19,12 @@ final class TabBarLayoutTests: XCTestCase {
         XCTAssertEqual(TabBarLayout.order(saved: [], all: ["home", "a"], first: "home"), ["home", "a"])
     }
 
+    func testMoreBadgeIsLoudUnlessOnlyQuietTabsWait() {
+        XCTAssertNil(TabBarLayout.moreBadge(waiting: [String](), quiet: ["github"]))
+        XCTAssertEqual(TabBarLayout.moreBadge(waiting: ["github"], quiet: ["github"]), .quiet)
+        XCTAssertEqual(TabBarLayout.moreBadge(waiting: ["github", "mail"], quiet: ["github"]), .loud)
+    }
+
     func testNoTabs() {
         XCTAssertEqual(TabBarLayout.split([Int]()).front, [])
     }

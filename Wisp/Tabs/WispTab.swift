@@ -1,4 +1,4 @@
-import Foundation
+import SwiftUI
 
 /// The tabs in the expanded panel, in tab-bar order.
 enum WispTab: String, CaseIterable, Identifiable {
@@ -24,6 +24,9 @@ enum WispTab: String, CaseIterable, Identifiable {
 
     /// An integration's tab shows its letters instead of a symbol (board 0.2).
     var letters: String? { self == .github ? "GH" : nil }
+
+    /// GitHub's badge counts reviews, which can wait; the others are red.
+    var badgeColor: Color { self == .github ? Theme.info : Theme.badge }
 
     var title: String {
         switch self {

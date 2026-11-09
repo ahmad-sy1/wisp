@@ -12,7 +12,7 @@ struct TabBar: View {
                     symbol: tab.symbol, label: tab.title, letters: tab.letters,
                     isActive: model.tab == tab,
                     badge: model.badges[tab] ?? 0,
-                    badgeColor: tab == .github ? Theme.info : Theme.badge
+                    badgeColor: tab.badgeColor
                 ) {
                     withAnimation(.easeInOut(duration: 0.18)) { model.tab = tab }
                 }
@@ -68,8 +68,7 @@ extension TabBar {
     /// Red when anything but GitHub's reviews waits in *More*: red is the louder of the two.
     fileprivate func moreBadgeColor(_ tabs: [WispTab]) -> Color? {
         let waiting = tabs.filter { (model.badges[$0] ?? 0) > 0 }
-        if waiting.isEmpty { return nil }
-        return waiting == [.github] ? Theme.info : Theme.badge
+        return TabBarLayout.moreBadge(waiting: waiting, quiet: [.github]).map { $0 == .quiet ? Theme.info : Theme.badge }
     }
 }
 
@@ -214,7 +213,7 @@ private struct MoreTabsRow: View {
                 }
                 Text(tab.title).font(.system(size: 13)).lineLimit(1)
                 Spacer(minLength: 6)
-                if badge > 0 { CountBadge(count: badge, color: tab == .github ? Theme.info : Theme.badge) }
+                if badge > 0 { CountBadge(count: badge, color: tab.badgeColor) }
             }
             .padding(.horizontal, 8)
             .frame(height: 26)
