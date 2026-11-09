@@ -93,7 +93,7 @@ private struct MailRow: View {
             .padding(.horizontal, 14)
             .frame(height: 44)
             .background(
-                RoundedRectangle(cornerRadius: 10, style: .continuous)
+                RoundedRectangle(cornerRadius: Theme.buttonCorner, style: .continuous)
                     .fill(hovered ? Theme.controlHover : .clear)
                     .padding(.horizontal, 6)
             )
@@ -135,8 +135,12 @@ struct MailToolbar: View {
 
     var body: some View {
         HStack(spacing: 6) {
-            pill(String(localized: "All"), .all)
-            pill(String(localized: "Unread"), .unread)
+            SegmentedControl(
+                selection: $store.filter,
+                values: [.all, .unread],
+                title: { $0 == .all ? String(localized: "All") : String(localized: "Unread") },
+                height: Theme.tabSize.height,
+                fontSize: 12)
             Button {
                 store.open()
             } label: {
@@ -151,23 +155,5 @@ struct MailToolbar: View {
             .buttonStyle(.plain)
             .help("Open in Gmail")
         }
-    }
-
-    private func pill(_ title: String, _ filter: MailStore.Filter) -> some View {
-        let active = store.filter == filter
-        return Button {
-            store.filter = filter
-        } label: {
-            Text(title)
-                .font(.system(size: 12, weight: active ? .semibold : .regular))
-                .foregroundStyle(active ? Theme.textPrimary : Theme.textSecondary)
-                .fixedSize()
-                .padding(.horizontal, 8)
-                .frame(height: Theme.tabSize.height)
-                .background(
-                    RoundedRectangle(cornerRadius: Theme.buttonCorner, style: .continuous)
-                        .fill(active ? Theme.activeTab : Theme.control))
-        }
-        .buttonStyle(.plain)
     }
 }

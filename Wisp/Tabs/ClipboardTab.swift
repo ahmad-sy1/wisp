@@ -86,7 +86,7 @@ private struct KindTile: View {
             .font(.system(size: kind == .url ? 10 : 11, weight: .bold))
             .foregroundStyle(Theme.textSecondary)
             .frame(width: 28, height: 28)
-            .background(RoundedRectangle(cornerRadius: 7, style: .continuous).fill(Theme.control))
+            .background(RoundedRectangle(cornerRadius: Theme.buttonCorner, style: .continuous).fill(Theme.control))
     }
 
     private var label: String {

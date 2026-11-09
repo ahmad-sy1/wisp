@@ -47,7 +47,7 @@ struct IntegrationsPage: View {
                     .foregroundStyle(.white)
                     .padding(.horizontal, 14)
                     .frame(height: 32)
-                    .background(RoundedRectangle(cornerRadius: 9).fill(prefs.accent.color))
+                    .background(RoundedRectangle(cornerRadius: Theme.buttonCorner).fill(prefs.accent.color))
             }
             .menuStyle(.button)
             .buttonStyle(.plain)

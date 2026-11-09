@@ -168,7 +168,7 @@ private struct ModeSwitch: View {
                         .foregroundStyle(item == mode ? Theme.textPrimary : Theme.textSecondary)
                         .frame(width: 30, height: 22)
                         .background(
-                            RoundedRectangle(cornerRadius: 7, style: .continuous)
+                            RoundedRectangle(cornerRadius: Theme.smallCorner, style: .continuous)
                                 .fill(item == mode ? Theme.activeTab : .clear)
                         )
                         .contentShape(Rectangle())
@@ -180,7 +180,7 @@ private struct ModeSwitch: View {
             }
         }
         .padding(2)
-        .background(RoundedRectangle(cornerRadius: 9, style: .continuous).fill(Theme.control))
+        .background(RoundedRectangle(cornerRadius: Theme.buttonCorner, style: .continuous).fill(Theme.control))
     }
 }
 
@@ -219,7 +219,7 @@ private struct LegChips: View {
         }
         .padding(.horizontal, 4)
         .frame(height: 22)
-        .background(RoundedRectangle(cornerRadius: 7, style: .continuous).fill(Theme.control))
+        .background(RoundedRectangle(cornerRadius: Theme.buttonCorner, style: .continuous).fill(Theme.control))
     }
 
     @ViewBuilder

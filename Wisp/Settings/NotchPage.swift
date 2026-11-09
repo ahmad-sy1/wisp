@@ -234,7 +234,7 @@ private struct HomeTileChip: View {
             .padding(.horizontal, 8)
             .frame(height: 26)
             .overlay(
-                RoundedRectangle(cornerRadius: 8)
+                RoundedRectangle(cornerRadius: Theme.buttonCorner)
                     .strokeBorder(shown ? color : Theme.cardBorder, lineWidth: 1)
             )
             .contentShape(Rectangle())

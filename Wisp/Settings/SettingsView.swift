@@ -81,7 +81,7 @@ struct SettingsView: View {
         .padding(.horizontal, 10)
         .frame(width: 205)
         .frame(maxHeight: .infinity, alignment: .top)
-        .background(Theme.card)
+        .background(Theme.sidebar)
     }
 
     @ViewBuilder
@@ -120,7 +120,7 @@ private struct SidebarItem: View {
             .padding(.horizontal, 10)
             .frame(height: 30)
             .background(
-                RoundedRectangle(cornerRadius: 8)
+                RoundedRectangle(cornerRadius: Theme.buttonCorner)
                     .fill(selected ? Theme.activeTab : hovering ? Theme.control : .clear)
             )
             .contentShape(Rectangle())

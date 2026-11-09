@@ -75,7 +75,7 @@ private struct PullList: View {
                 segment(.reviews, String(localized: "Reviews · \(store.snapshot.reviews.count)"))
             }
             .padding(2)
-            .background(RoundedRectangle(cornerRadius: 9, style: .continuous).fill(Theme.control))
+            .background(RoundedRectangle(cornerRadius: Theme.buttonCorner, style: .continuous).fill(Theme.control))
             .fixedSize()
 
             if pulls.isEmpty {
@@ -109,7 +109,7 @@ private struct PullList: View {
                 .padding(.horizontal, 9)
                 .frame(height: 22)
                 .background(
-                    RoundedRectangle(cornerRadius: 7, style: .continuous)
+                    RoundedRectangle(cornerRadius: Theme.smallCorner, style: .continuous)
                         .fill(showing == section ? Theme.activeTab : .clear)
                 )
                 .contentShape(Rectangle())
