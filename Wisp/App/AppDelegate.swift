@@ -48,6 +48,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             let settingsPage = UserDefaults.standard.string(forKey: "settingsPage").flatMap(SettingsPageID.init(rawValue:))
             if let settingsPage {
                 SettingsNavigation.shared.page = settingsPage
+                // `-addIntegration YES` opens that window on top (Integrations only).
+                SettingsNavigation.shared.addingIntegration = UserDefaults.standard.bool(forKey: "addIntegration")
                 openSettings()
             }
             if let path = UserDefaults.standard.string(forKey: "snapshot") {
