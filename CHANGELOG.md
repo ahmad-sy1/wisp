@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Settings → Integrations shows what needs attention first, and connected integrations with their own options appear in the sidebar (boards 10.3.4, 10.10)
 - One Manage window for Gmail and NS (boards 10.3.2, 10.3.3): a key is checked first and only stored when it works
 - Cut, copy, paste, select all and undo work with the usual shortcuts in every text field
 - *Add integration* is a window now (board 10.3.1): search, categories, what each service does and how it connects, all from the keyboard if you like
