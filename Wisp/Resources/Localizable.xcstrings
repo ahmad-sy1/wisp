@@ -331,6 +331,16 @@
         }
       }
     },
+    "1 tab on" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 tab aan"
+          }
+        }
+      }
+    },
     "16 characters" : {
       "localizations" : {
         "nl" : {

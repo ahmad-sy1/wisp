@@ -56,6 +56,7 @@ struct NotchPage: View {
 
     private func summary(_ front: Int, _ more: Int) -> String {
         let total = front + more
+        if total == 1 { return String(localized: "1 tab on") }
         return more == 0
             ? String(localized: "\(total) tabs on")
             : String(localized: "\(total) tabs on · \(front) fit in the notch · \(more) in More")
