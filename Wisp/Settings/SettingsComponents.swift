@@ -88,8 +88,8 @@ struct SettingsGroup<Content: View>: View {
                     }
                 }
             }
-            .background(RoundedRectangle(cornerRadius: 12).fill(Theme.card))
-            .overlay(RoundedRectangle(cornerRadius: 12).strokeBorder(Theme.cardBorder, lineWidth: 1))
+            .background(RoundedRectangle(cornerRadius: Theme.cardCorner).fill(Theme.card))
+            .overlay(RoundedRectangle(cornerRadius: Theme.cardCorner).strokeBorder(Theme.cardBorder, lineWidth: 1))
         }
     }
 }
@@ -162,29 +162,6 @@ struct SettingsStatus: View {
             Text(text)
         }
     }
-}
-
-/// The flat grey buttons in the cards (*Beheer*, *Wijzig*, *Opnieuw installeren*).
-struct SettingsButtonStyle: ButtonStyle {
-    @Environment(\.isEnabled) private var isEnabled
-
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .font(.system(size: 13))
-            .padding(.horizontal, 12)
-            .frame(height: 28)
-            .background(
-                RoundedRectangle(cornerRadius: 7)
-                    .fill(configuration.isPressed ? Theme.activeTab : Theme.control)
-            )
-            .overlay(RoundedRectangle(cornerRadius: 7).strokeBorder(Theme.cardBorder, lineWidth: 1))
-            .opacity(isEnabled ? 1 : 0.45)
-            .contentShape(Rectangle())
-    }
-}
-
-extension ButtonStyle where Self == SettingsButtonStyle {
-    static var settings: SettingsButtonStyle { SettingsButtonStyle() }
 }
 
 /// A blue text button inside a card (*Alle agenda's tonen*).

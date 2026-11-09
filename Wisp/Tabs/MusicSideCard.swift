@@ -164,7 +164,7 @@ private struct ConsentView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             HStack(alignment: .top, spacing: 12) {
-                RoundedRectangle(cornerRadius: 10, style: .continuous)
+                RoundedRectangle(cornerRadius: Theme.buttonCorner, style: .continuous)
                     .fill(Theme.control)
                     .frame(width: 34, height: 34)
                     .overlay(

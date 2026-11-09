@@ -57,7 +57,7 @@ struct GitHubPage: View {
                 },
                 trailing: {
                     Button("Disconnect") { store.disconnect() }
-                        .buttonStyle(.settings)
+                        .buttonStyle(.danger)
                 })
         case .connecting:
             SettingsRow(String(localized: "GitHub"), subtitle: String(localized: "Connecting…"))

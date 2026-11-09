@@ -123,8 +123,8 @@ struct StepButton: View {
             Image(systemName: symbol)
                 .font(.system(size: 12, weight: .semibold))
                 .frame(width: 28, height: 28)
-                .background(RoundedRectangle(cornerRadius: 7).fill(Theme.control))
-                .overlay(RoundedRectangle(cornerRadius: 7).strokeBorder(Theme.cardBorder, lineWidth: 1))
+                .background(RoundedRectangle(cornerRadius: Theme.buttonCorner).fill(Theme.control))
+                .overlay(RoundedRectangle(cornerRadius: Theme.buttonCorner).strokeBorder(Theme.cardBorder, lineWidth: 1))
                 .contentShape(Rectangle())
         }
         .buttonStyle(.plain)

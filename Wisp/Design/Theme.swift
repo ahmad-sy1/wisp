@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// Design tokens for wisp: pure black panel, flat cards, no gradients, no glass.
+/// Design tokens for wisp (board 0.2): pure black panel, flat cards, no gradients, no glass.
 enum Theme {
     // Colours
     static let panel = Color(hex: 0x000000)
@@ -9,9 +9,23 @@ enum Theme {
     static let control = Color(hex: 0x1C1C1E)
     static let controlHover = Color(hex: 0x222225)
     static let activeTab = Color(hex: 0x2A2A2D)
+    /// A switched-off track and the chosen segment.
+    static let trackOff = Color(hex: 0x3A3A3E)
+    static let sidebar = Color(hex: 0x0B0B0D)
+    static let modal = Color(hex: 0x0E0E10)
+    static let rowHover = Color(hex: 0x18181B)
+    /// The border of fields, modals and chips.
+    static let lineStrong = Color(hex: 0x2A2A2D)
     static let textPrimary = Color.white
+    /// Field labels and chip text.
+    static let textLabel = Color(hex: 0xD4D4D8)
     static let textSecondary = Color(hex: 0xA1A1AA)
+    /// Meta, section labels and placeholders.
+    static let textFaint = Color(hex: 0x71717A)
+    static let textDisabled = Color(hex: 0x52525B)
     static let badge = Color(hex: 0xFF453A)
+    /// Red that stays readable as text on black; `badge` is for filled shapes.
+    static let redText = Color(hex: 0xFF6961)
     static let ok = Color(hex: 0x30D158)
     static let warning = Color(hex: 0xFF9F0A)
     /// Review requests: the blue badge and dot, whatever the accent colour.
@@ -39,8 +53,11 @@ enum Theme {
     }
 
     // Shapes
-    static let cardCorner: CGFloat = 16
-    static let buttonCorner: CGFloat = 9
+    static let cardCorner: CGFloat = 14
+    static let modalCorner: CGFloat = 16
+    static let buttonCorner: CGFloat = 8
+    static let smallCorner: CGFloat = 6
+    static let iconCorner: CGFloat = 11
     static let buttonHeight: CGFloat = 28
     static let tabSize = CGSize(width: 32, height: 28)
 }
@@ -57,6 +74,24 @@ enum Accent: String, CaseIterable, Identifiable {
         case .green: Color(hex: 0x30D158)
         case .orange: Color(hex: 0xFF9F0A)
         case .purple: Color(hex: 0xBF5AF2)
+        }
+    }
+
+    var hover: Color {
+        switch self {
+        case .blue: Color(hex: 0x3395FF)
+        case .green: Color(hex: 0x4FD871)
+        case .orange: Color(hex: 0xFFAD2F)
+        case .purple: Color(hex: 0xC973F4)
+        }
+    }
+
+    var pressed: Color {
+        switch self {
+        case .blue: Color(hex: 0x0071E3)
+        case .green: Color(hex: 0x2AB84D)
+        case .orange: Color(hex: 0xE08C09)
+        case .purple: Color(hex: 0xA84FD5)
         }
     }
 }

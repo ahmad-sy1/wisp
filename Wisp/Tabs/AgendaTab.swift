@@ -176,8 +176,8 @@ private struct NowCard: View {
         }
         .padding(.horizontal, 11)
         .padding(.vertical, 10)
-        .background(RoundedRectangle(cornerRadius: 12, style: .continuous).fill(Theme.control))
-        .overlay(RoundedRectangle(cornerRadius: 12, style: .continuous).strokeBorder(Theme.cardBorder, lineWidth: 1))
+        .background(RoundedRectangle(cornerRadius: Theme.cardCorner, style: .continuous).fill(Theme.control))
+        .overlay(RoundedRectangle(cornerRadius: Theme.cardCorner, style: .continuous).strokeBorder(Theme.cardBorder, lineWidth: 1))
         .padding(.horizontal, 15)
         .padding(.vertical, 4)
     }
@@ -190,7 +190,7 @@ private struct NowCard: View {
                 .foregroundStyle(.white)
                 .padding(.horizontal, 7)
                 .frame(height: 20)
-                .background(RoundedRectangle(cornerRadius: 6, style: .continuous).fill(color))
+                .background(RoundedRectangle(cornerRadius: Theme.smallCorner, style: .continuous).fill(color))
                 .fixedSize()
             Text(event.title)
                 .font(.system(size: 15, weight: .semibold))

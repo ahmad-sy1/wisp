@@ -71,7 +71,7 @@ private struct NoteRow: View {
             .padding(.horizontal, 12)
             .frame(maxWidth: .infinity, minHeight: 44, alignment: .leading)
             .background(
-                RoundedRectangle(cornerRadius: 10, style: .continuous)
+                RoundedRectangle(cornerRadius: Theme.buttonCorner, style: .continuous)
                     .fill(selected ? Theme.activeTab : hovered ? Theme.controlHover : .clear)
             )
             .padding(.horizontal, 6)

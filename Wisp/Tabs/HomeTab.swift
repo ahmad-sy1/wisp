@@ -162,7 +162,7 @@ private struct ApprovalCard: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.horizontal, 10)
                     .padding(.vertical, 7)
-                    .background(RoundedRectangle(cornerRadius: 8, style: .continuous).fill(Theme.control))
+                    .background(RoundedRectangle(cornerRadius: Theme.buttonCorner, style: .continuous).fill(Theme.control))
 
                 HStack(spacing: 8) {
                     Spacer()
@@ -267,58 +267,9 @@ struct IconTile: View {
     var tint: Color = Theme.textPrimary
 
     var body: some View {
-        RoundedRectangle(cornerRadius: 10, style: .continuous)
+        RoundedRectangle(cornerRadius: Theme.iconCorner, style: .continuous)
             .fill(Theme.control)
             .frame(width: 40, height: 40)
             .overlay(Image(systemName: symbol).font(.system(size: 15)).foregroundStyle(tint))
-    }
-}
-
-struct AccentButtonStyle: ButtonStyle {
-    func makeBody(configuration: Configuration) -> some View {
-        AccentLabel(configuration: configuration)
-    }
-
-    private struct AccentLabel: View {
-        let configuration: ButtonStyleConfiguration
-        @ObservedObject private var prefs = Preferences.shared
-        @Environment(\.isEnabled) private var isEnabled
-
-        var body: some View {
-            configuration.label
-                .font(.system(size: 13, weight: .semibold))
-                .foregroundStyle(.white)
-                .padding(.horizontal, 12)
-                .frame(height: Theme.buttonHeight)
-                .background(
-                    RoundedRectangle(cornerRadius: Theme.buttonCorner, style: .continuous)
-                        .fill(prefs.accent.color)
-                )
-                .opacity(!isEnabled ? 0.4 : configuration.isPressed ? 0.75 : 1)
-        }
-    }
-}
-
-struct SecondaryButtonStyle: ButtonStyle {
-    func makeBody(configuration: Configuration) -> some View {
-        SecondaryLabel(configuration: configuration)
-    }
-
-    private struct SecondaryLabel: View {
-        let configuration: ButtonStyleConfiguration
-        @Environment(\.isEnabled) private var isEnabled
-
-        var body: some View {
-            configuration.label
-                .font(.system(size: 13, weight: .medium))
-                .foregroundStyle(Theme.textPrimary)
-                .padding(.horizontal, 12)
-                .frame(height: Theme.buttonHeight)
-                .background(
-                    RoundedRectangle(cornerRadius: Theme.buttonCorner, style: .continuous)
-                        .fill(configuration.isPressed ? Theme.activeTab : Theme.control)
-                )
-                .opacity(isEnabled ? 1 : 0.4)
-        }
     }
 }

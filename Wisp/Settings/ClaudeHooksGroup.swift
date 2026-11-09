@@ -69,7 +69,7 @@ struct ClaudeHooksGroup: View {
                 .padding(8)
             }
             .frame(height: 220)
-            .background(RoundedRectangle(cornerRadius: 6).fill(Color.black.opacity(0.25)))
+            .background(RoundedRectangle(cornerRadius: Theme.smallCorner).fill(Color.black.opacity(0.25)))
 
             Text(
                 "A backup is made first: \(plan.backupURL.lastPathComponent). Other settings stay as they are, but the file is reformatted (keys in alphabetical order)."

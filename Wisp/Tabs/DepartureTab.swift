@@ -158,29 +158,13 @@ private struct ModeSwitch: View {
     let choose: (TravelMode) -> Void
 
     var body: some View {
-        HStack(spacing: 1) {
-            ForEach(TravelMode.allCases) { item in
-                Button {
-                    choose(item)
-                } label: {
-                    Image(systemName: item.symbol)
-                        .font(.system(size: 11.5))
-                        .foregroundStyle(item == mode ? Theme.textPrimary : Theme.textSecondary)
-                        .frame(width: 30, height: 22)
-                        .background(
-                            RoundedRectangle(cornerRadius: 7, style: .continuous)
-                                .fill(item == mode ? Theme.activeTab : .clear)
-                        )
-                        .contentShape(Rectangle())
-                }
-                .buttonStyle(.plain)
-                .focusable(false)
-                .help(item.title)
-                .accessibilityLabel(item.title)
-            }
-        }
-        .padding(2)
-        .background(RoundedRectangle(cornerRadius: 9, style: .continuous).fill(Theme.control))
+        SegmentedControl(
+            selection: Binding(get: { mode }, set: choose),
+            values: TravelMode.allCases,
+            label: { .symbol($0.symbol, help: $0.title) },
+            height: 26,
+            fontSize: 11.5,
+            segmentWidth: 30)
     }
 }
 
@@ -219,7 +203,7 @@ private struct LegChips: View {
         }
         .padding(.horizontal, 4)
         .frame(height: 22)
-        .background(RoundedRectangle(cornerRadius: 7, style: .continuous).fill(Theme.control))
+        .background(RoundedRectangle(cornerRadius: Theme.buttonCorner, style: .continuous).fill(Theme.control))
     }
 
     @ViewBuilder

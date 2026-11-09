@@ -70,12 +70,17 @@ private struct PullList: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
-            HStack(spacing: 2) {
-                segment(.mine, String(localized: "My PRs · \(store.snapshot.mine.count)"))
-                segment(.reviews, String(localized: "Reviews · \(store.snapshot.reviews.count)"))
-            }
-            .padding(2)
-            .background(RoundedRectangle(cornerRadius: 9, style: .continuous).fill(Theme.control))
+            SegmentedControl(
+                selection: $showing.animation(.easeInOut(duration: 0.15)),
+                values: [.mine, .reviews],
+                title: {
+                    $0 == .mine
+                        ? String(localized: "My PRs · \(store.snapshot.mine.count)")
+                        : String(localized: "Reviews · \(store.snapshot.reviews.count)")
+                },
+                height: 26,
+                fontSize: 12
+            )
             .fixedSize()
 
             if pulls.isEmpty {
@@ -97,25 +102,6 @@ private struct PullList: View {
         .padding(.top, 10)
         .padding(.bottom, 6)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-    }
-
-    private func segment(_ section: Section, _ title: String) -> some View {
-        Button {
-            withAnimation(.easeInOut(duration: 0.15)) { showing = section }
-        } label: {
-            Text(title)
-                .font(.system(size: 12, weight: showing == section ? .semibold : .regular))
-                .foregroundStyle(showing == section ? Theme.textPrimary : Theme.textSecondary)
-                .padding(.horizontal, 9)
-                .frame(height: 22)
-                .background(
-                    RoundedRectangle(cornerRadius: 7, style: .continuous)
-                        .fill(showing == section ? Theme.activeTab : .clear)
-                )
-                .contentShape(Rectangle())
-        }
-        .buttonStyle(.plain)
-        .focusable(false)
     }
 }
 

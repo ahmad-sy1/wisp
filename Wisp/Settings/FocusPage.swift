@@ -19,7 +19,6 @@ struct FocusPage: View {
                 ) {
                     DurationPicker(minutes: $focus.minutes)
                         .disabled(focus.isActive)
-                        .opacity(focus.isActive ? 0.45 : 1)
                 }
                 SettingsToggle(
                     String(localized: "Do not disturb during focus"),
@@ -74,24 +73,11 @@ private struct DurationPicker: View {
     @Binding var minutes: Int
 
     var body: some View {
-        HStack(spacing: 2) {
-            ForEach(FocusStore.durations, id: \.self) { value in
-                let active = value == minutes
-                Button {
-                    minutes = value
-                } label: {
-                    Text("\(value) min")
-                        .font(.system(size: 13, weight: active ? .semibold : .regular))
-                        .foregroundStyle(active ? Theme.textPrimary : Theme.textSecondary)
-                        .frame(width: 60, height: 26)
-                        .background(RoundedRectangle(cornerRadius: 6).fill(active ? Theme.activeTab : .clear))
-                        .contentShape(Rectangle())
-                }
-                .buttonStyle(.plain)
-            }
-        }
-        .padding(2)
-        .background(RoundedRectangle(cornerRadius: 8).fill(Theme.control))
+        SegmentedControl(
+            selection: $minutes,
+            values: FocusStore.durations,
+            title: { String(localized: "\($0) min") },
+            segmentWidth: 60)
     }
 }
 
