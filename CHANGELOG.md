@@ -3,6 +3,7 @@
 ## Unreleased
 
 - One Manage window for Gmail and NS (boards 10.3.2, 10.3.3): a key is checked first and only stored when it works
+- Cut, copy, paste, select all and undo work with the usual shortcuts in every text field
 - *Add integration* is a window now (board 10.3.1): search, categories, what each service does and how it connects, all from the keyboard if you like
 - A shared design system (board 0.2): one set of colours, corners and buttons across the app, with hover and pressed states, and red text for *Disconnect*; Mail's filter is a segmented control
 - wisp has its own app icon and menu bar icon (board 0.1); the menu bar icon is a template, so macOS colours it
