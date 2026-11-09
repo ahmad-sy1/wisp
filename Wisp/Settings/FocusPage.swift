@@ -19,7 +19,6 @@ struct FocusPage: View {
                 ) {
                     DurationPicker(minutes: $focus.minutes)
                         .disabled(focus.isActive)
-                        .opacity(focus.isActive ? 0.45 : 1)
                 }
                 SettingsToggle(
                     String(localized: "Do not disturb during focus"),
