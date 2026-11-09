@@ -41,6 +41,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             // `open wisp.app --args -openOnLaunch mail` opens the panel on that tab (for screenshots).
             if let name = UserDefaults.standard.string(forKey: "openOnLaunch") {
                 notch.expand(to: WispTab(rawValue: name) ?? .home)
+                // `-openMore YES` opens the *More* menu of a full tab bar, once the panel is open.
+                if UserDefaults.standard.bool(forKey: "openMore") {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) { notch.model.moreOpen = true }
+                }
             }
             // `--args -openOnLaunch agenda -snapshot /tmp/agenda.png` draws the open panel to
             // a PNG once it has settled (data loaded, animations done) and quits.

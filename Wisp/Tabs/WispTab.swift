@@ -22,6 +22,9 @@ enum WispTab: String, CaseIterable, Identifiable {
         }
     }
 
+    /// An integration's tab shows its letters instead of a symbol (board 0.2).
+    var letters: String? { self == .github ? "GH" : nil }
+
     var title: String {
         switch self {
         case .home: String(localized: "Home")
