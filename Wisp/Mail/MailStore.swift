@@ -57,6 +57,7 @@ final class MailStore: ObservableObject {
     private static let listSize = 20
     /// Gmail drops idle connections after ~29 min; re-issue IDLE before that.
     private static let idleRefresh: Duration = .seconds(25 * 60)
+    private nonisolated static let checkTimeout: Duration = .seconds(15)
 
     private var loop: Task<Void, Never>?
     private var connection: IMAPConnection?
@@ -110,6 +111,35 @@ final class MailStore: ObservableObject {
         Keychain.set(address.trimmingCharacters(in: .whitespaces), for: Self.addressKey)
         Keychain.set(password, for: Self.passwordKey)
         restart()
+    }
+
+    /// Tries an account without storing it, for the Manage window. Gives up after a while,
+    /// or as soon as the window is cancelled.
+    func check(address: String, appPassword: String) async -> CredentialCheck {
+        let conn = IMAPConnection()
+        return await withTaskGroup(of: CredentialCheck.self) { group in
+            group.addTask {
+                do {
+                    try await conn.open(host: "imap.gmail.com", port: 993)
+                    try await conn.login(user: address, password: appPassword)
+                    return .accepted
+                } catch IMAPError.rejected {
+                    // Gmail words its refusals in several ways; the login is all this could refuse.
+                    return .rejected
+                } catch {
+                    return .unreachable
+                }
+            }
+            group.addTask {
+                try? await Task.sleep(for: Self.checkTimeout)
+                return .unreachable
+            }
+            let first = await group.next() ?? .unreachable
+            group.cancelAll()
+            // Ends a network call still waiting, so the group can finish.
+            await conn.close()
+            return first
+        }
     }
 
     func disconnect() {

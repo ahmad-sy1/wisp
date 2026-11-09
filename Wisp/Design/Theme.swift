@@ -59,6 +59,8 @@ enum Theme {
     static let smallCorner: CGFloat = 6
     static let iconCorner: CGFloat = 11
     static let buttonHeight: CGFloat = 28
+    /// Buttons in a modal window; rows stay at `buttonHeight`.
+    static let windowButtonHeight: CGFloat = 32
     static let tabSize = CGSize(width: 32, height: 28)
 }
 

@@ -113,6 +113,11 @@ final class DepartureStore: ObservableObject {
         settings.modeOverrides[EventLocation.key(place)] = mode
     }
 
+    /// The last characters of the stored key, enough to recognise it.
+    var nsKeySuffix: String {
+        String((Keychain.get(Self.keyAccount) ?? "").suffix(4))
+    }
+
     func setNSKey(_ key: String?) {
         if let key, !key.isEmpty {
             Keychain.set(key, for: Self.keyAccount)

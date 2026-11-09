@@ -31,8 +31,8 @@ The boards in [`design/boards/`](../design/boards) are the visual source of trut
 | [10.2](../design/boards/10.2-settings-general.png) | Settings: General |
 | [10.3](../design/boards/10.3-settings-integrations.png) | Settings: Integrations; being replaced by 10.3.4 |
 | [10.3.1](../design/boards/10.3.1-integrations-modal.png) | *Add integration* window |
-| [10.3.2](../design/boards/10.3.2-manage-integrations-single.png), [10.3.2.1](../design/boards/10.3.2.1-manage-modal.png) | Manage window, in the app and on its own (planned) |
-| [10.3.3](../design/boards/10.3.3-manage-integrations.png) | Manage window: four services in four states (planned) |
+| [10.3.2](../design/boards/10.3.2-manage-integrations-single.png), [10.3.2.1](../design/boards/10.3.2.1-manage-modal.png) | Manage window, in the app and on its own |
+| [10.3.3](../design/boards/10.3.3-manage-integrations.png) | Manage window: four services in four states |
 | [10.3.4](../design/boards/10.3.4-integration-rows-status.png) | Settings: Integrations with status rows (planned) |
 | [10.4](../design/boards/10.4-settings-calendar-weather.png) | Settings: Calendar & weather |
 | [10.5](../design/boards/10.5-settings-music.png) | Settings: Music |
@@ -281,7 +281,7 @@ A 760 × 620 pt window with the title bar drawn over it (boards 10.1–10.6), al
 Built in the same style, not on the boards (open to a design):
 
 - **Notch**: a tab's options open below its row (indented under the title, small switches) when you click the row. Rows move out of the way while you drag one (whole row is the handle); a switched-off tab's icon and title are dimmed. The Home tiles of board 10.1 come once GitHub, Notion and WHOOP exist.
-- **Integrations**: *Add integration* opens its own window (below). Gmail's *Manage* opens a sheet with address and app password; ✕ asks before it disconnects. Music has *Manage* (opens the Music page) but no ✕. The dot is the service's colour; errors show in the grey line.
+- **Integrations**: *Add integration* opens its own window (below). *Manage* opens the Manage window (below); Gmail's ✕ asks before it disconnects. Music has *Manage* (opens the Music page) but no ✕. The dot is the service's colour; errors show in the grey line.
 - **Calendar & weather**: without access, one row with *Give access* or *Open System Settings*. *Change* opens a search sheet.
 - **Music**: macOS doesn't tell apps whether system audio is allowed, so the dot shows wisp's own switch (*On* / *Off*).
 - **Focus**: with no learned rules, one row *No rules yet*.
@@ -298,8 +298,23 @@ Settings → Music (board 10.5): the system-audio row reads *Aan* / *Uit*, not *
 A 680 × 556 pt window over all of Settings, which dims to 60 % black. Search (⌘K), filter chips, the list on the left, the chosen service on the right, and ↑↓, ↩ and esc from the keyboard.
 
 - It lists only services that work, so the counts are lower than on the board and a category without a service has no chip. Music works automatically and isn't listed.
-- *Add …* and *Manage* open the service's current sheet or page until the Manage window (10.3.2) exists.
+- *Add …* and *Manage* open the Manage window; GitHub still has its own page.
 - *Request an integration* opens a new GitHub issue in the browser.
+
+## Manage window (boards 10.3.2, 10.3.3)
+
+One 460 × 500 pt window for every service: icon, name and status, the fields, a help link, a privacy line, the buttons. Only the fields come from the service (`ManageSpec`).
+
+| State | Status | Buttons |
+|---|---|---|
+| Empty | *Not connected* | Cancel, Connect (grey until the fields are complete) |
+| Checking | *Checking*, fields locked | Cancel, *Checking…* |
+| Failed | *Couldn't connect*, a red field and what to do | Cancel, Try again |
+| Connected | *Connected*, the secret only as dots | Disconnect on the left, Done on the right |
+
+- A key is checked with the service first and only stored when it works.
+- To change a key, disconnect and fill it in again; the board has no edit state.
+- The board's *checked 2 min ago* isn't shown yet: wisp keeps no time of the last check.
 
 ## Buttons
 
@@ -313,7 +328,7 @@ All in `Wisp/Design/Buttons.swift`, 28 pt high, radius 8 (board 0.2):
 
 Disabled, the fill drops to `control` (none for danger) and the text to `textDisabled`.
 
-`IconButtonStyle` is the 28 × 28 pt icon-only button. `ServiceIcon`, `FilterChip` and `SearchField` are in `Wisp/Design/` too.
+`IconButtonStyle` is the 28 × 28 pt icon-only button. `ServiceIcon`, `FilterChip`, `SearchField`, `FormField`, `StatusPill` and `ModalBackdrop` are in `Wisp/Design/` too. Buttons in a modal are 32 pt high.
 
 `SegmentedControl` (`Wisp/Design/SegmentedControl.swift`) holds two to four fixed choices: a `control` track with radius 8, the chosen segment on `trackOff` with radius 6. Segments show words or, with a tooltip, icons. Disabled, the text drops to `textDisabled` and the chosen segment to `activeTab`.
 

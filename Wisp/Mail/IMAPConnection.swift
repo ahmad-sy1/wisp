@@ -15,8 +15,11 @@ actor IMAPConnection {
     private var buffer = Data()
     private var tagCounter = 0
     private var idleDoneSent = false
+    private var isClosed = false
 
     func open(host: String, port: UInt16) async throws {
+        // Closed before it got this far: don't start a connection nobody will end.
+        guard !isClosed else { throw IMAPError.closed }
         let c = NWConnection(host: NWEndpoint.Host(host), port: NWEndpoint.Port(rawValue: port)!, using: .tls)
         conn = c
         try await withCheckedThrowingContinuation { (cont: CheckedContinuation<Void, Error>) in
@@ -39,6 +42,7 @@ actor IMAPConnection {
     }
 
     func close() {
+        isClosed = true
         conn?.cancel()
         conn = nil
     }

@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- One Manage window for Gmail and NS (boards 10.3.2, 10.3.3): a key is checked first and only stored when it works
+- Cut, copy, paste, select all and undo work with the usual shortcuts in every text field
 - *Add integration* is a window now (board 10.3.1): search, categories, what each service does and how it connects, all from the keyboard if you like
 - A switched-off Departure or GitHub tab stays quiet on the closed notch
 - A shared design system (board 0.2): one set of colours, corners and buttons across the app, with hover and pressed states, and red text for *Disconnect*; Mail's filter is a segmented control
