@@ -126,7 +126,7 @@ Three cards in the fixed 150 pt area (boards 3 and 3.1):
 | Part | Spec |
 |---|---|
 | Left card (348 pt) | today's events in 28 pt rows: time (13 pt, grey), a 3 × 16 pt bar, title (13 pt semibold). Done: grey bar, struck-through grey title. A red (`badge`) *nu* line with the time between done and coming. The next event shows *over 2u 55m* in its bar colour. Scrolls when the day is full, starting at the *nu* line |
-| Event on now (board 3.1) | a raised card just above the *nu* line (`control` fill, `cardBorder` hairline, radius 12, 15 pt from the card edges): a *NU* label (11 pt bold white on the accent colour, radius 6), the title (15 pt semibold), the times (13 pt grey), *nog 2u 22m* on the right (13 pt medium), and below a 5 pt bar (accent on `activeTab`) that fills up as the event runs. Shifts use `warning` instead of the accent. A long title pushes the times out rather than being cut off |
+| Event on now (board 3.1) | a raised card just above the *nu* line (`control` fill, `cardBorder` hairline, radius 14, 15 pt from the card edges): a *NU* label (11 pt bold white on the accent colour, radius 6), the title (15 pt semibold), the times (13 pt grey), *nog 2u 22m* on the right (13 pt medium), and below a 5 pt bar (accent on `activeTab`) that fills up as the event runs. Shifts use `warning` instead of the accent. A long title pushes the times out rather than being cut off |
 | Order | all-day, done (struck through), on now (card), *nu* line, coming |
 | Bar colour | shifts `warning`, everything else its calendar's colour |
 | Weather card (70 pt) | SF Symbol 28 pt light, temperature 22 pt semibold, *Nijmegen · half bewolkt* |
@@ -149,7 +149,7 @@ Two cards in the fixed 150 pt area (board 4):
 | Part | Spec |
 |---|---|
 | Left card (315 pt) | a 108 pt ring (7 pt, accent colour) that empties clockwise; the time left (26 pt bold) and the state (*gereed*, *focus*, *gepauzeerd*, *klaar*, 12 pt grey) inside. Next to it the task (15 pt semibold) with a pencil, *Start* / *Pauze* (accent) and *Reset*, and the source with a dot: green for *Automatisch · IntelliJ IDEA · wisp* and *Uit agenda*, grey for *Zelf gekozen* |
-| Right card | *Duur* (12 pt grey), three 30 pt pills *25 / 50 / 90 min* (active `activeTab`, white semibold), two checkboxes |
+| Right card | *Duur* (12 pt grey), a segmented control *25 / 50 / 90 min* across the card (board 0.2 replaces the separate pills of board 4), two checkboxes |
 | Tab bar | *Vandaag 3 sessies · 1u 45m* just left of Settings |
 | Closed notch | while a session runs or is paused: a small ring left of the camera, the time left (10.5 pt semibold) right of it. It replaces the music wings; paused shows both in grey |
 
@@ -303,7 +303,7 @@ All in `Wisp/Design/Buttons.swift`, 28 pt high, radius 8 (board 0.2):
 
 Disabled, the fill drops to `control` (none for danger) and the text to `textDisabled`.
 
-`SegmentedControl` (`Wisp/Design/SegmentedControl.swift`) holds two to four fixed choices: a `control` track with radius 8, the chosen segment on `trackOff` with radius 6.
+`SegmentedControl` (`Wisp/Design/SegmentedControl.swift`) holds two to four fixed choices: a `control` track with radius 8, the chosen segment on `trackOff` with radius 6. Segments show words or, with a tooltip, icons. Disabled, the text drops to `textDisabled` and the chosen segment to `activeTab`.
 
 ## Glass
 
