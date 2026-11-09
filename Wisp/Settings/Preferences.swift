@@ -107,7 +107,8 @@ final class Preferences: ObservableObject {
         hiddenMusicSources = Set((defaults.stringArray(forKey: Key.hiddenMusicSources) ?? []).compactMap(MusicSource.init(rawValue:)))
         // Saved order first; tabs added in a later version go at the end.
         let saved = (defaults.stringArray(forKey: Key.tabOrder) ?? []).compactMap(WispTab.init(rawValue:))
-        tabOrder = saved + WispTab.allCases.filter { !saved.contains($0) }
+        // Home is always the first tab.
+        tabOrder = [.home] + (saved + WispTab.allCases.filter { !saved.contains($0) }).filter { $0 != .home }
         hiddenTabs = Set((defaults.stringArray(forKey: Key.hiddenTabs) ?? []).compactMap(WispTab.init(rawValue:)))
             .subtracting([.home])
         // Only wisp's own domain, not the global language list.
@@ -119,7 +120,7 @@ final class Preferences: ObservableObject {
 
     /// Moves a tab to where another one is now (drag and drop in Settings → Notch).
     func moveTab(_ tab: WispTab, to target: WispTab) {
-        guard tab != target, let from = tabOrder.firstIndex(of: tab),
+        guard tab != target, tab != .home, target != .home, let from = tabOrder.firstIndex(of: tab),
             let to = tabOrder.firstIndex(of: target)
         else { return }
         var order = tabOrder

@@ -71,14 +71,20 @@ extension SettingsPage where Action == EmptyView {
 /// A grey header above a card whose rows are split by hairlines.
 struct SettingsGroup<Content: View>: View {
     var header: String?
+    /// Small text at the other end of the header.
+    var trailing: String?
     @ViewBuilder var content: Content
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             if let header {
-                Text(header)
-                    .font(.system(size: 12))
-                    .foregroundStyle(Theme.textSecondary)
+                HStack {
+                    Text(header)
+                    Spacer(minLength: 8)
+                    if let trailing { Text(trailing) }
+                }
+                .font(.system(size: 12))
+                .foregroundStyle(Theme.textSecondary)
             }
             VStack(spacing: 0) {
                 Group(subviews: content) { rows in
