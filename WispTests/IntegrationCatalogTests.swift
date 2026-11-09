@@ -137,6 +137,13 @@ final class IntegrationListTests: XCTestCase {
         XCTAssertFalse(IntegrationRowState.connection(.connecting).needsAttention)
     }
 
+    func testConnectionFromAStore() {
+        XCTAssertNil(IntegrationConnection.make(isStored: false, isReady: true, problem: nil, detail: "d"))
+        XCTAssertEqual(IntegrationConnection.make(isStored: true, isReady: false, problem: nil, detail: "d"), .connecting)
+        XCTAssertEqual(IntegrationConnection.make(isStored: true, isReady: true, problem: nil, detail: "d"), .connected("d"))
+        XCTAssertEqual(IntegrationConnection.make(isStored: true, isReady: false, problem: "p", detail: "d"), .problem("p"))
+    }
+
     func testNothingStoredShowsNothing() {
         XCTAssertTrue(IntegrationList.rows(added: [], connections: [:]).isEmpty)
     }

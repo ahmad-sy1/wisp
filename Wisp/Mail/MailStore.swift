@@ -75,7 +75,6 @@ final class MailStore: ObservableObject {
         showUnreadOnNotch = UserDefaults.standard.object(forKey: Self.unreadKey) as? Bool ?? true
     }
 
-
     var visibleMessages: [MailMessage] {
         filter == .all ? messages : messages.filter { !$0.isRead }
     }

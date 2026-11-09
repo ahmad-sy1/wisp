@@ -7,6 +7,15 @@ enum IntegrationConnection: Equatable, Sendable {
     case problem(String)
 }
 
+extension IntegrationConnection {
+    /// `nil` when nothing is stored. A problem goes before everything else.
+    static func make(isStored: Bool, isReady: Bool, problem: String?, detail: String) -> IntegrationConnection? {
+        guard isStored else { return nil }
+        if let problem { return .problem(problem) }
+        return isReady ? .connected(detail) : .connecting
+    }
+}
+
 enum IntegrationRowState: Equatable, Sendable {
     case notSetUp
     case connection(IntegrationConnection)

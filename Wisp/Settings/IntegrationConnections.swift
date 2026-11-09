@@ -7,19 +7,26 @@ enum IntegrationConnections {
         mail: MailStore = .shared, github: GitHubStore = .shared, departure: DepartureStore = .shared
     ) -> [IntegrationID: IntegrationConnection] {
         var result: [IntegrationID: IntegrationConnection] = [:]
-        if mail.isConfigured {
-            switch mail.status {
-            case .connected: result[.gmail] = .connected(String(localized: "Connected · \(mail.address ?? "")"))
-            case .failed(let message): result[.gmail] = .problem(message)
-            case .connecting, .notConfigured: result[.gmail] = .connecting
-            }
-        }
+        var mailProblem: String?
+        if case .failed(let message) = mail.status { mailProblem = message }
+        result[.gmail] = .make(
+            isStored: mail.isConfigured, isReady: mail.status == .connected, problem: mailProblem,
+            detail: String(localized: "Connected · \(mail.address ?? "")"))
+
+        var login = ""
+        var githubReady = false
+        var githubProblem: String?
         switch github.status {
-        case .disconnected: break
-        case .connecting: result[.github] = .connecting
-        case .connected(let login): result[.github] = .connected(String(localized: "Connected · @\(login)"))
-        case .failed(let message): result[.github] = .problem(message)
+        case .connected(let name):
+            login = name
+            githubReady = true
+        case .failed(let message): githubProblem = message
+        case .connecting, .disconnected: break
         }
+        result[.github] = .make(
+            isStored: github.status != .disconnected, isReady: githubReady, problem: githubProblem,
+            detail: String(localized: "Connected · @\(login)"))
+
         if departure.hasNSKey { result[.ns] = .connected(String(localized: "Connected")) }
         #if DEBUG
             // `-pretendNotConnected '("ns")'` for snapshots of a row that still needs setting up.
