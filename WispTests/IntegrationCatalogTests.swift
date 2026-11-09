@@ -77,8 +77,13 @@ final class IntegrationCatalogTests: XCTestCase {
         XCTAssertEqual(accepted, .accepted)
         let rejected = await NSTravelProvider(key: "k", transport: Status(code: 401)).checkKey()
         XCTAssertEqual(rejected, .rejected)
+        let forbidden = await NSTravelProvider(key: "k", transport: Status(code: 403)).checkKey()
+        XCTAssertEqual(forbidden, .rejected)
+        // Past the gateway, so the key itself was fine.
         let limited = await NSTravelProvider(key: "k", transport: Status(code: 429)).checkKey()
-        XCTAssertEqual(limited, .unreachable)
+        XCTAssertEqual(limited, .accepted)
+        let refusedRoute = await NSTravelProvider(key: "k", transport: Status(code: 400)).checkKey()
+        XCTAssertEqual(refusedRoute, .accepted)
         let offline = await NSTravelProvider(key: "k", transport: Offline()).checkKey()
         XCTAssertEqual(offline, .unreachable)
     }
