@@ -194,6 +194,7 @@ struct NotchShape: Shape {
 /// lists scroll inside the content area instead.
 struct ExpandedPanel: View {
     @ObservedObject var model: NotchModel
+    @ObservedObject private var prefs = Preferences.shared
 
     var body: some View {
         VStack(spacing: Theme.tabBarGap) {
@@ -209,5 +210,25 @@ struct ExpandedPanel: View {
         .padding(.horizontal, Theme.panelInset)
         .padding(.bottom, Theme.panelInset)
         .foregroundStyle(Theme.textPrimary)
+        .overlay(alignment: .topLeading) { moreMenu }
+    }
+
+    /// Under the *More* button, inside the panel, above a layer that closes it on a click.
+    @ViewBuilder private var moreMenu: some View {
+        let layout = TabBarLayout.split(prefs.visibleTabs)
+        if model.moreOpen, !layout.more.isEmpty {
+            ZStack(alignment: .topLeading) {
+                Color.clear
+                    .contentShape(Rectangle())
+                    .onTapGesture { model.moreOpen = false }
+                MoreTabsMenu(model: model, tabs: layout.more) {
+                    model.moreOpen = false
+                    SettingsNavigation.shared.page = .notch
+                    model.onOpenSettings()
+                }
+                .padding(.top, Theme.panelTopInset + Theme.tabBarHeight + 4)
+                .padding(.leading, Theme.panelInset + CGFloat(layout.front.count) * (Theme.tabSize.width + 2))
+            }
+        }
     }
 }
