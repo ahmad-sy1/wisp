@@ -61,6 +61,8 @@ struct SettingsView: View {
         .overlay {
             if navigation.addingIntegration { AddIntegrationOverlay() }
         }
+        // Something else can change the page, such as *Connect GitHub* in the notch.
+        .onChange(of: navigation.page) { _, _ in navigation.addingIntegration = false }
         .ignoresSafeArea()
         .tint(prefs.accent.color)
         .environment(\.colorScheme, .dark)
