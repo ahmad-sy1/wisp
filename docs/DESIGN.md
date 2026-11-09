@@ -6,6 +6,7 @@ The boards in [`design/boards/`](../design/boards) are the visual source of trut
 |---|---|
 | [0](../design/boards/0-brand.png) | brand: name in the notch (the mark and icon are replaced by 0.1) |
 | [0.1](../design/boards/0.1-brand-logo.png) | brand: logo and app icon, direction D |
+| [0.2](../design/boards/0.2-design-system.png) | design system: every shared part with its states; the same sections larger in [`0.2-design-system-boards/`](../design/boards/0.2-design-system-boards) |
 | [1](../design/boards/1-home.png) | Home |
 | [2](../design/boards/2-mail.png) | Mail |
 | [3](../design/boards/3-agenda-weather.png) | Agenda & weather |
@@ -23,13 +24,25 @@ The boards in [`design/boards/`](../design/boards) are the visual source of trut
 | [9.5](../design/boards/9.5-music-permission.png) | Music: one-time permission |
 | [9.6](../design/boards/9.6-closed-notch-mini-spectrum.png) | closed notch: mini spectrum, video, paused |
 | [9.7](../design/boards/9.7-closed-notch-focus-music.png) | closed notch: focus and music together (planned) |
-| [10.1](../design/boards/10.1-settings-notch.png) | Settings: Notch (tabs on/off and order, Home tiles) |
+| [10.1](../design/boards/10.1-settings-notch.png) | Settings: Notch (tabs on/off and order, Home tiles); being replaced by 10.1.1 |
+| [10.1.1](../design/boards/10.1.1-notch-page-new-design.png) | Settings: Notch with integrations and *More* (planned; rows keep their options) |
+| [10.1.2](../design/boards/10.1.2-tabbar-full-more.png) | tab bar: the *More* menu (planned; stays inside the panel) |
+| [10.1.3](../design/boards/10.1.3-choosing-home-tab.png) | Settings: choosing what Home shows (planned) |
 | [10.2](../design/boards/10.2-settings-general.png) | Settings: General |
-| [10.3](../design/boards/10.3-settings-integrations.png) | Settings: Integrations |
+| [10.3](../design/boards/10.3-settings-integrations.png) | Settings: Integrations; being replaced by 10.3.4 |
+| [10.3.1](../design/boards/10.3.1-integrations-modal.png) | *Add integration* window (planned) |
+| [10.3.2](../design/boards/10.3.2-manage-integrations-single.png), [10.3.2.1](../design/boards/10.3.2.1-manage-modal.png) | Manage window, in the app and on its own (planned) |
+| [10.3.3](../design/boards/10.3.3-manage-integrations.png) | Manage window: four services in four states (planned) |
+| [10.3.4](../design/boards/10.3.4-integration-rows-status.png) | Settings: Integrations with status rows (planned) |
 | [10.4](../design/boards/10.4-settings-calendar-weather.png) | Settings: Calendar & weather |
 | [10.5](../design/boards/10.5-settings-music.png) | Settings: Music |
 | [10.6](../design/boards/10.6-settings-focus.png) | Settings: Focus |
+| [10.9](../design/boards/10.9-integration-page-template-whoop.png) | Settings: page template for an integration, with WHOOP (planned) |
+| [10.10](../design/boards/10.10-sidemenu.png) | Settings: sidebar with few and many integrations (planned) |
 | [11](../design/boards/11-compact-notch-states.png) | closed notch: departure and GitHub states |
+| [11.1](../design/boards/11.1-open-notch-home-layouts.png) | Home with 4, 3, 2 and 1 places (planned) |
+| [11.2](../design/boards/11.2-home-items-three-sizes.png) | Home items in three sizes (planned) |
+| [11.3](../design/boards/11.3-integration-tab-template.png) | template for an integration's tab (planned) |
 | [12](../design/boards/12-departure.png) | Departure |
 | [13](../design/boards/13-github.png) | GitHub |
 | [14](../design/boards/14-settings-departure.png) | Settings: Departure |
@@ -69,20 +82,30 @@ The icons live in `Wisp/Resources/Assets.xcassets`. `AppIcon` uses the 1024 × 1
 | Button / pill idle | `control` | `#1C1C1E` |
 | Hover | `controlHover` | `#222225` |
 | Active tab | `activeTab` | `#2A2A2D` |
+| Switch off, chosen segment | `trackOff` | `#3A3A3E` |
+| Settings sidebar | `sidebar` | `#0B0B0D` |
+| Modal | `modal` | `#0E0E10` |
+| Row under the mouse | `rowHover` | `#18181B` |
+| Border of fields, modals, chips | `lineStrong` | `#2A2A2D` |
 | Text | `textPrimary` | `#FFFFFF` |
+| Field labels, chip text | `textLabel` | `#D4D4D8` |
 | Secondary text | `textSecondary` | `#A1A1AA` |
-| Badge | `badge` | `#FF453A` |
+| Meta, section labels, placeholders | `textFaint` | `#71717A` |
+| Disabled text | `textDisabled` | `#52525B` |
+| Badge, dots | `badge` | `#FF453A` |
+| Red text | `redText` | `#FF6961` |
 | OK, music | `ok` | `#30D158` |
 | Warning, shifts | `warning` | `#FF9F0A` |
 | Review requests | `info` | `#0A84FF`, whatever the accent |
 | Rain | `rain` | `#64D2FF` |
 | NS badge | `nsYellow` | `#FFC917` |
-| Accent (Settings) | `Accent` | `#0A84FF` (default), `#30D158`, `#FF9F0A`, `#BF5AF2` |
+| Accent (Settings) | `Accent` | `#0A84FF` (default), `#30D158`, `#FF9F0A`, `#BF5AF2`; each with a `hover` and a `pressed` shade |
 
 ## Shapes and type
 
-- Cards: radius 16 pt with a 1 pt border. Buttons: radius 9 pt, 28 pt high.
-- Tab buttons: 32 × 28 pt, radius 9. Active: `activeTab` background and a white icon; idle: grey icon, no background.
+- Radii: `smallCorner` 6 pt (a segment), `buttonCorner` 8 pt (buttons, fields, tabs, sidebar rows), `iconCorner` 11 pt, `cardCorner` 14 pt (cards and groups), `modalCorner` 16 pt, `panelCorner` 26 pt.
+- Cards have a 1 pt border. Buttons are 28 pt high.
+- Tab buttons: 32 × 28 pt, radius 8. Active: `activeTab` background and a white icon; idle: grey icon, no background.
 - Badges: red capsule with the count, top right of the tab icon.
 - Font: SF Pro (the system font). Titles 13–15 pt semibold, labels 11–12 pt, small meta 10–11 pt. Small labels above a title (*NU BEZIG*) are 10.5 pt medium with slight tracking.
 
@@ -247,10 +270,10 @@ A 760 × 620 pt window with the title bar drawn over it (boards 10.1–10.6), al
 
 | Part | Spec |
 |---|---|
-| Sidebar | 205 pt, `card` fill, a 1 pt `cardBorder` line on its right. The wisp dot and name (16 pt semibold) below the window buttons, then the pages: SF Symbol + 13 pt label in 30 pt rows; the active page on `activeTab`, radius 8 |
+| Sidebar | 205 pt, `sidebar` fill, a 1 pt `cardBorder` line on its right. The wisp dot and name (16 pt semibold) below the window buttons, then the pages: SF Symbol + 13 pt label in 30 pt rows; the active page on `activeTab`, radius 8 |
 | Page | black, 31 pt side margin. Title 26 pt bold, optional subtitle 13 pt grey, an action top right (*Add integration*: accent fill, white semibold) |
-| Group | a 12 pt grey header, then a card: `card` fill, `cardBorder` 1 pt, radius 12; rows at least 46 pt, split by 1 pt `cardBorder` lines, 15 pt inside |
-| Row | title 13 pt, optional 11.5 pt grey line below; on the right a switch, a pop-up, or a flat button (`control` fill, radius 7, 28 pt high) |
+| Group | a 12 pt grey header, then a card: `card` fill, `cardBorder` 1 pt, radius 14; rows at least 46 pt, split by 1 pt `cardBorder` lines, 15 pt inside |
+| Row | title 13 pt, optional 11.5 pt grey line below; on the right a switch, a pop-up, or a secondary button |
 | Note | 11.5 pt grey text under the last group |
 
 Built in the same style, not on the boards (open to a design):
@@ -270,7 +293,17 @@ Settings → Music (board 10.5): the system-audio row reads *Aan* / *Uit*, not *
 
 ## Buttons
 
-`AccentButtonStyle` (accent fill, white semibold) and `SecondaryButtonStyle` (`control` fill), 28 pt high, radius 9. Disabled, both drop to 40 % opacity.
+All in `Wisp/Design/Buttons.swift`, 28 pt high, radius 8 (board 0.2):
+
+| Style | For | Fill |
+|---|---|---|
+| `AccentButtonStyle` | the one next step in a view | accent, white semibold text |
+| `SecondaryButtonStyle` (`.settings` in Settings) | every other action | `controlHover`; `activeTab` on hover, `control` when pressed |
+| `DangerButtonStyle` (`.danger`) | *Disconnect* | none, `redText`; a faint red behind it on hover and press |
+
+Disabled, the fill drops to `control` (none for danger) and the text to `textDisabled`.
+
+`SegmentedControl` (`Wisp/Design/SegmentedControl.swift`) holds two to four fixed choices: a `control` track with radius 8, the chosen segment on `trackOff` with radius 6.
 
 ## Glass
 
