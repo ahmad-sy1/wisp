@@ -9,19 +9,22 @@ struct HomeLayoutRow: View {
         (prefs.homeLayout ?? .standard).items.map(\.shortTitle).joined(separator: ", ")
     }
 
+    private var description: String {
+        guard let layout = prefs.homeLayout else { return String(localized: "Shows the defaults") }
+        return layout.items.count == 1
+            ? String(localized: "1 thing: \(names)")
+            : String(localized: "\(layout.items.count) things: \(names)")
+    }
+
     var body: some View {
         HStack(spacing: 12) {
             Image(systemName: "house").font(.system(size: 14)).frame(width: 20)
             VStack(alignment: .leading, spacing: 2) {
                 Text("Home").font(.system(size: 13.5))
-                Text(
-                    prefs.homeLayout == nil
-                        ? String(localized: "Shows the defaults")
-                        : String(localized: "\(prefs.homeLayout?.items.count ?? 0) things: \(names)")
-                )
-                .font(.system(size: 12))
-                .foregroundStyle(Theme.textSecondary)
-                .lineLimit(1)
+                Text(description)
+                    .font(.system(size: 12))
+                    .foregroundStyle(Theme.textSecondary)
+                    .lineLimit(1)
             }
             Spacer(minLength: 10)
             if let layout = prefs.homeLayout {
@@ -183,7 +186,7 @@ private struct HomeLayoutChooser: View {
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
-        .accessibilityLabel(String(localized: "\(count) things"))
+        .accessibilityLabel(count == 1 ? String(localized: "1 thing") : String(localized: "\(count) things"))
     }
 
     private func placeRow(_ index: Int, name: String) -> some View {

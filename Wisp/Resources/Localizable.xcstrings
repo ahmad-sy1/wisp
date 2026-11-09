@@ -381,6 +381,26 @@
         }
       }
     },
+    "1 thing" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 ding"
+          }
+        }
+      }
+    },
+    "1 thing: %@" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 ding: %@"
+          }
+        }
+      }
+    },
     "16 characters" : {
       "localizations" : {
         "nl" : {
@@ -607,6 +627,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Toestaan"
+          }
+        }
+      }
+    },
+    "Allow the live spectrum in the Music tab." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sta het live spectrum toe in de Muziek-tab."
           }
         }
       }
@@ -2587,6 +2617,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Geen batterij"
+          }
+        }
+      }
+    },
+    "No calendar access" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geen agenda-toegang"
           }
         }
       }

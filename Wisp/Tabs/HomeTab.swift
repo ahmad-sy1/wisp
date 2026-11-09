@@ -19,31 +19,32 @@ struct HomeTab: View {
     @ViewBuilder
     private func grid(_ layout: HomeLayout) -> some View {
         let items = layout.items
+        let places = layout.places
         switch items.count {
         case 1:
-            cell(items[0], .large)
+            cell(items[0], places[0])
         case 2:
             HStack(spacing: Self.gap) {
-                cell(items[0], .medium)
-                cell(items[1], .medium)
+                cell(items[0], places[0])
+                cell(items[1], places[1])
             }
         case 3:
             HStack(spacing: Self.gap) {
-                cell(items[0], .medium)
+                cell(items[0], places[0])
                 VStack(spacing: Self.gap) {
-                    cell(items[1], .small)
-                    cell(items[2], .small)
+                    cell(items[1], places[1])
+                    cell(items[2], places[2])
                 }
             }
         default:
             VStack(spacing: Self.gap) {
                 HStack(spacing: Self.gap) {
-                    cell(items[0], .small)
-                    cell(items[1], .small)
+                    cell(items[0], places[0])
+                    cell(items[1], places[1])
                 }
                 HStack(spacing: Self.gap) {
-                    cell(items[2], .small)
-                    cell(items[3], .small)
+                    cell(items[2], places[2])
+                    cell(items[3], places[3])
                 }
             }
         }
