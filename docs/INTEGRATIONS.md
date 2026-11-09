@@ -60,6 +60,7 @@ From `__CFBundleIdentifier` and `TERM_PROGRAM`: any `com.jetbrains.*` bundle is 
 - Read-only: `EXAMINE` and `BODY.PEEK`. wisp never sets a flag.
 - Gmail extensions used: `X-GM-THRID` to open the thread in the browser (`https://mail.google.com/mail/u/?authuser=‹address›#all/‹thread id in hex›`).
 - Keychain accounts: `gmail-address`, `gmail-app-password`.
+- The Manage window signs in once before anything is stored, and gives up after 15 seconds.
 
 If wisp is shared with more people later, "Sign in with Google" (OAuth) is friendlier than app passwords, but Gmail scopes require Google's app verification. Until then app passwords are the simpler path.
 
@@ -93,12 +94,12 @@ Docs: <https://docs.github.com/en/rest>
 
 ## Departure: travel times
 
-Nothing here runs without a home address, and only during a trip: from three hours before an event with a location, or from 20 minutes (Settings) before your last one ends. What leaves the Mac: the home address and event locations to Apple, coordinates to NS, a rounded coordinate to Buienradar or Open-Meteo, stop codes to OVapi. Only the mode you use is asked.
+Apart from the one key check described below, nothing here runs without a home address, and only during a trip: from three hours before an event with a location, or from 20 minutes (Settings) before your last one ends. What leaves the Mac: the home address and event locations to Apple, coordinates to NS, a rounded coordinate to Buienradar or Open-Meteo, stop codes to OVapi. Only the mode you use is asked.
 
 | Mode | Service | Notes |
 |---|---|---|
 | Place lookup | Apple Maps (`MKLocalSearch`) | Addresses and event locations to coordinates, kept in memory. A calendar pin is used as it is. |
-| Public transport | [NS Reisinformatie](https://apiportal.ns.nl) `GET /reisinformatie-api/api/v3/trips` with `originLat/Lng`, `destinationLat/Lng`, `dateTime`, `searchForArrival` | Needs a free key, added under Settings → Integrations and kept in the Keychain. Sent as `Ocp-Apim-Subscription-Key`. Gives door-to-door advice with buses and trams, tracks and delays. **Not yet checked against the real API**: written from public examples, the parser is tolerant. |
+| Public transport | [NS Reisinformatie](https://apiportal.ns.nl) `GET /reisinformatie-api/api/v3/trips` with `originLat/Lng`, `destinationLat/Lng`, `dateTime`, `searchForArrival` | Needs a free key, added under Settings → Integrations and kept in the Keychain. The Manage window first asks for one fixed trip (Utrecht to Amsterdam) to see whether NS accepts the key, and only stores it if so. Sent as `Ocp-Apim-Subscription-Key`. Gives door-to-door advice with buses and trams, tracks and delays. **Not yet checked against the real API**: written from public examples, the parser is tolerant. |
 | Live buses | [OVapi](http://v0.ovapi.nl) `GET /stopareacode` and `/stopareacode/{code}` | Community run, no key, non-commercial use: asked only for bus legs within 90 minutes. HTTP only, hence the exception for this one domain in `Info.plist`. Stop names are matched to NS's by name; no match means no live time. Failures are ignored. |
 | Public transport without a key | Apple Maps `calculateETA` with `.transit` | A total time, without lines or delays. |
 | Car | Apple Maps `MKDirections` with `departureDate` | Traffic is included. The trip at 03:00 tomorrow stands in for no traffic, asked once a day per route. *Now or later* asks +30 and +60 min, at most every 15 min. |
