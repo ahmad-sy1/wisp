@@ -117,3 +117,40 @@ final class IntegrationCatalogTests: XCTestCase {
         XCTAssertEqual(gmail.phase(after: .unreachable), .failed(message: gmail.unreachableMessage, field: "password"))
     }
 }
+
+final class IntegrationListTests: XCTestCase {
+    func testAddedButNotConnectedNeedsAttention() {
+        let rows = IntegrationList.rows(added: [.ns], connections: [:])
+        XCTAssertEqual(rows.map(\.id), [.ns])
+        XCTAssertEqual(rows[0].state, .notSetUp)
+        XCTAssertTrue(rows[0].state.needsAttention)
+    }
+
+    func testConnectedShowsWithoutBeingAdded() {
+        let rows = IntegrationList.rows(added: [], connections: [.gmail: .connected("ok")])
+        XCTAssertEqual(rows.map(\.id), [.gmail])
+        XCTAssertFalse(rows[0].state.needsAttention)
+    }
+
+    func testAProblemNeedsAttentionAndConnectingDoesNot() {
+        XCTAssertTrue(IntegrationRowState.connection(.problem("x")).needsAttention)
+        XCTAssertFalse(IntegrationRowState.connection(.connecting).needsAttention)
+    }
+
+    func testNothingStoredShowsNothing() {
+        XCTAssertTrue(IntegrationList.rows(added: [], connections: [:]).isEmpty)
+    }
+
+    func testRowsAreSortedByName() {
+        let rows = IntegrationList.rows(added: [.ns, .gmail, .github], connections: [:])
+        XCTAssertEqual(rows.map(\.id), [.github, .gmail, .ns])
+    }
+
+    func testOnlyConnectedServicesWithOptionsGetASidebarPlace() {
+        let notSetUp = IntegrationList.rows(added: [.github, .gmail], connections: [:])
+        XCTAssertTrue(IntegrationList.sidebarRows(notSetUp).isEmpty)
+        let connected = IntegrationList.rows(
+            added: [], connections: [.github: .connected("ok"), .gmail: .connected("ok")])
+        XCTAssertEqual(IntegrationList.sidebarRows(connected).map(\.id), [.github])
+    }
+}

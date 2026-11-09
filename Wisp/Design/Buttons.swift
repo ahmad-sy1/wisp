@@ -88,6 +88,29 @@ struct SecondaryButtonStyle: ButtonStyle {
     }
 }
 
+/// A secondary action with an outline, next to a filled one (*Retry*).
+struct OutlinedButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        PhasedLabel(
+            configuration: configuration,
+            weight: .medium,
+            height: Theme.buttonHeight,
+            text: { $0 == .disabled ? Theme.textDisabled : Theme.textPrimary },
+            fill: { phase in
+                switch phase {
+                case .normal, .disabled: .clear
+                case .hovered: Theme.rowHover
+                case .pressed: Theme.control
+                }
+            }
+        )
+        .overlay(
+            RoundedRectangle(cornerRadius: Theme.buttonCorner, style: .continuous)
+                .strokeBorder(Theme.lineStrong, lineWidth: 1)
+        )
+    }
+}
+
 /// Danger: red text, never a red fill (*Disconnect*).
 struct DangerButtonStyle: ButtonStyle {
     var height = Theme.buttonHeight
