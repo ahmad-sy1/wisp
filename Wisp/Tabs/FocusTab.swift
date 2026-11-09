@@ -156,14 +156,13 @@ private struct OptionsCard: View {
             Text("Duration")
                 .font(.system(size: 12))
                 .foregroundStyle(Theme.textSecondary)
-            HStack(spacing: 6) {
-                ForEach(FocusStore.durations, id: \.self) { minutes in
-                    DurationPill(minutes: minutes, selected: focus.minutes == minutes) {
-                        focus.minutes = minutes
-                    }
-                    .disabled(focus.isActive)
-                }
-            }
+            SegmentedControl(
+                selection: $focus.minutes,
+                values: FocusStore.durations,
+                title: { String(localized: "\($0) min") },
+                fillsWidth: true
+            )
+            .disabled(focus.isActive)
             Toggle("Do not disturb during focus", isOn: $focus.doNotDisturb)
                 .help("Runs your Shortcuts “\(FocusStore.shortcutOn)” and “\(FocusStore.shortcutOff)”")
             Toggle("Start music when it begins", isOn: $focus.startMusic)
@@ -172,26 +171,6 @@ private struct OptionsCard: View {
         .font(.system(size: 13))
         .padding(.horizontal, 14)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
-    }
-}
-
-private struct DurationPill: View {
-    let minutes: Int
-    let selected: Bool
-    let action: () -> Void
-
-    var body: some View {
-        Button(action: action) {
-            Text("\(minutes) min")
-                .font(.system(size: 13, weight: selected ? .semibold : .regular))
-                .foregroundStyle(selected ? Theme.textPrimary : Theme.textSecondary)
-                .frame(maxWidth: .infinity)
-                .frame(height: 30)
-                .background(
-                    RoundedRectangle(cornerRadius: Theme.buttonCorner, style: .continuous)
-                        .fill(selected ? Theme.activeTab : Theme.control))
-        }
-        .buttonStyle(.plain)
     }
 }
 
