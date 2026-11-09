@@ -30,7 +30,7 @@ The boards in [`design/boards/`](../design/boards) are the visual source of trut
 | [10.1.3](../design/boards/10.1.3-choosing-home-tab.png) | Settings: choosing what Home shows (planned) |
 | [10.2](../design/boards/10.2-settings-general.png) | Settings: General |
 | [10.3](../design/boards/10.3-settings-integrations.png) | Settings: Integrations; being replaced by 10.3.4 |
-| [10.3.1](../design/boards/10.3.1-integrations-modal.png) | *Add integration* window (planned) |
+| [10.3.1](../design/boards/10.3.1-integrations-modal.png) | *Add integration* window |
 | [10.3.2](../design/boards/10.3.2-manage-integrations-single.png), [10.3.2.1](../design/boards/10.3.2.1-manage-modal.png) | Manage window, in the app and on its own (planned) |
 | [10.3.3](../design/boards/10.3.3-manage-integrations.png) | Manage window: four services in four states (planned) |
 | [10.3.4](../design/boards/10.3.4-integration-rows-status.png) | Settings: Integrations with status rows (planned) |
@@ -279,7 +279,7 @@ A 760 × 620 pt window with the title bar drawn over it (boards 10.1–10.6), al
 Built in the same style, not on the boards (open to a design):
 
 - **Notch**: a tab's options open below its row (indented under the title, small switches) when you click the row. Rows move out of the way while you drag one (whole row is the handle); a switched-off tab's icon and title are dimmed. The Home tiles of board 10.1 come once GitHub, Notion and WHOOP exist.
-- **Integrations**: *Add integration* is a menu (only Gmail for now) and dims when everything is added. Gmail's *Manage* opens a sheet with address and app password; ✕ asks before it disconnects. Music has *Manage* (opens the Music page) but no ✕. The dot is the service's colour; errors show in the grey line.
+- **Integrations**: *Add integration* opens its own window (below). Gmail's *Manage* opens a sheet with address and app password; ✕ asks before it disconnects. Music has *Manage* (opens the Music page) but no ✕. The dot is the service's colour; errors show in the grey line.
 - **Calendar & weather**: without access, one row with *Give access* or *Open System Settings*. *Change* opens a search sheet.
 - **Music**: macOS doesn't tell apps whether system audio is allowed, so the dot shows wisp's own switch (*On* / *Off*).
 - **Focus**: with no learned rules, one row *No rules yet*.
@@ -290,6 +290,14 @@ Settings → Departure (board 14) follows the board, plus *Reistijd naar je dien
 Settings → GitHub (board 15) follows the board. Not connected, the account row offers *Gebruik GitHub CLI-login* (if `gh` is installed) and *Token toevoegen…*; *Alle (6)* opens a sheet with a checkbox per repository.
 
 Settings → Music (board 10.5): the system-audio row reads *Aan* / *Uit*, not *Toegestaan*, because macOS doesn't tell apps whether it granted access. *Mini spectrum* and *Battery saver* are dimmed while the live spectrum is off.
+
+## Add integration (board 10.3.1)
+
+A 680 × 556 pt window over all of Settings, which dims to 60 % black. Search (⌘K), filter chips, the list on the left, the chosen service on the right, and ↑↓, ↩ and esc from the keyboard.
+
+- It lists only services that work, so the counts are lower than on the board and a category without a service has no chip. Music works automatically and isn't listed.
+- *Add …* and *Manage* open the service's current sheet or page until the Manage window (10.3.2) exists.
+- *Request an integration* opens a new GitHub issue in the browser.
 
 ## Buttons
 
@@ -302,6 +310,8 @@ All in `Wisp/Design/Buttons.swift`, 28 pt high, radius 8 (board 0.2):
 | `DangerButtonStyle` (`.danger`) | *Disconnect* | none, `redText`; a faint red behind it on hover and press |
 
 Disabled, the fill drops to `control` (none for danger) and the text to `textDisabled`.
+
+`IconButtonStyle` is the 28 × 28 pt icon-only button. `ServiceIcon`, `FilterChip` and `SearchField` are in `Wisp/Design/` too.
 
 `SegmentedControl` (`Wisp/Design/SegmentedControl.swift`) holds two to four fixed choices: a `control` track with radius 8, the chosen segment on `trackOff` with radius 6. Segments show words or, with a tooltip, icons. Disabled, the text drops to `textDisabled` and the chosen segment to `activeTab`.
 
