@@ -13,6 +13,12 @@ final class TabBarLayoutTests: XCTestCase {
         XCTAssertEqual(split.more, [7, 8])
     }
 
+    func testHomeGoesFirstAndNewTabsLast() {
+        XCTAssertEqual(
+            TabBarLayout.order(saved: ["a", "home", "b"], all: ["home", "a", "b", "new"], first: "home"), ["home", "a", "b", "new"])
+        XCTAssertEqual(TabBarLayout.order(saved: [], all: ["home", "a"], first: "home"), ["home", "a"])
+    }
+
     func testNoTabs() {
         XCTAssertEqual(TabBarLayout.split([Int]()).front, [])
     }

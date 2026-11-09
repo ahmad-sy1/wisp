@@ -108,7 +108,7 @@ final class Preferences: ObservableObject {
         // Saved order first; tabs added in a later version go at the end.
         let saved = (defaults.stringArray(forKey: Key.tabOrder) ?? []).compactMap(WispTab.init(rawValue:))
         // Home is always the first tab.
-        tabOrder = [.home] + (saved + WispTab.allCases.filter { !saved.contains($0) }).filter { $0 != .home }
+        tabOrder = TabBarLayout.order(saved: saved, all: WispTab.allCases, first: .home)
         hiddenTabs = Set((defaults.stringArray(forKey: Key.hiddenTabs) ?? []).compactMap(WispTab.init(rawValue:)))
             .subtracting([.home])
         // Only wisp's own domain, not the global language list.

@@ -3,6 +3,11 @@
 enum TabBarLayout {
     static let capacity = 8
 
+    /// The saved order with tabs of a later version at the end, and `first` always in front.
+    static func order<Tab: Equatable>(saved: [Tab], all: [Tab], first: Tab) -> [Tab] {
+        [first] + (saved + all.filter { !saved.contains($0) }).filter { $0 != first }
+    }
+
     static func split<Tab>(_ tabs: [Tab]) -> (front: [Tab], more: [Tab]) {
         guard tabs.count > capacity else { return (tabs, []) }
         return (Array(tabs.prefix(capacity - 1)), Array(tabs.dropFirst(capacity - 1)))
