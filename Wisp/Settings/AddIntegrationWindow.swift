@@ -73,7 +73,11 @@ private struct AddIntegrationWindow: View {
                 .strokeBorder(Theme.lineStrong, lineWidth: 1)
         )
         .clipShape(RoundedRectangle(cornerRadius: Theme.modalCorner, style: .continuous))
-        .onAppear { keys.start(handle) }
+        .onAppear {
+            keys.start(handle)
+            // A turn later: the field can't take focus while it is being added to the window.
+            DispatchQueue.main.async { searchFocused = true }
+        }
         .onDisappear { keys.stop() }
     }
 
