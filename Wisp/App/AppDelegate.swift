@@ -50,6 +50,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                 SettingsNavigation.shared.page = settingsPage
                 // `-addIntegration YES` opens that window on top (Integrations only).
                 SettingsNavigation.shared.addingIntegration = UserDefaults.standard.bool(forKey: "addIntegration")
+                // `-manageIntegration gmail` opens the Manage window, with `-manageState` for a state.
+                SettingsNavigation.shared.managingIntegration = UserDefaults.standard.string(forKey: "manageIntegration")
+                    .flatMap(IntegrationID.init(rawValue:))
                 openSettings()
             }
             if let path = UserDefaults.standard.string(forKey: "snapshot") {

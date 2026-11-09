@@ -581,6 +581,16 @@
         }
       }
     },
+    "Asking NS for the next departure…" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "NS vragen naar het volgende vertrek…"
+          }
+        }
+      }
+    },
     "Automatic · %@ active" : {
       "localizations" : {
         "nl" : {
@@ -931,6 +941,26 @@
         }
       }
     },
+    "Checking" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Controleren"
+          }
+        }
+      }
+    },
+    "Checking…" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Controleren…"
+          }
+        }
+      }
+    },
     "Choose an app" : {
       "localizations" : {
         "nl" : {
@@ -1111,6 +1141,16 @@
         }
       }
     },
+    "Connected as %@" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verbonden als %@"
+          }
+        }
+      }
+    },
     "Connected · %@" : {
       "localizations" : {
         "nl" : {
@@ -1137,6 +1177,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Verbonden · @%@"
+          }
+        }
+      }
+    },
+    "Connected · key ending in %@" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verbonden · sleutel eindigt op %@"
           }
         }
       }
@@ -1191,6 +1241,36 @@
         }
       }
     },
+    "Couldn't connect" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kan niet verbinden"
+          }
+        }
+      }
+    },
+    "Couldn't reach Gmail. Check your connection and try again." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gmail is niet bereikbaar. Controleer je verbinding en probeer het opnieuw."
+          }
+        }
+      }
+    },
+    "Couldn't reach NS. Check your connection and try again." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "NS is niet bereikbaar. Controleer je verbinding en probeer het opnieuw."
+          }
+        }
+      }
+    },
     "Create a token…" : {
       "localizations" : {
         "nl" : {
@@ -1201,12 +1281,12 @@
         }
       }
     },
-    "Create an app password…" : {
+    "Create an app password" : {
       "localizations" : {
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "App-wachtwoord maken…"
+            "value" : "Maak een app-wachtwoord"
           }
         }
       }
@@ -1381,6 +1461,16 @@
         }
       }
     },
+    "Email address" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "E-mailadres"
+          }
+        }
+      }
+    },
     "Esc cancels · ⌫ turns it off" : {
       "localizations" : {
         "nl" : {
@@ -1441,16 +1531,6 @@
         }
       }
     },
-    "For lines, platforms and delays in the Departure tab. Without it, wisp shows a total time from Apple Maps. The key is kept only in your Keychain." : {
-      "localizations" : {
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Voor lijnen, sporen en vertraging in de Vertrek-tab. Zonder sleutel toont wisp een totale reistijd van Apple Kaarten. De sleutel staat alleen in je Sleutelhanger."
-          }
-        }
-      }
-    },
     "For the notch and this window" : {
       "localizations" : {
         "nl" : {
@@ -1501,12 +1581,12 @@
         }
       }
     },
-    "Get a free key…" : {
+    "Get a free key at apiportal.ns.nl" : {
       "localizations" : {
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Vraag een gratis sleutel aan…"
+            "value" : "Haal een gratis sleutel op apiportal.ns.nl"
           }
         }
       }
@@ -1571,16 +1651,6 @@
         }
       }
     },
-    "Gmail address" : {
-      "localizations" : {
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gmail-adres"
-          }
-        }
-      }
-    },
     "Go now or wait %lld min" : {
       "localizations" : {
         "nl" : {
@@ -1611,6 +1681,16 @@
         }
       }
     },
+    "Google rejected this app password. Check that 2-step verification is on and paste it again." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Google heeft dit app-wachtwoord geweigerd. Controleer of verificatie in twee stappen aanstaat en plak het opnieuw."
+          }
+        }
+      }
+    },
     "HEADING HOME" : {
       "localizations" : {
         "nl" : {
@@ -1627,6 +1707,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Heeft een vraag voor je"
+          }
+        }
+      }
+    },
+    "Hidden" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verborgen"
+          }
+        }
+      }
+    },
+    "Hide key" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verberg sleutel"
           }
         }
       }
@@ -1747,6 +1847,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Inbox en meldingen van nieuwe mail"
+          }
+        }
+      }
+    },
+    "Inbox, unread count and new-mail alerts in your notch." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inbox, aantal ongelezen en meldingen van nieuwe mail in je notch."
           }
         }
       }
@@ -2167,6 +2277,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "NS API-sleutel"
+          }
+        }
+      }
+    },
+    "NS rejected this key. Copy the primary key of your subscription, not the secondary one." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "NS heeft deze sleutel geweigerd. Kopieer de primary key van je abonnement, niet de secondary."
           }
         }
       }
@@ -2791,12 +2911,12 @@
         }
       }
     },
-    "Primary key" : {
+    "Primary key from the NS API portal" : {
       "localizations" : {
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Primaire sleutel"
+            "value" : "Primary key uit het NS API-portaal"
           }
         }
       }
@@ -3321,6 +3441,16 @@
         }
       }
     },
+    "Show key" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toon sleutel"
+          }
+        }
+      }
+    },
     "Show new mail in the notch" : {
       "localizations" : {
         "nl" : {
@@ -3357,6 +3487,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Inloggen mislukt: controleer adres en app-wachtwoord"
+          }
+        }
+      }
+    },
+    "Signing in to Gmail…" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aanmelden bij Gmail…"
           }
         }
       }
@@ -3481,12 +3621,42 @@
         }
       }
     },
+    "Stored in your Mac's Keychain. wisp only talks to Google." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bewaard in de Sleutelhanger van je Mac. wisp praat alleen met Google."
+          }
+        }
+      }
+    },
+    "Stored in your Mac's Keychain. wisp only talks to NS." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bewaard in de Sleutelhanger van je Mac. wisp praat alleen met NS."
+          }
+        }
+      }
+    },
     "Street and number, town" : {
       "localizations" : {
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Straat en nummer, plaats"
+          }
+        }
+      }
+    },
+    "Subscribe to the “Ns-App” product and copy the primary key." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abonneer je op het product “Ns-App” en kopieer de primary key."
           }
         }
       }
@@ -3741,6 +3911,16 @@
         }
       }
     },
+    "Train departures and delays for the departure assistant." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Treinvertrek en vertragingen voor de vertrekassistent."
+          }
+        }
+      }
+    },
     "Tram" : {
       "localizations" : {
         "nl" : {
@@ -3767,6 +3947,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Reistijd naar je dienst"
+          }
+        }
+      }
+    },
+    "Try again" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Opnieuw proberen"
           }
         }
       }
@@ -4381,12 +4571,12 @@
         }
       }
     },
-    "name@gmail.com" : {
+    "myaccount.google.com/apppasswords · needs 2-step verification. Paste it without spaces." : {
       "localizations" : {
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "naam@gmail.com"
+            "value" : "myaccount.google.com/apppasswords · vereist verificatie in twee stappen. Plak het zonder spaties."
           }
         }
       }
@@ -4608,16 +4798,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "wisp heeft geen toegang tot je agenda. Zet wisp aan onder Privacy en beveiliging → Agenda's."
-          }
-        }
-      }
-    },
-    "wisp marks nothing as read and only changes your mailbox when you click Delete on new mail (it goes to the Gmail trash). Address and password are kept only in your Keychain." : {
-      "localizations" : {
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "wisp markeert niets als gelezen en verandert je mailbox alleen als je bij nieuwe mail op Verwijderen klikt (hij gaat naar de Gmail-prullenbak). Adres en wachtwoord staan alleen in je Keychain."
           }
         }
       }

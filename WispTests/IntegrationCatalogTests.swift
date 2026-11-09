@@ -35,4 +35,51 @@ final class IntegrationCatalogTests: XCTestCase {
         XCTAssertEqual(IntegrationCatalog.neighbour(of: nil, in: items, offset: 1), items[0].id)
         XCTAssertNil(IntegrationCatalog.neighbour(of: nil, in: [], offset: 1))
     }
+
+    private func spec(_ id: IntegrationID) throws -> ManageSpec {
+        try XCTUnwrap(IntegrationCatalog.manageSpec(for: id))
+    }
+
+    func testGitHubHasItsOwnPageInsteadOfTheManageWindow() {
+        XCTAssertNil(IntegrationCatalog.manageSpec(for: .github))
+    }
+
+    func testGmailNeedsAnAddressAndAWholeAppPassword() throws {
+        let gmail = try spec(.gmail)
+        let password = "abcd efgh ijkl mnop"
+        XCTAssertTrue(gmail.canConnect(["address": "a@gmail.com", "password": password]))
+        XCTAssertFalse(gmail.canConnect(["address": "a@gmail.com", "password": "short"]))
+        XCTAssertFalse(gmail.canConnect(["address": "nope", "password": password]))
+        XCTAssertFalse(gmail.canConnect(["address": "@gmail.com", "password": password]))
+        XCTAssertFalse(gmail.canConnect([:]))
+    }
+
+    func testNSNeedsAKey() throws {
+        let ns = try spec(.ns)
+        XCTAssertTrue(ns.canConnect(["key": " abc "]))
+        XCTAssertFalse(ns.canConnect(["key": "  "]))
+    }
+
+    private struct Status: HTTPTransport {
+        let code: Int
+        func send(_ request: HTTPRequest) async throws -> HTTPResponse {
+            XCTAssertEqual(request.headers["Ocp-Apim-Subscription-Key"], "k")
+            return HTTPResponse(status: code, headers: [:], body: Data())
+        }
+    }
+
+    private struct Offline: HTTPTransport {
+        func send(_ request: HTTPRequest) async throws -> HTTPResponse { throw URLError(.notConnectedToInternet) }
+    }
+
+    func testNSKeyCheck() async {
+        let accepted = await NSTravelProvider(key: "k", transport: Status(code: 200)).checkKey()
+        XCTAssertEqual(accepted, .accepted)
+        let rejected = await NSTravelProvider(key: "k", transport: Status(code: 401)).checkKey()
+        XCTAssertEqual(rejected, .rejected)
+        let limited = await NSTravelProvider(key: "k", transport: Status(code: 429)).checkKey()
+        XCTAssertEqual(limited, .unreachable)
+        let offline = await NSTravelProvider(key: "k", transport: Offline()).checkKey()
+        XCTAssertEqual(offline, .unreachable)
+    }
 }

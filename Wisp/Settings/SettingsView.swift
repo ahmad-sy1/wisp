@@ -40,8 +40,18 @@ final class SettingsNavigation: ObservableObject {
     @Published var page: SettingsPageID = .general
     /// *Add integration* is open, over the whole window.
     @Published var addingIntegration = false
-    /// What was picked there, for the Integrations page to set up.
-    @Published var chosenIntegration: IntegrationID?
+    /// The Manage window is open for this service.
+    @Published var managingIntegration: IntegrationID?
+
+    /// Closes *Add integration* and goes to where this service is set up.
+    func openSetup(of id: IntegrationID) {
+        addingIntegration = false
+        if IntegrationCatalog.manageSpec(for: id) != nil {
+            managingIntegration = id
+        } else {
+            page = .github
+        }
+    }
 }
 
 /// The Settings window: a sidebar with the pages, the chosen page on the right.
@@ -59,10 +69,17 @@ struct SettingsView: View {
         }
         .frame(minWidth: 760, minHeight: 620)
         .overlay {
-            if navigation.addingIntegration { AddIntegrationOverlay() }
+            if navigation.addingIntegration {
+                AddIntegrationOverlay()
+            } else if let id = navigation.managingIntegration {
+                ManageIntegrationOverlay(id: id)
+            }
         }
         // Something else can change the page, such as *Connect GitHub* in the notch.
-        .onChange(of: navigation.page) { _, _ in navigation.addingIntegration = false }
+        .onChange(of: navigation.page) { _, _ in
+            navigation.addingIntegration = false
+            navigation.managingIntegration = nil
+        }
         .ignoresSafeArea()
         .tint(prefs.accent.color)
         .environment(\.colorScheme, .dark)

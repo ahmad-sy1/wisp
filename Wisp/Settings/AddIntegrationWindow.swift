@@ -17,19 +17,13 @@ struct AddIntegrationOverlay: View {
     }
 
     var body: some View {
-        ZStack {
-            Color.black.opacity(0.6)
-                .contentShape(Rectangle())
-                .onTapGesture { navigation.addingIntegration = false }
-            AddIntegrationWindow(
-                added: added,
-                choose: { id in
-                    navigation.addingIntegration = false
-                    navigation.chosenIntegration = id
-                },
-                close: { navigation.addingIntegration = false })
+        ModalBackdrop(close: close) {
+            AddIntegrationWindow(added: added, choose: { navigation.openSetup(of: $0) }, close: close)
         }
-        .ignoresSafeArea()
+    }
+
+    private func close() {
+        navigation.addingIntegration = false
     }
 }
 
@@ -42,7 +36,7 @@ private struct AddIntegrationWindow: View {
     @State private var query = ""
     @State private var filter = IntegrationFilter.all
     @State private var selection: IntegrationID?
-    @State private var keys = KeyMonitor()
+    @State private var keys = WindowKeyMonitor()
     @FocusState private var searchFocused: Bool
 
     private var listing: IntegrationListing {
@@ -67,12 +61,7 @@ private struct AddIntegrationWindow: View {
             footer
         }
         .frame(width: 680, height: 556)
-        .background(RoundedRectangle(cornerRadius: Theme.modalCorner, style: .continuous).fill(Theme.modal))
-        .overlay(
-            RoundedRectangle(cornerRadius: Theme.modalCorner, style: .continuous)
-                .strokeBorder(Theme.lineStrong, lineWidth: 1)
-        )
-        .clipShape(RoundedRectangle(cornerRadius: Theme.modalCorner, style: .continuous))
+        .modalSurface()
         .onAppear {
             keys.start(handle)
             // A turn later: the field can't take focus while it is being added to the window.
@@ -271,14 +260,14 @@ private struct AddIntegrationWindow: View {
             } label: {
                 Text("Manage").frame(maxWidth: .infinity)
             }
-            .buttonStyle(SecondaryButtonStyle())
+            .buttonStyle(SecondaryButtonStyle(height: Theme.windowButtonHeight))
         } else {
             Button {
                 choose(item.id)
             } label: {
                 Text("Add \(item.name)").frame(maxWidth: .infinity)
             }
-            .buttonStyle(AccentButtonStyle())
+            .buttonStyle(AccentButtonStyle(height: Theme.windowButtonHeight))
         }
     }
 
@@ -421,26 +410,5 @@ private struct RequestLink: View {
         .focusable(false)
         .font(.system(size: muted ? 11.5 : 12))
         .foregroundStyle(muted ? Theme.textSecondary : prefs.accent.color)
-    }
-}
-
-/// Keys for the window while it is open; a text field would otherwise take the arrows and
-/// Return, and Esc would go nowhere.
-@MainActor
-private final class KeyMonitor {
-    private var token: Any?
-
-    func start(_ handle: @escaping (NSEvent) -> Bool) {
-        stop()
-        let window = NSApp.keyWindow
-        token = NSEvent.addLocalMonitorForEvents(matching: .keyDown) { event in
-            let used = MainActor.assumeIsolated { event.window === window && handle(event) }
-            return used ? nil : event
-        }
-    }
-
-    func stop() {
-        if let token { NSEvent.removeMonitor(token) }
-        token = nil
     }
 }

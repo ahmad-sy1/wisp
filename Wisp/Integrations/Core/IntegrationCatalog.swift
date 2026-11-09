@@ -4,6 +4,11 @@ enum IntegrationID: String, Sendable {
     case gmail, github, ns
 }
 
+/// What a service said about credentials that were not stored yet.
+enum CredentialCheck: Equatable, Sendable {
+    case accepted, rejected, unreachable
+}
+
 enum IntegrationCategory: String, CaseIterable, Sendable {
     case productivity, developer, lifestyle, business
 

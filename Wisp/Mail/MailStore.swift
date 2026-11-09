@@ -112,6 +112,28 @@ final class MailStore: ObservableObject {
         restart()
     }
 
+    /// Tries an account without storing it, for the Manage window.
+    func check(address: String, appPassword: String) async -> CredentialCheck {
+        let conn = IMAPConnection()
+        let result: CredentialCheck
+        do {
+            try await conn.open(host: "imap.gmail.com", port: 993)
+            try await conn.login(user: address, password: appPassword)
+            result = .accepted
+        } catch let IMAPError.rejected(message) where Self.isSignInRefusal(message) {
+            result = .rejected
+        } catch {
+            result = .unreachable
+        }
+        await conn.close()
+        return result
+    }
+
+    private static func isSignInRefusal(_ message: String) -> Bool {
+        message.localizedCaseInsensitiveContains("AUTHENTICATIONFAILED")
+            || message.localizedCaseInsensitiveContains("credentials")
+    }
+
     func disconnect() {
         stop()
         Keychain.remove(Self.addressKey)
@@ -148,10 +170,7 @@ final class MailStore: ObservableObject {
                 }
             } catch is CancellationError {
                 break
-            } catch let IMAPError.rejected(message)
-                where message.localizedCaseInsensitiveContains("AUTHENTICATIONFAILED")
-                || message.localizedCaseInsensitiveContains("credentials")
-            {
+            } catch let IMAPError.rejected(message) where Self.isSignInRefusal(message) {
                 // Wrong address or app password: retrying won't help.
                 status = .failed(String(localized: "Sign-in failed: check the address and app password"))
                 await conn.close()
