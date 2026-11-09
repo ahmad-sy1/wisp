@@ -41,6 +41,7 @@ private struct ManageWindow: View {
     @State private var values: [String: String] = [:]
     @State private var task: Task<Void, Never>?
     @State private var keys = WindowKeyMonitor()
+    @State private var confirmingDisconnect = false
 
     #if DEBUG
         /// `-manageState empty|checking|failed` draws that state, for snapshots.
@@ -126,6 +127,13 @@ private struct ManageWindow: View {
         }
         .frame(width: 460, height: 500)
         .modalSurface()
+        .confirmationDialog(
+            String(localized: "Disconnect \(spec.info.name)?"), isPresented: $confirmingDisconnect
+        ) {
+            Button("Disconnect", role: .destructive, action: disconnect)
+        } message: {
+            Text("wisp disconnects and deletes what you entered from your Keychain.")
+        }
         .onAppear { keys.start(handle) }
         .onDisappear {
             keys.stop()
@@ -225,7 +233,7 @@ private struct ManageWindow: View {
     @ViewBuilder private var buttons: some View {
         HStack(spacing: 8) {
             if isConnected {
-                Button("Disconnect", action: disconnect).buttonStyle(DangerButtonStyle(height: Theme.windowButtonHeight))
+                Button("Disconnect") { confirmingDisconnect = true }.buttonStyle(DangerButtonStyle(height: Theme.windowButtonHeight))
                 Spacer()
                 Button("Done", action: close).buttonStyle(AccentButtonStyle(height: Theme.windowButtonHeight))
             } else {
