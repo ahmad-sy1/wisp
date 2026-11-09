@@ -84,6 +84,9 @@ final class IntegrationCatalogTests: XCTestCase {
         XCTAssertEqual(limited, .accepted)
         let refusedRoute = await NSTravelProvider(key: "k", transport: Status(code: 400)).checkKey()
         XCTAssertEqual(refusedRoute, .accepted)
+        // Says nothing about the key.
+        let serverError = await NSTravelProvider(key: "k", transport: Status(code: 503)).checkKey()
+        XCTAssertEqual(serverError, .unreachable)
         let offline = await NSTravelProvider(key: "k", transport: Offline()).checkKey()
         XCTAssertEqual(offline, .unreachable)
     }

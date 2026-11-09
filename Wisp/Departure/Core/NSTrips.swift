@@ -20,20 +20,24 @@ struct NSTravelProvider: TravelProvider {
         }
     }
 
-    /// Asks for one fixed route, only to see whether NS accepts this key. The gateway checks the
-    /// key first and answers 401 or 403 when it is wrong, so any other answer means it passed.
+    /// Asks for one fixed route, only to see whether NS accepts this key. The gateway answers
+    /// 401 or 403 to a wrong key; a client error other than that means the key passed. A server
+    /// error says nothing about the key, so it isn't stored on that.
     func checkKey() async -> CredentialCheck {
         let utrecht = TravelPlace(name: "Utrecht Centraal", latitude: 52.0894, longitude: 5.1101)
         let amsterdam = TravelPlace(name: "Amsterdam Centraal", latitude: 52.3791, longitude: 4.9003)
         guard let url = Self.url(from: utrecht, to: amsterdam, departAt: nil, arriveBy: nil) else { return .unreachable }
         let request = HTTPRequest(url: url, headers: ["Ocp-Apim-Subscription-Key": key, "Accept": "application/json"])
         guard let response = try? await transport.send(request) else { return .unreachable }
-        if response.status == 401 || response.status == 403 { return .rejected }
         if response.status != 200 {
             let answer = String(decoding: response.body.prefix(300), as: UTF8.self)
             Self.log.notice("NS key check: status \(response.status, privacy: .public), \(answer, privacy: .public)")
         }
-        return .accepted
+        switch response.status {
+        case 401, 403: return .rejected
+        case 500...599: return .unreachable
+        default: return .accepted
+        }
     }
 
     static func url(from: TravelPlace, to: TravelPlace, departAt: Date?, arriveBy: Date?) -> URL? {
