@@ -178,20 +178,27 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             .removeDuplicates()
             .sink { count in notch.model.badges[.github] = count }
             .store(in: &subscriptions)
-        // One status on the notch: a trip is on the clock, so it goes before GitHub.
+        // One status on the notch, and none for a tab that is switched off.
         github.$compact
             .removeDuplicates()
-            .combineLatest(DepartureStore.shared.$output.removeDuplicates())
+            .combineLatest(DepartureStore.shared.$output.removeDuplicates(), Preferences.shared.$hiddenTabs.removeDuplicates())
             // @Published fires before the new value is stored.
             .receive(on: RunLoop.main)
-            .sink { compact, output in
-                notch.setStatus(output.map { StatusWings($0) } ?? StatusWings(compact))
+            .sink { compact, output, hidden in
+                notch.setStatus(
+                    ClosedNotchStatus.pick(
+                        trip: output.map { StatusWings($0) },
+                        tripTabOn: !hidden.contains(.departure),
+                        github: StatusWings(compact),
+                        githubTabOn: !hidden.contains(.github)))
             }
             .store(in: &subscriptions)
         github.onEvent = { event in
             let focus = FocusStore.shared
             // Quiet while focusing with "Do not disturb", and never over a permission request.
-            guard !(focus.isActive && focus.doNotDisturb), ClaudeSessions.shared.approval == nil else { return }
+            guard !(focus.isActive && focus.doNotDisturb), ClaudeSessions.shared.approval == nil,
+                !Preferences.shared.hiddenTabs.contains(.github)
+            else { return }
             switch event {
             case .checksFailed where github.notifyFailed:
                 notch.flash(Theme.badge)
