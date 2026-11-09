@@ -29,6 +29,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         notch.openSettings = { [weak self] in self?.openSettings() }
         self.notch = notch
         setUpStatusItem()
+        setUpEditMenu()
         startClaudeHooks(notch: notch)
         startMail(notch: notch)
         startMusic(notch: notch)
@@ -249,6 +250,23 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     // MARK: - Menu bar
+
+    /// wisp shows no menu bar, but ⌘X, ⌘C, ⌘V and ⌘A reach a text field through this menu.
+    private func setUpEditMenu() {
+        let edit = NSMenu(title: "Edit")
+        edit.addItem(withTitle: "Undo", action: Selector(("undo:")), keyEquivalent: "z")
+        edit.addItem(withTitle: "Redo", action: Selector(("redo:")), keyEquivalent: "Z")
+        edit.addItem(.separator())
+        edit.addItem(withTitle: "Cut", action: #selector(NSText.cut(_:)), keyEquivalent: "x")
+        edit.addItem(withTitle: "Copy", action: #selector(NSText.copy(_:)), keyEquivalent: "c")
+        edit.addItem(withTitle: "Paste", action: #selector(NSText.paste(_:)), keyEquivalent: "v")
+        edit.addItem(withTitle: "Select All", action: #selector(NSText.selectAll(_:)), keyEquivalent: "a")
+        let item = NSMenuItem()
+        item.submenu = edit
+        let main = NSMenu()
+        main.addItem(item)
+        NSApp.mainMenu = main
+    }
 
     private func setUpStatusItem() {
         let item = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
