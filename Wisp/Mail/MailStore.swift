@@ -120,18 +120,14 @@ final class MailStore: ObservableObject {
             try await conn.open(host: "imap.gmail.com", port: 993)
             try await conn.login(user: address, password: appPassword)
             result = .accepted
-        } catch let IMAPError.rejected(message) where Self.isSignInRefusal(message) {
+        } catch IMAPError.rejected {
+            // Gmail words its refusals in several ways; the login is all this could refuse.
             result = .rejected
         } catch {
             result = .unreachable
         }
         await conn.close()
         return result
-    }
-
-    private static func isSignInRefusal(_ message: String) -> Bool {
-        message.localizedCaseInsensitiveContains("AUTHENTICATIONFAILED")
-            || message.localizedCaseInsensitiveContains("credentials")
     }
 
     func disconnect() {
@@ -170,7 +166,10 @@ final class MailStore: ObservableObject {
                 }
             } catch is CancellationError {
                 break
-            } catch let IMAPError.rejected(message) where Self.isSignInRefusal(message) {
+            } catch let IMAPError.rejected(message)
+                where message.localizedCaseInsensitiveContains("AUTHENTICATIONFAILED")
+                || message.localizedCaseInsensitiveContains("credentials")
+            {
                 // Wrong address or app password: retrying won't help.
                 status = .failed(String(localized: "Sign-in failed: check the address and app password"))
                 await conn.close()
