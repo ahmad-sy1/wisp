@@ -20,7 +20,7 @@ struct AgendaEvent: Identifiable, Equatable {
 
 /// Today's events from the macOS Calendar app (EventKit), for the Agenda tab.
 ///
-/// Reads only while the tab is visible: `setVisible(true)` fetches and starts
+/// Reads only while something shows it: `setVisible(true)` fetches and starts
 /// listening for calendar changes, `setVisible(false)` stops. Nothing is written.
 @MainActor
 final class AgendaStore: ObservableObject {
@@ -68,6 +68,8 @@ final class AgendaStore: ObservableObject {
 
     private let store = EKEventStore()
     private let defaults = UserDefaults.standard
+    /// Who shows the events right now: the Agenda tab, Home.
+    private var viewers: Set<String> = []
     private var visible = false
     private var observer: NSObjectProtocol?
 
@@ -85,13 +87,14 @@ final class AgendaStore: ObservableObject {
     }
 
     /// The Agenda tab appeared (`true`) or went away.
-    func setVisible(_ on: Bool) {
-        visible = on
+    func setVisible(_ on: Bool, by viewer: String) {
+        if on { viewers.insert(viewer) } else { viewers.remove(viewer) }
+        visible = !viewers.isEmpty
         if on {
             access = Self.currentAccess()
             startObserving()
             reload()
-        } else {
+        } else if !visible {
             stopObserving()
         }
     }

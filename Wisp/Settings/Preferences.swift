@@ -29,9 +29,9 @@ final class Preferences: ObservableObject {
         }
     }
 
-    /// What Home leaves out (Settings → Notch). At least one tile stays.
-    @Published var hiddenHomeTiles: Set<HomeTile> {
-        didSet { defaults.set(hiddenHomeTiles.map(\.rawValue), forKey: Key.hiddenHomeTiles) }
+    /// What Home shows; `nil` until you choose, so Home shows `HomeLayout.standard`.
+    @Published var homeLayout: HomeLayout? {
+        didSet { defaults.set(try? JSONEncoder().encode(homeLayout), forKey: Key.homeLayout) }
     }
 
     /// The closed notch shows the real mini spectrum; off is the fixed equalizer, and no audio tap.
@@ -88,7 +88,7 @@ final class Preferences: ObservableObject {
         static let tabOrder = "tabOrder"
         static let hiddenTabs = "hiddenTabs"
         static let hotKey = "hotKey"
-        static let hiddenHomeTiles = "hiddenHomeTiles"
+        static let homeLayout = "homeLayout"
         static let miniSpectrum = "miniSpectrum"
         static let spectrumBatterySaver = "spectrumBatterySaver"
         static let hiddenMusicSources = "hiddenMusicSources"
@@ -101,13 +101,14 @@ final class Preferences: ObservableObject {
         launchAtLogin = SMAppService.mainApp.status == .enabled
         // Never set: the standard keys. Saved empty: switched off.
         hotKey = defaults.data(forKey: Key.hotKey).map { try? JSONDecoder().decode(KeyCombo.self, from: $0) } ?? .standard
-        hiddenHomeTiles = Set((defaults.stringArray(forKey: Key.hiddenHomeTiles) ?? []).compactMap(HomeTile.init(rawValue:)))
+        homeLayout = defaults.data(forKey: Key.homeLayout).flatMap { try? JSONDecoder().decode(HomeLayout.self, from: $0) }
         miniSpectrum = defaults.object(forKey: Key.miniSpectrum) as? Bool ?? true
         spectrumBatterySaver = defaults.object(forKey: Key.spectrumBatterySaver) as? Bool ?? true
         hiddenMusicSources = Set((defaults.stringArray(forKey: Key.hiddenMusicSources) ?? []).compactMap(MusicSource.init(rawValue:)))
         // Saved order first; tabs added in a later version go at the end.
         let saved = (defaults.stringArray(forKey: Key.tabOrder) ?? []).compactMap(WispTab.init(rawValue:))
-        tabOrder = saved + WispTab.allCases.filter { !saved.contains($0) }
+        // Home is always the first tab.
+        tabOrder = TabBarLayout.order(saved: saved, all: WispTab.allCases, first: .home)
         hiddenTabs = Set((defaults.stringArray(forKey: Key.hiddenTabs) ?? []).compactMap(WispTab.init(rawValue:)))
             .subtracting([.home])
         // Only wisp's own domain, not the global language list.
@@ -119,7 +120,7 @@ final class Preferences: ObservableObject {
 
     /// Moves a tab to where another one is now (drag and drop in Settings → Notch).
     func moveTab(_ tab: WispTab, to target: WispTab) {
-        guard tab != target, let from = tabOrder.firstIndex(of: tab),
+        guard tab != target, tab != .home, target != .home, let from = tabOrder.firstIndex(of: tab),
             let to = tabOrder.firstIndex(of: target)
         else { return }
         var order = tabOrder
@@ -140,14 +141,6 @@ final class Preferences: ObservableObject {
         task.arguments = ["-c", "sleep 0.5; /usr/bin/open \"$0\"", Bundle.main.bundlePath]
         try? task.run()
         NSApp.terminate(nil)
-    }
-
-    func setHomeTile(_ tile: HomeTile, shown: Bool) {
-        if shown {
-            hiddenHomeTiles.remove(tile)
-        } else if hiddenHomeTiles.count < HomeTile.allCases.count - 1 {
-            hiddenHomeTiles.insert(tile)
-        }
     }
 
     func setMusicSource(_ source: MusicSource, shown: Bool) {

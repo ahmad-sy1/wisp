@@ -25,9 +25,9 @@ The boards in [`design/boards/`](../design/boards) are the visual source of trut
 | [9.6](../design/boards/9.6-closed-notch-mini-spectrum.png) | closed notch: mini spectrum, video, paused |
 | [9.7](../design/boards/9.7-closed-notch-focus-music.png) | closed notch: focus and music together (planned) |
 | [10.1](../design/boards/10.1-settings-notch.png) | Settings: Notch (tabs on/off and order, Home tiles); being replaced by 10.1.1 |
-| [10.1.1](../design/boards/10.1.1-notch-page-new-design.png) | Settings: Notch with integrations and *More* (planned; rows keep their options) |
-| [10.1.2](../design/boards/10.1.2-tabbar-full-more.png) | tab bar: the *More* menu (planned; stays inside the panel) |
-| [10.1.3](../design/boards/10.1.3-choosing-home-tab.png) | Settings: choosing what Home shows (planned) |
+| [10.1.1](../design/boards/10.1.1-notch-page-new-design.png) | Settings: Notch with integrations and *More* (rows keep their options) |
+| [10.1.2](../design/boards/10.1.2-tabbar-full-more.png) | tab bar: the *More* menu (compacted so it stays inside the panel) |
+| [10.1.3](../design/boards/10.1.3-choosing-home-tab.png) | Settings: choosing what Home shows |
 | [10.2](../design/boards/10.2-settings-general.png) | Settings: General |
 | [10.3](../design/boards/10.3-settings-integrations.png) | Settings: Integrations; being replaced by 10.3.4 |
 | [10.3.1](../design/boards/10.3.1-integrations-modal.png) | *Add integration* window |
@@ -40,8 +40,8 @@ The boards in [`design/boards/`](../design/boards) are the visual source of trut
 | [10.9](../design/boards/10.9-integration-page-template-whoop.png) | Settings: page template for an integration, with WHOOP (planned) |
 | [10.10](../design/boards/10.10-sidemenu.png) | Settings: sidebar with few and many integrations (planned) |
 | [11](../design/boards/11-compact-notch-states.png) | closed notch: departure and GitHub states |
-| [11.1](../design/boards/11.1-open-notch-home-layouts.png) | Home with 4, 3, 2 and 1 places (planned) |
-| [11.2](../design/boards/11.2-home-items-three-sizes.png) | Home items in three sizes (planned) |
+| [11.1](../design/boards/11.1-open-notch-home-layouts.png) | Home with 4, 3, 2 and 1 places |
+| [11.2](../design/boards/11.2-home-items-three-sizes.png) | Home items in three sizes (the large *In progress* with focus time and last commit comes later) |
 | [11.3](../design/boards/11.3-integration-tab-template.png) | template for an integration's tab (planned) |
 | [12](../design/boards/12-departure.png) | Departure |
 | [13](../design/boards/13-github.png) | GitHub |
@@ -335,6 +335,20 @@ Disabled, the fill drops to `control` (none for danger) and the text to `textDis
 ## Glass
 
 Small controls may use glass: Liquid Glass (`glassEffect`) on macOS 26, a frosted material with a thin light edge on older systems (`Wisp/Design/Glass.swift`). Glass is for keys only; the panel and the cards stay flat and black.
+
+## Tab bar with More (boards 10.1.1, 10.1.2)
+
+Up to 8 tabs fit. With more, the last spot becomes *… 4 ⌄* and holds the rest, in tab order; the arrow keys still walk through every tab. Its menu is 26 pt rows inside the panel, four at most before it scrolls, without the board's *More tabs* title, so the panel never grows.
+
+Settings → Notch shows Home apart as the fixed first tab, and marks the rows that end up in *More*. A row still opens for its options, which board 10.1.1 leaves out. An integration's tab shows its letters.
+
+## Home with 1 to 4 places (boards 10.1.3, 11.1, 11.2)
+
+Places in the 572 × 150 pt area: small 281 × 70, medium 281 × 150, large 572 × 150. Four is 2 × 2, three is medium left with two small, two is two medium, one is large. *In progress* is one of the things to place, so leaving it out hides it. Until you choose, Home shows *In progress*, GitHub and Music.
+
+Less room means less information, never smaller text. Settings → Notch has the plan and *Edit*; the chooser is a popover. Each thing appears once: picking one that is elsewhere swaps the two.
+
+Not on the boards yet: WHOOP and Notion arrive with their integrations. *In progress* large is the medium card at full width for now. The next event uses today's calendar and says *Nothing planned* otherwise.
 
 ## Language
 

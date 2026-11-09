@@ -1,6 +1,26 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "#%lld %@" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "#%1$lld %2$@"
+          }
+        }
+      }
+    },
+    "%@ at %@" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ om %2$@"
+          }
+        }
+      }
+    },
     "%@ left" : {
       "localizations" : {
         "nl" : {
@@ -47,16 +67,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@ · werkt automatisch"
-          }
-        }
-      }
-    },
-    "%lld PRs · %lld reviews" : {
-      "localizations" : {
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%lld PR's · %lld reviews"
           }
         }
       }
@@ -201,12 +211,72 @@
         }
       }
     },
+    "%lld on" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld aan"
+          }
+        }
+      }
+    },
+    "%lld open" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld open"
+          }
+        }
+      }
+    },
     "%lld options" : {
       "localizations" : {
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld opties"
+          }
+        }
+      }
+    },
+    "%lld tabs on" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld tabs aan"
+          }
+        }
+      }
+    },
+    "%lld tabs on · %lld fit in the notch · %lld in More" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld tabs aan · %2$lld passen in de notch · %3$lld in Meer"
+          }
+        }
+      }
+    },
+    "%lld things" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld dingen"
+          }
+        }
+      }
+    },
+    "%lld things: %@" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld dingen: %2$@"
           }
         }
       }
@@ -297,6 +367,36 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "1 optie"
+          }
+        }
+      }
+    },
+    "1 tab on" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 tab aan"
+          }
+        }
+      }
+    },
+    "1 thing" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 ding"
+          }
+        }
+      }
+    },
+    "1 thing: %@" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 ding: %@"
           }
         }
       }
@@ -531,6 +631,16 @@
         }
       }
     },
+    "Allow the live spectrum in the Music tab." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sta het live spectrum toe in de Muziek-tab."
+          }
+        }
+      }
+    },
     "Allow…" : {
       "localizations" : {
         "nl" : {
@@ -691,6 +801,16 @@
         }
       }
     },
+    "Big, left" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Groot, links"
+          }
+        }
+      }
+    },
     "Bike" : {
       "localizations" : {
         "nl" : {
@@ -707,6 +827,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Fiets: waarschuwen voor buien"
+          }
+        }
+      }
+    },
+    "Bottom left" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Linksonder"
+          }
+        }
+      }
+    },
+    "Bottom right" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rechtsonder"
           }
         }
       }
@@ -961,12 +1101,52 @@
         }
       }
     },
+    "Checks failed" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Checks mislukt"
+          }
+        }
+      }
+    },
+    "Checks passing" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Checks geslaagd"
+          }
+        }
+      }
+    },
+    "Checks running · %lld/%lld" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Checks bezig · %1$lld/%2$lld"
+          }
+        }
+      }
+    },
     "Choose an app" : {
       "localizations" : {
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Kies een app"
+          }
+        }
+      }
+    },
+    "Choose what Home shows" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kies wat Home toont"
           }
         }
       }
@@ -1451,6 +1631,26 @@
         }
       }
     },
+    "Edit" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bewerken"
+          }
+        }
+      }
+    },
+    "Edit tabs in Settings…" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tabs bewerken in Instellingen…"
+          }
+        }
+      }
+    },
     "Edit this note" : {
       "localizations" : {
         "nl" : {
@@ -1577,6 +1777,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Vol over %@"
+          }
+        }
+      }
+    },
+    "Full width" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Volle breedte"
           }
         }
       }
@@ -1781,12 +1991,32 @@
         }
       }
     },
+    "Home · always the first tab" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Home · altijd de eerste tab"
+          }
+        }
+      }
+    },
     "Hooks" : {
       "localizations" : {
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Hooks"
+          }
+        }
+      }
+    },
+    "How many things does Home show?" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hoeveel dingen toont Home?"
           }
         }
       }
@@ -1807,6 +2037,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Over %lld min"
+          }
+        }
+      }
+    },
+    "In More" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In Meer"
           }
         }
       }
@@ -1907,6 +2147,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Installeren…"
+          }
+        }
+      }
+    },
+    "Integration" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Integratie"
           }
         }
       }
@@ -2221,6 +2471,16 @@
         }
       }
     },
+    "More tabs" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Meer tabs"
+          }
+        }
+      }
+    },
     "Moves it to the Gmail trash" : {
       "localizations" : {
         "nl" : {
@@ -2321,6 +2581,26 @@
         }
       }
     },
+    "Next" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Volgende"
+          }
+        }
+      }
+    },
+    "Next event" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Volgende afspraak"
+          }
+        }
+      }
+    },
     "Next train 16:42 · platform 3 · on time" : {
       "localizations" : {
         "nl" : {
@@ -2341,12 +2621,32 @@
         }
       }
     },
+    "No calendar access" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geen agenda-toegang"
+          }
+        }
+      }
+    },
     "No changes needed." : {
       "localizations" : {
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Geen wijzigingen nodig."
+          }
+        }
+      }
+    },
+    "No checks" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geen checks"
           }
         }
       }
@@ -2537,6 +2837,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Er speelt niets"
+          }
+        }
+      }
+    },
+    "Nothing planned" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Niets gepland"
           }
         }
       }
@@ -2841,6 +3151,16 @@
         }
       }
     },
+    "PR #%lld · %@" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "PR #%1$lld · %2$@"
+          }
+        }
+      }
+    },
     "Pause" : {
       "localizations" : {
         "nl" : {
@@ -2897,6 +3217,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Plaats voor het weer"
+          }
+        }
+      }
+    },
+    "Play" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Afspelen"
           }
         }
       }
@@ -3491,6 +3821,16 @@
         }
       }
     },
+    "Shows the defaults" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toont de standaard"
+          }
+        }
+      }
+    },
     "Sign-in failed: check the address and app password" : {
       "localizations" : {
         "nl" : {
@@ -3567,6 +3907,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Start Claude Code in IntelliJ of een terminal om hem hier te zien."
+          }
+        }
+      }
+    },
+    "Start Claude Code to see it here." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Start Claude Code om het hier te zien."
           }
         }
       }
@@ -3701,12 +4051,12 @@
         }
       }
     },
-    "Tabs · click a tab for its options" : {
+    "Tabs · connected integrations appear here automatically" : {
       "localizations" : {
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tabs · klik op een tab voor opties"
+            "value" : "Tabs · verbonden integraties verschijnen hier vanzelf"
           }
         }
       }
@@ -3901,6 +4251,26 @@
         }
       }
     },
+    "Top left" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Linksboven"
+          }
+        }
+      }
+    },
+    "Top right" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rechtsboven"
+          }
+        }
+      }
+    },
     "Train" : {
       "localizations" : {
         "nl" : {
@@ -4041,6 +4411,16 @@
         }
       }
     },
+    "Up to 8 tabs fit in the notch. With more, the last spot becomes More and holds the rest. Drag to choose which ones stay up front." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Er passen maximaal 8 tabs in de notch. Bij meer wordt de laatste plek Meer, met de rest erin. Sleep om te kiezen welke vooraan blijven."
+          }
+        }
+      }
+    },
     "Use GitHub CLI login" : {
       "localizations" : {
         "nl" : {
@@ -4127,6 +4507,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Waar werk je aan?"
+          }
+        }
+      }
+    },
+    "What goes where" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wat komt waar"
           }
         }
       }

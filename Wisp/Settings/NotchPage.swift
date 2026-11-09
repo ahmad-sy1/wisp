@@ -1,7 +1,7 @@
 import SwiftUI
 
-/// Settings → Notch (board 10.1): a live preview of the tab bar, and the tabs: drag to
-/// reorder, a switch to show or hide, and each tab's options under a click.
+/// Settings → Notch (board 10.1.1): a live preview of the tab bar, Home, and the other tabs:
+/// drag to reorder, a switch to show or hide, and each tab's options under a click.
 struct NotchPage: View {
     @ObservedObject var prefs: Preferences
     @ObservedObject var mail: MailStore
@@ -12,34 +12,40 @@ struct NotchPage: View {
     @State private var dragging: WispTab?
 
     var body: some View {
+        let layout = TabBarLayout.split(prefs.visibleTabs)
         SettingsPage(
             title: String(localized: "Notch"),
-            subtitle: String(localized: "Choose which tabs you see and drag them into your own order.")
+            subtitle: String(localized: "Choose which tabs you see and drag them into your own order."),
+            note: String(
+                localized:
+                    "Up to 8 tabs fit in the notch. With more, the last spot becomes More and holds the rest. Drag to choose which ones stay up front."
+            )
         ) {
             VStack(alignment: .leading, spacing: 8) {
                 Text("Preview")
                     .font(.system(size: 12))
                     .foregroundStyle(Theme.textSecondary)
-                TabBarPreview(tabs: prefs.visibleTabs)
+                TabBarPreview(tabs: layout.front, moreCount: layout.more.count)
+                Text(summary(layout.front.count, layout.more.count))
+                    .font(.system(size: 12))
+                    .foregroundStyle(Theme.textSecondary)
             }
 
-            SettingsGroup(header: String(localized: "Tabs · click a tab for its options")) {
-                ForEach(prefs.tabOrder) { tab in
-                    TabRow(
-                        tab: tab, optionCount: optionCount(tab), expanded: expanded == tab,
-                        shown: Binding(
-                            get: { !prefs.hiddenTabs.contains(tab) },
-                            set: { prefs.setTab(tab, shown: $0) })
-                    ) {
-                        withAnimation(.easeInOut(duration: 0.15)) { expanded = expanded == tab ? nil : tab }
-                    } options: {
-                        options(for: tab)
-                    }
-                    .onDrag {
-                        dragging = tab
-                        return NSItemProvider(object: tab.rawValue as NSString)
-                    }
-                    .onDrop(of: [.text], delegate: TabDropDelegate(target: tab, dragging: $dragging, prefs: prefs))
+            SettingsGroup(header: String(localized: "Home · always the first tab")) {
+                HomeLayoutRow(prefs: prefs)
+            }
+
+            SettingsGroup(
+                header: String(localized: "Tabs · connected integrations appear here automatically"),
+                trailing: String(localized: "\(prefs.visibleTabs.count) on")
+            ) {
+                ForEach(prefs.tabOrder.filter { $0 != .home }) { tab in
+                    tabRow(tab, inMore: layout.more.contains(tab))
+                        .onDrag {
+                            dragging = tab
+                            return NSItemProvider(object: tab.rawValue as NSString)
+                        }
+                        .onDrop(of: [.text], delegate: TabDropDelegate(target: tab, dragging: $dragging, prefs: prefs))
                 }
             }
         }
@@ -48,9 +54,29 @@ struct NotchPage: View {
         .onDisappear { dragging = nil }
     }
 
+    private func summary(_ front: Int, _ more: Int) -> String {
+        let total = front + more
+        if total == 1 { return String(localized: "1 tab on") }
+        return more == 0
+            ? String(localized: "\(total) tabs on")
+            : String(localized: "\(total) tabs on · \(front) fit in the notch · \(more) in More")
+    }
+
+    private func tabRow(_ tab: WispTab, inMore: Bool) -> some View {
+        TabRow(
+            tab: tab, optionCount: optionCount(tab), expanded: expanded == tab, inMore: inMore,
+            shown: Binding(
+                get: { !prefs.hiddenTabs.contains(tab) },
+                set: { prefs.setTab(tab, shown: $0) })
+        ) {
+            withAnimation(.easeInOut(duration: 0.15)) { expanded = expanded == tab ? nil : tab }
+        } options: {
+            options(for: tab)
+        }
+    }
+
     private func optionCount(_ tab: WispTab) -> Int {
         switch tab {
-        case .home: HomeTile.allCases.count
         case .mail: 2
         case .clipboard: 2
         case .system: 1
@@ -61,16 +87,6 @@ struct NotchPage: View {
     @ViewBuilder
     private func options(for tab: WispTab) -> some View {
         switch tab {
-        case .home:
-            HStack(spacing: 6) {
-                ForEach(HomeTile.allCases) { tile in
-                    let shown = !prefs.hiddenHomeTiles.contains(tile)
-                    HomeTileChip(title: tile.title, shown: shown, color: prefs.accent.color) {
-                        prefs.setHomeTile(tile, shown: !shown)
-                    }
-                }
-            }
-            .padding(.bottom, 4)
         case .mail:
             OptionToggle(String(localized: "Show new mail in the notch"), isOn: $mail.peekNewMail)
             OptionToggle(String(localized: "Unread count on the closed notch"), isOn: $mail.showUnreadOnNotch)
@@ -131,17 +147,25 @@ private struct TabDropDelegate: DropDelegate {
 
 private struct TabBarPreview: View {
     let tabs: [WispTab]
+    let moreCount: Int
 
     var body: some View {
         HStack(spacing: 0) {
             ForEach(tabs) { tab in
-                Image.wisp(tab.symbol)
-                    .font(.system(size: 13))
-                    .foregroundStyle(tab == .home ? Theme.textPrimary : Theme.textSecondary)
+                TabPreviewGlyph(tab: tab)
                     .frame(width: Theme.tabSize.width, height: Theme.tabSize.height)
                     .background(
                         RoundedRectangle(cornerRadius: Theme.buttonCorner)
                             .fill(tab == .home ? Theme.activeTab : .clear))
+            }
+            if moreCount > 0 {
+                HStack(spacing: 4) {
+                    Image(systemName: "ellipsis").font(.system(size: 12, weight: .semibold))
+                    Text(verbatim: "\(moreCount)").font(.system(size: 12, weight: .semibold))
+                }
+                .padding(.horizontal, 9)
+                .frame(height: Theme.tabSize.height)
+                .background(RoundedRectangle(cornerRadius: Theme.buttonCorner).fill(Theme.controlHover))
             }
             Spacer()
             Image(systemName: "slider.vertical.3")
@@ -160,11 +184,26 @@ private struct TabBarPreview: View {
     }
 }
 
+private struct TabPreviewGlyph: View {
+    let tab: WispTab
+
+    var body: some View {
+        if let letters = tab.letters {
+            ServiceIcon(letters: letters, color: Theme.textPrimary, size: .small)
+        } else {
+            Image.wisp(tab.symbol)
+                .font(.system(size: 13))
+                .foregroundStyle(tab == .home ? Theme.textPrimary : Theme.textSecondary)
+        }
+    }
+}
+
 /// ⠿ icon title "2 options" … switch. Drag anywhere on the row; click it for the options.
 private struct TabRow<Options: View>: View {
     let tab: WispTab
     let optionCount: Int
     let expanded: Bool
+    let inMore: Bool
     @Binding var shown: Bool
     let toggle: () -> Void
     @ViewBuilder var options: Options
@@ -172,13 +211,16 @@ private struct TabRow<Options: View>: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             HStack(spacing: 12) {
-                Grip()
+                if tab != .home { Grip() }
                 Group {
-                    Image.wisp(tab.symbol)
-                        .font(.system(size: 14))
-                        .frame(width: 20)
+                    glyph
                     Text(tab.title)
                         .font(.system(size: 13.5))
+                    if let source {
+                        Text(source)
+                            .font(.system(size: 12))
+                            .foregroundStyle(Theme.textSecondary)
+                    }
                 }
                 .opacity(shown ? 1 : 0.45)
                 if optionCount > 0 {
@@ -187,6 +229,17 @@ private struct TabRow<Options: View>: View {
                         .foregroundStyle(Theme.textSecondary)
                 }
                 Spacer()
+                if inMore && shown {
+                    HStack(spacing: 4) {
+                        Image(systemName: "ellipsis").font(.system(size: 10, weight: .semibold))
+                        Text("In More")
+                    }
+                    .font(.system(size: 11.5))
+                    .foregroundStyle(Theme.textSecondary)
+                    .padding(.horizontal, 9)
+                    .frame(height: 22)
+                    .overlay(Capsule().strokeBorder(Theme.lineStrong, lineWidth: 1))
+                }
                 if tab == .home {
                     Text("Always on")
                         .font(.system(size: 12))
@@ -199,7 +252,7 @@ private struct TabRow<Options: View>: View {
             }
             .padding(.leading, 12)
             .padding(.trailing, 15)
-            .frame(height: 41)
+            .frame(height: 44)
             .contentShape(Rectangle())
             .onTapGesture { if optionCount > 0 { toggle() } }
 
@@ -211,36 +264,25 @@ private struct TabRow<Options: View>: View {
             }
         }
     }
-}
 
-/// *✓ GitHub* with an accent border when on, *+ Notion* in grey when off.
-private struct HomeTileChip: View {
-    let title: String
-    let shown: Bool
-    let color: Color
-    let action: () -> Void
-
-    var body: some View {
-        Button(action: action) {
-            HStack(spacing: 4) {
-                Image(systemName: shown ? "checkmark" : "plus")
-                    .font(.system(size: 10, weight: .semibold))
-                Text(verbatim: title)
-                    .font(.system(size: 13))
-                    .lineLimit(1)
-                    .fixedSize()
-            }
-            .foregroundStyle(shown ? Theme.textPrimary : Theme.textSecondary)
-            .padding(.horizontal, 8)
-            .frame(height: 26)
-            .overlay(
-                RoundedRectangle(cornerRadius: Theme.buttonCorner)
-                    .strokeBorder(shown ? color : Theme.cardBorder, lineWidth: 1)
-            )
-            .contentShape(Rectangle())
+    @ViewBuilder private var glyph: some View {
+        if let letters = tab.letters {
+            ServiceIcon(letters: letters, color: Theme.textPrimary, size: .small).frame(width: 20)
+        } else {
+            Image.wisp(tab.symbol)
+                .font(.system(size: 14))
+                .frame(width: 20)
         }
-        .buttonStyle(.plain)
-        .accessibilityAddTraits(shown ? .isSelected : [])
+    }
+
+    /// Where a tab gets its data, when that is a service.
+    private var source: String? {
+        switch tab {
+        case .mail: "Gmail"
+        case .departure: "NS"
+        case .github: String(localized: "Integration")
+        default: nil
+        }
     }
 }
 

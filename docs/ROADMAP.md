@@ -8,7 +8,6 @@ What is planned, roughly in order. Every item becomes its own branch and pull re
 |---|---|---|
 | **Closed-notch priority** | One place decides what the closed notch shows (`NotchArbiter`), then GitHub, departure, mail, focus + music (board 9.7) move onto it, one pull request per step. | |
 | **Files tab** | The drop zone, restyled. | |
-| **Home tiles** | Pick the Home tiles as chips (board 10.1); GitHub is live, Notion and WHOOP don't exist yet. | [#24](https://github.com/ahmad-sy1/wisp/issues/24) |
 | **Focus task rules: sites and defaults** | Adding app/project rules is done; browser sites as a source (needs Automation) and *Default* rules are left. Board 10.6. | [#27](https://github.com/ahmad-sy1/wisp/issues/27) |
 | **Integrations rework** | Boards 0.2, 10.1.1–10.1.3, 10.3.1–10.3.4, 10.9, 10.10 and 11.1–11.3, one pull request per step: the design system (colours, corners, buttons done; the rest arrives with the parts below), *Add integration* and one Manage window (done), the Integrations page and sidebar, the Notch page with *More*, Home with 1–4 places, the integration tab. | |
 | **Notion, WHOOP** | Sign in with OAuth (PKCE), tokens in the Keychain; fills the Home tiles. See [INTEGRATIONS.md](INTEGRATIONS.md#planned-notion-whoop). | |

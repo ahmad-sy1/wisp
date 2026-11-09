@@ -301,3 +301,132 @@ struct Equalizer: View {
         }
     }
 }
+
+// MARK: - On Home
+
+/// Music on Home (board 11.2). Small: cover and pause. Medium: progress and the controls.
+/// Large: the live spectrum too.
+struct HomeMusicItem: View {
+    let place: HomePlace
+    @ObservedObject private var player = NowPlaying.shared
+    @ObservedObject private var spectrum = Spectrum.shared
+
+    var body: some View {
+        Card {
+            if let track = player.track {
+                switch place {
+                case .small: small(track)
+                case .medium: medium(track)
+                case .large: large(track)
+                }
+            } else {
+                HStack(spacing: 12) {
+                    Image(systemName: "music.note").foregroundStyle(Theme.textSecondary)
+                    Text("Not playing").font(.system(size: 13.5, weight: .semibold)).foregroundStyle(Theme.textSecondary)
+                    Spacer(minLength: 0)
+                }
+                .padding(.horizontal, 14)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            }
+        }
+    }
+
+    private func titles(_ track: NowPlayingTrack, withSource: Bool, album: Bool) -> some View {
+        VStack(alignment: .leading, spacing: 1) {
+            if withSource {
+                Text(track.sourceLabel.uppercased())
+                    .font(.system(size: 10.5, weight: .medium))
+                    .tracking(0.6)
+                    .foregroundStyle(Theme.textSecondary)
+                    .lineLimit(1)
+            }
+            Text(track.title).font(.system(size: 13.5, weight: .semibold)).lineLimit(1)
+            Text((album ? [track.artist, track.album] : [track.artist]).filter { !$0.isEmpty }.joined(separator: " · "))
+                .font(.system(size: 12))
+                .foregroundStyle(Theme.textSecondary)
+                .lineLimit(1)
+        }
+    }
+
+    private func small(_ track: NowPlayingTrack) -> some View {
+        HStack(spacing: 10) {
+            Artwork(image: track.artwork, size: 44, corner: Theme.buttonCorner, isVideo: track.isVideo)
+            titles(track, withSource: false, album: false)
+            Spacer(minLength: 4)
+            Equalizer(playing: track.isPlaying).frame(height: 14)
+            Button(action: player.playPause) {
+                Image(systemName: track.isPlaying ? "pause.fill" : "play.fill")
+                    .font(.system(size: 11))
+                    .foregroundStyle(.black)
+                    .frame(width: 28, height: 28)
+                    .background(RoundedRectangle(cornerRadius: Theme.buttonCorner, style: .continuous).fill(.white))
+            }
+            .buttonStyle(.plain)
+            .focusable(false)
+            .accessibilityLabel(track.isPlaying ? "Pause" : "Play")
+        }
+        .padding(.horizontal, 12)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+
+    private func controls(_ track: NowPlayingTrack) -> some View {
+        HStack(spacing: 0) {
+            ControlButton(symbol: "backward.end.fill", action: player.previousTrack)
+            PlayPauseButton(isPlaying: track.isPlaying, action: player.playPause)
+                .padding(.horizontal, 6)
+            ControlButton(symbol: "forward.end.fill", action: player.nextTrack)
+        }
+    }
+
+    private func medium(_ track: NowPlayingTrack) -> some View {
+        VStack(spacing: 6) {
+            HStack(spacing: 10) {
+                Artwork(image: track.artwork, size: 52, corner: Theme.buttonCorner, isVideo: track.isVideo)
+                titles(track, withSource: true, album: true)
+                Spacer(minLength: 0)
+            }
+            Progress(track: track)
+            HStack {
+                controls(track)
+                Spacer(minLength: 0)
+                Equalizer(playing: track.isPlaying).frame(height: 14)
+            }
+        }
+        .padding(.horizontal, 12)
+        .padding(.vertical, 8)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+
+    private func large(_ track: NowPlayingTrack) -> some View {
+        HStack(spacing: 14) {
+            Artwork(image: track.artwork, size: 124, corner: Theme.cardCorner, isVideo: track.isVideo)
+            VStack(alignment: .leading, spacing: 6) {
+                titles(track, withSource: true, album: true)
+                Spacer(minLength: 0)
+                Progress(track: track)
+                controls(track)
+            }
+            VStack(alignment: .leading, spacing: 6) {
+                Text("SPECTRUM")
+                    .font(.system(size: 10.5, weight: .medium))
+                    .tracking(0.6)
+                    .foregroundStyle(Theme.textSecondary)
+                if spectrum.consent == .allowed {
+                    SpectrumBars(levels: spectrum.levels, live: spectrum.isRunning && track.isPlaying)
+                } else {
+                    Text("Allow the live spectrum in the Music tab.")
+                        .font(.system(size: 12))
+                        .foregroundStyle(Theme.textSecondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                    Spacer(minLength: 0)
+                }
+            }
+            .frame(width: 170)
+            // Only runs while it is on screen.
+            .onAppear { spectrum.setVisible(true, by: "home") }
+            .onDisappear { spectrum.setVisible(false, by: "home") }
+        }
+        .padding(13)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+}
