@@ -82,4 +82,30 @@ final class IntegrationCatalogTests: XCTestCase {
         let offline = await NSTravelProvider(key: "k", transport: Offline()).checkKey()
         XCTAssertEqual(offline, .unreachable)
     }
+
+    func testStatusFollowsTheWindowFirstThenTheAccount() throws {
+        let ns = try spec(.ns)
+        let failed = ManagePhase.failed(message: "no", field: "key")
+        XCTAssertEqual(ns.status(phase: .idle, account: ManageAccount()), .notConnected)
+        XCTAssertEqual(ns.status(phase: .checking, account: ManageAccount()), .checking)
+        XCTAssertEqual(ns.status(phase: failed, account: ManageAccount(isConnected: true)), .failed)
+        XCTAssertEqual(ns.status(phase: .idle, account: ManageAccount(isConnected: true)), .connected)
+        XCTAssertEqual(ns.status(phase: .idle, account: ManageAccount(isConnected: true, health: .connecting)), .checking)
+        XCTAssertEqual(ns.status(phase: .idle, account: ManageAccount(isConnected: true, health: .failed("x"))), .failed)
+    }
+
+    func testSummary() throws {
+        let ns = try spec(.ns)
+        XCTAssertEqual(ns.summary(phase: .idle, account: ManageAccount()), ns.blurb)
+        XCTAssertEqual(ns.summary(phase: .checking, account: ManageAccount(isConnected: true)), ns.checking)
+        XCTAssertEqual(ns.summary(phase: .idle, account: ManageAccount(isConnected: true, summary: "ok")), "ok")
+        XCTAssertEqual(ns.summary(phase: .idle, account: ManageAccount(isConnected: true, health: .failed("offline"))), "offline")
+    }
+
+    func testAnswerOfTheServiceBecomesAPhase() throws {
+        let gmail = try spec(.gmail)
+        XCTAssertEqual(gmail.phase(after: .accepted), .idle)
+        XCTAssertEqual(gmail.phase(after: .rejected), .failed(message: gmail.rejectedMessage, field: "password"))
+        XCTAssertEqual(gmail.phase(after: .unreachable), .failed(message: gmail.unreachableMessage, field: "password"))
+    }
 }

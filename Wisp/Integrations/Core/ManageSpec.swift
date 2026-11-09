@@ -18,6 +18,10 @@ struct ManageSpec: Equatable, Sendable {
     let helpURL: String
     let helpText: String
     let privacy: String
+    let rejectedMessage: String
+    let unreachableMessage: String
+    /// The field a failed check points at.
+    let failureField: String
 
     func canConnect(_ values: [String: String]) -> Bool {
         switch info.id {
@@ -66,7 +70,11 @@ extension IntegrationCatalog {
                 helpTitle: String(localized: "Create an app password"),
                 helpURL: "https://myaccount.google.com/apppasswords",
                 helpText: String(localized: "myaccount.google.com/apppasswords · needs 2-step verification. Paste it without spaces."),
-                privacy: String(localized: "Stored in your Mac's Keychain. wisp only talks to Google."))
+                privacy: String(localized: "Stored in your Mac's Keychain. wisp only talks to Google."),
+                rejectedMessage: String(
+                    localized: "Google rejected this app password. Check that 2-step verification is on and paste it again."),
+                unreachableMessage: String(localized: "Couldn't reach Gmail. Check your connection and try again."),
+                failureField: ManageSpec.passwordField)
         case .ns:
             return ManageSpec(
                 info: info,
@@ -80,9 +88,79 @@ extension IntegrationCatalog {
                 helpTitle: String(localized: "Get a free key at apiportal.ns.nl"),
                 helpURL: "https://apiportal.ns.nl",
                 helpText: String(localized: "Subscribe to the “Ns-App” product and copy the primary key."),
-                privacy: String(localized: "Stored in your Mac's Keychain. wisp only talks to NS."))
+                privacy: String(localized: "Stored in your Mac's Keychain. wisp only talks to NS."),
+                rejectedMessage: String(
+                    localized: "NS rejected this key. Copy the primary key of your subscription, not the secondary one."),
+                unreachableMessage: String(localized: "Couldn't reach NS. Check your connection and try again."),
+                failureField: ManageSpec.keyField)
         case .github:
             return nil
+        }
+    }
+}
+
+/// Where an integration stands.
+enum IntegrationStatus: Equatable, Sendable {
+    case notConnected, checking, failed, connected
+
+    var title: String {
+        switch self {
+        case .notConnected: String(localized: "Not connected")
+        case .checking: String(localized: "Checking")
+        case .failed: String(localized: "Couldn't connect")
+        case .connected: String(localized: "Connected")
+        }
+    }
+}
+
+/// What the window itself is doing.
+enum ManagePhase: Equatable, Sendable {
+    case idle, checking
+    case failed(message: String, field: String)
+}
+
+/// What is stored for a service and how its connection is doing.
+struct ManageAccount: Equatable, Sendable {
+    enum Health: Equatable, Sendable {
+        case healthy, connecting
+        case failed(String)
+    }
+
+    var isConnected = false
+    var health = Health.healthy
+    /// The line under the name while connected.
+    var summary = ""
+    var address: String?
+}
+
+extension ManageSpec {
+    func status(phase: ManagePhase, account: ManageAccount) -> IntegrationStatus {
+        switch phase {
+        case .checking: return .checking
+        case .failed: return .failed
+        case .idle: break
+        }
+        guard account.isConnected else { return .notConnected }
+        switch account.health {
+        case .healthy: return .connected
+        case .connecting: return .checking
+        case .failed: return .failed
+        }
+    }
+
+    func summary(phase: ManagePhase, account: ManageAccount) -> String {
+        if phase == .checking { return checking }
+        guard account.isConnected else { return blurb }
+        if case .failed(let message) = account.health { return message }
+        return account.summary
+    }
+
+    /// What the window shows after the service has answered.
+    func phase(after check: CredentialCheck) -> ManagePhase {
+        switch check {
+        case .accepted: .idle
+        case .rejected: .failed(message: rejectedMessage, field: failureField)
+        case .unreachable: .failed(message: unreachableMessage, field: failureField)
         }
     }
 }

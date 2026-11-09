@@ -25,19 +25,11 @@ private struct ManageWindow: View {
     let spec: ManageSpec
     let close: () -> Void
 
-    private enum Phase: Equatable {
-        case idle, checking
-        case failed(message: String, field: String)
-    }
-
-    private struct Failure {
-        let message: String
-        let field: String
-    }
-
     @ObservedObject private var mail = MailStore.shared
     @ObservedObject private var departure = DepartureStore.shared
-    @State private var phase = Phase.idle
+    @State private var phase = ManagePhase.idle
+    /// Read when something changes, not on every keystroke: it comes from the Keychain.
+    @State private var account = ManageAccount()
     @State private var values: [String: String] = [:]
     @State private var task: Task<Void, Never>?
     @State private var keys = WindowKeyMonitor()
@@ -50,56 +42,42 @@ private struct ManageWindow: View {
         private var demoState: String? { nil }
     #endif
 
-    private var isConnected: Bool {
-        if demoState != nil { return false }
-        switch spec.info.id {
-        case .gmail: return mail.isConfigured
-        case .ns: return departure.hasNSKey
-        case .github: return false
-        }
-    }
+    private var isConnected: Bool { account.isConnected }
 
-    private var shownPhase: Phase {
+    private var shownPhase: ManagePhase {
         guard let demoState else { return phase }
         switch demoState {
         case "checking": return .checking
-        case "failed":
-            let field = spec.fields.last?.id ?? ""
-            let message =
-                spec.info.id == .gmail
-                ? String(localized: "Google rejected this app password. Check that 2-step verification is on and paste it again.")
-                : String(localized: "NS rejected this key. Copy the primary key of your subscription, not the secondary one.")
-            return .failed(message: message, field: field)
+        case "failed": return spec.phase(after: .rejected)
         default: return .idle
         }
     }
 
-    private var pill: StatusPill.Kind {
-        switch shownPhase {
-        case .checking: return .checking
-        case .failed: return .failed
-        case .idle: break
-        }
-        guard isConnected else { return .notConnected }
-        guard spec.info.id == .gmail else { return .connected }
-        switch mail.status {
-        case .connecting: return .checking
-        case .failed: return .failed
-        default: return .connected
-        }
-    }
+    private var pill: IntegrationStatus { spec.status(phase: shownPhase, account: account) }
 
-    private var summary: String {
-        if shownPhase == .checking { return spec.checking }
-        guard isConnected else { return spec.blurb }
+    private var summary: String { spec.summary(phase: shownPhase, account: account) }
+
+    /// Looks up what is stored for this service.
+    private func reloadAccount() {
+        guard demoState == nil else { return }
         switch spec.info.id {
         case .gmail:
-            if case .failed(let message) = mail.status { return message }
-            return String(localized: "Connected as \(mail.address ?? "")")
+            let health: ManageAccount.Health
+            switch mail.status {
+            case .connecting: health = .connecting
+            case .failed(let message): health = .failed(message)
+            case .connected, .notConfigured: health = .healthy
+            }
+            let address = mail.address
+            account = ManageAccount(
+                isConnected: mail.isConfigured, health: health,
+                summary: String(localized: "Connected as \(address ?? "")"), address: address)
         case .ns:
-            return String(localized: "Connected · key ending in \(departure.nsKeySuffix)")
+            account = ManageAccount(
+                isConnected: departure.hasNSKey,
+                summary: String(localized: "Connected · key ending in \(departure.nsKeySuffix)"))
         case .github:
-            return spec.blurb
+            account = ManageAccount()
         }
     }
 
@@ -134,7 +112,12 @@ private struct ManageWindow: View {
         } message: {
             Text("wisp disconnects and deletes what you entered from your Keychain.")
         }
-        .onAppear { keys.start(handle) }
+        .onAppear {
+            keys.start(handle)
+            reloadAccount()
+        }
+        .onChange(of: mail.status) { _, _ in reloadAccount() }
+        .onChange(of: departure.hasNSKey) { _, _ in reloadAccount() }
         .onDisappear {
             keys.stop()
             task?.cancel()
@@ -183,7 +166,7 @@ private struct ManageWindow: View {
     private func binding(for field: ManageField) -> Binding<String> {
         Binding(
             get: {
-                if isConnected, field.id == ManageSpec.addressField { return mail.address ?? "" }
+                if isConnected, field.id == ManageSpec.addressField { return account.address ?? "" }
                 return values[field.id] ?? ""
             },
             set: {
@@ -291,56 +274,30 @@ private struct ManageWindow: View {
         phase = .checking
         let entered = values
         task = Task {
-            let failure = await verifyAndSave(entered)
+            let result = await verifyAndSave(entered)
             guard !Task.isCancelled else { return }
-            if let failure {
-                phase = .failed(message: failure.message, field: failure.field)
-            } else {
-                values = [:]
-                phase = .idle
-            }
+            if result == .idle { values = [:] }
+            phase = result
         }
     }
 
     /// Nothing is stored unless the service accepts it and the window is still open.
-    private func verifyAndSave(_ entered: [String: String]) async -> Failure? {
+    private func verifyAndSave(_ entered: [String: String]) async -> ManagePhase {
+        let check: CredentialCheck
         switch spec.info.id {
         case .gmail:
             let address = (entered[ManageSpec.addressField] ?? "").trimmingCharacters(in: .whitespaces)
             let password = (entered[ManageSpec.passwordField] ?? "").replacingOccurrences(of: " ", with: "")
-            switch await mail.check(address: address, appPassword: password) {
-            case .accepted:
-                if !Task.isCancelled { mail.connect(address: address, appPassword: password) }
-                return nil
-            case .rejected:
-                return Failure(
-                    message: String(
-                        localized: "Google rejected this app password. Check that 2-step verification is on and paste it again."),
-                    field: ManageSpec.passwordField)
-            case .unreachable:
-                return Failure(
-                    message: String(localized: "Couldn't reach Gmail. Check your connection and try again."),
-                    field: ManageSpec.passwordField)
-            }
+            check = await mail.check(address: address, appPassword: password)
+            if check == .accepted, !Task.isCancelled { mail.connect(address: address, appPassword: password) }
         case .ns:
             let key = (entered[ManageSpec.keyField] ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
-            switch await NSTravelProvider(key: key).checkKey() {
-            case .accepted:
-                if !Task.isCancelled { departure.setNSKey(key) }
-                return nil
-            case .rejected:
-                return Failure(
-                    message: String(
-                        localized: "NS rejected this key. Copy the primary key of your subscription, not the secondary one."),
-                    field: ManageSpec.keyField)
-            case .unreachable:
-                return Failure(
-                    message: String(localized: "Couldn't reach NS. Check your connection and try again."),
-                    field: ManageSpec.keyField)
-            }
+            check = await NSTravelProvider(key: key).checkKey()
+            if check == .accepted, !Task.isCancelled { departure.setNSKey(key) }
         case .github:
-            return nil
+            check = .unreachable
         }
+        return spec.phase(after: check)
     }
 
     // MARK: - Keys

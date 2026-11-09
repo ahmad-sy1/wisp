@@ -1361,6 +1361,16 @@
         }
       }
     },
+    "Disconnect %@?" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ ontkoppelen?"
+          }
+        }
+      }
+    },
     "Do not disturb during focus" : {
       "localizations" : {
         "nl" : {
@@ -4778,6 +4788,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "wisp verbreekt de verbinding en wist het app-wachtwoord uit je Sleutelhanger."
+          }
+        }
+      }
+    },
+    "wisp disconnects and deletes what you entered from your Keychain." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "wisp koppelt los en wist wat je hebt ingevuld uit je Sleutelhanger."
           }
         }
       }
