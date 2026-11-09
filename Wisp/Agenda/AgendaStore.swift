@@ -92,7 +92,6 @@ final class AgendaStore: ObservableObject {
         visible = !viewers.isEmpty
         if on {
             access = Self.currentAccess()
-            stopObserving()
             startObserving()
             reload()
         } else if !visible {
