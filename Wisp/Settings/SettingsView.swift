@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// The pages in the Settings sidebar, in order (boards 10.1–10.6).
+/// The pages of the Settings window (boards 10.1–10.6, 10.10).
 enum SettingsPageID: String, CaseIterable, Identifiable {
     case general, notch, integrations, agenda, departure, github, music, focus
 
@@ -18,6 +18,10 @@ enum SettingsPageID: String, CaseIterable, Identifiable {
         case .focus: String(localized: "Focus")
         }
     }
+
+    /// The fixed groups of the sidebar; connected integrations are added below them.
+    static let main: [SettingsPageID] = [.general, .notch, .integrations]
+    static let features: [SettingsPageID] = [.agenda, .departure, .music, .focus]
 
     var symbol: String {
         switch self {
@@ -58,6 +62,15 @@ final class SettingsNavigation: ObservableObject {
 struct SettingsView: View {
     @ObservedObject var prefs: Preferences
     @ObservedObject var navigation: SettingsNavigation = .shared
+    @ObservedObject private var mail = MailStore.shared
+    @ObservedObject private var github = GitHubStore.shared
+    @ObservedObject private var departure = DepartureStore.shared
+
+    private var integrationRows: [IntegrationRowModel] {
+        IntegrationList.rows(
+            added: prefs.addedIntegrations,
+            connections: IntegrationConnections.current(mail: mail, github: github, departure: departure))
+    }
 
     var body: some View {
         HStack(spacing: 0) {
@@ -99,15 +112,46 @@ struct SettingsView: View {
             .padding(.top, 46)
             .padding(.bottom, 18)
 
-            ForEach(SettingsPageID.allCases) { id in
-                SidebarItem(id: id, selected: navigation.page == id) { navigation.page = id }
+            let rows = integrationRows
+            let attention = rows.filter(\.state.needsAttention).count
+            ForEach(SettingsPageID.main) { id in
+                pageItem(id, badge: id == .integrations ? attention : 0)
+            }
+            sidebarHeader(String(localized: "Features"))
+            ForEach(SettingsPageID.features) { pageItem($0) }
+            let connected = IntegrationList.sidebarRows(rows)
+            if !connected.isEmpty {
+                sidebarHeader(String(localized: "Connected"))
+                ForEach(connected) { row in
+                    // GitHub is the only one with a page so far.
+                    SidebarItem(
+                        title: row.info.name, selected: navigation.page == .github, hasProblem: row.state.needsAttention,
+                        action: { navigation.page = .github },
+                        icon: { ServiceIcon(letters: row.info.letters, color: Color(hex: row.info.tint), size: .small) })
+                }
             }
             Spacer()
         }
         .padding(.horizontal, 10)
-        .frame(width: 205)
+        .frame(width: 196)
         .frame(maxHeight: .infinity, alignment: .top)
         .background(Theme.sidebar)
+    }
+
+    private func pageItem(_ id: SettingsPageID, badge: Int = 0) -> some View {
+        SidebarItem(
+            title: id.title, selected: navigation.page == id, badge: badge,
+            action: { navigation.page = id },
+            icon: { Image.wisp(id.symbol).font(.system(size: 13)).frame(width: 18) })
+    }
+
+    private func sidebarHeader(_ title: String) -> some View {
+        Text(title)
+            .font(.system(size: 11))
+            .foregroundStyle(Theme.textFaint)
+            .padding(.leading, 10)
+            .padding(.top, 12)
+            .padding(.bottom, 2)
     }
 
     @ViewBuilder
@@ -125,22 +169,33 @@ struct SettingsView: View {
     }
 }
 
-private struct SidebarItem: View {
-    let id: SettingsPageID
+private struct SidebarItem<Icon: View>: View {
+    let title: String
     let selected: Bool
+    var badge = 0
+    var hasProblem = false
     let action: () -> Void
+    @ViewBuilder let icon: Icon
     @State private var hovering = false
 
     var body: some View {
         Button(action: action) {
             HStack(spacing: 10) {
-                Image.wisp(id.symbol)
-                    .font(.system(size: 13))
-                    .frame(width: 18)
-                Text(id.title)
+                icon
+                Text(title)
                     .font(.system(size: 13))
                     .lineLimit(1)
-                Spacer(minLength: 0)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                if badge > 0 {
+                    Text(verbatim: "\(badge)")
+                        .font(.system(size: 10, weight: .bold))
+                        .foregroundStyle(.white)
+                        .frame(minWidth: 16, minHeight: 16)
+                        .background(Circle().fill(Theme.badge))
+                }
+                if hasProblem {
+                    Circle().fill(Theme.badge).frame(width: 7, height: 7)
+                }
             }
             .foregroundStyle(selected ? Theme.textPrimary : Theme.textSecondary)
             .padding(.horizontal, 10)
