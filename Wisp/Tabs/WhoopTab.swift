@@ -146,16 +146,17 @@ private struct RecoveryBars: View {
     }
 }
 
+/// WHOOP's colours, all from `Theme`.
 enum WhoopColors {
-    static let deep = Color(hex: 0x5E5CE6)
-    static let light = Color(hex: 0x64D2FF)
-    static let rem = Color(hex: 0xBF5AF2)
-    static let strain = Color(hex: 0x64D2FF)
+    static let deep = Theme.sleepDeep
+    static let light = Theme.rain
+    static let rem = Theme.sleepREM
+    static let strain = Theme.rain
 
     static func zone(_ score: Int) -> Color {
         switch RecoveryZone(score) {
         case .green: Theme.ok
-        case .yellow: Color(hex: 0xFFD60A)
+        case .yellow: Theme.recoveryYellow
         case .red: Theme.badge
         }
     }

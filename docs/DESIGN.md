@@ -99,6 +99,9 @@ The icons live in `Wisp/Resources/Assets.xcassets`. `AppIcon` uses the 1024 × 1
 | Review requests | `info` | `#0A84FF`, whatever the accent |
 | Rain | `rain` | `#64D2FF` |
 | NS badge | `nsYellow` | `#FFC917` |
+| WHOOP deep sleep | `sleepDeep` | `#5E5CE6` |
+| WHOOP REM sleep | `sleepREM` | `#BF5AF2` |
+| WHOOP recovery 34–66 | `recoveryYellow` | `#FFD60A` |
 | Accent (Settings) | `Accent` | `#0A84FF` (default), `#30D158`, `#FF9F0A`, `#BF5AF2`; each with a `hover` and a `pressed` shade |
 
 ## Shapes and type
