@@ -591,6 +591,16 @@
         }
       }
     },
+    "Added · not connected yet" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toegevoegd · nog niet verbonden"
+          }
+        }
+      }
+    },
     "After your last event with a location" : {
       "localizations" : {
         "nl" : {
@@ -1331,6 +1341,16 @@
         }
       }
     },
+    "Connected integrations with their own choices get a page in the sidebar. Keys are kept in your Mac's Keychain." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verbonden integraties met eigen keuzes krijgen een pagina in de zijbalk. Sleutels worden bewaard in de Sleutelhanger van je Mac."
+          }
+        }
+      }
+    },
     "Connected · %@" : {
       "localizations" : {
         "nl" : {
@@ -1347,6 +1367,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Verbonden · %@ gefocust"
+          }
+        }
+      }
+    },
+    "Connected · %lld" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verbonden · %lld"
           }
         }
       }
@@ -1697,6 +1727,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Niet gelukt: %@"
+          }
+        }
+      }
+    },
+    "Features" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Functies"
           }
         }
       }
@@ -2071,16 +2111,6 @@
         }
       }
     },
-    "In use" : {
-      "localizations" : {
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "In gebruik"
-          }
-        }
-      }
-    },
     "In your notch" : {
       "localizations" : {
         "nl" : {
@@ -2187,26 +2217,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Klembordgeschiedenis bijhouden"
-          }
-        }
-      }
-    },
-    "Key in your Keychain" : {
-      "localizations" : {
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sleutel in je Sleutelhanger"
-          }
-        }
-      }
-    },
-    "Keys and passwords are kept safely in your Mac's Keychain. Removing an integration disconnects it and deletes its key." : {
-      "localizations" : {
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sleutels en wachtwoorden worden veilig in de Sleutelhanger van je Mac bewaard. Verwijderen koppelt de integratie los en wist de sleutel."
           }
         }
       }
@@ -2557,6 +2567,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "NS heeft deze sleutel geweigerd. Kopieer de primary key van je abonnement, niet de secondary."
+          }
+        }
+      }
+    },
+    "Needs attention · %lld" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aandacht nodig · %lld"
           }
         }
       }
@@ -3121,6 +3141,16 @@
         }
       }
     },
+    "Options" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Opties"
+          }
+        }
+      }
+    },
     "Other place" : {
       "localizations" : {
         "nl" : {
@@ -3411,12 +3441,12 @@
         }
       }
     },
-    "Remove Gmail?" : {
+    "Remove %@?" : {
       "localizations" : {
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Gmail verwijderen?"
+            "value" : "%@ verwijderen?"
           }
         }
       }
@@ -3487,6 +3517,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Start wisp opnieuw om van taal te wisselen."
+          }
+        }
+      }
+    },
+    "Retry" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Opnieuw"
           }
         }
       }
@@ -3667,6 +3707,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Zelf ingesteld"
+          }
+        }
+      }
+    },
+    "Set up in Manage" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Instellen via Beheer"
           }
         }
       }
@@ -5172,12 +5222,12 @@
         }
       }
     },
-    "wisp disconnects and deletes the app password from your Keychain." : {
+    "wisp disconnects and deletes its key from your Keychain." : {
       "localizations" : {
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "wisp verbreekt de verbinding en wist het app-wachtwoord uit je Sleutelhanger."
+            "value" : "wisp koppelt los en wist de sleutel uit je Sleutelhanger."
           }
         }
       }

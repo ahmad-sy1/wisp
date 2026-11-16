@@ -4,26 +4,33 @@ import SwiftUI
 /// Connects the window to what is really set up, and dims Settings behind it.
 struct AddIntegrationOverlay: View {
     @ObservedObject private var navigation = SettingsNavigation.shared
+    @ObservedObject private var prefs = Preferences.shared
     @ObservedObject private var mail = MailStore.shared
     @ObservedObject private var github = GitHubStore.shared
     @ObservedObject private var departure = DepartureStore.shared
 
     private var added: Set<IntegrationID> {
-        var result = Set<IntegrationID>()
-        if mail.isConfigured { result.insert(.gmail) }
-        if github.status != .disconnected { result.insert(.github) }
-        if departure.hasNSKey { result.insert(.ns) }
-        return result
+        prefs.addedIntegrations.union(IntegrationConnections.current(mail: mail, github: github, departure: departure).keys)
     }
 
     var body: some View {
         ModalBackdrop(close: close) {
-            AddIntegrationWindow(added: added, choose: { navigation.openSetup(of: $0) }, close: close)
+            AddIntegrationWindow(added: added, choose: choose, close: close)
         }
     }
 
     private func close() {
         navigation.addingIntegration = false
+    }
+
+    /// Adding puts it in the list, where *Manage* sets it up; something already there opens.
+    private func choose(_ id: IntegrationID) {
+        if added.contains(id) {
+            navigation.openSetup(of: id)
+        } else {
+            prefs.addedIntegrations.insert(id)
+            close()
+        }
     }
 }
 
