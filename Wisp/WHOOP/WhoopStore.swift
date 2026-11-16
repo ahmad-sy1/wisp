@@ -99,6 +99,8 @@ final class WhoopStore: ObservableObject {
             store(tokens)
             UserDefaults.standard.removeObject(forKey: Key.signedOutSince)
             self.client = makeClient(client, tokens: tokens)
+            // Possibly another account than before.
+            firstName = nil
             status = .connecting
             startPolling()
             return .accepted
@@ -192,8 +194,10 @@ final class WhoopStore: ObservableObject {
         defer { isSyncing = false }
         do {
             let today = try await client.today()
-            if firstName == nil { firstName = try? await client.firstName() }
+            let name = firstName == nil ? try? await client.firstName() : nil
+            // Disconnected or signed in again while this round ran: its answers are stale.
             guard self.client === client else { return }
+            if let name { firstName = name }
             self.today = today
             lastSync = Date()
             status = .connected
