@@ -29,16 +29,16 @@ The boards in [`design/boards/`](../design/boards) are the visual source of trut
 | [10.1.2](../design/boards/10.1.2-tabbar-full-more.png) | tab bar: the *More* menu (planned; stays inside the panel) |
 | [10.1.3](../design/boards/10.1.3-choosing-home-tab.png) | Settings: choosing what Home shows (planned) |
 | [10.2](../design/boards/10.2-settings-general.png) | Settings: General |
-| [10.3](../design/boards/10.3-settings-integrations.png) | Settings: Integrations; being replaced by 10.3.4 |
+| [10.3](../design/boards/10.3-settings-integrations.png) | Settings: Integrations; replaced by 10.3.4 |
 | [10.3.1](../design/boards/10.3.1-integrations-modal.png) | *Add integration* window |
 | [10.3.2](../design/boards/10.3.2-manage-integrations-single.png), [10.3.2.1](../design/boards/10.3.2.1-manage-modal.png) | Manage window, in the app and on its own |
 | [10.3.3](../design/boards/10.3.3-manage-integrations.png) | Manage window: four services in four states |
-| [10.3.4](../design/boards/10.3.4-integration-rows-status.png) | Settings: Integrations with status rows (planned) |
+| [10.3.4](../design/boards/10.3.4-integration-rows-status.png) | Settings: Integrations with status rows |
 | [10.4](../design/boards/10.4-settings-calendar-weather.png) | Settings: Calendar & weather |
 | [10.5](../design/boards/10.5-settings-music.png) | Settings: Music |
 | [10.6](../design/boards/10.6-settings-focus.png) | Settings: Focus |
 | [10.9](../design/boards/10.9-integration-page-template-whoop.png) | Settings: page template for an integration, with WHOOP (planned) |
-| [10.10](../design/boards/10.10-sidemenu.png) | Settings: sidebar with few and many integrations (planned) |
+| [10.10](../design/boards/10.10-sidemenu.png) | Settings: sidebar with few and many integrations (search and folding groups are planned) |
 | [11](../design/boards/11-compact-notch-states.png) | closed notch: departure and GitHub states |
 | [11.1](../design/boards/11.1-open-notch-home-layouts.png) | Home with 4, 3, 2 and 1 places (planned) |
 | [11.2](../design/boards/11.2-home-items-three-sizes.png) | Home items in three sizes (planned) |
@@ -272,7 +272,7 @@ A 760 × 620 pt window with the title bar drawn over it (boards 10.1–10.6), al
 
 | Part | Spec |
 |---|---|
-| Sidebar | 205 pt, `sidebar` fill, a 1 pt `cardBorder` line on its right. The wisp dot and name (16 pt semibold) below the window buttons, then the pages: SF Symbol + 13 pt label in 30 pt rows; the active page on `activeTab`, radius 8 |
+| Sidebar | 196 pt, `sidebar` fill, a 1 pt `cardBorder` line on its right. The wisp dot and name (16 pt semibold) below the window buttons, then the pages in groups (*Features*, *Connected*, 11 pt `textFaint`): SF Symbol or service icon + 13 pt label in 30 pt rows; the active page on `activeTab`, radius 8 |
 | Page | black, 31 pt side margin. Title 26 pt bold, optional subtitle 13 pt grey, an action top right (*Add integration*: accent fill, white semibold) |
 | Group | a 12 pt grey header, then a card: `card` fill, `cardBorder` 1 pt, radius 14; rows at least 46 pt, split by 1 pt `cardBorder` lines, 15 pt inside |
 | Row | title 13 pt, optional 11.5 pt grey line below; on the right a switch, a pop-up, or a secondary button |
@@ -281,7 +281,7 @@ A 760 × 620 pt window with the title bar drawn over it (boards 10.1–10.6), al
 Built in the same style, not on the boards (open to a design):
 
 - **Notch**: a tab's options open below its row (indented under the title, small switches) when you click the row. Rows move out of the way while you drag one (whole row is the handle); a switched-off tab's icon and title are dimmed. The Home tiles of board 10.1 come once GitHub, Notion and WHOOP exist.
-- **Integrations**: *Add integration* opens its own window (below). *Manage* opens the Manage window (below); Gmail's ✕ asks before it disconnects. Music has *Manage* (opens the Music page) but no ✕. The dot is the service's colour; errors show in the grey line.
+- **Integrations** (board 10.3.4): *Needs attention* above *Connected*. *Add integration* opens its own window; adding puts a service in the list as *Set up in Manage*. ✕ takes it out, asking first when it is connected. Music works by itself and has no buttons. Connected services with choices of their own get a place in the sidebar, by name, with a red dot on a problem; the Integrations row counts what needs attention.
 - **Calendar & weather**: without access, one row with *Give access* or *Open System Settings*. *Change* opens a search sheet.
 - **Music**: macOS doesn't tell apps whether system audio is allowed, so the dot shows wisp's own switch (*On* / *Off*).
 - **Focus**: with no learned rules, one row *No rules yet*.
@@ -298,7 +298,7 @@ Settings → Music (board 10.5): the system-audio row reads *Aan* / *Uit*, not *
 A 680 × 556 pt window over all of Settings, which dims to 60 % black. Search (⌘K), filter chips, the list on the left, the chosen service on the right, and ↑↓, ↩ and esc from the keyboard.
 
 - It lists only services that work, so the counts are lower than on the board and a category without a service has no chip. Music works automatically and isn't listed.
-- *Add …* and *Manage* open the Manage window; GitHub still has its own page.
+- *Add …* puts the service in the list; *Manage* opens the Manage window. GitHub still has its own page.
 - *Request an integration* opens a new GitHub issue in the browser.
 
 ## Manage window (boards 10.3.2, 10.3.3)

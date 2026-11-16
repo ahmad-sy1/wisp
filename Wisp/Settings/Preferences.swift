@@ -59,6 +59,11 @@ final class Preferences: ObservableObject {
         didSet { defaults.set(hiddenTabs.map(\.rawValue), forKey: Key.hiddenTabs) }
     }
 
+    /// Integrations added in *Add integration*, connected or not.
+    @Published var addedIntegrations: Set<IntegrationID> {
+        didSet { defaults.set(addedIntegrations.map(\.rawValue), forKey: Key.addedIntegrations) }
+    }
+
     /// The tabs in the tab bar, in order.
     var visibleTabs: [WispTab] { tabOrder.filter { !hiddenTabs.contains($0) } }
 
@@ -87,6 +92,7 @@ final class Preferences: ObservableObject {
         static let languages = "AppleLanguages"
         static let tabOrder = "tabOrder"
         static let hiddenTabs = "hiddenTabs"
+        static let addedIntegrations = "addedIntegrations"
         static let hotKey = "hotKey"
         static let hiddenHomeTiles = "hiddenHomeTiles"
         static let miniSpectrum = "miniSpectrum"
@@ -110,6 +116,8 @@ final class Preferences: ObservableObject {
         tabOrder = saved + WispTab.allCases.filter { !saved.contains($0) }
         hiddenTabs = Set((defaults.stringArray(forKey: Key.hiddenTabs) ?? []).compactMap(WispTab.init(rawValue:)))
             .subtracting([.home])
+        addedIntegrations = Set(
+            (defaults.stringArray(forKey: Key.addedIntegrations) ?? []).compactMap(IntegrationID.init(rawValue:)))
         // Only wisp's own domain, not the global language list.
         let own = defaults.persistentDomain(forName: Bundle.main.bundleIdentifier ?? "")?[Key.languages] as? [String]
         let current = own?.first.flatMap(AppLanguage.init(code:)) ?? .system

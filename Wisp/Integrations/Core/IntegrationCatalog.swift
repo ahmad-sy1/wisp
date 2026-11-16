@@ -39,6 +39,8 @@ struct IntegrationInfo: Identifiable, Equatable, Sendable {
     let setupMinutes: Int
     /// Extra words people search for.
     let keywords: [String]
+    /// It has choices of its own, so it gets a page in the sidebar once connected.
+    var hasOptions = false
 }
 
 enum IntegrationFilter: Hashable, Sendable {
@@ -81,7 +83,7 @@ enum IntegrationCatalog {
             vendor: "GitHub",
             notchPreview: String(localized: "CI 3/4 · review requested"),
             connectWith: String(localized: "GitHub CLI or token"), setupMinutes: 1,
-            keywords: ["git", "code", "pull request", "pr", "ci", "review"]),
+            keywords: ["git", "code", "pull request", "pr", "ci", "review"], hasOptions: true),
     ]
 
     /// The chips to offer: everything, what's added, and each category that has a service.

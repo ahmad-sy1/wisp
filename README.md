@@ -138,7 +138,7 @@ Open **Settings**: click the notch, then the sliders icon on the right. On a ful
 | **Gmail** | the Mail tab and unread badge | *Integrations → Add integration → Gmail*: your address and a Google [app password](https://myaccount.google.com/apppasswords). Both are stored in the Keychain only. |
 | **Calendar & weather** | the Agenda tab | Calendar access (macOS asks once), which calendars count, how a shift is recognised (the word *dienst* or a calendar), and the place for the weather (Nijmegen by default). |
 | **Departure** | the Departure tab and countdown | *Settings → Departure*: your home address (nothing runs without one) and how you travel. For lines, tracks and delays, add a free [NS key](https://apiportal.ns.nl) under *Integrations*. Your home address and event locations go to Apple for routes. |
-| **GitHub** | the GitHub tab and closed-notch states | *Settings → GitHub*: use your `gh` login with one click, or add a token. It is stored in the Keychain only. |
+| **GitHub** | the GitHub tab and closed-notch states | *Settings → Integrations → Add integration*, then GitHub: use your `gh` login with one click, or add a token. It is stored in the Keychain only. |
 | **Accent colour** | buttons, unread dots, highlights | Blue, green, orange or purple. |
 | **Open at login** | wisp is always there | One toggle. |
 

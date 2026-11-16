@@ -32,6 +32,9 @@ final class MailStore: ObservableObject {
     enum Filter { case all, unread }
 
     @Published private(set) var status: Status = .notConfigured
+    /// Copies of what is in the Keychain, so views don't read it on every render.
+    @Published private(set) var address: String?
+    @Published private(set) var isConfigured: Bool
     @Published private(set) var messages: [MailMessage] = []
     @Published private(set) var unreadCount = 0
     @Published var filter: Filter = .all
@@ -66,12 +69,11 @@ final class MailStore: ObservableObject {
     private var newestUID: UInt32?
 
     private init() {
+        address = Keychain.get(Self.addressKey)
+        isConfigured = Keychain.get(Self.addressKey) != nil && Keychain.get(Self.passwordKey) != nil
         peekNewMail = UserDefaults.standard.object(forKey: Self.peekKey) as? Bool ?? true
         showUnreadOnNotch = UserDefaults.standard.object(forKey: Self.unreadKey) as? Bool ?? true
     }
-
-    var address: String? { Keychain.get(Self.addressKey) }
-    var isConfigured: Bool { address != nil && Keychain.get(Self.passwordKey) != nil }
 
     var visibleMessages: [MailMessage] {
         filter == .all ? messages : messages.filter { !$0.isRead }
@@ -110,6 +112,8 @@ final class MailStore: ObservableObject {
         let password = appPassword.replacingOccurrences(of: " ", with: "")
         Keychain.set(address.trimmingCharacters(in: .whitespaces), for: Self.addressKey)
         Keychain.set(password, for: Self.passwordKey)
+        self.address = Keychain.get(Self.addressKey)
+        isConfigured = self.address != nil && Keychain.get(Self.passwordKey) != nil
         restart()
     }
 
@@ -146,6 +150,8 @@ final class MailStore: ObservableObject {
         stop()
         Keychain.remove(Self.addressKey)
         Keychain.remove(Self.passwordKey)
+        address = nil
+        isConfigured = false
         messages = []
         unreadCount = 0
         status = .notConfigured
