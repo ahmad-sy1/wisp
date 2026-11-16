@@ -10,7 +10,7 @@ Golden rule: **check the official documentation when you build or change an inte
 | Live spectrum | ✓ live | one-time *System Audio Recording* permission |
 | GitHub | planned | sign in with GitHub |
 | Notion | planned | sign in with Notion |
-| WHOOP | planned | sign in with WHOOP |
+| WHOOP | ✓ live | your own WHOOP developer app, then sign in with WHOOP |
 | Agenda | ✓ live | macOS Calendar access (EventKit) |
 | Weather | ✓ live | nothing (Open-Meteo, no key) |
 | System info | ✓ live | nothing; Location access only to show the Wi-Fi name |
@@ -106,13 +106,22 @@ Apart from the one key check described below, nothing here runs without a home a
 | Bike | Apple Maps walking route at 16 km/h | MapKit has no cycling directions. |
 | Rain | [Buienradar](https://www.buienradar.nl) `gpsgadget.buienradar.nl/data/raintext`, then Open-Meteo `minutely_15` | Buienradar is the radar, for the Netherlands and Belgium; free for non-commercial use with a mention, which Settings → Departure has. Open-Meteo answers elsewhere or when it fails. |
 
-## Planned: Notion, WHOOP
+## WHOOP
 
-Plan: each is added under Settings → Integrations → *Add integration* that opens the service's own sign-in page (OAuth 2.0 with PKCE), so nobody has to paste tokens. The redirect comes back to wisp through a custom URL scheme; tokens are stored in the Keychain and refreshed automatically. Each service needs wisp registered once as an OAuth app (client ID only, no secret in the app where the service allows it).
+Docs: <https://developer.whoop.com/docs/developing/oauth>, <https://developer.whoop.com/api/>
+
+- **Why your own app**: WHOOP only gives data to a registered app, and its token exchange needs the app's client secret, which can't ship inside a public app. So each person creates an app once at <https://developer-dashboard.whoop.com> (redirect URL `wisp://oauth/whoop`; scopes `read:recovery`, `read:sleep`, `read:cycles`, `read:profile`, `offline`) and enters its client ID and secret in the Manage window.
+- **Sign-in**: OAuth 2.0 authorization code. *Connect* opens `https://api.prod.whoop.com/oauth/oauth2/auth` in the browser with an eight-character `state`; WHOOP sends the browser to `wisp://oauth/whoop?code=…&state=…` (`CFBundleURLTypes` in `project.yml`), and wisp trades the code at `/oauth/oauth2/token`. Nothing is stored unless that works; the window gives up after five minutes or when you close it.
+- **Tokens**: the access token lasts an hour. `offline` brings a refresh token; every refresh hands out a new pair and the old refresh token stops working, so refreshes never overlap (`WhoopClient` is an actor) and each new pair goes to the Keychain at once. A refused refresh means WHOOP signed wisp out: the tab says since when and offers *Reconnect*, which signs in again with the stored client.
+- **Data** (`/developer/v2/`): `recovery?limit=7` (score, HRV, resting heart rate, the bars), `activity/sleep?limit=5` (the last night that isn't a nap), `cycle?limit=1` (today's strain and kilojoules), `user/profile/basic` (the first name in Settings). Only records with `score_state` `SCORED` count. Every 30 minutes while connected, on waking if the last answer is older, and when you open the tab if it's stale. Nothing is written to disk.
+- **Disconnect** calls `DELETE /developer/v2/user/access` and deletes the client ID, secret and tokens from the Keychain.
+
+## Planned: Notion
+
+Plan: like WHOOP, Notion's token exchange needs a client secret, so it follows the same flow: the client ID and secret of your own Notion integration in the Manage window, then Notion's sign-in in the browser, back on `wisp://oauth/notion`. Tokens are stored in the Keychain.
 
 | Service | Home tile | Data |
 |---|---|---|
-| WHOOP | *68% herstel* | latest recovery, strain, sleep |
 | Notion | *2 bijgewerkt* | pages edited today |
 
 ## Agenda (EventKit)
