@@ -131,6 +131,17 @@ final class WhoopClientTests: XCTestCase {
         XCTAssertEqual(saved.tokens.map(\.refresh), ["r2"])
     }
 
+    func testRevokingRefreshesWithoutSaving() async {
+        let server = Server()
+        let saved = Saved()
+        let expired = WhoopOAuth.Tokens(access: "old", refresh: "r1", expires: now)
+        let whoop = WhoopClient(
+            transport: server, client: client, tokens: expired, save: { saved.tokens.append($0) }, now: { [now] in now })
+        await whoop.revoke()
+        XCTAssertEqual(server.refreshes, 1)
+        XCTAssertTrue(saved.tokens.isEmpty, "disconnected tokens must not come back")
+    }
+
     func testRefusedRefreshMeansSignedOut() async {
         let server = Server()
         server.refreshStatus = 400

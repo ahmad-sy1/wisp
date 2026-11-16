@@ -217,7 +217,11 @@ final class WhoopStore: ObservableObject {
 
     private func makeClient(_ client: WhoopOAuth.Client, tokens: WhoopOAuth.Tokens) -> WhoopClient {
         WhoopClient(transport: transport, client: client, tokens: tokens) { tokens in
-            Task { @MainActor in WhoopStore.store(tokens) }
+            // A refresh that finishes after Disconnect must not bring the tokens back.
+            Task { @MainActor in
+                guard WhoopStore.shared.hasConnection else { return }
+                WhoopStore.store(tokens)
+            }
         }
     }
 

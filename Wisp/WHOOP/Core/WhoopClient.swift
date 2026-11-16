@@ -65,8 +65,10 @@ actor WhoopClient {
         try WhoopParser.firstName(try await get("user/profile/basic"))
     }
 
-    /// Tells WHOOP that wisp lets go; best effort, the tokens are deleted either way.
+    /// Tells WHOOP that wisp lets go; best effort, the tokens are deleted either way. From
+    /// here on a refresh is no longer saved, so nothing ends up back in the Keychain.
     func revoke() async {
+        isRevoked = true
         guard let token = try? await accessToken(),
             let url = URL(string: "user/access", relativeTo: Self.apiBase)
         else { return }
@@ -100,6 +102,7 @@ actor WhoopClient {
     }
 
     private var refreshing: Task<WhoopOAuth.Tokens, Error>?
+    private var isRevoked = false
 
     private func accessToken() async throws -> String {
         if let refreshing { return try await refreshing.value.access }
@@ -137,6 +140,6 @@ actor WhoopClient {
         refreshing = task
         defer { refreshing = nil }
         tokens = try await task.value
-        save(tokens)
+        if !isRevoked { save(tokens) }
     }
 }
