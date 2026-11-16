@@ -201,12 +201,42 @@
         }
       }
     },
+    "%lld on" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld aan"
+          }
+        }
+      }
+    },
     "%lld options" : {
       "localizations" : {
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld opties"
+          }
+        }
+      }
+    },
+    "%lld tabs on" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld tabs aan"
+          }
+        }
+      }
+    },
+    "%lld tabs on · %lld fit in the notch · %lld in More" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld tabs aan · %2$lld passen in de notch · %3$lld in Meer"
           }
         }
       }
@@ -297,6 +327,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "1 optie"
+          }
+        }
+      }
+    },
+    "1 tab on" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 tab aan"
           }
         }
       }
@@ -1481,6 +1521,16 @@
         }
       }
     },
+    "Edit tabs in Settings…" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tabs bewerken in Instellingen…"
+          }
+        }
+      }
+    },
     "Edit this note" : {
       "localizations" : {
         "nl" : {
@@ -1821,6 +1871,16 @@
         }
       }
     },
+    "Home · always the first tab" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Home · altijd de eerste tab"
+          }
+        }
+      }
+    },
     "Hooks" : {
       "localizations" : {
         "nl" : {
@@ -1847,6 +1907,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Over %lld min"
+          }
+        }
+      }
+    },
+    "In More" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In Meer"
           }
         }
       }
@@ -1937,6 +2007,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Installeren…"
+          }
+        }
+      }
+    },
+    "Integration" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Integratie"
           }
         }
       }
@@ -2227,6 +2307,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Mist er een? Vraag een integratie aan"
+          }
+        }
+      }
+    },
+    "More tabs" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Meer tabs"
           }
         }
       }
@@ -3751,12 +3841,12 @@
         }
       }
     },
-    "Tabs · click a tab for its options" : {
+    "Tabs · connected integrations appear here automatically" : {
       "localizations" : {
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tabs · klik op een tab voor opties"
+            "value" : "Tabs · verbonden integraties verschijnen hier vanzelf"
           }
         }
       }
@@ -4087,6 +4177,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Zonder titel"
+          }
+        }
+      }
+    },
+    "Up to 8 tabs fit in the notch. With more, the last spot becomes More and holds the rest. Drag to choose which ones stay up front." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Er passen maximaal 8 tabs in de notch. Bij meer wordt de laatste plek Meer, met de rest erin. Sleep om te kiezen welke vooraan blijven."
           }
         }
       }

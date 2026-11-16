@@ -9,6 +9,8 @@ final class NotchModel: ObservableObject {
     @Published var phase: Phase = .collapsed
     @Published var hovering = false
     @Published var tab: WispTab = .home
+    /// The *More* menu of the tab bar is open.
+    @Published var moreOpen = false
     /// Red count badges on tab icons (e.g. unread mail).
     @Published var badges: [WispTab: Int] = [:]
 

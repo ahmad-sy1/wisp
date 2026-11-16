@@ -95,6 +95,7 @@ final class NotchController {
     }
 
     func collapse() {
+        model.moreOpen = false
         collapseWork?.cancel()
         guard !model.isCollapsed, canCollapse() else { return }
         endKeyboardOpen()
