@@ -187,7 +187,7 @@ The details are in [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) and [`docs/INT
 
 ## Privacy
 
-wisp has no servers and no analytics. It connects to Gmail only after you add an account, and reads Now Playing, your calendar and your Claude Code sessions locally on your Mac. Your calendar is only read and never leaves the Mac; for the weather, only the coordinates of the place you chose go to Open-Meteo. The live spectrum analyses the sound on your Mac and never records, stores or sends it. Tool output and file contents from Claude Code never reach the app: `wisp-hook` strips them before forwarding. Passwords are stored in the macOS Keychain and nowhere else.
+wisp has no servers and no analytics. It connects to Gmail, GitHub, NS and WHOOP only after you add them, and reads Now Playing, your calendar and your Claude Code sessions locally on your Mac. Your calendar is only read and never leaves the Mac; for the weather, only the coordinates of the place you chose go to Open-Meteo. The live spectrum analyses the sound on your Mac and never records, stores or sends it. Tool output and file contents from Claude Code never reach the app: `wisp-hook` strips them before forwarding. Your WHOOP scores are only kept in memory and never leave the Mac. Passwords are stored in the macOS Keychain and nowhere else.
 
 ## Credits
 
