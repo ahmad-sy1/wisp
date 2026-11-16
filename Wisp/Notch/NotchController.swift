@@ -75,8 +75,9 @@ final class NotchController {
     func expand(to tab: WispTab? = nil) {
         collapseWork?.cancel()
         if let tab { model.tab = tab }
-        // A tab switched off in Settings doesn't open; Home always can.
-        if Preferences.shared.hiddenTabs.contains(model.tab) { model.tab = .home }
+        // A tab switched off in Settings, or of a service that isn't connected, doesn't open;
+        // Home always can.
+        if !Preferences.shared.visibleTabs.contains(model.tab) { model.tab = .home }
         guard !model.isExpanded else {
             // The cancel above must not leave it open for good.
             if !keyboardOpen { scheduleCollapse(after: 4) }
