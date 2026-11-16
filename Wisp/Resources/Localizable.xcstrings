@@ -111,6 +111,16 @@
         }
       }
     },
+    "%lld kcal · scale 0–21" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld kcal · schaal 0–21"
+          }
+        }
+      }
+    },
     "%lld min" : {
       "localizations" : {
         "nl" : {
@@ -1211,6 +1221,26 @@
         }
       }
     },
+    "Client ID" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Client-ID"
+          }
+        }
+      }
+    },
+    "Client secret" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Client secret"
+          }
+        }
+      }
+    },
     "Clipboard" : {
       "localizations" : {
         "nl" : {
@@ -1311,6 +1341,16 @@
         }
       }
     },
+    "Connect WHOOP" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Koppel WHOOP"
+          }
+        }
+      }
+    },
     "Connect with" : {
       "localizations" : {
         "nl" : {
@@ -1401,6 +1441,16 @@
         }
       }
     },
+    "Connected · waiting for data" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verbonden · wacht op gegevens"
+          }
+        }
+      }
+    },
     "Connecting to Gmail…" : {
       "localizations" : {
         "nl" : {
@@ -1417,6 +1467,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Verbinden…"
+          }
+        }
+      }
+    },
+    "Connection lost · since %@" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verbinding verbroken · sinds %@"
           }
         }
       }
@@ -1481,6 +1541,16 @@
         }
       }
     },
+    "Couldn't reach WHOOP. Check your connection and try again." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "WHOOP is niet bereikbaar. Controleer je verbinding en probeer het opnieuw."
+          }
+        }
+      }
+    },
     "Create a token…" : {
       "localizations" : {
         "nl" : {
@@ -1491,12 +1561,32 @@
         }
       }
     },
+    "Create an app at developer-dashboard.whoop.com" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Maak een app op developer-dashboard.whoop.com"
+          }
+        }
+      }
+    },
     "Create an app password" : {
       "localizations" : {
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Maak een app-wachtwoord"
+          }
+        }
+      }
+    },
+    "Deep · Light · REM · Awake" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Diep · Licht · REM · Wakker"
           }
         }
       }
@@ -1801,6 +1891,26 @@
         }
       }
     },
+    "From the same app" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uit dezelfde app"
+          }
+        }
+      }
+    },
+    "From your WHOOP developer app" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uit je WHOOP-developer-app"
+          }
+        }
+      }
+    },
     "From your calendar" : {
       "localizations" : {
         "nl" : {
@@ -1957,6 +2067,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "NAAR HUIS"
+          }
+        }
+      }
+    },
+    "HRV %lld ms · RHR %lld" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "HRV %lld ms · RHR %lld"
           }
         }
       }
@@ -2671,6 +2791,16 @@
         }
       }
     },
+    "No data yet" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nog geen gegevens"
+          }
+        }
+      }
+    },
     "No integration for “%@”" : {
       "localizations" : {
         "nl" : {
@@ -2797,6 +2927,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Er speelt niets"
+          }
+        }
+      }
+    },
+    "Not scored yet" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nog geen score"
           }
         }
       }
@@ -3067,6 +3207,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Open Systeeminstellingen"
+          }
+        }
+      }
+    },
+    "Open WHOOP" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open WHOOP"
           }
         }
       }
@@ -3421,6 +3571,76 @@
         }
       }
     },
+    "Reconnect" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Opnieuw verbinden"
+          }
+        }
+      }
+    },
+    "Recovery" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Herstel"
+          }
+        }
+      }
+    },
+    "Recovery 68% · sleep 7h 12m" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Herstel 68% · slaap 7h 12m"
+          }
+        }
+      }
+    },
+    "Recovery, sleep and strain" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Herstel, slaap en belasting"
+          }
+        }
+      }
+    },
+    "Recovery, sleep and strain in their own tab." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Herstel, slaap en belasting in een eigen tab."
+          }
+        }
+      }
+    },
+    "Redirect URL wisp://oauth/whoop; scopes read:recovery, read:sleep, read:cycles, read:profile and offline. Connect opens WHOOP's sign-in in your browser." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Redirect-URL wisp://oauth/whoop; scopes read:recovery, read:sleep, read:cycles, read:profile en offline. Koppelen opent de aanmelding van WHOOP in je browser."
+          }
+        }
+      }
+    },
+    "Refresh" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vernieuw"
+          }
+        }
+      }
+    },
     "Reinstall…" : {
       "localizations" : {
         "nl" : {
@@ -3637,6 +3857,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Opslaan"
+          }
+        }
+      }
+    },
+    "Scale 0–21" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schaal 0–21"
           }
         }
       }
@@ -3881,6 +4111,16 @@
         }
       }
     },
+    "Sign in to WHOOP in your browser, then come back here…" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Meld je in je browser aan bij WHOOP en kom dan hier terug…"
+          }
+        }
+      }
+    },
     "Sign-in failed: check the address and app password" : {
       "localizations" : {
         "nl" : {
@@ -3891,12 +4131,32 @@
         }
       }
     },
+    "Signed out · reconnect" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Afgemeld · verbind opnieuw"
+          }
+        }
+      }
+    },
     "Signing in to Gmail…" : {
       "localizations" : {
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Aanmelden bij Gmail…"
+          }
+        }
+      }
+    },
+    "Sleep" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Slaap"
           }
         }
       }
@@ -4051,6 +4311,26 @@
         }
       }
     },
+    "Stored in your Mac's Keychain. wisp only talks to WHOOP." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bewaard in de sleutelhanger van je Mac. wisp praat alleen met WHOOP."
+          }
+        }
+      }
+    },
+    "Strain" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Belasting"
+          }
+        }
+      }
+    },
     "Street and number, town" : {
       "localizations" : {
         "nl" : {
@@ -4067,6 +4347,36 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Abonneer je op het product “Ns-App” en kopieer de primary key."
+          }
+        }
+      }
+    },
+    "Synced %lld min ago" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld min geleden gesynchroniseerd"
+          }
+        }
+      }
+    },
+    "Synced at %@" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gesynchroniseerd om %@"
+          }
+        }
+      }
+    },
+    "Synced just now" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zojuist gesynchroniseerd"
           }
         }
       }
@@ -4491,6 +4801,46 @@
         }
       }
     },
+    "WHOOP didn't sign wisp in. Check the client ID, the secret and the redirect URL wisp://oauth/whoop." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "WHOOP heeft wisp niet aangemeld. Controleer de client-ID, het secret en de redirect-URL wisp://oauth/whoop."
+          }
+        }
+      }
+    },
+    "WHOOP sends your first scores after you've worn your strap overnight. wisp checks again every 30 minutes." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "WHOOP stuurt je eerste scores nadat je je band een nacht hebt gedragen. wisp kijkt elke 30 minuten opnieuw."
+          }
+        }
+      }
+    },
+    "WHOOP signed wisp out" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "WHOOP heeft wisp afgemeld"
+          }
+        }
+      }
+    },
+    "WHOOP signed wisp out. Disconnect and connect again." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "WHOOP heeft wisp afgemeld. Ontkoppel en koppel opnieuw."
+          }
+        }
+      }
+    },
     "Wait %lld min, saves %lld min" : {
       "localizations" : {
         "nl" : {
@@ -4701,6 +5051,16 @@
         }
       }
     },
+    "Your developer app" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Je eigen developer-app"
+          }
+        }
+      }
+    },
     "Your inbox is empty." : {
       "localizations" : {
         "nl" : {
@@ -4737,6 +5097,36 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Je pull requests, hun checks en reviewverzoeken, met een rustig signaal in je notch."
+          }
+        }
+      }
+    },
+    "Your recovery, last night's sleep and today's strain in their own tab. You sign in with your own WHOOP developer app." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Je herstel, de slaap van afgelopen nacht en de belasting van vandaag in een eigen tab. Je meldt je aan met je eigen WHOOP-developer-app."
+          }
+        }
+      }
+    },
+    "Your recovery, sleep and strain, from your own WHOOP developer app." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Je herstel, slaap en belasting, via je eigen WHOOP-developer-app."
+          }
+        }
+      }
+    },
+    "Your sign-in expired or was revoked. Reconnect to see your scores again." : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Je aanmelding is verlopen of ingetrokken. Verbind opnieuw om je scores weer te zien."
           }
         }
       }

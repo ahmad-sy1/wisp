@@ -31,6 +31,10 @@ struct ManageSpec: Equatable, Sendable {
             return ManageSpec.looksLikeAddress(address) && password.count >= 16
         case .ns:
             return !(values[ManageSpec.keyField] ?? "").trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        case .whoop:
+            return [ManageSpec.clientIDField, ManageSpec.clientSecretField].allSatisfy {
+                !(values[$0] ?? "").trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+            }
         case .github:
             return false
         }
@@ -39,6 +43,8 @@ struct ManageSpec: Equatable, Sendable {
     static let addressField = "address"
     static let passwordField = "password"
     static let keyField = "key"
+    static let clientIDField = "clientID"
+    static let clientSecretField = "clientSecret"
 
     private static func looksLikeAddress(_ text: String) -> Bool {
         let parts = text.split(separator: "@", omittingEmptySubsequences: false)
@@ -93,6 +99,31 @@ extension IntegrationCatalog {
                     localized: "NS rejected this key. Copy the primary key of your subscription, not the secondary one."),
                 unreachableMessage: String(localized: "Couldn't reach NS. Check your connection and try again."),
                 failureField: ManageSpec.keyField)
+        case .whoop:
+            return ManageSpec(
+                info: info,
+                blurb: String(localized: "Recovery, sleep and strain in their own tab."),
+                checking: String(localized: "Sign in to WHOOP in your browser, then come back here…"),
+                fields: [
+                    ManageField(
+                        id: ManageSpec.clientIDField, label: String(localized: "Client ID"),
+                        placeholder: String(localized: "From your WHOOP developer app")),
+                    ManageField(
+                        id: ManageSpec.clientSecretField, label: String(localized: "Client secret"),
+                        placeholder: String(localized: "From the same app"), isSecret: true),
+                ],
+                helpTitle: String(localized: "Create an app at developer-dashboard.whoop.com"),
+                helpURL: "https://developer-dashboard.whoop.com",
+                helpText: String(
+                    localized:
+                        "Redirect URL wisp://oauth/whoop; scopes read:recovery, read:sleep, read:cycles, read:profile and offline. Connect opens WHOOP's sign-in in your browser."
+                ),
+                privacy: String(localized: "Stored in your Mac's Keychain. wisp only talks to WHOOP."),
+                rejectedMessage: String(
+                    localized:
+                        "WHOOP didn't sign wisp in. Check the client ID, the secret and the redirect URL wisp://oauth/whoop."),
+                unreachableMessage: String(localized: "Couldn't reach WHOOP. Check your connection and try again."),
+                failureField: ManageSpec.clientSecretField)
         case .github:
             return nil
         }

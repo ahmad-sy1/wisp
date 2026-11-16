@@ -2,7 +2,7 @@ import SwiftUI
 
 /// The tabs in the expanded panel, in tab-bar order.
 enum WispTab: String, CaseIterable, Identifiable {
-    case home, mail, agenda, departure, github, focus, music, clipboard, notes, system, files
+    case home, mail, agenda, departure, github, whoop, focus, music, clipboard, notes, system, files
 
     var id: String { rawValue }
 
@@ -13,6 +13,7 @@ enum WispTab: String, CaseIterable, Identifiable {
         case .agenda: "calendar"
         case .departure: "tram"
         case .github: WispGlyph.pullRequest
+        case .whoop: "heart"
         case .focus: "timer"
         case .music: "music.note"
         case .clipboard: "clipboard"
@@ -23,7 +24,13 @@ enum WispTab: String, CaseIterable, Identifiable {
     }
 
     /// An integration's tab shows its letters instead of a symbol (board 0.2).
-    var letters: String? { self == .github ? "GH" : nil }
+    var letters: String? {
+        switch self {
+        case .github: "GH"
+        case .whoop: "W"
+        default: nil
+        }
+    }
 
     /// GitHub's badge counts reviews, which can wait; the others are red.
     var badgeColor: Color { self == .github ? Theme.info : Theme.badge }
@@ -35,6 +42,7 @@ enum WispTab: String, CaseIterable, Identifiable {
         case .agenda: String(localized: "Calendar")
         case .departure: String(localized: "Departure")
         case .github: "GitHub"
+        case .whoop: "WHOOP"
         case .focus: String(localized: "Focus")
         case .music: String(localized: "Music")
         case .clipboard: String(localized: "Clipboard")

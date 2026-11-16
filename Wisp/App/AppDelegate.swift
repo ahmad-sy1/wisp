@@ -35,6 +35,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         startMusic(notch: notch)
         startFocus(notch: notch)
         startGitHub(notch: notch)
+        startWhoop()
         ClipboardStore.shared.start()
         startHotKey(notch: notch)
         #if DEBUG
@@ -217,6 +218,30 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         }
         github.start()
         DepartureStore.shared.start()
+    }
+
+    // MARK: - WHOOP
+
+    private func startWhoop() {
+        let whoop = WhoopStore.shared
+        // The tab exists only while WHOOP is connected.
+        whoop.$status
+            .map { $0 != .notConnected }
+            .removeDuplicates()
+            .sink { connected in
+                if connected {
+                    Preferences.shared.unavailableTabs.remove(.whoop)
+                } else {
+                    Preferences.shared.unavailableTabs.insert(.whoop)
+                }
+            }
+            .store(in: &subscriptions)
+        whoop.start()
+    }
+
+    /// `wisp://oauth/whoop?…`: a browser sign-in coming back.
+    func application(_ application: NSApplication, open urls: [URL]) {
+        for url in urls { _ = WhoopStore.shared.handle(url) }
     }
 
     // MARK: - Music

@@ -39,7 +39,7 @@ struct NotchPage: View {
                 header: String(localized: "Tabs · connected integrations appear here automatically"),
                 trailing: String(localized: "\(prefs.visibleTabs.count) on")
             ) {
-                ForEach(prefs.tabOrder.filter { $0 != .home }) { tab in
+                ForEach(prefs.availableTabs.filter { $0 != .home }) { tab in
                     tabRow(tab, inMore: layout.more.contains(tab))
                         .onDrag {
                             dragging = tab
@@ -280,7 +280,7 @@ private struct TabRow<Options: View>: View {
         switch tab {
         case .mail: "Gmail"
         case .departure: "NS"
-        case .github: String(localized: "Integration")
+        case .github, .whoop: String(localized: "Integration")
         default: nil
         }
     }

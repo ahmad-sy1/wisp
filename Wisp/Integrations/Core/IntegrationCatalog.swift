@@ -1,7 +1,7 @@
 import Foundation
 
 enum IntegrationID: String, Sendable {
-    case gmail, github, ns
+    case gmail, github, ns, whoop
 }
 
 /// What a service said about credentials that were not stored yet.
@@ -84,6 +84,16 @@ enum IntegrationCatalog {
             notchPreview: String(localized: "CI 3/4 · review requested"),
             connectWith: String(localized: "GitHub CLI or token"), setupMinutes: 1,
             keywords: ["git", "code", "pull request", "pr", "ci", "review"], hasOptions: true),
+        IntegrationInfo(
+            id: .whoop, name: "WHOOP", letters: "W", tint: 0x44D7B6, category: .lifestyle,
+            summary: String(localized: "Recovery, sleep and strain"),
+            details: String(
+                localized:
+                    "Your recovery, last night's sleep and today's strain in their own tab. You sign in with your own WHOOP developer app."),
+            vendor: "WHOOP",
+            notchPreview: String(localized: "Recovery 68% · sleep 7h 12m"),
+            connectWith: String(localized: "Your developer app"), setupMinutes: 5,
+            keywords: ["health", "gezondheid", "sleep", "slaap", "recovery", "herstel", "strain", "fitness"]),
     ]
 
     /// The chips to offer: everything, what's added, and each category that has a service.

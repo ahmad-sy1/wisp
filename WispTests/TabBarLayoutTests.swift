@@ -28,4 +28,9 @@ final class TabBarLayoutTests: XCTestCase {
     func testNoTabs() {
         XCTAssertEqual(TabBarLayout.split([Int]()).front, [])
     }
+
+    func testPlacingANewTabAfterAnother() {
+        XCTAssertEqual(TabBarLayout.placing("w", after: "gh", in: ["h", "gh", "m", "w"]), ["h", "gh", "w", "m"])
+        XCTAssertEqual(TabBarLayout.placing("w", after: "x", in: ["h", "w"]), ["h", "w"])
+    }
 }

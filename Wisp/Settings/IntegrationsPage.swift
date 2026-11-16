@@ -8,13 +8,14 @@ struct IntegrationsPage: View {
     @ObservedObject private var prefs = Preferences.shared
     @ObservedObject private var github = GitHubStore.shared
     @ObservedObject private var departure = DepartureStore.shared
+    @ObservedObject private var whoop = WhoopStore.shared
     @ObservedObject private var navigation = SettingsNavigation.shared
     @State private var removing: IntegrationInfo?
 
     private var rows: [IntegrationRowModel] {
         IntegrationList.rows(
             added: prefs.addedIntegrations,
-            connections: IntegrationConnections.current(mail: mail, github: github, departure: departure))
+            connections: IntegrationConnections.current(mail: mail, github: github, departure: departure, whoop: whoop))
     }
 
     var body: some View {
@@ -85,6 +86,7 @@ struct IntegrationsPage: View {
         case .gmail: mail.disconnect()
         case .github: github.disconnect()
         case .ns: departure.setNSKey(nil)
+        case .whoop: WhoopStore.shared.disconnect()
         }
     }
 
