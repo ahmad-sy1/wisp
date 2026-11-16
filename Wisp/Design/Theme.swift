@@ -34,6 +34,10 @@ enum Theme {
     static let rain = Color(hex: 0x64D2FF)
     /// The NS badge in a route.
     static let nsYellow = Color(hex: 0xFFC917)
+    /// WHOOP: deep sleep, REM and a middling recovery (light sleep and strain use `rain`).
+    static let sleepDeep = Color(hex: 0x5E5CE6)
+    static let sleepREM = Color(hex: 0xBF5AF2)
+    static let recoveryYellow = Color(hex: 0xFFD60A)
 
     // Panel geometry (expanded)
     static let panelWidth: CGFloat = 600

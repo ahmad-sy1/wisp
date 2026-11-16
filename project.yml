@@ -75,6 +75,10 @@ targets:
         NSLocationUsageDescription: "macOS gives apps the name of your Wi‑Fi network only with Location access. wisp uses it for the System tab and never reads where you are."
         NSLocationWhenInUseUsageDescription: "macOS gives apps the name of your Wi‑Fi network only with Location access. wisp uses it for the System tab and never reads where you are."
         LSApplicationCategoryType: public.app-category.productivity
+        # wisp://oauth/<service>: where a service's browser sign-in comes back (WHOOP).
+        CFBundleURLTypes:
+          - CFBundleURLName: com.ahmadalasmi.wisp.oauth
+            CFBundleURLSchemes: [wisp]
         # OVapi only answers over HTTP. Only stop codes go there (Wisp/Departure/Core/OVapi.swift).
         NSAppTransportSecurity:
           NSExceptionDomains:
@@ -110,6 +114,7 @@ targets:
       - path: Wisp/Departure/Core
       - path: Wisp/Notch/Core
       - path: Wisp/Integrations/Core
+      - path: Wisp/WHOOP/Core
       - path: Wisp/Support/HTTPTransport.swift
     settings:
       base:

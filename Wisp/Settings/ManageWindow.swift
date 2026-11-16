@@ -27,6 +27,7 @@ private struct ManageWindow: View {
 
     @ObservedObject private var mail = MailStore.shared
     @ObservedObject private var departure = DepartureStore.shared
+    @ObservedObject private var whoop = WhoopStore.shared
     @State private var phase = ManagePhase.idle
     /// Read when something changes, not on every keystroke: it comes from the Keychain.
     @State private var account = ManageAccount()
@@ -76,6 +77,15 @@ private struct ManageWindow: View {
             account = ManageAccount(
                 isConnected: departure.hasNSKey,
                 summary: String(localized: "Connected · key ending in \(departure.nsKeySuffix)"))
+        case .whoop:
+            var health = ManageAccount.Health.healthy
+            if case .signedOut = whoop.status {
+                health = .failed(String(localized: "WHOOP signed wisp out. Disconnect and connect again."))
+            }
+            let summary =
+                whoop.firstName.map { String(localized: "Connected as \($0)") } ?? String(localized: "Connected")
+            account = ManageAccount(
+                isConnected: whoop.hasConnection, health: health, summary: summary, address: whoop.storedClientID)
         case .github:
             account = ManageAccount()
         }
@@ -118,6 +128,8 @@ private struct ManageWindow: View {
         }
         .onChange(of: mail.status) { _, _ in reloadAccount() }
         .onChange(of: departure.hasNSKey) { _, _ in reloadAccount() }
+        .onChange(of: whoop.status) { _, _ in reloadAccount() }
+        .onChange(of: whoop.firstName) { _, _ in reloadAccount() }
         .onDisappear {
             keys.stop()
             task?.cancel()
@@ -166,7 +178,8 @@ private struct ManageWindow: View {
     private func binding(for field: ManageField) -> Binding<String> {
         Binding(
             get: {
-                if isConnected, field.id == ManageSpec.addressField { return account.address ?? "" }
+                // The visible field (address, client ID) shows what is stored; secrets stay masked.
+                if isConnected, !field.isSecret { return account.address ?? "" }
                 return values[field.id] ?? ""
             },
             set: {
@@ -265,6 +278,7 @@ private struct ManageWindow: View {
         switch spec.info.id {
         case .gmail: mail.disconnect()
         case .ns: departure.setNSKey(nil)
+        case .whoop: whoop.disconnect()
         case .github: break
         }
         values = [:]
@@ -296,6 +310,11 @@ private struct ManageWindow: View {
             let key = (entered[ManageSpec.keyField] ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
             check = await NSTravelProvider(key: key).checkKey()
             if check == .accepted, !Task.isCancelled { departure.setNSKey(key) }
+        case .whoop:
+            let id = (entered[ManageSpec.clientIDField] ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+            let secret = (entered[ManageSpec.clientSecretField] ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+            // Stores by itself once WHOOP hands out tokens, unless the window closed first.
+            check = await whoop.signIn(clientID: id, secret: secret)
         case .github:
             check = .unreachable
         }

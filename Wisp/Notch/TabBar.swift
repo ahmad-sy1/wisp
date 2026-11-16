@@ -57,8 +57,9 @@ struct TabBar: View {
                 model.onOpenSettings()
             }
         }
-        .onChange(of: prefs.hiddenTabs) { _, hidden in
-            if hidden.contains(model.tab) { model.tab = .home }
+        // Switched off, or its service disconnected while it was open.
+        .onChange(of: prefs.visibleTabs) { _, visible in
+            if !visible.contains(model.tab) { model.tab = .home }
         }
         .onChange(of: model.tab) { _, _ in model.moreOpen = false }
     }

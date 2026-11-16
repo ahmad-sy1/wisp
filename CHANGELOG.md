@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- WHOOP: recovery, sleep and strain in a tab of its own (board 11.3), signed in through the browser with your own WHOOP developer app; every integration's tab now shares one template with *No data yet* and *Connection lost* states
 - Settings → Integrations shows what needs attention first, and connected integrations with their own options appear in the sidebar (boards 10.3.4, 10.10)
 - One Manage window for Gmail and NS (boards 10.3.2, 10.3.3): a key is checked first and only stored when it works
 - A full tab bar keeps its last spot for *More*, and Settings → Notch shows which tabs end up there (boards 10.1.1, 10.1.2)

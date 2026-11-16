@@ -65,11 +65,12 @@ struct SettingsView: View {
     @ObservedObject private var mail = MailStore.shared
     @ObservedObject private var github = GitHubStore.shared
     @ObservedObject private var departure = DepartureStore.shared
+    @ObservedObject private var whoop = WhoopStore.shared
 
     private var integrationRows: [IntegrationRowModel] {
         IntegrationList.rows(
             added: prefs.addedIntegrations,
-            connections: IntegrationConnections.current(mail: mail, github: github, departure: departure))
+            connections: IntegrationConnections.current(mail: mail, github: github, departure: departure, whoop: whoop))
     }
 
     var body: some View {

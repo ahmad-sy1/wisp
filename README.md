@@ -37,12 +37,13 @@ The notch is the one bit of screen you never use. wisp turns it into a quiet das
 - **Focus timer**: 25, 50 or 90 minutes with a ring that keeps counting in the closed notch. It guesses what you work on (the calendar event that's on, or the app and Claude Code project in front) and learns from your corrections; today's sessions sit in the tab bar.
 - **Departure**: when to leave, from your calendar: for an event with a location, or home after your last one. By public transport with line numbers and tracks, by car with traffic and whether waiting helps, by bike with the rain. A countdown on the closed notch, and nothing when there is no trip.
 - **GitHub**: your open pull requests with the state of their checks, requested reviews and your contribution graph. The closed notch stays empty until something matters: a run going, a failed job, a review request, a new comment.
+- **WHOOP**: today's recovery with the last week of scores, last night's sleep by stage and today's strain, in a tab of its own that appears once you connect.
 - **Clipboard**: the last 20 texts you copied, searchable, one click to copy again. Stored only on your Mac; passwords and one-time codes are never kept.
 - **Notes**: jot something down without leaving what you're doing; click a note to edit it. Stored only on your Mac.
 - **System**: battery and time left, your AirPods' batteries, CPU with the busiest app, free storage and the Wi-Fi network, read only while you look.
 - **Keyboard**: ⌥Space opens the notch from anywhere (change it in Settings); ← → walk through the tabs, Esc closes.
 - **English and Dutch**: wisp follows your Mac's language, or pick one in Settings.
-- **Calm by default**: the closed notch draws nothing extra and uses 0 % CPU. The exceptions are the ones you connect: checking GitHub and travel times, adaptively and never while the Mac sleeps.
+- **Calm by default**: the closed notch draws nothing extra and uses 0 % CPU. The exceptions are the ones you connect: checking GitHub, WHOOP and travel times, adaptively and never while the Mac sleeps.
 - **Any Mac**: on a screen without a notch, wisp sits in a small bar at the top centre.
 - **Private by design**: no telemetry, no account. Passwords live in your macOS Keychain. wisp only talks to the services you connect.
 
@@ -139,6 +140,7 @@ Open **Settings**: click the notch, then the sliders icon on the right. On a ful
 | **Calendar & weather** | the Agenda tab | Calendar access (macOS asks once), which calendars count, how a shift is recognised (the word *dienst* or a calendar), and the place for the weather (Nijmegen by default). |
 | **Departure** | the Departure tab and countdown | *Settings → Departure*: your home address (nothing runs without one) and how you travel. For lines, tracks and delays, add a free [NS key](https://apiportal.ns.nl) under *Integrations*. Your home address and event locations go to Apple for routes. |
 | **GitHub** | the GitHub tab and closed-notch states | *Settings → Integrations → Add integration*, then GitHub: use your `gh` login with one click, or add a token. It is stored in the Keychain only. |
+| **WHOOP** | the WHOOP tab | WHOOP only hands out data to a registered app, so you make your own once at [developer-dashboard.whoop.com](https://developer-dashboard.whoop.com) with redirect URL `wisp://oauth/whoop` and the scopes `read:recovery`, `read:sleep`, `read:cycles`, `read:profile` and `offline`. Enter its client ID and secret under *Integrations → Add integration → WHOOP*; *Connect* opens WHOOP's sign-in in your browser. Everything is stored in the Keychain only. |
 | **Accent colour** | buttons, unread dots, highlights | Blue, green, orange or purple. |
 | **Open at login** | wisp is always there | One toggle. |
 
@@ -185,7 +187,7 @@ The details are in [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) and [`docs/INT
 
 ## Privacy
 
-wisp has no servers and no analytics. It connects to Gmail only after you add an account, and reads Now Playing, your calendar and your Claude Code sessions locally on your Mac. Your calendar is only read and never leaves the Mac; for the weather, only the coordinates of the place you chose go to Open-Meteo. The live spectrum analyses the sound on your Mac and never records, stores or sends it. Tool output and file contents from Claude Code never reach the app: `wisp-hook` strips them before forwarding. Passwords are stored in the macOS Keychain and nowhere else.
+wisp has no servers and no analytics. It connects to Gmail, GitHub, NS and WHOOP only after you add them, and reads Now Playing, your calendar and your Claude Code sessions locally on your Mac. Your calendar is only read and never leaves the Mac; for the weather, only the coordinates of the place you chose go to Open-Meteo. The live spectrum analyses the sound on your Mac and never records, stores or sends it. Tool output and file contents from Claude Code never reach the app: `wisp-hook` strips them before forwarding. Your WHOOP scores are only kept in memory and never leave the Mac. Passwords are stored in the macOS Keychain and nowhere else.
 
 ## Credits
 
