@@ -4,7 +4,8 @@ import Foundation
 @MainActor
 enum IntegrationConnections {
     static func current(
-        mail: MailStore = .shared, github: GitHubStore = .shared, departure: DepartureStore = .shared
+        mail: MailStore = .shared, github: GitHubStore = .shared, departure: DepartureStore = .shared,
+        whoop: WhoopStore = .shared
     ) -> [IntegrationID: IntegrationConnection] {
         var result: [IntegrationID: IntegrationConnection] = [:]
         var mailProblem: String?
@@ -28,6 +29,12 @@ enum IntegrationConnections {
             detail: String(localized: "Connected · @\(login)"))
 
         if departure.hasNSKey { result[.ns] = .connected(String(localized: "Connected")) }
+
+        var whoopProblem: String?
+        if case .signedOut = whoop.status { whoopProblem = String(localized: "Signed out · reconnect") }
+        result[.whoop] = .make(
+            isStored: whoop.hasConnection, isReady: whoop.status == .connected, problem: whoopProblem,
+            detail: whoop.firstName.map { String(localized: "Connected · \($0)") } ?? String(localized: "Connected"))
         #if DEBUG
             // `-pretendNotConnected '("ns")'` for snapshots of a row that still needs setting up.
             for name in UserDefaults.standard.stringArray(forKey: "pretendNotConnected") ?? [] {

@@ -42,7 +42,7 @@ The boards in [`design/boards/`](../design/boards) are the visual source of trut
 | [11](../design/boards/11-compact-notch-states.png) | closed notch: departure and GitHub states |
 | [11.1](../design/boards/11.1-open-notch-home-layouts.png) | Home with 4, 3, 2 and 1 places |
 | [11.2](../design/boards/11.2-home-items-three-sizes.png) | Home items in three sizes (the large *In progress* with focus time and last commit comes later) |
-| [11.3](../design/boards/11.3-integration-tab-template.png) | template for an integration's tab (planned) |
+| [11.3](../design/boards/11.3-integration-tab-template.png) | template for an integration's tab: metrics (WHOOP), list, *No data yet*, *Connection lost* |
 | [12](../design/boards/12-departure.png) | Departure |
 | [13](../design/boards/13-github.png) | GitHub |
 | [14](../design/boards/14-settings-departure.png) | Settings: Departure |
@@ -99,6 +99,9 @@ The icons live in `Wisp/Resources/Assets.xcassets`. `AppIcon` uses the 1024 × 1
 | Review requests | `info` | `#0A84FF`, whatever the accent |
 | Rain | `rain` | `#64D2FF` |
 | NS badge | `nsYellow` | `#FFC917` |
+| WHOOP deep sleep | `sleepDeep` | `#5E5CE6` |
+| WHOOP REM sleep | `sleepREM` | `#BF5AF2` |
+| WHOOP recovery 34–66 | `recoveryYellow` | `#FFD60A` |
 | Accent (Settings) | `Accent` | `#0A84FF` (default), `#30D158`, `#FF9F0A`, `#BF5AF2`; each with a `hover` and a `pressed` shade |
 
 ## Shapes and type
@@ -348,7 +351,13 @@ Places in the 572 × 150 pt area: small 281 × 70, medium 281 × 150, large 572 
 
 Less room means less information, never smaller text. Settings → Notch has the plan and *Edit*; the chooser is a popover. Each thing appears once: picking one that is elsewhere swaps the two.
 
-Not on the boards yet: WHOOP and Notion arrive with their integrations. *In progress* large is the medium card at full width for now. The next event uses today's calendar and says *Nothing planned* otherwise.
+Not on Home yet: WHOOP (board 11.2) comes with its Settings page (board 10.9), Notion with its integration. *In progress* large is the medium card at full width for now. The next event uses today's calendar and says *Nothing planned* otherwise.
+
+## An integration's tab (board 11.3)
+
+Every integration's tab is built the same way (`IntegrationTab`): a 28 pt header with the service's tile, name, a dot and a status (*Synced 5 min ago*, grey *Connected · waiting for data*, red *Connection lost · since 09:12*) and *Open <service> ↗* on the right, above a 572 × 114 area. That area holds up to three equal `IntegrationMetric` tiles, a list of up to three rows (with Vercel), or an `IntegrationStateCard`: *No data yet* with *Refresh*, or *signed wisp out* with *Manage* and *Reconnect*. An integration's tab only exists while it is connected.
+
+WHOOP: recovery with the last seven scores as bars (only today's in its zone colour: green from 67, yellow from 34, red below), sleep as a bar of deep, light, REM and awake, strain on its 0–21 scale. The board's strain goal isn't in WHOOP's API, so the line under strain shows the calories instead.
 
 ## Language
 

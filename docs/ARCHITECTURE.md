@@ -21,6 +21,7 @@ wisp.app
 | `Wisp/Music` | `NowPlaying` (bridge process), `AudioOutput` (device, quality, volume), `Spectrum`, `AudioTap` and `SpectrumAnalyzer` (live spectrum) |
 | `Wisp/Departure` | `Core`: the departure engine, models and provider protocols (no UI, unit tested) |
 | `Wisp/GitHub` | `GitHubStore`; `Core`: the API client, models and radar logic (no UI, unit tested) |
+| `Wisp/WHOOP` | `WhoopStore`; `Core`: the OAuth steps, the API client and the parsers (no UI, unit tested) |
 | `Wisp/Integrations` | `Core`: the catalog behind *Add integration*, what the Manage window and the Integrations list show (no UI, unit tested) |
 | `Wisp/Agenda` | `AgendaStore` (EventKit, today's events, shifts) and `WeatherStore` (Open-Meteo) |
 | `Wisp/Clipboard` | `ClipboardStore`: the last 20 copied texts, stored in `clipboard.json` |
@@ -139,6 +140,18 @@ GitHub REST/GraphQL ◄─ GitHubClient (ETags, rate limit) ◄─ RadarSync ◄
 - **The closed notch**: `Radar.compact` picks one indicator; `StatusWings` turns it into text and `NotchController.setStatus` gives it room (grow the window, then spring the shape; shrink the shape, then the window). `NotchModel.wings` decides what shows when several want the wings. The spinner steps ten times a second through a `TimelineView` and only exists while a run is going. Looking at the tab acknowledges failures, reviews and comments.
 - **`RadarSeen`** (UserDefaults, `githubSeen`) remembers what was reported, per commit and per pull request, so an animation goes off once and not again after a restart. It holds no secrets, only repository names and numbers.
 
+
+## WHOOP
+
+```
+browser ─► wisp://oauth/whoop ─► AppDelegate.application(_:open:) ─► WhoopStore.handle
+WHOOP v2 API ◄─ WhoopClient (actor: token refresh, one at a time) ◄─ WhoopStore ─► WhoopTab
+```
+
+- `Wisp/WHOOP/Core` is free of UI and compiled by the tests: `WhoopOAuth` (authorize URL, callback parsing, token requests), `WhoopClient` (requests, a 401 means one refresh, a refused refresh means `signedOut`), `WhoopParser` (the v2 collections → `WhoopToday`).
+- **`WhoopStore`** keeps the client ID, secret and tokens in the Keychain and the scores in memory. While connected one task sleeps 30 minutes between rounds; waking from sleep and opening the tab ask again if the last answer is older. `signIn` waits for the browser with a checked continuation that the callback, a five-minute timeout or closing the Manage window resolves.
+- **The tab** is `WhoopTab` on the shared `IntegrationTab` template (board 11.3). It only exists while WHOOP is connected: the store sets `Preferences.unavailableTabs`, which `availableTabs` (Settings → Notch) and `visibleTabs` (the tab bar) leave out. A first connection puts the tab right after GitHub, so it doesn't land in *More*. `-whoopDemo data|empty|signedOut` draws the tab without an account.
+
 ## Departure assistant
 
 `Wisp/Departure/Core` holds the logic, free of clock, network and UI. `DepartureEngine.plan` turns calendar events and settings into the one trip that matters (or none), `nextWake` says when that can next change, and `resolve` turns the providers' answers into one `DepartureOutput`: what to show, in which colour, how many minutes, which alternatives. `RoutineDetector` fills in the location of repeating events that have none, and `EventLocation` tells a place from a video call. Providers sit behind `TravelProvider`, `RainProvider` and `PlaceLookup`, with mocks.
@@ -177,14 +190,14 @@ GitHub REST/GraphQL ◄─ GitHubClient (ETags, rate limit) ◄─ RadarSync ◄
 ## Settings and secrets
 
 - The Settings window (boards 10.1–10.6) is one `NSWindow` with a full-size content view: `SettingsView` draws the sidebar and the page that `SettingsNavigation.shared.page` names, so other places can open a given page (the Mail tab's *Connect Gmail* opens *Integrations*). Pages are built from `SettingsPage`, `SettingsGroup` (a header above a card; rows split by hairlines) and `SettingsRow`. The options of single tabs (Mail, Clipboard, System) sit under *Notch*, behind a click on the tab.
-- The tab bar shows `Preferences.visibleTabs`: `tabOrder` (all tabs, saved as `tabOrder`; tabs a later version adds go at the end) minus `hiddenTabs` (`hiddenTabs`; never Home), with Home always first. Above 8 tabs `TabBarLayout` moves the rest to *More*. Settings → Notch reorders with SwiftUI drag and drop (`onDrag` / `DropDelegate`, moving live while hovering). Opening the notch on a hidden tab, or hiding the open one, shows Home. A hidden Departure or GitHub tab also shows no status on the closed notch. What Home shows is a `HomeLayout` of one to four `HomeItem`s (`homeLayout`); each item draws itself per `HomePlace`.
+- The tab bar shows `Preferences.visibleTabs`: `tabOrder` (all tabs, saved as `tabOrder`; tabs a later version adds go at the end) minus `hiddenTabs` (`hiddenTabs`; never Home) and `unavailableTabs` (integrations that aren't connected), with Home always first. Above 8 tabs `TabBarLayout` moves the rest to *More*. Settings → Notch reorders with SwiftUI drag and drop (`onDrag` / `DropDelegate`, moving live while hovering). Opening the notch on a tab that isn't in the bar, or hiding or disconnecting the open one, shows Home. A hidden Departure or GitHub tab also shows no status on the closed notch. What Home shows is a `HomeLayout` of one to four `HomeItem`s (`homeLayout`); each item draws itself per `HomePlace`.
 
 - `Preferences` (UserDefaults): accent colour, close delay, sounds, open at login (`SMAppService`), and the language (`AppleLanguages` in wisp's own domain, the same key System Settings → Language & Region → Apps uses; applied after a restart). `Spectrum` keeps the spectrum permission choice (`spectrumConsent`); `AgendaStore` the hidden calendars, the shift calendar and the ride (`agenda…`); `DepartureStore` the home address, the transport, the notifications and your choice per location (`departureSettings`); `WeatherStore` the place (`weatherPlace`); `FocusStore` the duration, the two options, the learned tasks and today's numbers (`focus…`).
 - `Keychain`: generic passwords under the service `com.ahmadalasmi.wisp`, accessible after first unlock, this device only. Nothing secret is ever written to UserDefaults, to disk or to git.
 
 ## Performance rules
 
-- Closed: no timers, no animations, nothing redrawn, with these exceptions: the clipboard history checks the pasteboard's change count once a second (see [Clipboard](#clipboard)), and a connected GitHub account has one pending wake-up (see [CI & PR radar](#ci--pr-radar)); so does a home address (see [Departure assistant](#departure-assistant)); all can be switched off. The only other background work is event-driven (the hook socket, the IMAP IDLE connection, the Now Playing bridge).
+- Closed: no timers, no animations, nothing redrawn, with these exceptions: the clipboard history checks the pasteboard's change count once a second (see [Clipboard](#clipboard)), and a connected GitHub account has one pending wake-up (see [CI & PR radar](#ci--pr-radar)); so does a home address (see [Departure assistant](#departure-assistant)), and a connected WHOOP account sleeps 30 minutes between rounds (see [WHOOP](#whoop)); all can be switched off. The only other background work is event-driven (the hook socket, the IMAP IDLE connection, the Now Playing bridge).
 - Open: views that tick (the session timer, the music progress) use `TimelineView(.periodic)` at one update per second or once a minute, and only exist while their tab is visible.
 - A running focus session redraws its ring and time once a second, in the tab and on the closed notch. Nothing runs before or after a session.
 - The live spectrum and the music wings are the exception: they move while music plays, because that is what they are for. The audio tap only runs while one of them is on screen and music plays (music wings hidden under a focus session or a status count as off screen): about 3–4 % CPU for the Release build (the FFT itself is a fraction of that; the rest is drawing). Bars are drawn in a single `Canvas`, and only the views that draw them observe `SpectrumLevels`, so nothing else redraws 30 times a second. Measure in Release: a Debug build is several times slower.

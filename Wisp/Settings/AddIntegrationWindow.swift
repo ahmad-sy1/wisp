@@ -8,9 +8,10 @@ struct AddIntegrationOverlay: View {
     @ObservedObject private var mail = MailStore.shared
     @ObservedObject private var github = GitHubStore.shared
     @ObservedObject private var departure = DepartureStore.shared
+    @ObservedObject private var whoop = WhoopStore.shared
 
     private var added: Set<IntegrationID> {
-        prefs.addedIntegrations.union(IntegrationConnections.current(mail: mail, github: github, departure: departure).keys)
+        prefs.addedIntegrations.union(IntegrationConnections.current(mail: mail, github: github, departure: departure, whoop: whoop).keys)
     }
 
     var body: some View {

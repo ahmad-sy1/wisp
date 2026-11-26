@@ -64,8 +64,15 @@ final class Preferences: ObservableObject {
         didSet { defaults.set(addedIntegrations.map(\.rawValue), forKey: Key.addedIntegrations) }
     }
 
+    /// Integration tabs whose service isn't connected: they don't exist yet, not even in
+    /// Settings → Notch. Set by the integrations themselves; not saved.
+    @Published var unavailableTabs: Set<WispTab> = [.whoop]
+
+    /// Every tab that can be shown, in order.
+    var availableTabs: [WispTab] { tabOrder.filter { !unavailableTabs.contains($0) } }
+
     /// The tabs in the tab bar, in order.
-    var visibleTabs: [WispTab] { tabOrder.filter { !hiddenTabs.contains($0) } }
+    var visibleTabs: [WispTab] { availableTabs.filter { !hiddenTabs.contains($0) } }
 
     /// wisp's own language; `.system` follows macOS. Takes effect after a restart.
     @Published var language: AppLanguage {
@@ -135,6 +142,11 @@ final class Preferences: ObservableObject {
         order.remove(at: from)
         order.insert(tab, at: to)
         tabOrder = order
+    }
+
+    /// A newly connected integration's tab goes next to `other`, so it doesn't land in *More*.
+    func placeTab(_ tab: WispTab, after other: WispTab) {
+        tabOrder = TabBarLayout.placing(tab, after: other, in: tabOrder)
     }
 
     func setTab(_ tab: WispTab, shown: Bool) {
