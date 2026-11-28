@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Page dots on the closed notch: with the mouse on it and more than one alert, small dots under the camera show how many there are and which one you see
 - Swipe through the closed notch: with the mouse on it, two fingers sideways (one on a Magic Mouse, a click of a scroll wheel) show the next alert; the content follows the fingers, settles on the nearest and springs to its width, comes back to the most important one 4 s after the mouse leaves, and a click opens the tab of the alert you see
 - Closed notch: one list of everything that wants to show (focus, departure, CI failed, review, comments, music, CI running, unread mail), in the same order as before. Nothing changes on screen yet: a failed run, a review and new comments now wait in the list behind what shows instead of being dropped, ready for swiping
 - WHOOP: recovery, sleep and strain in a tab of its own (board 11.3), signed in through the browser with your own WHOOP developer app; every integration's tab now shares one template with *No data yet* and *Connection lost* states
