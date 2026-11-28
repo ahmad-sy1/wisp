@@ -197,6 +197,9 @@ struct NotchPager: Equatable {
         chosen = nil
     }
 
+    /// The panel or a peek opened over the closed notch: any drag ends, the first alert shows.
+    mutating func stop() { reset() }
+
     // MARK: - Private
 
     private mutating func endDrag() {

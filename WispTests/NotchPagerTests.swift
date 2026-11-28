@@ -143,6 +143,17 @@ final class NotchPagerTests: XCTestCase {
         XCTAssertEqual(pager.visible, .ciFailed)
     }
 
+    func testStoppingEndsADragAndShowsTheFirst() {
+        var pager = pager()
+        pager.step(by: 1)
+        pager.dragBegan()
+        pager.dragChanged(by: 20)
+        pager.stop()
+        XCTAssertTrue(pager.isIdle)
+        XCTAssertEqual(pager.visible, .departure)
+        XCTAssertEqual(pager.offset(of: 0), 0)
+    }
+
     // MARK: - The list changes
 
     func testKeepsShowingTheSameAlertWhenOthersComeAndGo() {

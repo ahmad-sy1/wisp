@@ -348,12 +348,13 @@ final class NotchController {
         return true
     }
 
-    /// Shows the most important alert again (opening the panel or a peek starts from there).
+    /// Shows the most important alert again. Opening the panel or a peek starts from there, and
+    /// ends a swipe that was going: its last scrolls go to the panel, not to the closed notch.
     private func backToFirst(animated: Bool = false) {
         returnWork?.cancel()
         returnWork = nil
         var pager = model.pager
-        pager.returnToFirst()
+        if animated { pager.returnToFirst() } else { pager.stop() }
         if animated {
             changeClosed(alerts: model.alerts, pager: pager)
         } else {
