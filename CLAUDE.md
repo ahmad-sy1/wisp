@@ -48,6 +48,7 @@ The owner is Ahmad. Talk to him in Dutch; code, comments, commits, docs, PR desc
 2. Small, logical commits in Conventional Commits style.
 3. Build, then `./scripts/install.sh` and check the change in the running app:
    - Debug builds open on a tab with `--args -openOnLaunch <tab>` (for screenshots); add `-snapshot </absolute/path.png>` to draw the panel to a PNG and quit, which also works with the screen locked.
+   - Touched the closed notch: run `./scripts/snapshots.sh`; for a change you meant, `record` and commit the new references.
    - Claude Code can be simulated with fake hook events (see [`CONTRIBUTING.md`](CONTRIBUTING.md)); end test sessions with `SessionEnd`.
    - Anything that animates: measure CPU on the **Release** build (Debug is several times slower).
    - Say plainly what you could not test (hover, clicks, permission prompts need Ahmad).

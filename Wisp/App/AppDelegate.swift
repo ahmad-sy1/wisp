@@ -28,6 +28,16 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         let notch = NotchController()
         notch.openSettings = { [weak self] in self?.openSettings() }
         self.notch = notch
+        #if DEBUG
+            // `-listSnapshotScenes YES`: the names `scripts/snapshots.sh` can ask for.
+            if UserDefaults.standard.bool(forKey: "listSnapshotScenes") {
+                print(SnapshotScene.allCases.map(\.rawValue).joined(separator: "\n"))
+                exit(0)
+            }
+            if let scene = SnapshotScene.requested {
+                return snapshotScene(scene, notch: notch)
+            }
+        #endif
         setUpStatusItem()
         setUpEditMenu()
         startClaudeHooks(notch: notch)
@@ -72,6 +82,27 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             }
         #endif
     }
+
+    #if DEBUG
+        /// `-snapshotScene ci-failed -snapshot /abs/path.png`: draws one fixed state of the closed
+        /// notch and quits, for `scripts/snapshots.sh`. Nothing live starts: no hooks, mail, music,
+        /// GitHub, shortcut or menu bar item, so it can run next to the installed wisp.
+        private func snapshotScene(_ scene: SnapshotScene, notch: NotchController) {
+            guard notch.model.hasNotch else {
+                // Wings only show next to a real notch: an external screen alone can't do this.
+                FileHandle.standardError.write(Data("wisp: snapshot scenes need the built-in screen with a notch\n".utf8))
+                exit(2)
+            }
+            notch.ignoreMouse()
+            scene.apply(to: notch)
+            let path = UserDefaults.standard.string(forKey: "snapshot")
+            let delay = UserDefaults.standard.object(forKey: "snapshotDelay") as? Double ?? 1.5
+            DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
+                let written = path.map { notch.snapshot(to: URL(fileURLWithPath: $0)) } ?? false
+                exit(written ? 0 : 1)
+            }
+        }
+    #endif
 
     /// Opening wisp again (Spotlight, Finder, Dock) shows Settings: on a full menu bar
     /// macOS hides the status item behind the notch, so this is the fallback way in.

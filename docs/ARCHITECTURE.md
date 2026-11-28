@@ -37,7 +37,8 @@ wisp.app
 | `Shared` | code used by both the app and `wisp-hook` (the socket path) |
 | `Helpers` | `NowPlayingBridge.m`, compiled into the dylib by a build phase |
 | `design/boards` | the design boards: the visual source of truth |
-| `scripts` | `install.sh` and `release.sh` |
+| `snapshots` | reference PNGs of the closed notch for `scripts/snapshots.sh` |
+| `scripts` | `install.sh`, `release.sh`, `test.sh`, `snapshots.sh` (with `imagediff.swift`), `format.sh` and `strings.py` |
 
 ## The notch
 

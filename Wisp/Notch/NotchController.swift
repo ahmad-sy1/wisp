@@ -194,6 +194,12 @@ final class NotchController {
             guard let png = rep.representation(using: .png, properties: [:]) else { return false }
             return (try? png.write(to: url)) != nil
         }
+
+        /// For a snapshot scene: the mouse passes through to the installed wisp underneath, so
+        /// moving over the notch or clicking it can't change what the snapshot shows.
+        func ignoreMouse() {
+            panel.ignoresMouseEvents = true
+        }
     #endif
 
     /// Shows or hides the music wings on the closed notch.
