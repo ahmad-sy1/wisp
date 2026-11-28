@@ -69,7 +69,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             }
             if let path = UserDefaults.standard.string(forKey: "snapshot") {
                 // `-snapshotDelay 8` for data that takes longer to arrive.
-                let delay = UserDefaults.standard.object(forKey: "snapshotDelay") as? Double ?? 3
+                // From the command line the value is text, so `double(forKey:)` and not `as? Double`.
+                let delay =
+                    UserDefaults.standard.object(forKey: "snapshotDelay") != nil
+                    ? UserDefaults.standard.double(forKey: "snapshotDelay") : 3
                 DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
                     let url = URL(fileURLWithPath: path)
                     if settingsPage != nil { self.snapshotSettings(to: url) } else { notch.snapshot(to: url) }
