@@ -113,6 +113,6 @@ extension StatusWings {
         self.init(
             icon: .symbol(output.plan.mode.symbol, output.timeUrgency == .normal ? Theme.textPrimary : output.timeUrgency.color),
             left: left, leftColor: output.timeUrgency.color,
-            right: right, rightColor: rightColor, rightSymbol: rightSymbol, urgent: true, tab: .departure)
+            right: right, rightColor: rightColor, rightSymbol: rightSymbol, tab: .departure)
     }
 }

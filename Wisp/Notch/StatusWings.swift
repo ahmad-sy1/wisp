@@ -19,8 +19,6 @@ struct StatusWings: Equatable {
     var rightColor: Color = Theme.textSecondary
     /// An optional symbol before the right text (the rain cloud).
     var rightSymbol: String?
-    /// Urgent statuses go above the music wings; others wait until the music stops.
-    var urgent: Bool
     /// The tab a click on the notch opens.
     var tab: WispTab
 
@@ -116,33 +114,31 @@ struct RunSpinner: View {
 }
 
 extension StatusWings {
-    /// The radar's indicator as wings (design page 1). Only a run going waits behind music.
+    /// The radar's indicator as wings (design page 1). Where it goes in the list is `RadarCompact.slot`.
     init(_ compact: RadarCompact) {
         switch compact {
         case .running(let completed, let total):
             self.init(
-                icon: .spinner, left: "CI", right: "\(completed)/\(total)",
-                urgent: false, tab: .github)
+                icon: .spinner, left: "CI", right: "\(completed)/\(total)", tab: .github)
         case .failed(let pull):
             self.init(
                 icon: .symbol("xmark.circle", Theme.badge), left: "CI", leftColor: Theme.badge,
-                right: "#\(pull.number)", urgent: true, tab: .github)
+                right: "#\(pull.number)", tab: .github)
         case .reviewRequested(_, let count):
             let symbol = WispTab.github.symbol
             if count == 1 {
                 self.init(
                     icon: .symbolDot(symbol, Theme.info), left: "", right: String(localized: "Review"),
-                    rightColor: Theme.textPrimary, urgent: true, tab: .github)
+                    rightColor: Theme.textPrimary, tab: .github)
             } else {
                 self.init(
                     icon: .symbol(symbol, Theme.info), left: "\(count)", leftColor: Theme.info,
-                    right: String(localized: "Reviews"), rightColor: Theme.textPrimary,
-                    urgent: true, tab: .github)
+                    right: String(localized: "Reviews"), rightColor: Theme.textPrimary, tab: .github)
             }
         case .newActivity(let pull, let count):
             self.init(
                 icon: .symbolDot(WispTab.github.symbol, Theme.warning), left: "#\(pull.number)",
-                right: "\(count)", rightColor: Theme.textPrimary, rightSymbol: "text.bubble", urgent: true, tab: .github)
+                right: "\(count)", rightColor: Theme.textPrimary, rightSymbol: "text.bubble", tab: .github)
         }
     }
 }
