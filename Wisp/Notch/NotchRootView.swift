@@ -17,16 +17,16 @@ struct NotchRootView: View {
 
             if model.isCollapsed {
                 switch model.wings {
-                case .focus:
+                case .focus?:
                     FocusWings(
                         focus: focus, color: prefs.accent.color,
                         height: model.notchSize.height, wing: model.wingWidth
                     )
                     .transition(.opacity)
-                case .status(let status):
+                case .status(let status)?:
                     StatusWingsView(status: status, height: model.notchSize.height)
                         .transition(.opacity)
-                case .music:
+                case .music?:
                     if let track = player.track {
                         MusicWings(
                             track: track, levels: spectrum.isRunning && prefs.miniSpectrum ? spectrum.levels : nil,
@@ -34,10 +34,10 @@ struct NotchRootView: View {
                         )
                         .transition(.opacity)
                     }
-                case .mail:
+                case .mail?:
                     MailWings(count: model.unreadCount, height: model.notchSize.height, wing: model.wingWidth)
                         .transition(.opacity)
-                case .none:
+                case nil:
                     EmptyView()
                 }
             }

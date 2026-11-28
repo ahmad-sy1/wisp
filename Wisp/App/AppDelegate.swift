@@ -121,7 +121,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             .map { count, show in show && count > 0 }
             .removeDuplicates()
             .receive(on: RunLoop.main)
-            .sink { on in notch.setMailWings(on) }
+            .sink { on in notch.report(.mail, on ? .mail : nil) }
             .store(in: &subscriptions)
         mail.onNewMail = { message in
             let focus = FocusStore.shared
@@ -159,7 +159,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             .removeDuplicates()
             // @Published fires before the new value is stored; let the wings appear after.
             .receive(on: RunLoop.main)
-            .sink { active in notch.setFocusWings(active) }
+            .sink { active in notch.report(.focus, active ? .focus : nil) }
             .store(in: &subscriptions)
         // Never over a permission request: the panel stays on the question until it is answered.
         focus.onFinished = {
@@ -183,19 +183,26 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             .removeDuplicates()
             .sink { count in notch.model.badges[.github] = count }
             .store(in: &subscriptions)
-        // One status on the notch, and none for a tab that is switched off.
-        github.$compact
+        // Every GitHub alert in its own place on the closed notch, none for a switched-off tab.
+        github.$alerts
             .removeDuplicates()
-            .combineLatest(DepartureStore.shared.$output.removeDuplicates(), Preferences.shared.$hiddenTabs.removeDuplicates())
+            .combineLatest(Preferences.shared.$hiddenTabs.map { !$0.contains(.github) }.removeDuplicates())
             // @Published fires before the new value is stored.
             .receive(on: RunLoop.main)
-            .sink { compact, output, hidden in
-                notch.setStatus(
-                    ClosedNotchStatus.pick(
-                        trip: output.map { StatusWings($0) },
-                        tripTabOn: !hidden.contains(.departure),
-                        github: StatusWings(compact),
-                        githubTabOn: !hidden.contains(.github)))
+            .sink { alerts, tabOn in
+                let bySlot = Dictionary(alerts.map { ($0.slot, $0) }, uniquingKeysWith: { first, _ in first })
+                for slot in [ClosedNotchSlot.ciFailed, .review, .comments, .ciRunning] {
+                    notch.report(slot, bySlot[slot].map { .status(StatusWings($0)) }, tabOn: tabOn)
+                }
+            }
+            .store(in: &subscriptions)
+        // A trip is one place on the closed notch, whatever it shows inside.
+        DepartureStore.shared.$output
+            .removeDuplicates()
+            .combineLatest(Preferences.shared.$hiddenTabs.map { !$0.contains(.departure) }.removeDuplicates())
+            .receive(on: RunLoop.main)
+            .sink { output, tabOn in
+                notch.report(.departure, output.map { .status(StatusWings($0)) }, tabOn: tabOn)
             }
             .store(in: &subscriptions)
         github.onEvent = { event in
@@ -252,7 +259,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
         player.$isActive
             .removeDuplicates()
-            .sink { active in notch.setMusicWings(active) }
+            .sink { active in notch.report(.music, active ? .music : nil) }
             .store(in: &subscriptions)
 
         // The spectrum follows what plays and stops when it pauses.
@@ -272,8 +279,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
         // The closed-notch wings show the mini-spectrum only while the music wings are what
         // the notch really shows (no focus session or status on top), if it isn't switched off.
-        notch.model.$musicWings
-            .combineLatest(notch.model.$focusWings, notch.model.$statusWings, notch.model.$phase)
+        notch.model.$alerts
+            .combineLatest(notch.model.$phase)
             .combineLatest(Preferences.shared.$miniSpectrum)
             // @Published fires before the new value is stored, and `wings` reads what is stored.
             .receive(on: RunLoop.main)

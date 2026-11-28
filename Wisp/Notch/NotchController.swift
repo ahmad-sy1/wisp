@@ -21,9 +21,8 @@ final class NotchController {
     /// Opened with the shortcut: stays until the shortcut, Esc or a click elsewhere.
     private var keyboardOpen = false
     private var outsideClickMonitors: [Any] = []
-    /// The wings each source asks for; shown only on a screen with a notch.
-    private var wantedWings: [ReferenceWritableKeyPath<NotchModel, Bool>: Bool] = [:]
-    private var wantedStatus: StatusWings?
+    /// What every feature reported; the model gets it only on a screen with a notch.
+    private var reported = ClosedNotchList<NotchModel.Wings>()
     /// Asked of the window, not remembered from enter and exit events: those don't come
     /// when the window changes size under a mouse that stands still. `NSMouseInRect`: on the
     /// top row of pixels the mouse is at maxY, which `contains` leaves out.
@@ -196,19 +195,15 @@ final class NotchController {
         }
     #endif
 
-    /// Shows or hides the music wings on the closed notch.
-    func setMusicWings(_ on: Bool) { setWings(\.musicWings, on) }
+    /// A feature fills its place in the closed notch's list while it is active, and empties it
+    /// with nil when it isn't. The notch decides what shows; the order is `ClosedNotchSlot`'s.
+    func report(_ slot: ClosedNotchSlot, _ wings: NotchModel.Wings?, tabOn: Bool = true) {
+        reported.set(slot, wings, tabOn: tabOn)
+        showReported()
+    }
 
-    /// Shows or hides the focus timer's wings on the closed notch.
-    func setFocusWings(_ on: Bool) { setWings(\.focusWings, on) }
-
-    /// Shows or hides the unread-mail wings on the closed notch.
-    func setMailWings(_ on: Bool) { setWings(\.mailWings, on) }
-
-    /// Shows a status (CI, reviews, departure) on the closed notch; nil takes it away.
-    func setStatus(_ status: StatusWings?) {
-        wantedStatus = status
-        changeWings(\.statusWings, to: model.hasNotch ? status : nil)
+    private func showReported() {
+        changeAlerts(to: model.hasNotch ? reported : ClosedNotchList())
     }
 
     /// The notch drops 2 pt and springs back, once per event.
@@ -234,30 +229,25 @@ final class NotchController {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: end)
     }
 
-    private func setWings(_ wings: ReferenceWritableKeyPath<NotchModel, Bool>, _ wanted: Bool) {
-        wantedWings[wings] = wanted
-        changeWings(wings, to: wanted && model.hasNotch)
-    }
-
     /// Changes what the wings show. Growing: the window first, then the shape springs out into
     /// it. Shrinking: the shape first, then the window. Same size: only the content changes.
-    private func changeWings<Value: Equatable>(_ wings: ReferenceWritableKeyPath<NotchModel, Value>, to new: Value) {
-        let old = model[keyPath: wings]
+    private func changeAlerts(to new: ClosedNotchList<NotchModel.Wings>) {
+        let old = model.alerts
         guard old != new else { return }
         let before = model.restingSize
-        model[keyPath: wings] = new
+        model.alerts = new
         let after = model.restingSize
-        model[keyPath: wings] = old
+        model.alerts = old
         if !model.isCollapsed || after == before {
-            withAnimation(.easeInOut(duration: 0.2)) { model[keyPath: wings] = new }
+            withAnimation(.easeInOut(duration: 0.2)) { model.alerts = new }
         } else if after.width > before.width {
-            model[keyPath: wings] = new
+            model.alerts = new
             panel.setFrame(collapsedFrame, display: true)
-            model[keyPath: wings] = old
-            withAnimation(openSpring) { model[keyPath: wings] = new }
+            model.alerts = old
+            withAnimation(openSpring) { model.alerts = new }
         } else {
             withAnimation(closeSpring) {
-                model[keyPath: wings] = new
+                model.alerts = new
             } completion: { [weak self] in
                 guard let self, self.model.isCollapsed else { return }
                 self.panel.setFrame(self.collapsedFrame, display: true)
@@ -319,8 +309,7 @@ final class NotchController {
         geometry = .current()
         applyGeometry()
         // The lid closed or opened: wings only make sense next to a real notch.
-        for (wings, wanted) in wantedWings { setWings(wings, wanted) }
-        setStatus(wantedStatus)
+        showReported()
         let frame = model.isCollapsed ? collapsedFrame : geometry.frame(for: model.shapeSize)
         panel.setFrame(frame, display: true)
     }

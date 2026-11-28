@@ -117,10 +117,8 @@ struct RunSpinner: View {
 
 extension StatusWings {
     /// The radar's indicator as wings (design page 1). Only a run going waits behind music.
-    init?(_ compact: RadarCompact) {
+    init(_ compact: RadarCompact) {
         switch compact {
-        case .none:
-            return nil
         case .running(let completed, let total):
             self.init(
                 icon: .spinner, left: "CI", right: "\(completed)/\(total)",
