@@ -241,7 +241,7 @@ The rest waits behind the first, and a swipe with the mouse on the closed notch 
 | Width | every alert keeps its own wing width (at most 96 + 12 pt, both wings equal). During a drag the width goes between the two alerts in proportion; after settling it springs to the new width with the open/close spring. Never wider than the alert that shows needs |
 | Scroll wheel | one click is one alert, down or right for the next, with a short rest so a fast spin doesn't race through the list |
 | Back | about 4 s after the mouse left, the most important alert shows again |
-| Urgent | an urgent alert (focus, a trip, CI failed, a review, comments) that arrives while you browse takes you to it with the tick, or when the fingers lift. Music, a run going and unread mail don't |
+| Urgent | an urgent alert (focus, a trip, CI failed, a review, comments) that arrives while you browse takes you to it with the tick (for a GitHub alert only with *Tik-animatie* on; one tick when the GitHub event ticks too), or when the fingers lift. Music, a run going and unread mail don't |
 | Gone | when the alert that shows goes, the next one takes its place (the one before, if it was the last) |
 | Click | opens the tab of the alert that shows |
 | Reduce Motion | no sliding or following: it switches at the end of the gesture |
