@@ -173,14 +173,19 @@ final class RadarDiffTests: XCTestCase {
     }
 }
 
-final class RadarCompactTests: XCTestCase {
+final class RadarAlertsTests: XCTestCase {
     private let all = RadarNotifications()
 
-    func testNothingWrongShowsNothing() {
-        XCTAssertEqual(Radar.compact(snapshot: RadarSnapshot(mine: [pull(1, status: .passed)]), seen: baseline, notifications: all), .none)
+    private func alerts(_ snapshot: RadarSnapshot, _ seen: RadarSeen, _ notifications: RadarNotifications? = nil) -> [RadarCompact] {
+        Radar.alerts(snapshot: snapshot, seen: seen, notifications: notifications ?? all)
     }
 
-    func testPriorityFailedThenReviewThenCommentsThenRunning() {
+    func testNothingWrongShowsNothing() {
+        XCTAssertEqual(alerts(RadarSnapshot(mine: [pull(1, status: .passed)]), baseline), [])
+    }
+
+    /// All at once, one of each kind, most urgent first: nothing falls away any more.
+    func testEveryKindAtOnceInOrder() {
         let failed = pull(1, status: .failed, jobs: [FailedJob(name: "build", url: nil)])
         let running = { () -> PullRequest in
             var p = pull(2, status: .running)
@@ -192,13 +197,26 @@ final class RadarCompactTests: XCTestCase {
         var seen = baseline
         seen.unseenActivity = [running.id: 3]
         var snapshot = RadarSnapshot(mine: [running, failed], reviews: [review])
-        XCTAssertEqual(Radar.compact(snapshot: snapshot, seen: seen, notifications: all), .failed(failed))
+        XCTAssertEqual(
+            alerts(snapshot, seen),
+            [
+                .failed(failed), .reviewRequested(review, count: 1), .newActivity(running, count: 3),
+                .running(completed: 2, total: 5),
+            ])
         snapshot.mine = [running]
-        XCTAssertEqual(Radar.compact(snapshot: snapshot, seen: seen, notifications: all), .reviewRequested(review, count: 1))
+        XCTAssertEqual(alerts(snapshot, seen).first, .reviewRequested(review, count: 1))
         snapshot.reviews = []
-        XCTAssertEqual(Radar.compact(snapshot: snapshot, seen: seen, notifications: all), .newActivity(running, count: 3))
+        XCTAssertEqual(alerts(snapshot, seen).first, .newActivity(running, count: 3))
         seen.unseenActivity = [:]
-        XCTAssertEqual(Radar.compact(snapshot: snapshot, seen: seen, notifications: all), .running(completed: 2, total: 5))
+        XCTAssertEqual(alerts(snapshot, seen), [.running(completed: 2, total: 5)])
+    }
+
+    func testEachKindHasItsOwnPlaceOnTheNotch() {
+        let p = pull(1)
+        XCTAssertEqual(
+            [RadarCompact.failed(p), .reviewRequested(p, count: 1), .newActivity(p, count: 1), .running(completed: 0, total: 1)]
+                .map(\.slot),
+            [.ciFailed, .review, .comments, .ciRunning])
     }
 
     func testAcknowledgingClearsDotsUntilANewCommitFails() {
@@ -207,9 +225,9 @@ final class RadarCompactTests: XCTestCase {
         var seen = baseline
         seen.unseenActivity = [failed.id: 1]
         let looked = Radar.acknowledge(snapshot: snapshot, seen: seen)
-        XCTAssertEqual(Radar.compact(snapshot: snapshot, seen: looked, notifications: all), .none)
+        XCTAssertEqual(alerts(snapshot, looked), [])
         let again = RadarSnapshot(mine: [pull(1, sha: "b", status: .failed)], reviews: [pull(2)])
-        XCTAssertEqual(Radar.compact(snapshot: again, seen: looked, notifications: all), .failed(again.mine[0]))
+        XCTAssertEqual(alerts(again, looked), [.failed(again.mine[0])])
     }
 
     func testSwitchedOffNotificationsDontShow() {
@@ -217,7 +235,7 @@ final class RadarCompactTests: XCTestCase {
         off.failed = false
         off.review = false
         let snapshot = RadarSnapshot(mine: [pull(1, status: .failed)], reviews: [pull(2)])
-        XCTAssertEqual(Radar.compact(snapshot: snapshot, seen: baseline, notifications: off), .none)
+        XCTAssertEqual(alerts(snapshot, baseline, off), [])
     }
 }
 

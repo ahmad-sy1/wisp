@@ -18,13 +18,14 @@ final class GitHubStore: ObservableObject {
 
     @Published private(set) var status: Status = .disconnected
     @Published private(set) var snapshot = RadarSnapshot()
-    @Published private(set) var compact: RadarCompact = .none
+    /// What the closed notch may show, most urgent first; empty when nothing is wrong.
+    @Published private(set) var alerts: [RadarCompact] = []
     @Published private(set) var stats: ContributionStats?
     @Published private(set) var repositories: [GitHubRepository] = []
     @Published private(set) var seen: RadarSeen {
         didSet {
             if !isDemo, let data = try? JSONEncoder().encode(seen) { defaults.set(data, forKey: Key.seen) }
-            updateCompact()
+            updateAlerts()
         }
     }
 
@@ -141,7 +142,7 @@ final class GitHubStore: ObservableObject {
         statsFetched = nil
         repositories = []
         seen = RadarSeen()
-        updateCompact()
+        updateAlerts()
     }
 
     private func verifyAndKeep(token: String) {
@@ -238,7 +239,7 @@ final class GitHubStore: ObservableObject {
         seen = diff.seen
         if previous != result.snapshot || !diff.events.isEmpty { lastChange = .now }
         if tabVisible { seen = Radar.acknowledge(snapshot: snapshot, seen: seen) }
-        updateCompact()
+        updateAlerts()
         for event in diff.events { onEvent(event) }
     }
 
@@ -342,17 +343,17 @@ final class GitHubStore: ObservableObject {
         }
     }
 
-    private func updateCompact() {
+    private func updateAlerts() {
         let notifications = RadarNotifications(
             failed: notifyFailed, passed: notifyPassed, review: notifyReview,
             comments: notifyComments, tick: tickAnimation)
-        let new = Radar.compact(snapshot: snapshot, seen: seen, notifications: notifications)
-        if new != compact { compact = new }
+        let new = Radar.alerts(snapshot: snapshot, seen: seen, notifications: notifications)
+        if new != alerts { alerts = new }
     }
 
     private func saveNotifications(_ value: Bool, _ key: String) {
         defaults.set(value, forKey: key)
-        updateCompact()
+        updateAlerts()
     }
 
     private static func message(for error: Error) -> String {
