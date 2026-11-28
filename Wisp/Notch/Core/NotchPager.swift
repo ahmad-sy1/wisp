@@ -20,7 +20,7 @@ struct NotchPager: Equatable {
     static let inactiveDot = 0.32
 
     private(set) var pages: [Page] = []
-    /// The alert chosen by browsing; nil shows the first one.
+    /// The alert chosen by browsing; nil shows the first one, whichever that is.
     private(set) var chosen: ClosedNotchSlot?
     /// Finger travel since the drag began, in points; positive moves on to the next alert.
     private(set) var drag: CGFloat = 0
@@ -47,7 +47,7 @@ struct NotchPager: Equatable {
     var canBrowse: Bool { pages.count > 1 && !isQuiet }
 
     /// Somebody browsed away from the first alert: it comes back `returnDelay` after the mouse leaves.
-    var needsReturn: Bool { chosen != nil && chosen != pages.first?.slot }
+    var needsReturn: Bool { chosen != nil }
 
     /// Nothing in progress: no drag and no jump waiting. The notch needs no timer or animation.
     var isIdle: Bool { !isDragging && drag == 0 && pendingJump == nil }
@@ -133,7 +133,7 @@ struct NotchPager: Equatable {
         }
         if let chosen, !new.contains(where: { $0.slot == chosen }) {
             // The alert that showed went: the next one moves into its place.
-            self.chosen = new[min(oldIndex, new.count - 1)].slot
+            choose(min(oldIndex, new.count - 1))
             endDrag()
         }
         if let pendingJump, !new.contains(where: { $0.slot == pendingJump }) { self.pendingJump = nil }
@@ -144,8 +144,8 @@ struct NotchPager: Equatable {
             if pendingJump.map({ urgent < $0 }) ?? true { pendingJump = urgent }
             return false
         }
-        guard urgent != visible else { return false }
-        chosen = urgent
+        guard urgent != visible, let found = pages.firstIndex(where: { $0.slot == urgent }) else { return false }
+        choose(found)
         return true
     }
 
@@ -181,14 +181,14 @@ struct NotchPager: Equatable {
             jumped = false
         }
         endDrag()
-        chosen = pages.isEmpty ? nil : pages[target].slot
+        choose(target)
         return jumped
     }
 
     /// One step without following the fingers: a scroll wheel, or a swipe under Reduce Motion.
     mutating func step(by delta: Int) {
         guard canBrowse, !isDragging else { return }
-        chosen = pages[min(max(index + delta, 0), pages.count - 1)].slot
+        choose(min(max(index + delta, 0), pages.count - 1))
     }
 
     /// Back to the most important alert, `returnDelay` after the mouse left.
@@ -201,6 +201,12 @@ struct NotchPager: Equatable {
     mutating func stop() { reset() }
 
     // MARK: - Private
+
+    /// The first alert isn't pinned: landing on it means "show whatever is most important",
+    /// so something more important that arrives later goes in front.
+    private mutating func choose(_ i: Int) {
+        chosen = i == 0 || !pages.indices.contains(i) ? nil : pages[i].slot
+    }
 
     private mutating func endDrag() {
         isDragging = false

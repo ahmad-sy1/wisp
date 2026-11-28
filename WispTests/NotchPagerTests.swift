@@ -135,6 +135,26 @@ final class NotchPagerTests: XCTestCase {
         XCTAssertTrue(pager.isIdle, "back at rest: no timer or animation left")
     }
 
+    /// Swipe away and back: the notch follows the list again, so music starting in front
+    /// of a run going shows the music.
+    func testLandingBackOnTheFirstDoesntPinIt() {
+        let calm: [NotchPager.Page] = [.init(slot: .ciRunning, wing: 40), .init(slot: .mail, wing: 34)]
+        var pager = pager(calm)
+        pager.step(by: 1)
+        pager.step(by: -1)
+        XCTAssertFalse(pager.needsReturn)
+        pager.update([.init(slot: .music, wing: 34)] + calm)
+        XCTAssertEqual(pager.visible, .music)
+
+        pager.dragBegan()
+        pager.dragChanged(by: 30)
+        pager.dragChanged(by: -30)
+        pager.dragEnded()
+        pager.update(calm)
+        XCTAssertEqual(pager.visible, .ciRunning)
+        XCTAssertFalse(pager.needsReturn)
+    }
+
     func testDoesntReturnInTheMiddleOfADrag() {
         var pager = pager()
         pager.step(by: 1)
