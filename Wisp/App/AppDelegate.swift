@@ -61,6 +61,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                     .flatMap(IntegrationID.init(rawValue:))
                 openSettings()
             }
+            // `-hoverDemo YES`: the closed notch as with the mouse on it (page dots), for snapshots.
+            if UserDefaults.standard.bool(forKey: "hoverDemo") {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 3.5) { notch.model.hovering = true }
+            }
             if UserDefaults.standard.object(forKey: "swipeDemo") != nil {
                 let points = CGFloat(UserDefaults.standard.double(forKey: "swipeDemo"))
                 let lift = UserDefaults.standard.bool(forKey: "swipeDemoEnd")
