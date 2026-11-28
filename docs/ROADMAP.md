@@ -6,7 +6,7 @@ What is planned, roughly in order. Every item becomes its own branch and pull re
 
 | Item | Notes | Tracking |
 |---|---|---|
-| **Closed-notch alerts** | One list decides what the closed notch shows (`ClosedNotchList`, done). Next: swiping through it with two fingers on the closed notch, then page dots on hover. | |
+| **Closed-notch alerts** | One list decides what the closed notch shows (`ClosedNotchList`), and a swipe on the closed notch browses it (`NotchPager`): done. Next: page dots on hover. | |
 | **Files tab** | The drop zone, restyled. | |
 | **Focus task rules: sites and defaults** | Adding app/project rules is done; browser sites as a source (needs Automation) and *Default* rules are left. Board 10.6. | [#27](https://github.com/ahmad-sy1/wisp/issues/27) |
 | **Integrations rework** | Boards 0.2, 10.1.1–10.1.3, 10.3.1–10.3.4, 10.9, 10.10 and 11.1–11.3, one pull request per step: the design system (colours, corners, buttons done; the rest arrives with the parts below), *Add integration*, one Manage window, the Integrations page and sidebar (done), the Notch page with *More*, Home with 1–4 places (done), the integration tab with WHOOP (this step); next WHOOP's Settings page and Home tile (boards 10.9, 11.2), then Notion, Vercel, Resend, Cal.com, Stripe and n8n one by one. | |
