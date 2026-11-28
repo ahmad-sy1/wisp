@@ -16,30 +16,7 @@ struct NotchRootView: View {
             shape.fill(Theme.panel)
 
             if model.isCollapsed {
-                switch model.wings {
-                case .focus?:
-                    FocusWings(
-                        focus: focus, color: prefs.accent.color,
-                        height: model.notchSize.height, wing: model.wingWidth
-                    )
-                    .transition(.opacity)
-                case .status(let status)?:
-                    StatusWingsView(status: status, height: model.notchSize.height)
-                        .transition(.opacity)
-                case .music?:
-                    if let track = player.track {
-                        MusicWings(
-                            track: track, levels: spectrum.isRunning && prefs.miniSpectrum ? spectrum.levels : nil,
-                            height: model.notchSize.height, wing: model.wingWidth
-                        )
-                        .transition(.opacity)
-                    }
-                case .mail?:
-                    MailWings(count: model.unreadCount, height: model.notchSize.height, wing: model.wingWidth)
-                        .transition(.opacity)
-                case nil:
-                    EmptyView()
-                }
+                ClosedNotchStrip(model: model, prefs: prefs, player: player, spectrum: spectrum, focus: focus)
             }
 
             if let flash = model.flash {
@@ -69,6 +46,57 @@ struct NotchRootView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .tint(prefs.accent.color)
         .preferredColorScheme(.dark)
+    }
+}
+
+/// The closed notch's alerts side by side. The one that shows sits on the camera; while the
+/// fingers drag, it and its neighbour slide along. What passes under the camera can't be seen
+/// (there are no pixels), so each wing looks like its own little carousel. Only the alerts in
+/// view are drawn, so a spinner or a timer off screen doesn't run.
+private struct ClosedNotchStrip: View {
+    @ObservedObject var model: NotchModel
+    @ObservedObject var prefs: Preferences
+    @ObservedObject var player: NowPlaying
+    @ObservedObject var spectrum: Spectrum
+    @ObservedObject var focus: FocusStore
+
+    var body: some View {
+        let pager = model.pager
+        let drawn = model.reduceMotion ? (pager.pages.isEmpty ? [] : [pager.index]) : pager.drawnPages
+        ZStack(alignment: .top) {
+            ForEach(drawn, id: \.self) { i in
+                let page = pager.pages[i]
+                if let wings = model.alerts[page.slot] {
+                    content(wings, wing: page.wing, settled: i == pager.index && !pager.isDragging)
+                        .frame(width: model.notchSize.width + 2 * page.wing)
+                        .offset(x: model.reduceMotion ? 0 : pager.offset(of: i))
+                        .id(page.slot)
+                        .transition(.opacity)
+                }
+            }
+        }
+        .accessibilityElement(children: .combine)
+        .accessibilityValue(pager.pages.count > 1 ? Text("\(pager.index + 1) of \(pager.pages.count)") : Text(verbatim: ""))
+    }
+
+    @ViewBuilder
+    private func content(_ wings: NotchModel.Wings, wing: CGFloat, settled: Bool) -> some View {
+        let height = model.notchSize.height
+        switch wings {
+        case .focus:
+            FocusWings(focus: focus, color: prefs.accent.color, height: height, wing: wing)
+        case .status(let status):
+            StatusWingsView(status: status, height: height)
+        case .music:
+            if let track = player.track {
+                // The live spectrum only for music that has settled in view.
+                MusicWings(
+                    track: track, levels: settled && spectrum.isRunning && prefs.miniSpectrum ? spectrum.levels : nil,
+                    height: height, wing: wing)
+            }
+        case .mail:
+            MailWings(count: model.unreadCount, height: height, wing: wing)
+        }
     }
 }
 

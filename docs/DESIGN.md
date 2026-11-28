@@ -232,7 +232,21 @@ A status only shows while its tab is switched on in Settings → Notch.
 
 On the closed notch the wings show one thing at a time, in this order: a running focus session (ring and time), an urgent status (a trip, CI failed, review requested, new comments; board 11), music (artwork and mini spectrum, boards 9.6), a calm status (a CI run going), unread mail (an envelope and the red count, board 8). Unread mail can be switched off in Settings → Gmail.
 
-A status (`StatusWings`, board 11) has an icon and short text left of the camera and short text right of it, 12 pt semibold. Both wings are as wide as the wider one, because the window is centred on the camera. So every status is a word or a number, shorter than board 11, and the tab has the details: *CI* and *3/4* for a run, *CI* and *#47* in red for a failure, the icon with a blue dot and *Review* (or the count in blue and *Reviews*), the pull request and a comment count, and for a trip the countdown with one time or delay. A wing is at most 96 pt, and digits are measured and drawn at equal width, so a countdown or *3/4* doesn't move the notch unless it gains a digit. The notch drops 2 pt and springs back on a new event (*Tik-animatie*); CI gets a short flash of red or green. A click opens the tab it comes from. Everything stays quiet during a focus session with *Niet storen* and under a permission request.
+The rest waits behind the first, and a swipe with the mouse on the closed notch shows it (no board; Ahmad's description):
+
+| Part | Spec |
+|---|---|
+| Gesture | two fingers sideways on the trackpad, one finger on a Magic Mouse; to the left shows the next. Only with the mouse on the closed notch: scrolls anywhere else stay with the other apps. Vertical swipes do nothing |
+| Following | the content moves with the fingers. Each wing works like a small carousel: what passes the camera can't be seen. When the fingers lift it settles on the nearest alert; past the first or last it stretches at most 14 pt and springs back |
+| Width | every alert keeps its own wing width (at most 96 + 12 pt, both wings equal). During a drag the width goes between the two alerts in proportion; after settling it springs to the new width with the open/close spring. Never wider than the alert that shows needs |
+| Scroll wheel | one click is one alert, down or right for the next, with a short rest so a fast spin doesn't race through the list |
+| Back | about 4 s after the mouse left, the most important alert shows again |
+| Urgent | an urgent alert (focus, a trip, CI failed, a review, comments) that arrives while you browse takes you to it with the tick (for a GitHub alert only with *Tik-animatie* on; one tick when the GitHub event ticks too), or when the fingers lift. Music, a run going and unread mail don't |
+| Gone | when the alert that shows goes, the next one takes its place (the one before, if it was the last) |
+| Click | opens the tab of the alert that shows |
+| Reduce Motion | no sliding or following: it switches at the end of the gesture |
+
+A status (`StatusWings`, board 11) has an icon and short text left of the camera and short text right of it, 12 pt semibold. Both wings are as wide as the wider one, because the window is centred on the camera. So every status is a word or a number, shorter than board 11, and the tab has the details: *CI* and *3/4* for a run, *CI* and *#47* in red for a failure, the icon with a blue dot and *Review* (or the count in blue and *Reviews*), the pull request and a comment count, and for a trip the countdown with one time or delay. A wing is at most 96 pt, and digits are measured and drawn at equal width, so a countdown or *3/4* doesn't move the notch unless it gains a digit. The notch drops 2 pt and springs back on a new event (*Tik-animatie*); CI gets a short flash of red or green. A click opens the tab it comes from. Everything stays quiet during a focus session with *Niet storen* and under a permission request, browsing included.
 
 New mail peeks out of the notch (board 8): 420 × 132 pt, corner radius 26.
 

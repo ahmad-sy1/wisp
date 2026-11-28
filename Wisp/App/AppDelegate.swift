@@ -61,9 +61,18 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                     .flatMap(IntegrationID.init(rawValue:))
                 openSettings()
             }
+            if UserDefaults.standard.object(forKey: "swipeDemo") != nil {
+                let points = CGFloat(UserDefaults.standard.double(forKey: "swipeDemo"))
+                let lift = UserDefaults.standard.bool(forKey: "swipeDemoEnd")
+                // After the demo data has arrived.
+                DispatchQueue.main.asyncAfter(deadline: .now() + 3.5) { notch.demoSwipe(points, lift: lift) }
+            }
             if let path = UserDefaults.standard.string(forKey: "snapshot") {
                 // `-snapshotDelay 8` for data that takes longer to arrive.
-                let delay = UserDefaults.standard.object(forKey: "snapshotDelay") as? Double ?? 3
+                // From the command line the value is text, so `double(forKey:)` and not `as? Double`.
+                let delay =
+                    UserDefaults.standard.object(forKey: "snapshotDelay") != nil
+                    ? UserDefaults.standard.double(forKey: "snapshotDelay") : 3
                 DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
                     let url = URL(fileURLWithPath: path)
                     if settingsPage != nil { self.snapshotSettings(to: url) } else { notch.snapshot(to: url) }
@@ -98,6 +107,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         sessions.onNeedsAttention = { notch.expand(to: .home) }
         sessions.onAnswered = { notch.collapseSoon() }
         notch.canCollapse = { sessions.approval == nil }
+        // Browsing the closed notch stays still under a permission request and while focusing
+        // with "Do not disturb", like everything else on it.
+        notch.isQuiet = {
+            let focus = FocusStore.shared
+            return sessions.approval != nil || (focus.isActive && focus.doNotDisturb)
+        }
 
         let server = HookServer { event, reply in sessions.handle(event, reply: reply) }
         server.start()
@@ -209,6 +224,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                 notch.report(.departure, output.map { .status(StatusWings($0)) }, tabOn: tabOn)
             }
             .store(in: &subscriptions)
+        // A jump to a GitHub alert while browsing ticks only when GitHub's ticks are on.
+        notch.ticksOnJump = { slot in
+            switch slot {
+            case .ciFailed, .review, .comments, .ciRunning: github.tickAnimation
+            case .focus, .departure, .music, .mail: true
+            }
+        }
         github.onEvent = { event in
             let focus = FocusStore.shared
             // Quiet while focusing with "Do not disturb", and never over a permission request.
@@ -284,7 +306,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         // The closed-notch wings show the mini-spectrum only while the music wings are what
         // the notch really shows (no focus session or status on top), if it isn't switched off.
         notch.model.$alerts
-            .combineLatest(notch.model.$phase)
+            .combineLatest(notch.model.$phase, notch.model.$pager.map(\.visible).removeDuplicates())
             .combineLatest(Preferences.shared.$miniSpectrum)
             // @Published fires before the new value is stored, and `wings` reads what is stored.
             .receive(on: RunLoop.main)

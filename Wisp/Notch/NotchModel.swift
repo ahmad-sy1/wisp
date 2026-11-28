@@ -19,6 +19,10 @@ final class NotchModel: ObservableObject {
     /// Everything that wants to stay on the closed notch, in order (`ClosedNotchSlot`). The
     /// wings show the first; empty on a screen without a notch.
     @Published var alerts = ClosedNotchList<Wings>()
+    /// Which alert shows, and where a swipe through them stands.
+    @Published var pager = NotchPager()
+    /// System setting, read when a swipe starts: no sliding, just switching.
+    var reduceMotion = false
     @Published var unreadCount = 0
     /// How far the closed notch has dropped during a tick (2 pt and back).
     @Published var tickOffset: CGFloat = 0
@@ -50,14 +54,30 @@ final class NotchModel: ObservableObject {
         case music, mail
     }
 
-    /// What the wings show now: the most important alert, or nil.
-    var wings: Wings? { alerts.top?.content }
+    /// What the wings show now: the alert the pager stands on (the most important one unless
+    /// you browsed), or nil.
+    var wings: Wings? { pager.visible.flatMap { alerts[$0] } }
 
-    /// The width of one wing as things are now.
-    var currentWingWidth: CGFloat {
+    /// The width of one wing for `wings`: its own, always.
+    func wingWidth(for wings: Wings) -> CGFloat {
         if case .status(let status) = wings { return status.wingWidth + 12 }
         return wingWidth
     }
+
+    /// The alerts as the pager needs them.
+    func pages(for alerts: ClosedNotchList<Wings>) -> [NotchPager.Page] {
+        alerts.entries.map { NotchPager.Page(slot: $0.slot, wing: wingWidth(for: $0.content)) }
+    }
+
+    /// The width of one wing as things are now: during a swipe between the two alerts, in
+    /// proportion; under Reduce Motion the one that shows.
+    var currentWingWidth: CGFloat {
+        guard !pager.pages.isEmpty else { return wingWidth }
+        return reduceMotion ? pager.pages[pager.index].wing : pager.wing
+    }
+
+    /// The widest the wings can get while browsing: the window makes room for it during a drag.
+    var widestWing: CGFloat { pager.pages.map(\.wing).max() ?? wingWidth }
 
     /// The closed notch, including the wings when they show.
     var restingSize: CGSize {

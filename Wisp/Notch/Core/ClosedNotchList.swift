@@ -13,6 +13,15 @@ enum ClosedNotchSlot: Int, CaseIterable, Comparable, Sendable {
     case mail
 
     static func < (lhs: Self, rhs: Self) -> Bool { lhs.rawValue < rhs.rawValue }
+
+    /// An urgent alert that arrives while you browse the list takes you to it. Music, a run
+    /// going and unread mail wait their turn.
+    var isUrgent: Bool {
+        switch self {
+        case .focus, .departure, .ciFailed, .review, .comments: true
+        case .music, .ciRunning, .mail: false
+        }
+    }
 }
 
 /// Everything that wants to stay on the closed notch right now, most important first.

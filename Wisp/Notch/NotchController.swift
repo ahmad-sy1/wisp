@@ -13,6 +13,12 @@ final class NotchController {
     var openSettings: () -> Void = {}
     /// False while something needs an answer (a permission request): stay open.
     var canCollapse: () -> Bool = { true }
+    /// True while the closed notch must stay still: focus with *Do not disturb*, or a
+    /// permission request. No browsing then.
+    var isQuiet: () -> Bool = { false }
+    /// Whether an urgent alert that takes you to it while browsing ticks: GitHub's own setting
+    /// decides for GitHub alerts.
+    var ticksOnJump: (ClosedNotchSlot) -> Bool = { _ in true }
 
     private var geometry = NotchGeometry.current()
     private let panel: NotchPanel
@@ -23,6 +29,11 @@ final class NotchController {
     private var outsideClickMonitors: [Any] = []
     /// What every feature reported; the model gets it only on a screen with a notch.
     private var reported = ClosedNotchList<NotchModel.Wings>()
+    private var scrollReader = NotchScrollReader()
+    /// Brings the most important alert back a few seconds after the mouse left.
+    private var returnWork: DispatchWorkItem?
+    /// A tick is under way.
+    private var ticking = false
     /// Asked of the window, not remembered from enter and exit events: those don't come
     /// when the window changes size under a mouse that stands still. `NSMouseInRect`: on the
     /// top row of pixels the mouse is at maxY, which `contains` leaves out.
@@ -38,15 +49,18 @@ final class NotchController {
         let host = NotchHostingView(rootView: NotchRootView(model: model, prefs: .shared))
         host.onMouseEntered = { [weak self] in self?.mouseEntered() }
         host.onMouseExited = { [weak self] in self?.mouseExited() }
+        host.onScroll = { [weak self] in self?.scrolled($0) ?? false }
         panel.contentView = host
 
         model.onTapCollapsed = { [weak self] in
             guard let self else { return }
-            // A status on the notch: a click opens where it comes from.
-            if case .status(let status) = self.model.wings {
-                self.expand(to: status.tab)
-            } else {
-                self.expand()
+            // A click opens the tab of the alert that shows.
+            switch self.model.wings {
+            case .status(let status)?: self.expand(to: status.tab)
+            case .focus?: self.expand(to: .focus)
+            case .music?: self.expand(to: .music)
+            case .mail?: self.expand(to: .mail)
+            case nil: self.expand()
             }
         }
         model.onCollapse = { [weak self] in self?.collapse() }
@@ -73,6 +87,7 @@ final class NotchController {
 
     func expand(to tab: WispTab? = nil) {
         collapseWork?.cancel()
+        backToFirst()
         if let tab { model.tab = tab }
         // A tab switched off in Settings, or of a service that isn't connected, doesn't open;
         // Home always can.
@@ -114,6 +129,7 @@ final class NotchController {
     func peek(_ mail: MailMessage) {
         guard model.isCollapsed else { return }
         collapseWork?.cancel()
+        backToFirst()
         model.peekMail = mail
         panel.setFrame(geometry.frame(for: CGSize(width: Theme.peekWidth, height: Theme.peekHeight)), display: true)
         withAnimation(openSpring) {
@@ -195,6 +211,23 @@ final class NotchController {
         }
     #endif
 
+    #if DEBUG
+        /// `-swipeDemo 30`: drags the closed notch's alerts that many points, as fingers would,
+        /// and leaves them there (for snapshots in the middle of a swipe). `-swipeDemoEnd YES`
+        /// lifts the fingers too.
+        func demoSwipe(_ points: CGFloat, lift: Bool) {
+            var pager = model.pager
+            pager.dragBegan()
+            pager.dragChanged(by: points)
+            model.pager = pager
+            panel.setFrame(collapsedFrame, display: true)
+            if lift {
+                pager.dragEnded()
+                changeClosed(alerts: model.alerts, pager: pager)
+            }
+        }
+    #endif
+
     /// A feature fills its place in the closed notch's list while it is active, and empties it
     /// with nil when it isn't. The notch decides what shows; the order is `ClosedNotchSlot`'s.
     func report(_ slot: ClosedNotchSlot, _ wings: NotchModel.Wings?, tabOn: Bool = true) {
@@ -203,16 +236,25 @@ final class NotchController {
     }
 
     private func showReported() {
-        changeAlerts(to: model.hasNotch ? reported : ClosedNotchList())
+        let alerts = model.hasNotch ? reported : ClosedNotchList()
+        var pager = model.pager
+        pager.setQuiet(isQuiet())
+        let jumped = pager.update(model.pages(for: alerts))
+        changeClosed(alerts: alerts, pager: pager)
+        // An urgent alert took you to it while you browsed: the usual tick says so.
+        if let jumped, ticksOnJump(jumped) { tick() }
     }
 
-    /// The notch drops 2 pt and springs back, once per event.
+    /// The notch drops 2 pt and springs back, once per event. Two reasons at the same moment
+    /// (a GitHub event and the jump to it) give one tick.
     func tick() {
-        guard model.isCollapsed else { return }
+        guard model.isCollapsed, !ticking else { return }
+        ticking = true
         withAnimation(.spring(response: 0.16, dampingFraction: 0.5)) { model.tickOffset = 2 }
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.14) { [weak self] in
             withAnimation(.spring(response: 0.3, dampingFraction: 0.55)) { self?.model.tickOffset = 0 }
         }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) { [weak self] in self?.ticking = false }
     }
 
     /// A short flash of colour over the closed notch. A new flash gets its full time, and a
@@ -231,28 +273,109 @@ final class NotchController {
 
     /// Changes what the wings show. Growing: the window first, then the shape springs out into
     /// it. Shrinking: the shape first, then the window. Same size: only the content changes.
-    private func changeAlerts(to new: ClosedNotchList<NotchModel.Wings>) {
-        let old = model.alerts
-        guard old != new else { return }
-        let before = model.restingSize
-        model.alerts = new
-        let after = model.restingSize
-        model.alerts = old
-        if !model.isCollapsed || after == before {
-            withAnimation(.easeInOut(duration: 0.2)) { model.alerts = new }
-        } else if after.width > before.width {
-            model.alerts = new
-            panel.setFrame(collapsedFrame, display: true)
-            model.alerts = old
-            withAnimation(openSpring) { model.alerts = new }
-        } else {
-            withAnimation(closeSpring) {
-                model.alerts = new
-            } completion: { [weak self] in
-                guard let self, self.model.isCollapsed else { return }
-                self.panel.setFrame(self.collapsedFrame, display: true)
-            }
+    /// A swipe that settles springs like opening and closing; Reduce Motion just switches.
+    private func changeClosed(alerts: ClosedNotchList<NotchModel.Wings>, pager: NotchPager) {
+        let oldAlerts = model.alerts
+        let oldPager = model.pager
+        guard oldAlerts != alerts || oldPager != pager else { return }
+        func set(_ a: ClosedNotchList<NotchModel.Wings>, _ p: NotchPager) {
+            model.alerts = a
+            model.pager = p
         }
+        let before = model.restingSize
+        set(alerts, pager)
+        let after = model.restingSize
+        let room = collapsedFrame
+        set(oldAlerts, oldPager)
+        guard model.isCollapsed else {
+            withAnimation(.easeInOut(duration: 0.2)) { set(alerts, pager) }
+            return
+        }
+        if room.width > panel.frame.width { panel.setFrame(room, display: true) }
+        let moved = oldPager.index != pager.index || oldPager.isDragging != pager.isDragging
+        let animation: Animation? =
+            if model.reduceMotion && moved { nil } else if after.width > before.width {
+                openSpring
+            } else if after.width < before.width || moved { closeSpring } else { .easeInOut(duration: 0.2) }
+        withAnimation(animation) {
+            set(alerts, pager)
+        } completion: { [weak self] in
+            guard let self, self.model.isCollapsed, !self.model.pager.isDragging else { return }
+            self.panel.setFrame(self.collapsedFrame, display: true)
+        }
+    }
+
+    // MARK: - Browsing
+
+    /// A scroll on the closed notch. The window only gets scrolls while the mouse is on it, so
+    /// scrolls anywhere else stay with the other apps.
+    private func scrolled(_ event: NSEvent) -> Bool {
+        guard model.isCollapsed else { return false }
+        guard !event.phase.contains(.mayBegin) else { return true }
+        // Quiet started or ended without the list changing (Do not disturb switched mid-session).
+        let quiet = isQuiet()
+        if model.pager.isQuiet != quiet { showReported() }
+        if quiet { return true }
+        let phase: NotchScrollEvent.Phase =
+            if event.phase.contains(.began) { .began } else if event.phase.contains(.changed) {
+                .changed
+            } else if event.phase.contains(.ended) || event.phase.contains(.cancelled) { .ended } else { .none }
+        let input = NotchScrollEvent(
+            dx: event.scrollingDeltaX, dy: event.scrollingDeltaY, precise: event.hasPreciseScrollingDeltas,
+            phase: phase, momentum: !event.momentumPhase.isEmpty, inverted: event.isDirectionInvertedFromDevice,
+            time: event.timestamp)
+        var pager = model.pager
+        switch scrollReader.read(input) {
+        case .none:
+            break
+        case .dragBegan:
+            guard pager.canBrowse else { break }
+            returnWork?.cancel()
+            model.reduceMotion = NSWorkspace.shared.accessibilityDisplayShouldReduceMotion
+            pager.dragBegan()
+            model.pager = pager
+            // Room for the widest alert, so the shape can follow the fingers without the window.
+            panel.setFrame(collapsedFrame, display: true)
+        case .drag(let delta):
+            guard pager.isDragging else { break }
+            pager.dragChanged(by: delta)
+            // Straight to the fingers, no animation.
+            model.pager = pager
+        case .dragEnded:
+            guard pager.isDragging else { break }
+            let jumped = pager.dragEnded()
+            changeClosed(alerts: model.alerts, pager: pager)
+            if let jumped, ticksOnJump(jumped) { tick() }
+        case .step(let delta):
+            guard pager.canBrowse else { break }
+            returnWork?.cancel()
+            model.reduceMotion = NSWorkspace.shared.accessibilityDisplayShouldReduceMotion
+            pager.step(by: delta)
+            changeClosed(alerts: model.alerts, pager: pager)
+        }
+        return true
+    }
+
+    /// Shows the most important alert again. Opening the panel or a peek starts from there, and
+    /// ends a swipe that was going: its last scrolls go to the panel, not to the closed notch.
+    private func backToFirst(animated: Bool = false) {
+        returnWork?.cancel()
+        returnWork = nil
+        var pager = model.pager
+        if animated { pager.returnToFirst() } else { pager.stop() }
+        if animated {
+            changeClosed(alerts: model.alerts, pager: pager)
+        } else {
+            model.pager = pager
+        }
+    }
+
+    private func scheduleReturn() {
+        returnWork?.cancel()
+        guard model.pager.needsReturn else { return }
+        let work = DispatchWorkItem { [weak self] in self?.backToFirst(animated: true) }
+        returnWork = work
+        DispatchQueue.main.asyncAfter(deadline: .now() + NotchPager.returnDelay, execute: work)
     }
 
     /// Close after the usual delay, unless the mouse is on the panel.
@@ -279,6 +402,7 @@ final class NotchController {
 
     private func mouseEntered() {
         collapseWork?.cancel()
+        returnWork?.cancel()
         guard model.isCollapsed else { return }
         withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) { model.hovering = true }
     }
@@ -289,13 +413,16 @@ final class NotchController {
             scheduleCollapse(after: Preferences.shared.closeDelay)
         } else {
             withAnimation(.spring(response: 0.28, dampingFraction: 0.9)) { model.hovering = false }
+            scheduleReturn()
         }
     }
 
     // MARK: - Geometry
 
+    /// The closed notch plus a hover margin. During a swipe: room for the widest alert.
     private var collapsedFrame: NSRect {
-        let n = model.restingSize
+        var n = model.restingSize
+        if model.pager.isDragging { n.width = max(n.width, model.notchSize.width + 2 * model.widestWing) }
         let g = NotchModel.hoverGrow
         return geometry.frame(for: CGSize(width: n.width + g.width + 8, height: n.height + g.height + 2))
     }
