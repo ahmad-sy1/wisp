@@ -93,6 +93,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                 FileHandle.standardError.write(Data("wisp: snapshot scenes need the built-in screen with a notch\n".utf8))
                 exit(2)
             }
+            notch.ignoreMouse()
             scene.apply(to: notch)
             let path = UserDefaults.standard.string(forKey: "snapshot")
             let delay = UserDefaults.standard.object(forKey: "snapshotDelay") as? Double ?? 1.5
