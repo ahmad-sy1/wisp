@@ -110,10 +110,16 @@ struct NotchPager: Equatable {
         return pages.indices.filter { abs(Double($0) - p) < 1 }
     }
 
+    /// The page dots show with the mouse on the closed notch and more than one alert, and not
+    /// while it must stay still. (Nor during the mail peek: that isn't the closed notch.)
+    func showsDots(hovering: Bool) -> Bool { hovering && canBrowse }
+
     /// Opacity of the dot of page `i`: full for the alert that shows, `inactiveDot` for the
-    /// others, in between while the fingers move (both about 0.66 halfway).
-    func dotOpacity(_ i: Int) -> Double {
-        let closeness = max(0, 1 - abs(settledPosition - Double(i)))
+    /// others, in between while the fingers move (both about 0.66 halfway). The stretch at the
+    /// ends changes nothing; under Reduce Motion they switch when the alert does.
+    func dotOpacity(_ i: Int, reduceMotion: Bool = false) -> Double {
+        let at = reduceMotion ? Double(index) : settledPosition
+        let closeness = max(0, 1 - abs(at - Double(i)))
         return Self.inactiveDot + (1 - Self.inactiveDot) * closeness
     }
 

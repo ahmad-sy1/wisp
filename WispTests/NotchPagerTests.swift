@@ -270,6 +270,25 @@ final class NotchPagerTests: XCTestCase {
 
     // MARK: - Dots
 
+    func testDotsShowOnHoverWithMoreThanOneAlert() {
+        var pager = pager()
+        XCTAssertTrue(pager.showsDots(hovering: true))
+        XCTAssertFalse(pager.showsDots(hovering: false), "the mouse leaves: gone at once")
+        pager.setQuiet(true)
+        XCTAssertFalse(pager.showsDots(hovering: true), "not with Do not disturb or a permission request")
+        XCTAssertFalse(self.pager([.init(slot: .music, wing: 34)]).showsDots(hovering: true), "one alert: no dots")
+    }
+
+    func testUnderReduceMotionDotsSwitchWithTheAlert() {
+        var pager = pager()
+        pager.dragBegan()
+        pager.dragChanged(by: 25)
+        XCTAssertEqual(pager.dotOpacity(0, reduceMotion: true), 1)
+        XCTAssertEqual(pager.dotOpacity(1, reduceMotion: true), NotchPager.inactiveDot)
+        pager.dragEnded()
+        XCTAssertEqual(pager.dotOpacity(1, reduceMotion: true), 1)
+    }
+
     func testDotsFollowTheFingers() {
         var pager = pager()
         XCTAssertEqual(pager.dotOpacity(0), 1)
