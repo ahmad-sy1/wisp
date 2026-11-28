@@ -43,6 +43,8 @@ wisp.app
 
 `NotchController` owns a borderless, non-activating `NSPanel` (`NotchPanel`) that sits above the menu bar on every Space.
 
+**One list decides what the closed notch shows.** `ClosedNotchList` (`Wisp/Notch/Core`, tested) holds everything that wants to stay on the closed notch, one place per `ClosedNotchSlot`: focus, departure, CI failed, review requested, new comments, music, CI running, unread mail. The order of that enum is the order of importance, and it is the only place that order lives. A feature only calls `NotchController.report(slot, wings)` while it is active and `report(slot, nil)` when it isn't (with `tabOn:` false when its tab is switched off); the notch shows `alerts.top`. Nothing falls away: a failed run behind a trip is still in the list, it just isn't first. Departure is one place whatever it shows inside, so the list knows nothing about trips. Short-lived things (the mail peek, a tick, a flash) aren't in it.
+
 **The window is always exactly as big as what is drawn.** Closed, it is the size of the notch plus a few points of hover margin (and the music wings when they show). Open, it is the 600 × 242 pt panel. This one rule removes a whole class of problems:
 
 - nothing around the notch is ever covered by an invisible window, so no click-through juggling;
@@ -51,7 +53,7 @@ wisp.app
 
 Opening resizes the window first and then springs the SwiftUI shape out into it; closing animates the shape back and only then shrinks the window (`withAnimation(…) completion:`).
 
-`NotchModel` holds the UI state: `phase` (collapsed or expanded), `hovering`, the selected `tab`, tab `badges` and `musicWings`. `NotchRootView` draws one black `NotchShape` (flat top, rounded bottom) and puts the panel content inside it.
+`NotchModel` holds the UI state: `phase` (collapsed or expanded), `hovering`, the selected `tab`, tab `badges` and `alerts`. `NotchRootView` draws one black `NotchShape` (flat top, rounded bottom) and puts the panel content inside it.
 
 `NotchGeometry` finds the screen with a notch (`safeAreaInsets.top > 0`) and measures the notch from `auxiliaryTopLeftArea` / `auxiliaryTopRightArea`. Without a notch it uses a 180 pt bar as tall as the menu bar. It is recomputed whenever the screen setup changes.
 
@@ -91,7 +93,7 @@ The unread count drives the badge on the Mail tab through Combine.
 
 - After each refresh, `MailStore` compares the UIDs with the highest one it has seen. A newer unread message calls `onNewMail`, and the notch **peeks** (`NotchModel.Phase.peek`, a third state between closed and open). Nothing peeks on connect or after waking, only for mail that arrives while wisp listens.
 - **Delete** in the peek opens a second, short IMAP connection: `LIST` to find the mailbox marked `\Trash` (Gmail names it after the account's language, e.g. `[Gmail]/Prullenbak`), `SELECT INBOX`, `UID MOVE` that one UID there, logout. It is the only write wisp does, and only after a click.
-- The unread count also drives the **mail wings** on the closed notch (`NotchModel.mailWings`); focus and music wings take precedence.
+- The unread count also fills the **mail** place on the closed notch's list, the last one: everything else goes first.
 
 ## Music
 
@@ -135,9 +137,9 @@ GitHub REST/GraphQL ◄─ GitHubClient (ETags, rate limit) ◄─ RadarSync ◄
                        └── GitHubService protocol; MockGitHubService for tests and -githubDemo
 ```
 
-- `Wisp/GitHub/Core` is free of UI and is what the tests compile: `CheckAggregator` (jobs → one status), `PollSchedule` (the next delay), `Radar` (`diff`: what is new; `compact`: what the closed notch shows; `acknowledge`: you looked; `streak`), `RadarSync` (one round, asking only what may have changed).
+- `Wisp/GitHub/Core` is free of UI and is what the tests compile: `CheckAggregator` (jobs → one status), `PollSchedule` (the next delay), `Radar` (`diff`: what is new; `alerts`: what the closed notch may show, one of each kind; `acknowledge`: you looked; `streak`), `RadarSync` (one round, asking only what may have changed).
 - **`GitHubStore`** has one pending `DispatchWorkItem` at a time, with a delay from `PollSchedule`. Sleep and screen lock cancel it; waking schedules a round after 3 s. Errors keep the last data on screen. A rejected key stops polling until you reconnect.
-- **The closed notch**: `Radar.compact` picks one indicator; `StatusWings` turns it into text and `NotchController.setStatus` gives it room (grow the window, then spring the shape; shrink the shape, then the window). `NotchModel.wings` decides what shows when several want the wings. The spinner steps ten times a second through a `TimelineView` and only exists while a run is going. Looking at the tab acknowledges failures, reviews and comments.
+- **The closed notch**: `Radar.alerts` lists a failed run, review requests, new comments and a run going at the same time, each with its own `slot`; `StatusWings` turns one into text and `NotchController.report` puts it in the list, which gives the first one room (grow the window, then spring the shape; shrink the shape, then the window). The spinner steps ten times a second through a `TimelineView` and only exists while a run is going. Looking at the tab acknowledges failures, reviews and comments.
 - **`RadarSeen`** (UserDefaults, `githubSeen`) remembers what was reported, per commit and per pull request, so an animation goes off once and not again after a restart. It holds no secrets, only repository names and numbers.
 
 
@@ -156,7 +158,7 @@ WHOOP v2 API ◄─ WhoopClient (actor: token refresh, one at a time) ◄─ Who
 
 `Wisp/Departure/Core` holds the logic, free of clock, network and UI. `DepartureEngine.plan` turns calendar events and settings into the one trip that matters (or none), `nextWake` says when that can next change, and `resolve` turns the providers' answers into one `DepartureOutput`: what to show, in which colour, how many minutes, which alternatives. `RoutineDetector` fills in the location of repeating events that have none, and `EventLocation` tells a place from a video call. Providers sit behind `TravelProvider`, `RainProvider` and `PlaceLookup`, with mocks.
 
-- **On screen**: `StatusWings(DepartureOutput)` on the closed notch, ahead of a GitHub status and only while the Departure tab is on (`ClosedNotchStatus.pick`); `DepartureTab` when open. Without a home address the feature doesn't exist as far as your calendar and the network are concerned.
+- **On screen**: `StatusWings(DepartureOutput)` on the closed notch, in the departure place of the closed notch's list, ahead of GitHub, and only while the Departure tab is on; `DepartureTab` when open. Without a home address the feature doesn't exist as far as your calendar and the network are concerned.
 - **`DepartureStore`** holds one pending wake-up: at `nextWake` with no trip on, on each new minute during one. The providers are only asked when `refreshInterval` says so (15, 5 or 2 minutes as leaving comes closer); in between the countdown comes from the last answer. A car or bike moves along with the clock. A new event, a change in Settings or waking re-evaluates. Errors keep the last answer; with none, nothing shows. Settings are saved as `departureSettings`, the NS key in the Keychain.
 
 ## Clipboard
@@ -185,7 +187,7 @@ WHOOP v2 API ◄─ WhoopClient (actor: token refresh, one at a time) ◄─ Who
 - **The task** is guessed when the tab opens and when a session starts: the timed calendar event that is on now (`AgendaStore.eventNow()`, one small query), otherwise the app in front. For an IDE or terminal the guess is *Coding*, with the project from the newest Claude Code session in that app; for other apps, the app's name. Typing a different task remembers it for that app (and project) in `focusLearnedTasks`; Settings → Focus lists and forgets them.
 - **Rules**: `FocusStore.learned` (from corrections, saved as `focusLearnedTasks`) and `ownRules` (from Settings, `focusOwnRules`) map `bundle|project` or `bundle` to a task; your own rule wins, and a correction in the notch replaces it.
 - **Do not disturb** runs the user's Shortcuts *wisp Focus On* and *wisp Focus Off* (`/usr/bin/shortcuts run`), since macOS lets apps switch a Focus mode only through Shortcuts. **Start music** sends play to Now Playing if something is paused.
-- The tab and the closed-notch wings redraw once a second only while a session runs (`TimelineView(.periodic)`); before, after and while paused they are still. The wings come from `NotchModel.focusWings` and win over the music wings; the mini spectrum stops while they show.
+- The tab and the closed-notch wings redraw once a second only while a session runs (`TimelineView(.periodic)`); before, after and while paused they are still. Focus is the first place in the closed notch's list, so it wins over everything; the mini spectrum stops while it shows.
 
 ## Settings and secrets
 
@@ -200,7 +202,7 @@ WHOOP v2 API ◄─ WhoopClient (actor: token refresh, one at a time) ◄─ Who
 - Closed: no timers, no animations, nothing redrawn, with these exceptions: the clipboard history checks the pasteboard's change count once a second (see [Clipboard](#clipboard)), and a connected GitHub account has one pending wake-up (see [CI & PR radar](#ci--pr-radar)); so does a home address (see [Departure assistant](#departure-assistant)), and a connected WHOOP account sleeps 30 minutes between rounds (see [WHOOP](#whoop)); all can be switched off. The only other background work is event-driven (the hook socket, the IMAP IDLE connection, the Now Playing bridge).
 - Open: views that tick (the session timer, the music progress) use `TimelineView(.periodic)` at one update per second or once a minute, and only exist while their tab is visible.
 - A running focus session redraws its ring and time once a second, in the tab and on the closed notch. Nothing runs before or after a session.
-- The live spectrum and the music wings are the exception: they move while music plays, because that is what they are for. The audio tap only runs while one of them is on screen and music plays (music wings hidden under a focus session or a status count as off screen): about 3–4 % CPU for the Release build (the FFT itself is a fraction of that; the rest is drawing). Bars are drawn in a single `Canvas`, and only the views that draw them observe `SpectrumLevels`, so nothing else redraws 30 times a second. Measure in Release: a Debug build is several times slower.
+- The live spectrum and the music wings are the exception: they move while music plays, because that is what they are for. The audio tap only runs while one of them is on screen and music plays (music behind a focus session or a status in the closed notch's list counts as off screen): about 3–4 % CPU for the Release build (the FFT itself is a fraction of that; the rest is drawing). Bars are drawn in a single `Canvas`, and only the views that draw them observe `SpectrumLevels`, so nothing else redraws 30 times a second. Measure in Release: a Debug build is several times slower.
 
 ## Signing
 

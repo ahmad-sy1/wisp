@@ -16,15 +16,10 @@ final class NotchModel: ObservableObject {
 
     @Published var notchSize = CGSize(width: 185, height: 32)
     @Published var hasNotch = true
-    /// Music is playing: the closed notch grows a wing on each side (artwork, equalizer).
-    @Published var musicWings = false
-    /// A focus session runs: the wings show its ring and time instead (they win over music).
-    @Published var focusWings = false
-    /// Unread mail: an envelope and the count (only when nothing else uses the wings).
-    @Published var mailWings = false
+    /// Everything that wants to stay on the closed notch, in order (`ClosedNotchSlot`). The
+    /// wings show the first; empty on a screen without a notch.
+    @Published var alerts = ClosedNotchList<Wings>()
     @Published var unreadCount = 0
-    /// CI, reviews, departure: a status that needs room on both sides of the camera.
-    @Published var statusWings: StatusWings?
     /// How far the closed notch has dropped during a tick (2 pt and back).
     @Published var tickOffset: CGFloat = 0
     /// A short flash of colour over the closed notch (CI passed or failed).
@@ -45,24 +40,18 @@ final class NotchModel: ObservableObject {
     /// Width of one music wing: about square with the notch height.
     var wingWidth: CGFloat { notchSize.height + 2 }
 
-    var showsWings: Bool { musicWings || focusWings || mailWings || statusWings != nil }
+    var showsWings: Bool { !alerts.isEmpty }
 
-    /// What the wings show now. One thing at a time, most urgent first: a focus session, an
-    /// urgent status, music, a calm status (a run going), unread mail.
+    /// How one alert looks on the wings: a focus session's ring and time, the artwork and
+    /// equalizer, unread mail, or a status (CI, reviews, departure) with text on both sides.
     enum Wings: Equatable {
-        case none, focus
+        case focus
         case status(StatusWings)
         case music, mail
     }
 
-    var wings: Wings {
-        if focusWings { return .focus }
-        if let statusWings, statusWings.urgent { return .status(statusWings) }
-        if musicWings { return .music }
-        if let statusWings { return .status(statusWings) }
-        if mailWings { return .mail }
-        return .none
-    }
+    /// What the wings show now: the most important alert, or nil.
+    var wings: Wings? { alerts.top?.content }
 
     /// The width of one wing as things are now.
     var currentWingWidth: CGFloat {

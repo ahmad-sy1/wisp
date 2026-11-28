@@ -41,11 +41,22 @@ struct RadarSnapshot: Equatable, Codable, Sendable {
 
 /// One small indicator on the closed notch (design page 1). Nothing wrong shows nothing.
 enum RadarCompact: Equatable, Sendable {
-    case none
     case running(completed: Int, total: Int)
     case failed(PullRequest)
     case reviewRequested(PullRequest, count: Int)
     case newActivity(PullRequest, count: Int)
+}
+
+extension RadarCompact {
+    /// The place each kind of GitHub alert takes in the closed notch's list.
+    var slot: ClosedNotchSlot {
+        switch self {
+        case .failed: .ciFailed
+        case .reviewRequested: .review
+        case .newActivity: .comments
+        case .running: .ciRunning
+        }
+    }
 }
 
 /// What the user wants to hear about (Settings → GitHub).
@@ -135,31 +146,34 @@ enum Radar {
         return seen
     }
 
-    /// What the closed notch shows, most urgent first: failed, review, comments, running.
-    static func compact(snapshot: RadarSnapshot, seen: RadarSeen, notifications: RadarNotifications) -> RadarCompact {
+    /// Everything the closed notch may show, at most one of each kind, most urgent first:
+    /// failed, review, comments, running. The notch decides which one it shows.
+    static func alerts(snapshot: RadarSnapshot, seen: RadarSeen, notifications: RadarNotifications) -> [RadarCompact] {
+        var alerts: [RadarCompact] = []
         if notifications.failed,
             let pull = snapshot.mine.first(where: {
                 $0.checks.status == .failed && !seen.acknowledgedFailures.contains(failureKey($0))
             })
         {
-            return .failed(pull)
+            alerts.append(.failed(pull))
         }
         if notifications.review {
             let waiting = snapshot.reviews.filter { !seen.acknowledgedReviews.contains($0.id) }
-            if let first = waiting.first { return .reviewRequested(first, count: waiting.count) }
+            if let first = waiting.first { alerts.append(.reviewRequested(first, count: waiting.count)) }
         }
         if notifications.comments,
             let pull = snapshot.mine.first(where: { (seen.unseenActivity[$0.id] ?? 0) > 0 })
         {
-            return .newActivity(pull, count: seen.unseenActivity[pull.id] ?? 0)
+            alerts.append(.newActivity(pull, count: seen.unseenActivity[pull.id] ?? 0))
         }
         let running = snapshot.mine.filter { $0.checks.status == .running }
         if !running.isEmpty {
-            return .running(
-                completed: running.reduce(0) { $0 + $1.checks.completed },
-                total: running.reduce(0) { $0 + $1.checks.total })
+            alerts.append(
+                .running(
+                    completed: running.reduce(0) { $0 + $1.checks.completed },
+                    total: running.reduce(0) { $0 + $1.checks.total }))
         }
-        return .none
+        return alerts
     }
 
     /// Consecutive days with a contribution up to today. A today without one doesn't break the
