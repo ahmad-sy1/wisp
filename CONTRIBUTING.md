@@ -50,7 +50,17 @@ Only one wisp can own the notch and the hook socket: quit the installed one (or 
 ./scripts/test.sh
 ```
 
-Logic lives in `Core` folders without UI, and network code behind a protocol with a mock, so it is tested without keys. The test target compiles those folders itself and doesn't start wisp. CI runs the tests too. Views aren't tested.
+Logic lives in `Core` folders without UI, and network code behind a protocol with a mock, so it is tested without keys. The test target compiles those folders itself and doesn't start wisp. CI runs the tests too. Views aren't tested by CI.
+
+### Snapshots of the closed notch
+
+```bash
+./scripts/snapshots.sh
+```
+
+Draws fixed states of the closed notch (a failed run, reviews, comments, a trip, unread mail, with and without hover) from made-up data, and compares each with its reference in `snapshots/closed-notch/`. Nothing live starts, so it runs next to the installed wisp. It ends with `CHANGED` and exit 1 when a state looks different; `build.noindex/snapshots/<scene>.diff.png` shows the changed pixels in red. A different size (the notch got wider or narrower) is reported as such.
+
+Run it before a pull request that touches the notch. When the change is meant, record the references again with `./scripts/snapshots.sh record` and commit them, so the review shows the before and after. CI doesn't run it: its Mac has no notch, and the references belong to this Mac's notch (record first on another model). New scenes go in `SnapshotScene` (`Wisp/Notch/SnapshotScenes.swift`, debug builds only).
 
 `HookIntegrationTests` runs the real `wisp-hook` against a socket of its own. Each run gets a temporary home folder and first checks that the hook really uses it, so the tests can't reach the wisp running on your Mac. The 115 s wait for a permission answer is the one thing they leave out.
 
