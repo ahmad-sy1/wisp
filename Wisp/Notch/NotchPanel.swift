@@ -40,6 +40,9 @@ final class NotchPanel: NSPanel {
 final class NotchHostingView: NSHostingView<NotchRootView> {
     var onMouseEntered: () -> Void = {}
     var onMouseExited: () -> Void = {}
+    /// Scrolls over the notch, for browsing the closed notch's alerts. True when taken; the
+    /// rest goes on as usual (the lists in the open panel scroll themselves).
+    var onScroll: (NSEvent) -> Bool = { _ in false }
     private var tracking: NSTrackingArea?
 
     override func acceptsFirstMouse(for event: NSEvent?) -> Bool { true }
@@ -57,4 +60,7 @@ final class NotchHostingView: NSHostingView<NotchRootView> {
 
     override func mouseEntered(with event: NSEvent) { onMouseEntered() }
     override func mouseExited(with event: NSEvent) { onMouseExited() }
+    override func scrollWheel(with event: NSEvent) {
+        if !onScroll(event) { super.scrollWheel(with: event) }
+    }
 }

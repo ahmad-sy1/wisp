@@ -211,6 +211,16 @@
         }
       }
     },
+    "%lld of %lld" : {
+      "localizations" : {
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld van %2$lld"
+          }
+        }
+      }
+    },
     "%lld off" : {
       "localizations" : {
         "nl" : {
