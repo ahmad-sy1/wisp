@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Closed notch: one list of everything that wants to show (focus, departure, CI failed, review, comments, music, CI running, unread mail), in the same order as before. Nothing changes on screen yet: a failed run, a review and new comments now wait in the list behind what shows instead of being dropped, ready for swiping
 - WHOOP: recovery, sleep and strain in a tab of its own (board 11.3), signed in through the browser with your own WHOOP developer app; every integration's tab now shares one template with *No data yet* and *Connection lost* states
 - Settings → Integrations shows what needs attention first, and connected integrations with their own options appear in the sidebar (boards 10.3.4, 10.10)
 - One Manage window for Gmail and NS (boards 10.3.2, 10.3.3): a key is checked first and only stored when it works
