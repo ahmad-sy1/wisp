@@ -40,6 +40,15 @@ enum Theme {
     static let recoveryYellow = Color(hex: 0xFFD60A)
 
     // Panel geometry (expanded)
+    /// Page dots on the closed notch (one per alert, while hovering): white, small, in the
+    /// 4 pt the notch grows under the camera on hover.
+    static let pageDot: CGFloat = 3
+    static let pageDotGap: CGFloat = 4
+    /// Room under the dots, so they sit fully below the camera.
+    static let pageDotBottom: CGFloat = 0.5
+    /// Dots of the alerts that don't show.
+    static let pageDotInactiveOpacity = NotchPager.inactiveDot
+
     static let panelWidth: CGFloat = 600
     static let panelTopInset: CGFloat = 40
     static let panelInset: CGFloat = 14
