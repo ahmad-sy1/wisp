@@ -50,7 +50,7 @@ final class NotchPagerTests: XCTestCase {
         var pager = pager()
         pager.dragBegan()
         pager.dragChanged(by: 30)  // past halfway to the second
-        XCTAssertFalse(pager.dragEnded())
+        XCTAssertNil(pager.dragEnded())
         XCTAssertEqual(pager.visible, .ciFailed)
         XCTAssertEqual(pager.wing, 40)
         XCTAssertTrue(pager.isIdle)
@@ -208,8 +208,8 @@ final class NotchPagerTests: XCTestCase {
     func testAnUrgentArrivalWhileBrowsingJumpsToIt() {
         var pager = pager()
         pager.step(by: 2)  // music
-        let jumped = pager.update(three + [.init(slot: .review, wing: 50)].sortedLike())
-        XCTAssertTrue(jumped)
+        let jumped = pager.update((three + [.init(slot: .review, wing: 50)]).sortedLike())
+        XCTAssertEqual(jumped, .review)
         XCTAssertEqual(pager.visible, .review)
     }
 
@@ -217,9 +217,9 @@ final class NotchPagerTests: XCTestCase {
         var pager = pager()
         pager.dragBegan()
         pager.dragChanged(by: 10)
-        XCTAssertFalse(pager.update((three + [.init(slot: .comments, wing: 30)]).sortedLike()))
+        XCTAssertNil(pager.update((three + [.init(slot: .comments, wing: 30)]).sortedLike()))
         XCTAssertEqual(pager.pendingJump, .comments)
-        XCTAssertTrue(pager.dragEnded(), "lifting the fingers jumps")
+        XCTAssertEqual(pager.dragEnded(), .comments, "lifting the fingers jumps")
         XCTAssertEqual(pager.visible, .comments)
     }
 
@@ -235,16 +235,16 @@ final class NotchPagerTests: XCTestCase {
     func testCalmArrivalsAndUpdatesDontJump() {
         var pager = pager()
         pager.step(by: 1)
-        XCTAssertFalse(pager.update((three + [.init(slot: .mail, wing: 34)]).sortedLike()))
-        XCTAssertFalse(pager.update([.init(slot: .departure, wing: 66)] + three.dropFirst() + [.init(slot: .mail, wing: 34)]))
+        XCTAssertNil(pager.update((three + [.init(slot: .mail, wing: 34)]).sortedLike()))
+        XCTAssertNil(pager.update([.init(slot: .departure, wing: 66)] + three.dropFirst() + [.init(slot: .mail, wing: 34)]))
         XCTAssertEqual(pager.visible, .ciFailed)
     }
 
     func testNotBrowsingTheMostImportantSimplyShows() {
         var pager = pager()
-        XCTAssertFalse(pager.update((three + [.init(slot: .review, wing: 50)]).sortedLike()))
+        XCTAssertNil(pager.update((three + [.init(slot: .review, wing: 50)]).sortedLike()))
         XCTAssertEqual(pager.visible, .departure)
-        XCTAssertFalse(pager.update(([.init(slot: .focus, wing: 34)] + three)))
+        XCTAssertNil(pager.update(([.init(slot: .focus, wing: 34)] + three)))
         XCTAssertEqual(pager.visible, .focus)
     }
 
@@ -262,7 +262,7 @@ final class NotchPagerTests: XCTestCase {
         pager.dragChanged(by: 40)
         pager.step(by: 1)
         XCTAssertEqual(pager.visible, .departure)
-        XCTAssertFalse(pager.update((three + [.init(slot: .review, wing: 50)]).sortedLike()), "no jumps either")
+        XCTAssertNil(pager.update((three + [.init(slot: .review, wing: 50)]).sortedLike()), "no jumps either")
         pager.setQuiet(false)
         pager.step(by: 1)
         XCTAssertEqual(pager.visible, .ciFailed)

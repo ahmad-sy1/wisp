@@ -16,6 +16,9 @@ final class NotchController {
     /// True while the closed notch must stay still: focus with *Do not disturb*, or a
     /// permission request. No browsing then.
     var isQuiet: () -> Bool = { false }
+    /// Whether an urgent alert that takes you to it while browsing ticks: GitHub's own setting
+    /// decides for GitHub alerts.
+    var ticksOnJump: (ClosedNotchSlot) -> Bool = { _ in true }
 
     private var geometry = NotchGeometry.current()
     private let panel: NotchPanel
@@ -29,6 +32,8 @@ final class NotchController {
     private var scrollReader = NotchScrollReader()
     /// Brings the most important alert back a few seconds after the mouse left.
     private var returnWork: DispatchWorkItem?
+    /// A tick is under way.
+    private var ticking = false
     /// Asked of the window, not remembered from enter and exit events: those don't come
     /// when the window changes size under a mouse that stands still. `NSMouseInRect`: on the
     /// top row of pixels the mouse is at maxY, which `contains` leaves out.
@@ -237,16 +242,19 @@ final class NotchController {
         let jumped = pager.update(model.pages(for: alerts))
         changeClosed(alerts: alerts, pager: pager)
         // An urgent alert took you to it while you browsed: the usual tick says so.
-        if jumped { tick() }
+        if let jumped, ticksOnJump(jumped) { tick() }
     }
 
-    /// The notch drops 2 pt and springs back, once per event.
+    /// The notch drops 2 pt and springs back, once per event. Two reasons at the same moment
+    /// (a GitHub event and the jump to it) give one tick.
     func tick() {
-        guard model.isCollapsed else { return }
+        guard model.isCollapsed, !ticking else { return }
+        ticking = true
         withAnimation(.spring(response: 0.16, dampingFraction: 0.5)) { model.tickOffset = 2 }
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.14) { [weak self] in
             withAnimation(.spring(response: 0.3, dampingFraction: 0.55)) { self?.model.tickOffset = 0 }
         }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) { [weak self] in self?.ticking = false }
     }
 
     /// A short flash of colour over the closed notch. A new flash gets its full time, and a
@@ -337,7 +345,7 @@ final class NotchController {
             guard pager.isDragging else { break }
             let jumped = pager.dragEnded()
             changeClosed(alerts: model.alerts, pager: pager)
-            if jumped { tick() }
+            if let jumped, ticksOnJump(jumped) { tick() }
         case .step(let delta):
             guard pager.canBrowse else { break }
             returnWork?.cancel()

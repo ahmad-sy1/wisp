@@ -224,6 +224,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                 notch.report(.departure, output.map { .status(StatusWings($0)) }, tabOn: tabOn)
             }
             .store(in: &subscriptions)
+        // A jump to a GitHub alert while browsing ticks only when GitHub's ticks are on.
+        notch.ticksOnJump = { slot in
+            switch slot {
+            case .ciFailed, .review, .comments, .ciRunning: github.tickAnimation
+            case .focus, .departure, .music, .mail: true
+            }
+        }
         github.onEvent = { event in
             let focus = FocusStore.shared
             // Quiet while focusing with "Do not disturb", and never over a permission request.

@@ -121,15 +121,15 @@ struct NotchPager: Equatable {
 
     /// The list changed. Keeps showing the same alert; if that one went, the one that takes
     /// its place. An urgent alert that is new while you browse shows straight away, or when the
-    /// fingers lift. True when the notch jumped, so it can tick.
+    /// fingers lift. Returns the alert it jumped to, so the notch can tick.
     @discardableResult
-    mutating func update(_ new: [Page]) -> Bool {
+    mutating func update(_ new: [Page]) -> ClosedNotchSlot? {
         let old = pages
         let oldIndex = index
         pages = new
         guard !new.isEmpty else {
             reset()
-            return false
+            return nil
         }
         if let chosen, !new.contains(where: { $0.slot == chosen }) {
             // The alert that showed went: the next one moves into its place.
@@ -137,16 +137,16 @@ struct NotchPager: Equatable {
             endDrag()
         }
         if let pendingJump, !new.contains(where: { $0.slot == pendingJump }) { self.pendingJump = nil }
-        guard !isQuiet, chosen != nil || isDragging else { return false }
+        guard !isQuiet, chosen != nil || isDragging else { return nil }
         let arrived = new.filter { page in page.slot.isUrgent && !old.contains { $0.slot == page.slot } }
-        guard let urgent = arrived.first?.slot else { return false }
+        guard let urgent = arrived.first?.slot else { return nil }
         if isDragging {
             if pendingJump.map({ urgent < $0 }) ?? true { pendingJump = urgent }
-            return false
+            return nil
         }
-        guard urgent != visible, let found = pages.firstIndex(where: { $0.slot == urgent }) else { return false }
+        guard urgent != visible, let found = pages.firstIndex(where: { $0.slot == urgent }) else { return nil }
         choose(found)
-        return true
+        return urgent
     }
 
     mutating func setQuiet(_ quiet: Bool) {
@@ -167,18 +167,18 @@ struct NotchPager: Equatable {
     }
 
     /// Fingers lifted: settles on the nearest alert, or on an urgent one that arrived meanwhile.
-    /// True when that was a jump, so the notch can tick.
+    /// Returns that urgent alert, so the notch can tick.
     @discardableResult
-    mutating func dragEnded() -> Bool {
-        guard isDragging else { return false }
+    mutating func dragEnded() -> ClosedNotchSlot? {
+        guard isDragging else { return nil }
         let target: Int
-        let jumped: Bool
+        let jumped: ClosedNotchSlot?
         if let pendingJump, let found = pages.firstIndex(where: { $0.slot == pendingJump }) {
             target = found
-            jumped = true
+            jumped = pendingJump
         } else {
             target = Int(settledPosition.rounded())
-            jumped = false
+            jumped = nil
         }
         endDrag()
         choose(target)
