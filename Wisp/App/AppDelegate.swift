@@ -184,6 +184,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             .sink { count in notch.model.badges[.github] = count }
             .store(in: &subscriptions)
         // Every GitHub alert in its own place on the closed notch, none for a switched-off tab.
+        // The places come from the alerts themselves (`RadarCompact.slot`), so a new kind shows
+        // without a change here; a place that was filled last time and isn't now is emptied.
+        var githubSlots: Set<ClosedNotchSlot> = []
         github.$alerts
             .removeDuplicates()
             .combineLatest(Preferences.shared.$hiddenTabs.map { !$0.contains(.github) }.removeDuplicates())
@@ -191,9 +194,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             .receive(on: RunLoop.main)
             .sink { alerts, tabOn in
                 let bySlot = Dictionary(alerts.map { ($0.slot, $0) }, uniquingKeysWith: { first, _ in first })
-                for slot in [ClosedNotchSlot.ciFailed, .review, .comments, .ciRunning] {
+                for slot in githubSlots.union(bySlot.keys) {
                     notch.report(slot, bySlot[slot].map { .status(StatusWings($0)) }, tabOn: tabOn)
                 }
+                githubSlots = Set(bySlot.keys)
             }
             .store(in: &subscriptions)
         // A trip is one place on the closed notch, whatever it shows inside.
