@@ -36,15 +36,19 @@ scenes=$(run -listSnapshotScenes YES)
 failed=0
 for scene in $scenes; do
   new="$OUT/$scene.png"
-  run -snapshotScene "$scene" -snapshot "$ROOT/$new"
-  if [ "$MODE" = record ]; then
+  code=0
+  run -snapshotScene "$scene" -snapshot "$ROOT/$new" || code=$?
+  if [ "$code" -ne 0 ]; then
+    # 2: no notch on this screen (the app says so); 1: the PNG couldn't be written.
+    echo "FAILED    $scene: wisp exited with $code$([ "$code" -eq 1 ] && echo ', no PNG written')"
+    failed=1
+  elif [ "$MODE" = record ]; then
     cp "$new" "$REFS/$scene.png"
     echo "recorded  $scene"
   elif [ ! -f "$REFS/$scene.png" ]; then
     echo "NEW       $scene (no reference yet: run with record)"
     failed=1
   else
-    code=0
     result=$(build.noindex/imagediff "$REFS/$scene.png" "$new" "$OUT/$scene.diff.png" 2>&1) || code=$?
     case $code in
     0) echo "ok        $scene" ;;
