@@ -19,6 +19,13 @@ struct NotchRootView: View {
                 ClosedNotchStrip(model: model, prefs: prefs, player: player, spectrum: spectrum, focus: focus)
             }
 
+            if model.isCollapsed && model.pager.showsDots(hovering: model.hovering) {
+                PageDots(pager: model.pager, reduceMotion: model.reduceMotion)
+                    .frame(maxHeight: .infinity, alignment: .bottom)
+                    .padding(.bottom, Theme.pageDotBottom)
+                    .transition(.opacity)
+            }
+
             if let flash = model.flash {
                 shape.fill(flash.opacity(0.4))
                     .allowsHitTesting(false)
@@ -97,6 +104,27 @@ private struct ClosedNotchStrip: View {
         case .mail:
             MailWings(count: model.unreadCount, height: height, wing: wing)
         }
+    }
+}
+
+/// One dot per alert under the camera, in the list's order; the one that shows is white, the
+/// others faint, and during a swipe the opacity follows the fingers. Not clickable.
+private struct PageDots: View {
+    let pager: NotchPager
+    let reduceMotion: Bool
+
+    var body: some View {
+        HStack(spacing: Theme.pageDotGap) {
+            ForEach(Array(pager.pages.enumerated()), id: \.element.slot) { i, _ in
+                Circle()
+                    .fill(Theme.textPrimary)
+                    .frame(width: Theme.pageDot, height: Theme.pageDot)
+                    .opacity(pager.dotOpacity(i, reduceMotion: reduceMotion))
+                    .transition(.opacity)
+            }
+        }
+        .allowsHitTesting(false)
+        .accessibilityHidden(true)
     }
 }
 
